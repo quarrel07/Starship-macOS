@@ -1,4 +1,4 @@
-#include "libc/stdbool.h"
+#include "stdbool.h"
 #include "PR/rcp.h"
 
 s32 __osAiDeviceBusy(void) {

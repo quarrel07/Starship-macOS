@@ -1,7 +1,7 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#include "libultra/ultra64.h"
+#include <libultraship.h>
 #include "sf64math.h"
 
 typedef struct {

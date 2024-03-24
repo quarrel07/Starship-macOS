@@ -2,6 +2,11 @@
 #define MACROS_H
 
 #include "alignment.h"
+#include "libc/math.h"
+#include <math.h>
+
+#define __sinf sinf
+#define __cosf cosf
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
@@ -34,13 +39,14 @@
 #define RAD_TO_DEG(radians) (((radians) * 180.0f) / M_PI)
 #define DEG_TO_RAD(degrees) (((degrees) / 180.0f) * M_PI)
 
-#define SIN_DEG(angle) __sinf((M_DTOR)*(angle))
-#define COS_DEG(angle) __cosf((M_DTOR)*(angle))
+// TODO: Fix these
+#define SIN_DEG(angle) /*sinf*/(M_DTOR * angle)
+#define COS_DEG(angle) /*cosf*/(M_DTOR * angle)
 
-#define USEC_TO_CYCLES(n) (((u64)(n)*(osClockRate/15625LL))/(1000000LL/15625LL))
+#define USEC_TO_CYCLES(n) (((u64)(n)*(OS_CLOCK_RATE/15625LL))/(1000000LL/15625LL))
 #define MSEC_TO_CYCLES(n) (USEC_TO_CYCLES((n) * 1000LL))
 
-#define CYCLES_TO_USEC(c)    (((u64)(c)*(1000000LL/15625LL))/(osClockRate/15625LL))
+#define CYCLES_TO_USEC(c)    (((u64)(c)*(1000000LL/15625LL))/(OS_CLOCK_RATE/15625LL))
 #define CYCLES_TO_MSEC(c) ((s32)CYCLES_TO_USEC(c)/1000)
 
 /*

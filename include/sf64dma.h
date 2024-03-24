@@ -1,8 +1,8 @@
 #ifndef SF64_DMA
 #define SF64_DMA
 
-#include "PR/ultratypes.h"
-#include "libc/stdbool.h"
+#include <libultra/types.h>
+#include "stdbool.h"
 
 #define DECLARE_VRAM_SEGMENT(name) \
     extern u8 name ## _VRAM[]; \
@@ -38,22 +38,26 @@
     DECLARE_RODATA_SEGMENT(name); \
     DECLARE_BSS_SEGMENT(name)
 
-#define SEGMENT_VRAM_START(segment) (segment ## _VRAM)
-#define SEGMENT_VRAM_END(segment)   (segment ## _VRAM_END)
-#define SEGMENT_VRAM_SIZE(segment)  ((uintptr_t)SEGMENT_VRAM_END(segment) - (uintptr_t)SEGMENT_VRAM_START(segment))
+// TODO: Implement file loading
+#define SEGMENT_VRAM_START(segment) NULL
+#define SEGMENT_VRAM_END(segment)   NULL
+#define SEGMENT_VRAM_SIZE(segment)  NULL
 
-#define SEGMENT_ROM_START(segment) (segment ## _ROM_START)
-#define SEGMENT_ROM_END(segment)   (segment ## _ROM_END)
-#define SEGMENT_ROM_SIZE(segment)  ((uintptr_t)SEGMENT_ROM_END(segment) - (uintptr_t)SEGMENT_ROM_START(segment))
+// TODO: Implement file loading
+#define SEGMENT_ROM_START(segment) NULL
+#define SEGMENT_ROM_END(segment)   NULL
+#define SEGMENT_ROM_SIZE(segment)  NULL
 
+// TODO: Implement file loading
 #define SEGMENT_TEXT_START(segment) (segment ## _TEXT_START)
 #define SEGMENT_TEXT_END(segment)   (segment ## _TEXT_END)
 #define SEGMENT_TEXT_SIZE(segment)  ((uintptr_t)SEGMENT_TEXT_END(segment) - (uintptr_t)SEGMENT_TEXT_START(segment))
 
-#define SEGMENT_DATA_START(segment) (segment ## _DATA_START)
-#define SEGMENT_DATA_END(segment)   (segment ## _DATA_END)
-#define SEGMENT_DATA_SIZE(segment)  ((uintptr_t)SEGMENT_DATA_END(segment) - (uintptr_t)SEGMENT_DATA_START(segment))
-#define SEGMENT_DATA_SIZE_CONST(segment) (segment ## _DATA_SIZE)
+// TODO: Implement file loading
+#define SEGMENT_DATA_START(segment) NULL
+#define SEGMENT_DATA_END(segment)   NULL
+#define SEGMENT_DATA_SIZE(segment)  NULL
+#define SEGMENT_DATA_SIZE_CONST(segment) NULL
 
 #define SEGMENT_RODATA_START(segment) (segment ## _RODATA_START)
 #define SEGMENT_RODATA_END(segment)   (segment ## _RODATA_END)

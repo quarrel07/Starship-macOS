@@ -1,7 +1,7 @@
 #ifndef FOX_MAP_H
 #define FOX_MAP_H
 
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 #include "sf64level.h"
 
 typedef struct {

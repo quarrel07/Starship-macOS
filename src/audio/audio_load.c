@@ -296,7 +296,7 @@ s32 AudioLoad_SyncLoadInstrument(s32 fontId, s32 instId, s32 drumId) {
 
 void AudioLoad_AsyncLoadSampleBank(s32 sampleBankId, s32 nChunks, s32 retData, OSMesgQueue* retQueue) {
     if (AudioLoad_AsyncLoadInner(2, AudioLoad_GetLoadTableIndex(2, sampleBankId), nChunks, retData, retQueue) == NULL) {
-        osSendMesg(retQueue, NULL, 0);
+        osSendMesg(retQueue, OS_MESG_PTR(NULL), 0);
     }
 }
 
@@ -742,7 +742,7 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
     ramAddr = AudioLoad_SearchCaches(tableType, id);
     if (ramAddr != NULL) {
         loadStatus = 2;
-        osSendMesg(retQueue, (void*) (retData << 0x18), 0);
+        osSendMesg(retQueue, OS_MESG_32(retData << 0x18), 0);
     } else {
         table = AudioLoad_GetLoadTable(tableType);
         size = table->entries[id].size;
@@ -842,21 +842,9 @@ void AudioLoad_Init(void) {
     for (; dwordsLeft >= 0; dwordsLeft--) {
         *clearContext++ = 0;
     }
-    switch (osTvType) {
-        case OS_TV_PAL:
-            gMaxTempoTvTypeFactors = 20.03042f;
-            gRefreshRate = 50;
-            break;
-        case OS_TV_MPAL:
-            gMaxTempoTvTypeFactors = 16.546f;
-            gRefreshRate = 60;
-            break;
-        default:
-        case OS_TV_NTSC:
-            gMaxTempoTvTypeFactors = 16.713f;
-            gRefreshRate = 60;
-            break;
-    }
+    // TODO: osTVType should be unnecessary
+    gMaxTempoTvTypeFactors = 16.713f;
+    gRefreshRate = 60;
     AudioThread_Init();
     for (i = 0; i < 3; i++) {
         gAiBuffLengths[i] = 0xA0;
@@ -1084,7 +1072,7 @@ AudioAsyncLoad* AudioLoad_StartAsyncLoad(u32 devAddr, u8* ramAddr, u32 size, s32
 
     asyncLoad->delay = 3;
     asyncLoad->medium = medium;
-    asyncLoad->retMsg = retMesg;
+    asyncLoad->retMsg = OS_MESG_32(retMesg);
 
     osCreateMesgQueue(&asyncLoad->msgQueue, &asyncLoad->msg, 1);
     return asyncLoad;
@@ -1128,7 +1116,7 @@ void AudioLoad_ProcessAsyncLoad(AudioAsyncLoad* asyncLoad, s32 resetStatus) {
         }
     }
     if (asyncLoad->bytesRemaining == 0) {
-        temp = asyncLoad->retMsg;
+        temp = asyncLoad->retMsg.data32;
         pad1 = (temp >> 0x10) & 0xFF;
         sp24 = (temp >> 8) & 0xFF;
         pad2 = temp & 0xFF;
@@ -1352,17 +1340,18 @@ s32 AudioLoad_ProcessSamplePreloads(s32 resetStatus) {
     s32 sampleAddr;
     u32 size;
     s32 nChunks;
+    OSMesg mesg;
 
     if (gPreloadSampleStackTop > 0) {
         if (resetStatus != 0) {
-            if (osRecvMesg(&gPreloadSampleQueue, (OSMesg) &preloadIndex, 0)) {}
+            if (osRecvMesg(&gPreloadSampleQueue, &mesg, 0)) {}
             gPreloadSampleStackTop = 0;
             return false;
         }
-        if (osRecvMesg(&gPreloadSampleQueue, (OSMesg) &preloadIndex, 0) == -1) {
+        if (osRecvMesg(&gPreloadSampleQueue, &mesg, 0) == -1) {
             return false;
         }
-        // "Receive %d\n"
+        preloadIndex = mesg.data32;
         preloadIndex >>= 0x18;
 
         if (gPreloadSampleStack[preloadIndex].isFree == 0) {

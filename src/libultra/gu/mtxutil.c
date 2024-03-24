@@ -10,8 +10,7 @@
  *									  *
  **************************************************************************/
 
-#include "PR/ultratypes.h"
-#include "PR/guint.h"
+#include <libultraship.h>
 
 void guMtxF2L(float mf[4][4], Mtx* m) {
     int i, j;

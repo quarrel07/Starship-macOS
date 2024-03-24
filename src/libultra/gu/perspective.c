@@ -11,7 +11,7 @@
  *									  *
  **************************************************************************/
 
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 #include "PR/guint.h"
 
 extern f32 __cosf(f32);

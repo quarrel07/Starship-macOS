@@ -1,7 +1,7 @@
 #ifndef SF64_MATH_H
 #define SF64_MATH_H
 
-#include "libultra/ultra64.h"
+#include <libultraship.h>
 
 typedef struct {
     /* 0x0 */ f32 x;
@@ -95,8 +95,8 @@ f32 Math_FAtan2F(f32, f32);
 f32 Math_FAsinF(f32);
 f32 Math_FAcosF(f32);
 
-f32 __sinf(f32);
-f32 __cosf(f32);
+#define __sinf sinf
+#define __cosf cosf
 
 s64 __ull_div(s64, s64);
 s64 __ll_mul(s64, s64);

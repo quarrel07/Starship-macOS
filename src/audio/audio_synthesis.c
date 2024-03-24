@@ -1215,22 +1215,22 @@ Acmd* func_8000B51C(Acmd* aList, NoteSubEu* noteSub, NoteSynthesisState* synthSt
         switch (delaySide) {
             case 1:
                 aEnvMixer(aList++, dmemSrc, aiBufLen, 0, 0, ((temp_a1 & 0x80) >> 7),
-                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, 0x65B1C9E1);
+                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, 0x65B1C9E1, 0);
                 break;
             case 2:
                 aEnvMixer(aList++, dmemSrc, aiBufLen, 0, 0, ((temp_a1 & 0x80) >> 7),
-                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, 0x9965C9E1);
+                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, 0x9965C9E1, 0);
                 break;
             default:
                 aEnvMixer(aList++, dmemSrc, aiBufLen, 0, 0, ((temp_a1 & 0x80) >> 7),
-                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, 0x99B1C9E1);
+                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, 0x99B1C9E1, 0);
                 break;
         }
     } else {
         aEnvSetup1(aList++, (temp_a1 & 0x7F), var_a2, var_t0, var_a3);
         aEnvSetup2(aList++, temp_t1, temp_t2);
         aEnvMixer(aList++, dmemSrc, aiBufLen, 0, 0, ((temp_a1 & 0x80) >> 7), noteSub->bitField0.stereoStrongRight,
-                  noteSub->bitField0.stereoStrongLeft, 0x99B1C9E1);
+                  noteSub->bitField0.stereoStrongLeft, 0x99B1C9E1, 0);
     }
 
     return aList;

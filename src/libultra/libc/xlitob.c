@@ -1,6 +1,6 @@
 #include "PR/xstdio.h"
-#include "libc/string.h"
-#include "libc/stdlib.h"
+#include "string.h"
+#include "stdlib.h"
 
 #define BUFF_LEN 0x18
 

@@ -1,7 +1,7 @@
 #ifndef I1_H
 #define I1_H
 
-#include "libc/stdbool.h"
+#include "stdbool.h"
 #include "structs.h"
 #include "sf64object.h"
 #include "sf64thread.h"

@@ -1,4 +1,4 @@
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 
 void* memcpy(void* s1, const void* s2, size_t n) {
     unsigned char* su1 = (unsigned char*) s1;

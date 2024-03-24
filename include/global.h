@@ -6,7 +6,7 @@
 #include "sf64audio_external.h"
 #include "functions.h"
 #include "variables.h"
-#include "context.h"
+#include "sf64context.h"
 #include "structs.h"
 #include "sf64mesg.h"
 #include "assets/ast_radio.h"
@@ -20,5 +20,6 @@
 #include "i5.h"
 #include "i6.h"
 #include "assets/ast_common.h"
+#include <libultraship.h>
 
 #endif // GLOBAL_H

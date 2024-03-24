@@ -1,5 +1,5 @@
-#include "libc/stdlib.h"
-#include "libc/string.h"
+#include "stdlib.h"
+#include "string.h"
 #include "PR/xstdio.h"
 
 // TODO: these come from headers

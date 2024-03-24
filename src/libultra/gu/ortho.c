@@ -1,5 +1,4 @@
-#include "PR/ultratypes.h"
-#include "PR/gu.h"
+#include <libultraship.h>
 
 void guOrthoF(float mf[4][4], float l, float r, float b, float t, float n, float f, float scale) {
     int i;

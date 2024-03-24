@@ -1,4 +1,4 @@
-#include "PR/rcp.h"
+#include <libultraship.h>
 
 extern s32 osViClock;
 

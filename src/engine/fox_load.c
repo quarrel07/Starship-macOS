@@ -27,22 +27,21 @@ OverlayInit sCurrentOverlay = {
 };
 
 void Overlay_LoadSegment(void* vRomAddress, void* dest, ptrdiff_t size) {
-    s32 i;
-
-    for (i = 0; gDmaTable[i].pRom.end != NULL; i++) {
-        if (gDmaTable[i].vRomAddress == vRomAddress) {
-            if (gDmaTable[i].compFlag == 0) {
-                Lib_DmaRead(gDmaTable[i].pRom.start, dest, size);
-            } else {
-                Lib_FillScreen(true);
-                sFillTimer = 3;
-                D_game_80161A39 = true;
-                Lib_DmaRead(gDmaTable[i].pRom.start, gFrameBuffers, SEGMENT_SIZE(gDmaTable[i].pRom));
-                Mio0_Decompress(gFrameBuffers, dest);
-            }
-            break;
-        }
-    }
+    // s32 i;
+    // for (i = 0; gDmaTable[i].pRom.end != NULL; i++) {
+    //     if (gDmaTable[i].vRomAddress == vRomAddress) {
+    //         if (gDmaTable[i].compFlag == 0) {
+    //             Lib_DmaRead(gDmaTable[i].pRom.start, dest, size);
+    //         } else {
+    //             Lib_FillScreen(true);
+    //             sFillTimer = 3;
+    //             D_80161A39 = true;
+    //             Lib_DmaRead(gDmaTable[i].pRom.start, gFrameBuffers, SEGMENT_SIZE(gDmaTable[i].pRom));
+    //             Mio0_Decompress(gFrameBuffers, dest);
+    //         }
+    //         break;
+    //     }
+    // }
 }
 
 u8 Overlay_Init(OverlayInit* ovlInit) {
@@ -196,6 +195,6 @@ u8 Overlay_Load(u8 ovlSetup, u8 ovlStage) {
 }
 
 void Overlay_InitDma(void) {
-    Lib_DmaRead(SEGMENT_ROM_START(dma_table), SEGMENT_VRAM_START(dma_table), SEGMENT_ROM_SIZE(dma_table));
-    Overlay_LoadSegment(SEGMENT_ROM_START(ast_radio), SEGMENT_VRAM_START(ast_radio), SEGMENT_ROM_SIZE(ast_radio));
+    // Lib_DmaRead(SEGMENT_ROM_START(dma_table), SEGMENT_VRAM_START(dma_table), SEGMENT_ROM_SIZE(dma_table));
+    // Overlay_LoadSegment(SEGMENT_ROM_START(ast_radio), SEGMENT_VRAM_START(ast_radio), SEGMENT_ROM_SIZE(ast_radio));
 }

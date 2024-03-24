@@ -1,7 +1,7 @@
 #ifndef LIBC_MATH_H
 #define LIBC_MATH_H
 
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 
 #define M_PI    3.14159265358979323846f
 #define M_DTOR	(M_PI / 180.0f)
@@ -28,43 +28,25 @@ typedef union {
 
 extern f32 __libm_qnan_f;
 
-float fabsf(float f);
-#pragma intrinsic(fabsf)
-#ifdef __GNUC__
-#define fabsf(f) __builtin_fabsf((float)(f))
-#endif
-
-double fabs(double f);
-#pragma intrinsic(fabs)
-#ifdef __GNUC__
-#define fabs(f) __builtin_fabs((double)(f))
-#endif
-
-float sqrtf(float f);
-#pragma intrinsic(sqrtf)
-
-double sqrt(double d);
-#pragma intrinsic(sqrt)
-
-f32 __floorf(f32);
-f64 __floor(f64);
-s32 __lfloorf(f32);
-s32 __lfloor(f64);
-f32 __ceilf(f32);
-f64 __ceil(f64);
-s32 __lceilf(f32);
-s32 __lceil(f64);
-f32 __truncf(f32);
-f64 __trunc(f64);
-s32 __ltruncf(f32);
-s32 __ltrunc(f64);
-f32 __roundf(f32);
-f64 __round(f64);
-s32 __lroundf(f32);
-s32 __lround(f64);
-f32 __nearbyintf(f32);
-f64 __nearbyint(f64);
-s32 __lnearbyintf(f32);
-s32 __lnearbyint(f64);
+#define __floorf floorf
+#define __floor floor
+#define __lfloorf lfloorf
+#define __lfloor lfloor
+#define __ceilf ceilf
+#define __ceil ceil
+#define __lceilf lceilf
+#define __lceil lceil
+#define __truncf truncf
+#define __trunc trunc
+#define __ltruncf ltruncf
+#define __ltrunc ltrunc
+#define __roundf roundf
+#define __round round
+#define __lroundf lroundf
+#define __lround lround
+#define __nearbyintf nearbyintf
+#define __nearbyint nearbyint
+#define __lnearbyintf lnearbyintf
+#define __lnearbyint lnearbyint
 
 #endif

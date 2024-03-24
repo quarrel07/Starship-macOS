@@ -3,13 +3,14 @@
 
 #include "PR/xstdio.h"
 #include "PR/controller.h"
-#include "libultra/ultra64.h"
+#include <libultraship.h>
+#include "math.h"
 #include "libc/math.h"
-#include "libc/stdarg.h"
-#include "libc/stdbool.h"
-#include "libc/stdint.h"
-#include "libc/stddef.h"
-#include "libc/string.h"
+#include "stdarg.h"
+#include "stdbool.h"
+#include "stdint.h"
+#include "stddef.h"
+#include "string.h"
 #include "macros.h"
 #include "sf64math.h"
 #include "gfx.h"
@@ -26,7 +27,7 @@ void Lib_vTable(s32 index, void (**table)(s32, s32), s32 arg0, s32 arg1);
 void Lib_QuickSort(u8* first, u32 length, u32 size, CompareFunc cFunc);
 void Lib_Perspective(Gfx** dList);
 void Lib_Ortho(Gfx** dList);
-void Lib_DmaRead(void* src, void* dst, s32 size);
+void Lib_DmaRead(void* src, void* dst, ptrdiff_t size);
 void Lib_FillScreen(u8 setFill);
 
 void Memory_FreeAll(void);
@@ -35,7 +36,6 @@ void* Memory_Allocate(s32);
 OSPiHandle * func_8001EE60(void);
 void RdRam_CheckIPL3(void);
 void Mio0_Decompress(void* header, u8* dst);
-s32 vsprintf(char* dst, const char* fmt, va_list args);
 
 void Game_Initialize(void);
 void Game_Update(void);

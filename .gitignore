@@ -24,3 +24,5 @@ debug/
 m2cfiles/
 TempComp.bin.mio0
 torch.hash.yml
+cmake-build-*/
+.idea/

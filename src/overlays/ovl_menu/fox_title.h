@@ -219,7 +219,7 @@ void Title_8018DF0C(f32 arg0);
 void Title_8018E058(void);
 void Title_8018E200(void);
 bool Title_8018EDC8(s32, Gfx **, Vec3f *, Vec3f *, void *);
-void  Title_8018E67C(s32);
+void Title_8018E67C(s32);
 void Title_8018F438(void);
 void Title_80190144(void);
 void Title_801903B8(void);

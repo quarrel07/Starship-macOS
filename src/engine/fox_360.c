@@ -2272,10 +2272,12 @@ void ActorAllRange_Draw(Actor* actor) {
                             break;
                     }
                 } else if (gCurrentLevel == LEVEL_SECTOR_Z) {
-                    gSPDisplayList(gMasterDisp++, D_SZ_6004FE0) Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -60.0f, 1);
+                    gSPDisplayList(gMasterDisp++, D_SZ_6004FE0);
+                     Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -60.0f, 1);
                     func_edisplay_8005B1E8(actor, 2);
                 } else if (gCurrentLevel == LEVEL_BOLSE) {
-                    gSPDisplayList(gMasterDisp++, D_BO_6008770) Matrix_Push(&gGfxMatrix);
+                    gSPDisplayList(gMasterDisp++, D_BO_6008770);
+                    Matrix_Push(&gGfxMatrix);
                     Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -60.0f, 1);
                     func_edisplay_8005B1E8(actor, 2);
                     Matrix_Pop(&gGfxMatrix);

@@ -1,7 +1,7 @@
 #ifndef SF64_SAVE
 #define SF64_SAVE
 
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 
 typedef struct {
     /* bit 0 */ u8 unk_0 : 3;

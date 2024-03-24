@@ -6,7 +6,7 @@
 #ifndef SF64_AUDIO_H
 #define SF64_AUDIO_H
 
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 #include "sf64audio_external.h"
 
 typedef void (*AudioCustomUpdateFunction)(void);
@@ -336,7 +336,7 @@ typedef struct {
             /* 0x00 */ u8 hang : 1;
             /* 0x00 */ u8 decay : 1;
             /* 0x00 */ u8 release : 1;
-            /* 0x00 */ 
+            /* 0x00 */
         } s;
         /* 0x00 */ u8 asByte;
     } action;
@@ -457,7 +457,7 @@ typedef struct SequenceLayer {
     /* 0x28 */ f32 velocitySquare;
     /* 0x2C */ f32 noteVelocity;
     /* 0x30 */ f32 noteFreqMod;
-    /* 0x34 */ u16 shortNoteDefaultDelay;    
+    /* 0x34 */ u16 shortNoteDefaultDelay;
     /* 0x36 */ u16 lastDelay;
     /* 0x38 */ s16 delay;
     /* 0x3A */ s16 gateDelay;
@@ -990,7 +990,7 @@ typedef struct {
 #define SFX_RANGE_SHIFT(sfxId) (((sfxId) >> 16) & 0xFF)
 #define SFX_IMPORTANCE_SHIFT(sfxId) (((sfxId) >> 8) & 0xFF)
 
-#define SFX_BANK(sfxId) SFX_BANK_SHIFT(SFX_BANK_MASK(sfxId)) 
+#define SFX_BANK(sfxId) SFX_BANK_SHIFT(SFX_BANK_MASK(sfxId))
 #define SFX_STATE(sfxId) SFX_STATE_SHIFT(SFX_STATE_MASK(sfxId))
 #define SFX_BIT04(sfxId) ((sfxId) & (1 << 27))
 #define SFX_BIT05(sfxId) ((sfxId) & (1 << 26))

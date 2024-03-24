@@ -63,7 +63,7 @@ void Controller_UpdateInput(void) {
     s32 i;
 
     for (i = 0; i < 4; i++) {
-        if (gControllerPlugged[i] == 1 && sNextController[i].errno == 0) {
+        if (gControllerPlugged[i] == 1 && sNextController[i].err_no == 0) {
             sPrevController[i] = gControllerHold[i];
             gControllerHold[i] = sNextController[i];
             gControllerPress[i].button =
@@ -71,8 +71,8 @@ void Controller_UpdateInput(void) {
             Controller_AddDeadZone(i);
         } else {
             gControllerHold[i].button = gControllerHold[i].stick_x = gControllerHold[i].stick_y =
-                gControllerHold[i].errno = gControllerPress[i].button = gControllerPress[i].stick_x =
-                    gControllerPress[i].stick_y = gControllerPress[i].errno = 0;
+                gControllerHold[i].err_no = gControllerPress[i].button = gControllerPress[i].stick_x =
+                    gControllerPress[i].stick_y = gControllerPress[i].err_no = 0;
         }
     }
 }
@@ -84,41 +84,41 @@ void Controller_ReadData(void) {
         gControllerLock--;
         for (i = 0; i < 4; i++) {
             sNextController[i].button = sNextController[i].stick_x = sNextController[i].stick_y =
-                sNextController[i].errno = 0;
+                sNextController[i].err_no = 0;
         }
     } else {
         osContStartReadData(&gSerialEventQueue);
         osRecvMesg(&gSerialEventQueue, NULL, OS_MESG_BLOCK);
         osContGetReadData(sNextController);
     }
-    osSendMesg(&gControllerMsgQueue, (OSMesg) SI_CONT_READ_DONE, OS_MESG_PRI_NORMAL);
+    osSendMesg(&gControllerMsgQueue, OS_MESG_32(SI_CONT_READ_DONE), OS_MESG_PRI_NORMAL);
 }
 
 void Save_ReadData(void) {
     if ((gStartNMI == 0) && (Save_ReadEeprom(&gSaveIOBuffer) == 0)) {
-        osSendMesg(&gSaveMsgQueue, (OSMesg) SI_SAVE_SUCCESS, OS_MESG_PRI_NORMAL);
+        osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
         return;
     }
-    osSendMesg(&gSaveMsgQueue, (OSMesg) SI_SAVE_FAILED, OS_MESG_PRI_NORMAL);
+    osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
 }
 
 void Save_WriteData(void) {
     if ((gStartNMI == 0) && (Save_WriteEeprom(&gSaveIOBuffer) == 0)) {
-        osSendMesg(&gSaveMsgQueue, (OSMesg) SI_SAVE_SUCCESS, OS_MESG_PRI_NORMAL);
+        osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
         return;
     }
-    osSendMesg(&gSaveMsgQueue, (OSMesg) SI_SAVE_FAILED, OS_MESG_PRI_NORMAL);
+    osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
 }
 
 void Controller_Rumble(void) {
     s32 i;
 
-    osContStartQuery(&gSerialEventQueue);
+    // osContStartQuery(&gSerialEventQueue);
     osRecvMesg(&gSerialEventQueue, NULL, OS_MESG_BLOCK);
-    osContGetQuery(sControllerStatus);
+    // osContGetQuery(sControllerStatus);
 
     for (i = 0; i < 4; i++) {
-        if ((gControllerPlugged[i] != 0) && (sControllerStatus[i].errno == 0)) {
+        if ((gControllerPlugged[i] != 0) && (sControllerStatus[i].err_no == 0)) {
             if (sControllerStatus[i].status & 1) {
                 if (gControllerRumble[i] == 0) {
                     if (osMotorInit(&gSerialEventQueue, &sControllerMotor[i], i)) {

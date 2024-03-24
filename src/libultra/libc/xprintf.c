@@ -1,6 +1,6 @@
 #include "macros.h"
-#include "libc/string.h"
-#include "libc/stdarg.h"
+#include "string.h"
+#include "stdarg.h"
 #include "PR/xstdio.h"
 
 // TODO: these come from headers

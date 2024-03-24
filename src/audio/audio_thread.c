@@ -49,15 +49,15 @@ SPTask* AudioThread_CreateTask(void) {
     OSTask_t* task;
     u16* sp40;
     s32 pad3C;
-    u32 sp38;
-    u32 sp34;
+    OSMesg sp38;
+    OSMesg sp34;
     s32 pad30;
 
     gAudioTaskCountQ++;
     if ((gAudioTaskCountQ % gAudioBufferParams.specUnk4) != 0) {
         return gWaitingAudioTask;
     }
-    osSendMesg(gAudioTaskStartQueue, (OSMesg) gAudioTaskCountQ, 0);
+    osSendMesg(gAudioTaskStartQueue, OS_MESG_32(gAudioTaskCountQ), 0);
     gAudioTaskIndexQ ^= 1;
     gCurAiBuffIndex++;
     gCurAiBuffIndex %= 3;
@@ -71,15 +71,15 @@ SPTask* AudioThread_CreateTask(void) {
     gCurAudioFrameDmaCount = 0;
     AudioLoad_DecreaseSampleDmaTtls();
     AudioLoad_ProcessLoads(gResetStatus);
-    if (osRecvMesg(gAudioUnkQueue, (OSMesg) &sp38, 0) != -1) {
+    if (osRecvMesg(gAudioUnkQueue, &sp38, 0) != -1) {
         if (gResetStatus == 0) {
             gResetStatus = 5;
         }
-        gAudioSpecId = sp38;
+        gAudioSpecId = sp38.data32;
     }
     if ((gResetStatus != 0) && (AudioHeap_ResetStep() == 0)) {
         if (gResetStatus == 0) {
-            osSendMesg(gAudioResetQueue, (OSMesg) (s32) gAudioSpecId, 0);
+            osSendMesg(gAudioResetQueue, OS_MESG_32((s32) gAudioSpecId), 0);
         }
         gWaitingAudioTask = NULL;
         return NULL;
@@ -102,8 +102,8 @@ SPTask* AudioThread_CreateTask(void) {
     if (gAiBuffLengths[sp4C] > gAudioBufferParams.maxAiBufferLength) {
         gAiBuffLengths[sp4C] = gAudioBufferParams.maxAiBufferLength;
     }
-    while (osRecvMesg(gThreadCmdProcQueue, (OSMesg) &sp34, 0) != -1) {
-        AudioThread_ProcessCmds(sp34);
+    while (osRecvMesg(gThreadCmdProcQueue, &sp34, 0) != -1) {
+        AudioThread_ProcessCmds(sp34.data32);
     }
     gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &sp50, sp40, gAiBuffLengths[sp4C]);
     gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
@@ -112,19 +112,19 @@ SPTask* AudioThread_CreateTask(void) {
     sp4C = gAudioTaskIndexQ;
 
     gAudioCurTask->msgQueue = NULL;
-    gAudioCurTask->msg = NULL;
+    gAudioCurTask->msg = OS_MESG_PTR(NULL);
 
     task = &gAudioCurTask->task.t;
 
     task->type = 2;
     task->flags = 0;
-    task->ucode_boot = rspbootTextStart;
-    task->ucode_boot_size = (uintptr_t) rspbootTextEnd - (uintptr_t) rspbootTextStart;
-
-    task->ucode = aspMainTextStart;
-    task->ucode_data = aspMainDataStart;
-    task->ucode_size = SP_UCODE_SIZE;
-    task->ucode_data_size = (aspMainDataEnd - aspMainDataStart) * 8;
+    // task->ucode_boot = rspbootTextStart;
+    // task->ucode_boot_size = (uintptr_t) rspbootTextEnd - (uintptr_t) rspbootTextStart;
+    //
+    // task->ucode = aspMainTextStart;
+    // task->ucode_data = aspMainDataStart;
+    // task->ucode_size = SP_UCODE_SIZE;
+    // task->ucode_data_size = (aspMainDataEnd - aspMainDataStart) * 8;
 
     task->dram_stack = NULL;
     task->dram_stack_size = 0;
@@ -282,7 +282,7 @@ void AudioThread_ScheduleProcessCmds(void) {
         D_800C7C70 = (u8) (gThreadCmdWritePos - gThreadCmdReadPos + 0x100);
     }
     msg = (((gThreadCmdReadPos & 0xFF) << 8) | (gThreadCmdWritePos & 0xFF));
-    osSendMesg(gThreadCmdProcQueue, (OSMesg) msg, 0);
+    osSendMesg(gThreadCmdProcQueue, OS_MESG_32(msg), 0);
     gThreadCmdReadPos = gThreadCmdWritePos;
 }
 
@@ -420,7 +420,7 @@ void AudioThread_ResetAudioHeap(s32 specId) {
     // clang-format on
 
     AudioThread_ResetCmdQueue();
-    osSendMesg(gAudioUnkQueue, (OSMesg) specId, 0);
+    osSendMesg(gAudioUnkQueue, OS_MESG_32(specId), 0);
 }
 
 void AudioThread_PreNMIReset(void) {

@@ -1,19 +1,19 @@
 #include "sys.h"
 
-Mtx gIdentityMtx = { {
-    {
+Mtx gIdentityMtx = {
+    .intPart = {
         { 1, 0, 0, 0 },
         { 0, 1, 0, 0 },
         { 0, 0, 1, 0 },
         { 0, 0, 0, 1 },
     },
-    {
+    .fracPart = {
         { 0, 0, 0, 0 },
         { 0, 0, 0, 0 },
         { 0, 0, 0, 0 },
         { 0, 0, 0, 0 },
     },
-} };
+};
 
 Matrix gIdentityMatrix = { {
     { 1.0f, 0.0f, 0.0f, 0.0f },
@@ -332,8 +332,8 @@ void Matrix_RotateAxis(Matrix* mtx, f32 angle, f32 axisX, f32 axisY, f32 axisZ, 
 // Converts the current Gfx matrix to a Mtx
 void Matrix_ToMtx(Mtx* dest) {
     s32 intVal;
-    u16(*iPart)[4] = dest->u.i;
-    u16(*fPart)[4] = dest->u.f;
+    u16(*iPart)[4] = dest->intPart;
+    u16(*fPart)[4] = dest->fracPart;
     Matrix* src = gGfxMatrix;
 
     intVal = src->m[0][0] * 0x10000;
@@ -403,22 +403,22 @@ void Matrix_ToMtx(Mtx* dest) {
 
 // Converts the Mtx src to a Matrix, putting the result in dest
 void Matrix_FromMtx(Mtx* src, Matrix* dest) {
-    dest->m[0][0] = ((src->u.i[0][0] << 0x10) | src->u.f[0][0]) * (1.0f / 0x10000);
-    dest->m[0][1] = ((src->u.i[0][1] << 0x10) | src->u.f[0][1]) * (1.0f / 0x10000);
-    dest->m[0][2] = ((src->u.i[0][2] << 0x10) | src->u.f[0][2]) * (1.0f / 0x10000);
-    dest->m[0][3] = ((src->u.i[0][3] << 0x10) | src->u.f[0][3]) * (1.0f / 0x10000);
-    dest->m[1][0] = ((src->u.i[1][0] << 0x10) | src->u.f[1][0]) * (1.0f / 0x10000);
-    dest->m[1][1] = ((src->u.i[1][1] << 0x10) | src->u.f[1][1]) * (1.0f / 0x10000);
-    dest->m[1][2] = ((src->u.i[1][2] << 0x10) | src->u.f[1][2]) * (1.0f / 0x10000);
-    dest->m[1][3] = ((src->u.i[1][3] << 0x10) | src->u.f[1][3]) * (1.0f / 0x10000);
-    dest->m[2][0] = ((src->u.i[2][0] << 0x10) | src->u.f[2][0]) * (1.0f / 0x10000);
-    dest->m[2][1] = ((src->u.i[2][1] << 0x10) | src->u.f[2][1]) * (1.0f / 0x10000);
-    dest->m[2][2] = ((src->u.i[2][2] << 0x10) | src->u.f[2][2]) * (1.0f / 0x10000);
-    dest->m[2][3] = ((src->u.i[2][3] << 0x10) | src->u.f[2][3]) * (1.0f / 0x10000);
-    dest->m[3][0] = ((src->u.i[3][0] << 0x10) | src->u.f[3][0]) * (1.0f / 0x10000);
-    dest->m[3][1] = ((src->u.i[3][1] << 0x10) | src->u.f[3][1]) * (1.0f / 0x10000);
-    dest->m[3][2] = ((src->u.i[3][2] << 0x10) | src->u.f[3][2]) * (1.0f / 0x10000);
-    dest->m[3][3] = ((src->u.i[3][3] << 0x10) | src->u.f[3][3]) * (1.0f / 0x10000);
+    dest->m[0][0] = ((src->intPart[0][0] << 0x10) | src->fracPart[0][0]) * (1.0f / 0x10000);
+    dest->m[0][1] = ((src->intPart[0][1] << 0x10) | src->fracPart[0][1]) * (1.0f / 0x10000);
+    dest->m[0][2] = ((src->intPart[0][2] << 0x10) | src->fracPart[0][2]) * (1.0f / 0x10000);
+    dest->m[0][3] = ((src->intPart[0][3] << 0x10) | src->fracPart[0][3]) * (1.0f / 0x10000);
+    dest->m[1][0] = ((src->intPart[1][0] << 0x10) | src->fracPart[1][0]) * (1.0f / 0x10000);
+    dest->m[1][1] = ((src->intPart[1][1] << 0x10) | src->fracPart[1][1]) * (1.0f / 0x10000);
+    dest->m[1][2] = ((src->intPart[1][2] << 0x10) | src->fracPart[1][2]) * (1.0f / 0x10000);
+    dest->m[1][3] = ((src->intPart[1][3] << 0x10) | src->fracPart[1][3]) * (1.0f / 0x10000);
+    dest->m[2][0] = ((src->intPart[2][0] << 0x10) | src->fracPart[2][0]) * (1.0f / 0x10000);
+    dest->m[2][1] = ((src->intPart[2][1] << 0x10) | src->fracPart[2][1]) * (1.0f / 0x10000);
+    dest->m[2][2] = ((src->intPart[2][2] << 0x10) | src->fracPart[2][2]) * (1.0f / 0x10000);
+    dest->m[2][3] = ((src->intPart[2][3] << 0x10) | src->fracPart[2][3]) * (1.0f / 0x10000);
+    dest->m[3][0] = ((src->intPart[3][0] << 0x10) | src->fracPart[3][0]) * (1.0f / 0x10000);
+    dest->m[3][1] = ((src->intPart[3][1] << 0x10) | src->fracPart[3][1]) * (1.0f / 0x10000);
+    dest->m[3][2] = ((src->intPart[3][2] << 0x10) | src->fracPart[3][2]) * (1.0f / 0x10000);
+    dest->m[3][3] = ((src->intPart[3][3] << 0x10) | src->fracPart[3][3]) * (1.0f / 0x10000);
 }
 
 // Applies the transform matrix mtx to the vector src, putting the result in dest

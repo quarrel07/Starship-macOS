@@ -1,8 +1,8 @@
 #ifndef SF64_MESG
 #define SF64_MESG
 
-#include "libultra/ultra64.h"
-#include "libc/stdbool.h"
+#include <libultraship.h>
+#include "stdbool.h"
 
 typedef struct {
     s32 msgId;

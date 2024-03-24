@@ -242,7 +242,7 @@ void Fault_ThreadEntry(void* arg0) {
     func_8000762C(300, 10, "-");
     gControllerPlugged[0] = 1;
     while (var_s5 == 0) {
-        osSendMesg(&gSerialThreadMsgQueue, (OSMesg) SI_READ_CONTROLLER, OS_MESG_PRI_NORMAL);
+        osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
         osRecvMesg(&gControllerMsgQueue, NULL, OS_MESG_BLOCK);
         Controller_UpdateInput();
         switch (var_s0) {

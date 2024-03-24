@@ -1,7 +1,7 @@
 #ifndef LIBC_STDDEF_H
 #define LIBC_STDDEF_H
 
-#include "PR/ultratypes.h"
+#include <libultra/types.h>
 
 typedef s32 ptrdiff_t;
 

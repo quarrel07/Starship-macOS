@@ -1,7 +1,7 @@
 #ifndef I3_H
 #define I3_H
 
-#include "libc/stdbool.h"
+#include "stdbool.h"
 #include "structs.h"
 #include "sf64object.h"
 #include "sf64thread.h"

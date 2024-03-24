@@ -120,24 +120,25 @@ void Lib_DmaRead(void* src, void* dst, ptrdiff_t size) {
 void Lib_FillScreen(u8 setFill) {
     s32 i;
 
+    // TODO: Implement fill screen
     gFillScreenColor |= 1;
     if (setFill == true) {
         if (gFillScreen == false) {
             if (gFillScreenColor == 1) {
-                osViBlack(1);
+                // osViBlack(1);
             } else {
                 for (i = 0; i < 3 * SCREEN_WIDTH; i++) {
                     gFillBuffer[i] = gFillScreenColor;
                 }
-                osWritebackDCacheAll();
-                osViSwapBuffer(&gFillBuffer[SCREEN_WIDTH]);
-                osViRepeatLine(1);
+                // osWritebackDCacheAll();
+                // osViSwapBuffer(&gFillBuffer[SCREEN_WIDTH]);
+                // osViRepeatLine(1);
             }
             gFillScreen = true;
         }
     } else if (gFillScreen == true) {
-        osViRepeatLine(0);
-        osViBlack(0);
+        // osViRepeatLine(0);
+        // osViBlack(0);
         gFillScreen = false;
     }
 }

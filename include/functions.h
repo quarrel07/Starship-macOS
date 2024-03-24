@@ -470,7 +470,7 @@ void func_play_800B2130(Player*);
 void func_play_800B2574(Player*);
 void func_play_800B56BC(Player*);
 void func_play_800B5D30(Player*, s32);
-void func_play_800B5FBC(Player*, s32 , bool );
+void func_play_800B5FBC(Player*, s32, bool);
 void func_play_800B63BC(Player*, s32);
 void func_play_800B6848(Player*, s32 );
 void func_play_800B6BFC(Player*, s32 );
@@ -512,5 +512,12 @@ void Ending_8018AAC4(void);
 
 // sf_i5_5
 bool Ground_801B49D0(Actor* actor);
+
+// libultra
+void gSPSegmentLoadRes(void* value, int segNum, uintptr_t target);
+void gSPDisplayList(Gfx* pkt, Gfx* dl);
+void gSPDisplayListOffset(Gfx* pkt, Gfx* dl, int offset);
+void gSPVertex(Gfx* pkt, uintptr_t v, int n, int v0);
+void gSPInvalidateTexCache(Gfx* pkt, uintptr_t texAddr);
 
 #endif

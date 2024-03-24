@@ -4,12 +4,7 @@
     { NULL, NULL }
 
 #define OVERLAY_OFFSETS(file)                                                                                   \
-    {                                                                                                           \
-        { SEGMENT_ROM_START(file), SEGMENT_ROM_END(file) }, { SEGMENT_BSS_START(file), SEGMENT_BSS_END(file) }, \
-            { SEGMENT_TEXT_START(file), SEGMENT_TEXT_END(file) }, {                                             \
-            SEGMENT_DATA_START(file), SEGMENT_RODATA_END(file)                                                  \
-        }                                                                                                       \
-    }
+    NO_OVERLAY
 
 #define NO_OVERLAY                                        \
     {                                                     \
@@ -19,7 +14,7 @@
     }
 
 #define ROM_SEGMENT(file) \
-    { SEGMENT_ROM_START(file), SEGMENT_ROM_END(file) }
+    NO_SEGMENT
 
 OverlayInit sNoOvl_Logo[1] = {
     { NO_OVERLAY,

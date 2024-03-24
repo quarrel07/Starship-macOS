@@ -1,7 +1,7 @@
 #ifndef SF64_THREAD
 #define SF64_THREAD
 
-#include "libultra/ultra64.h"
+#include <libultraship.h>
 #include "gfx.h"
 
 typedef enum {

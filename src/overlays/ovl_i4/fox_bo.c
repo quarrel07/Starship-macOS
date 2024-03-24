@@ -2216,7 +2216,7 @@ void Bolse_80192264(void) {
                     gDPLoadTileTexture(gMasterDisp++, D_BO_600AD80, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32);
                 }
                 Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, D_BO_600BEC0)
+                gSPDisplayList(gMasterDisp++, D_BO_600BEC0);
             }
             Matrix_Pop(&gGfxMatrix);
         }

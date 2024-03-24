@@ -1,7 +1,7 @@
 #ifndef GFX_H
 #define GFX_H
 
-#include "libultra/ultra64.h"
+#include <libultraship.h>
 #include "sf64math.h"
 #include "libc/stdbool.h"
 
@@ -64,16 +64,12 @@
 
 #define VTX_T(x,y,z,s,t,cr,cg,cb,a) { { x, y, z }, 0, { s, t }, { cr, cg, cb, a } }
 
-typedef struct {
-    u8 r, g, b;
-} Color_RGB8; // size = 0x3
-
 typedef union {
     u16 data[SCREEN_HEIGHT * SCREEN_WIDTH];
     u16 array[SCREEN_HEIGHT][SCREEN_WIDTH];
 } FrameBuffer; // size = 0x25800
 
-typedef bool (*OverrideLimbDraw)(s32 limbIndex, Gfx** dList,  Vec3f* pos, Vec3f* rot, void* this);
+typedef bool (*OverrideLimbDraw)(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* this);
 typedef void (*PostLimbDraw)(s32, Vec3f*, void*);
 
 typedef struct {
@@ -104,12 +100,12 @@ void Graphics_NMIWipe(void);
 
 void Lights_SetOneLight(Gfx** dList, s32 dirX, s32 dirY, s32 dirZ, s32 colR, s32 colG, s32 colB, s32 ambR, s32 ambG, s32 ambB);
 void Lights_SetTwoLights(Gfx** dList, s32 dir1x, s32 dir1y, s32 dir1z, s32 dir2x, s32 dir2y, s32 dir2z, s32 col1r, s32 col1g,
-                   s32 col1b, s32 col2r, s32 col2g, s32 col2b, s32 ambR, s32 ambG, s32 ambB);  
+                   s32 col1b, s32 col2r, s32 col2g, s32 col2b, s32 ambR, s32 ambG, s32 ambB);
 
 char* Graphics_ClearPrintBuffer(char *buf, s32 fill, s32 len);
 s32 Graphics_Printf(const char *fmt, ...);
 void Texture_Scroll(u16 *texture, s32 width, s32 height, u8 mode);
-void Texture_Mottle(u16 *dst, u16 *src, u8 mode);    
+void Texture_Mottle(u16 *dst, u16 *src, u8 mode);
 s32 Animation_GetLimbIndex(Limb* limb, Limb** skeleton);
 void Animation_DrawLimb(s32 mode, Limb* limb, Limb* *skeleton, Vec3f* jointTable, OverrideLimbDraw overrideLimbDraw, PostLimbDraw postLimbDraw, void* data);
 void Animation_DrawSkeleton(s32 mode, Limb** skeletonSegment, Vec3f* jointTable, OverrideLimbDraw overrideLimbDraw, PostLimbDraw postLimbDraw, void* data, Matrix* transform);
