@@ -30,7 +30,7 @@ void Overlay_LoadSegment(void* vRomAddress, void* dest, ptrdiff_t size) {
     s32 i;
     Lib_FillScreen(true);
     sFillTimer = 3;
-    D_80161A39 = true;
+    D_game_80161A39 = true;
 }
 
 u8 Overlay_Init(OverlayInit* ovlInit) {
