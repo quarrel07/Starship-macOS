@@ -53,6 +53,8 @@ s32 Save_Write(void) {
 }
 
 s32 Save_Read(void) {
+
+    return 0;
     OSMesg* sp24;
     s32 i;
 

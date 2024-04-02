@@ -49,9 +49,9 @@ extern Mtx gIdentityMtx; // 800C4620
 extern Matrix gIdentityMatrix; //800C4660
 
 extern Matrix* gGfxMatrix;
-extern Matrix sGfxMatrixStack[0x20];
+extern Matrix sGfxMatrixStack[];
 extern Matrix* gCalcMatrix;
-extern Matrix sCalcMatrixStack[0x20];
+extern Matrix sCalcMatrixStack[];
 
 f32 Math_ModF(f32 value, f32 mod);
 void Rand_Init(void);

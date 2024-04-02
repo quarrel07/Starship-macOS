@@ -13,7 +13,7 @@ TimerTask* Timer_AllocateTask(void) {
     return NULL;
 }
 
-s32 Timer_CreateTask(u64 time, TimerAction action, s32* address, s32 value) {
+int32_t Timer_CreateTask(uint64_t time, TimerAction action, s32* address, s32 value) {
     TimerTask* task = Timer_AllocateTask();
 
     if (task == NULL) {
@@ -41,10 +41,4 @@ void Timer_CompleteTask(TimerTask* task) {
     task->active = false;
 }
 
-void Timer_Wait(u64 time) {
-    OSTimer timer;
-    OSMesg dummy;
-
-    osSetTimer(&timer, time, 0, &gTimerWaitMsgQueue, OS_MESG_PTR(NULL));
-    osRecvMesg(&gTimerWaitMsgQueue, &dummy, OS_MESG_BLOCK);
-}
+void

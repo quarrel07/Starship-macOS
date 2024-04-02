@@ -11,9 +11,12 @@
 
 extern "C" {
 float gInterpolationStep = 0.0f;
+#include <sf64thread.h>
+#include <macros.h>
 }
 
 GameEngine* GameEngine::Instance;
+// TimerTask sTimerTasks[0x10];
 
 GameEngine::GameEngine() {
     std::vector<std::string> OTRFiles;
@@ -116,4 +119,71 @@ extern "C" uint32_t GameEngine_GetGameVersion() {
 extern "C" int GameEngine_OTRSigCheck(const char* data) {
     static const char* sOtrSignature = "__OTR__";
     return strncmp(data, sOtrSignature, strlen(sOtrSignature)) == 0;
+}
+
+extern "C" float SIN_DEG(float angle) {
+    return sinf(M_DTOR * angle);
+}
+extern "C" float COS_DEG(float angle) {
+    return cosf(M_DTOR * angle);
+}
+
+struct TimedEntry {
+    uint64_t duration;
+    TimerAction action;
+    int32_t* address;
+    int32_t value;
+    bool active;
+};
+
+std::vector<TimedEntry> gTimerTasks;
+
+
+uint64_t Timer_GetCurrentMillis() {
+    return SDL_GetTicks();
+}
+
+extern "C" int32_t Timer_CreateTask(uint64_t time, TimerAction action, int32_t* address, int32_t value) {
+    const auto millis = Timer_GetCurrentMillis();
+    TimedEntry entry = {
+        .duration = millis + CYCLES_TO_MSEC_PC(time),
+        .action = action,
+        .address = address,
+        .value = value,
+        .active = true,
+    };
+
+    gTimerTasks.push_back(entry);
+
+    return gTimerTasks.size() - 1;
+}
+
+extern "C" void Timer_Increment(int32_t* address, int32_t value) {
+    *address += value;
+}
+
+extern "C" void Timer_SetValue(int32_t* address, int32_t value) {
+    *address = value;
+}
+
+void Timer_CompleteTask(TimedEntry& task) {
+    if (task.action != nullptr) {
+        task.action(task.address, task.value);
+    }
+    task.active = false;
+}
+
+extern "C" void Timer_Update() {
+
+    if(gTimerTasks.empty()) {
+        return;
+    }
+
+    const auto millis = Timer_GetCurrentMillis();
+
+    for (auto& task : gTimerTasks) {
+        if (task.active && millis >= task.duration) {
+            Timer_CompleteTask(task);
+        }
+    }
 }

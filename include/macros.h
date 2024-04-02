@@ -21,7 +21,7 @@
 #define RAND_INT_SEEDED(max) ((s32)(Rand_ZeroOneSeeded()*(max)))
 #define RAND_FLOAT_CENTERED_SEEDED(width) ((Rand_ZeroOneSeeded()-0.5f)*(width))
 
-#define SEGMENTED_TO_VIRTUAL(segment) ((void*)OS_PHYSICAL_TO_K0(gSegments[((uintptr_t)(segment)<<4)>>0x1C]+(((uintptr_t)(segment))&0xFFFFFF)))
+#define SEGMENTED_TO_VIRTUAL(segment) (segment)
 
 #define ARRAY_COUNT(arr) (s32)(sizeof(arr) / sizeof(arr[0]))
 #define ARRAY_COUNTU(arr) (u32)(sizeof(arr) / sizeof(arr[0]))
@@ -39,15 +39,15 @@
 #define RAD_TO_DEG(radians) (((radians) * 180.0f) / M_PI)
 #define DEG_TO_RAD(degrees) (((degrees) / 180.0f) * M_PI)
 
-// TODO: Fix these
-#define SIN_DEG(angle) /*sinf*/(M_DTOR * angle)
-#define COS_DEG(angle) /*cosf*/(M_DTOR * angle)
+extern f32 SIN_DEG(f32 angle);
+extern f32 COS_DEG(f32 angle);
 
 #define USEC_TO_CYCLES(n) (((u64)(n)*(OS_CLOCK_RATE/15625LL))/(1000000LL/15625LL))
 #define MSEC_TO_CYCLES(n) (USEC_TO_CYCLES((n) * 1000LL))
 
 #define CYCLES_TO_USEC(c)    (((u64)(c)*(1000000LL/15625LL))/(OS_CLOCK_RATE/15625LL))
 #define CYCLES_TO_MSEC(c) ((s32)CYCLES_TO_USEC(c)/1000)
+#define CYCLES_TO_MSEC_PC(c) (CYCLES_TO_USEC(c)/1000)
 
 /*
  * Macros for libultra

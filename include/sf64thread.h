@@ -28,7 +28,7 @@ typedef struct {
     /* 0x00 */ u8 active;
     /* 0x08 */ OSTimer timer;
     /* 0x28 */ TimerAction action;
-    /* 0x2C */ s32* address;
+    /* 0x2C */ uintptr_t address;
     /* 0x30 */ s32 value;
 } TimerTask; // size = 0x38, 0x8 aligned
 

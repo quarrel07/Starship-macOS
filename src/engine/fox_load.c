@@ -27,24 +27,28 @@ OverlayInit sCurrentOverlay = {
 };
 
 void Overlay_LoadSegment(void* vRomAddress, void* dest, ptrdiff_t size) {
-    // s32 i;
-    // for (i = 0; gDmaTable[i].pRom.end != NULL; i++) {
-    //     if (gDmaTable[i].vRomAddress == vRomAddress) {
-    //         if (gDmaTable[i].compFlag == 0) {
-    //             Lib_DmaRead(gDmaTable[i].pRom.start, dest, size);
-    //         } else {
-    //             Lib_FillScreen(true);
-    //             sFillTimer = 3;
-    //             D_80161A39 = true;
-    //             Lib_DmaRead(gDmaTable[i].pRom.start, gFrameBuffers, SEGMENT_SIZE(gDmaTable[i].pRom));
-    //             Mio0_Decompress(gFrameBuffers, dest);
-    //         }
-    //         break;
-    //     }
-    // }
+    s32 i;
+    for (i = 0; gDmaTable[i].pRom.end != NULL; i++) {
+        if (gDmaTable[i].vRomAddress == vRomAddress) {
+            if (gDmaTable[i].compFlag == 0) {
+                Lib_DmaRead(gDmaTable[i].pRom.start, dest, size);
+            } else {
+                Lib_FillScreen(true);
+                sFillTimer = 3;
+                D_80161A39 = true;
+                // Lib_DmaRead(gDmaTable[i].pRom.start, gFrameBuffers, SEGMENT_SIZE(gDmaTable[i].pRom));
+                // Mio0_Decompress(gFrameBuffers, dest);
+            }
+            break;
+        }
+    }
 }
 
 u8 Overlay_Init(OverlayInit* ovlInit) {
+
+    sCurrentOverlay = *ovlInit;
+    return true;
+
     u8* ramPtr = SEGMENT_VRAM_START(ovl_i1);
     u8 segment;
     u8 changeOvl = false;
@@ -174,13 +178,13 @@ u8 Overlay_Load(u8 ovlSetup, u8 ovlStage) {
         case OVL_SETUP_VERSUS:
             changeOvl = Overlay_Init(&sOvli2_Versus[ovlStage]);
             if (changeOvl == true) {
-                Audio_SetAudioSpec(3, 0x310);
+                // Audio_SetAudioSpec(3, 0x310);
             }
             break;
         case OVL_SETUP_LOGO:
             changeOvl = Overlay_Init(&sNoOvl_Logo[ovlStage]); // Logo does not load an overlay file
             if (changeOvl == true) {
-                Audio_SetAudioSpec(0, 0xE);
+                // Audio_SetAudioSpec(0, 0xE);
             }
             break;
         case OVL_SETUP_CREDITS:

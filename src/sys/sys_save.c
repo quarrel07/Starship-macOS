@@ -19,7 +19,7 @@ s32 Save_WriteBlock(s32 arg0, u8* arg1) {
         (void) "ＥＥＰＲＯＭ インターフェース回路反応なし (ＷＲＩＴＥ)\n";
         return -1;
     }
-    Timer_Wait(MSEC_TO_CYCLES(15));
+    // Timer_Wait(MSEC_TO_CYCLES(15));
     (void) "EEPROM WRITE %02X: %02X %02X %02X %02X %02X %02X %02X %02X\n";
     return 0;
 }

@@ -95,6 +95,7 @@ list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_edata_1C.c")
 list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_rcp_setup.c")
 list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_load_inits.c")
 list(FILTER ALL_FILES EXCLUDE REGEX "src/overlays/ovl_ending/fox_end2_data.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/main/sys_timer.c")
 
 # list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_hud.c")
 # list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_360.c")

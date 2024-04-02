@@ -224,9 +224,11 @@ void Timer_ThreadEntry(void* arg0) {
 
     while (1) {
         osRecvMesg(&gTimerTaskMsgQueue, &sp24, OS_MESG_BLOCK);
-        Timer_CompleteTask(sp24.ptr);
+        // Timer_CompleteTask(sp24.ptr);
     }
 }
+
+extern void Graphics_PushFrame(Gfx* masterDL);
 
 void Graphics_ThreadEntry(void* arg0) {
     u8 i;
@@ -247,44 +249,66 @@ void Graphics_ThreadEntry(void* arg0) {
         gSPEndDisplayList(gMasterDisp++);
     }
     Graphics_SetTask();
-    while (1) {
-        gSysFrameCount++;
-        Graphics_InitializeTask(gSysFrameCount);
-        osRecvMesg(&gControllerMsgQueue, NULL, OS_MESG_BLOCK);
-        osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_RUMBLE), OS_MESG_PRI_NORMAL);
-        Controller_UpdateInput();
-        osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
-        if (gControllerPress[3].button & U_JPAD) {
-            Main_SetVIMode();
-        }
-        {
-            gSPSegment(gUnkDisp1++, 0, 0);
-            gSPDisplayList(gMasterDisp++, gGfxPool->unkDL1);
-            Game_Update();
-            if (gStartNMI == 1) {
-                Graphics_NMIWipe();
-            }
-            gSPEndDisplayList(gUnkDisp1++);
-            gSPEndDisplayList(gUnkDisp2++);
-            gSPDisplayList(gMasterDisp++, gGfxPool->unkDL2);
-            gDPFullSync(gMasterDisp++);
-            gSPEndDisplayList(gMasterDisp++);
-        }
-        osRecvMesg(&gGfxTaskMsgQueue, NULL, OS_MESG_BLOCK);
-        Graphics_SetTask();
-        if (gFillScreen == 0) {
-            osViSwapBuffer(&gFrameBuffers[(gSysFrameCount - 1) % 3]);
-        }
-        // func_80007FE4(&gFrameBuffers[(gSysFrameCount - 1) % 3], SCREEN_WIDTH, 16);
+    // while (1) {
 
-        var_v1 = MIN(D_80137E78, 4);
-        var_v2 = MAX(var_v1, gGfxVImsgQueue.validCount + 1);
-        for (i = 0; i < var_v2; i += 1) { // Can't be ++
-            osRecvMesg(&gGfxVImsgQueue, NULL, OS_MESG_BLOCK);
-        }
+    // }
+}
 
-        Audio_Update();
+void Graphics_ThreadUpdate(){
+
+    if (GfxDebuggerIsDebugging()) {
+        Graphics_PushFrame(gGfxPool->masterDL);
+        return;
     }
+
+    gSysFrameCount++;
+    Graphics_InitializeTask(gSysFrameCount);
+    osRecvMesg(&gControllerMsgQueue, NULL, OS_MESG_BLOCK);
+    osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_RUMBLE), OS_MESG_PRI_NORMAL);
+    Controller_UpdateInput();
+    osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
+    if (gControllerPress[3].button & U_JPAD) {
+        Main_SetVIMode();
+    }
+    {
+        gSPSegment(gUnkDisp1++, 0, 0);
+        gSPDisplayList(gMasterDisp++, gGfxPool->unkDL1);
+        Game_Update();
+        if (gStartNMI == 1) {
+            Graphics_NMIWipe();
+        }
+        gSPEndDisplayList(gUnkDisp1++);
+        gSPEndDisplayList(gUnkDisp2++);
+        gSPDisplayList(gMasterDisp++, gGfxPool->unkDL2);
+        gDPFullSync(gMasterDisp++);
+        gSPEndDisplayList(gMasterDisp++);
+    }
+    osRecvMesg(&gGfxTaskMsgQueue, NULL, OS_MESG_BLOCK);
+    Graphics_SetTask();
+
+    if(GfxDebuggerIsDebuggingRequested()) {
+        GfxDebuggerDebugDisplayList(gGfxPool->masterDL);
+    }
+
+    Graphics_PushFrame(gGfxPool->masterDL);
+
+    if (gFillScreen == 0) {
+        osViSwapBuffer(&gFrameBuffers[(gSysFrameCount - 1) % 3]);
+    }
+
+    Controller_ReadData();
+    // LTODO: FAULT_CRASH
+    // func_80007FE4(&gFrameBuffers[(gSysFrameCount - 1) % 3], SCREEN_WIDTH, 16);
+
+    // LTODO: Figure out what this is
+    // var_v1 = MIN(D_80137E78, 4);
+    // var_v2 = MAX(var_v1, gGfxVImsgQueue.validCount + 1);
+    // for (i = 0; i < var_v2; i += 1) { // Can't be ++
+    //     osRecvMesg(&gGfxVImsgQueue, NULL, OS_MESG_BLOCK);
+    // }
+
+    // LTODO: There is no audio for now :P
+    // Audio_Update();
 }
 
 void Main_InitMesgQueues(void) {
@@ -424,45 +448,41 @@ void Main_ThreadEntry(void* arg0) {
     OSMesg ogMsg;
     u32 mesg;
 
-    // osCreateThread(&gAudioThread, THREAD_ID_AUDIO, Audio_ThreadEntry, arg0,
-    //                gAudioThreadStack + sizeof(gAudioThreadStack), 80);
-    // osStartThread(&gAudioThread);
-    // osCreateThread(&gGraphicsThread, THREAD_ID_GRAPHICS, Graphics_ThreadEntry, arg0,
-    //                gGraphicsThreadStack + sizeof(gGraphicsThreadStack), 40);
-    // osStartThread(&gGraphicsThread);
-    // osCreateThread(&gTimerThread, THREAD_ID_TIMER, Timer_ThreadEntry, arg0,
-    //                gTimerThreadStack + sizeof(gTimerThreadStack), 60);
-    // osStartThread(&gTimerThread);
-    // osCreateThread(&gSerialThread, THREAD_ID_SERIAL, SerialInterface_ThreadEntry, arg0,
-    //                gSerialThreadStack + sizeof(gSerialThreadStack), 20);
-    // osStartThread(&gSerialThread);
+    // LTODO: Implement audio
+    // Audio_ThreadEntry(NULL);
+    Graphics_ThreadEntry(NULL);
+    Controller_Init();
 
-    Main_InitMesgQueues();
+    // LTODO: Implement timers
+    // Timer_ThreadEntry(NULL);
 
-    while (true) {
-        osRecvMesg(&gMainThreadMsgQueue, &ogMsg, OS_MESG_BLOCK);
-        mesg = ogMsg.data32;
 
-        switch (mesg) {
-            case EVENT_MESG_VI:
-                osSendMesg(&gAudioVImsgQueue, OS_MESG_32(EVENT_MESG_VI), OS_MESG_PRI_NORMAL);
-                osSendMesg(&gGfxVImsgQueue, OS_MESG_32(EVENT_MESG_VI), OS_MESG_PRI_NORMAL);
-                Main_GetNewTasks();
-                break;
-            case EVENT_MESG_SP:
-                Main_HandleRSP();
-                break;
-            case EVENT_MESG_DP:
-                Main_HandleRDP();
-                break;
-            case EVENT_MESG_PRENMI:
-                gStartNMI = 1;
-                break;
-        }
-        if (gStopTasks == 0) {
-            Main_StartNextTask();
-        }
-    }
+    // N64 Stuff should not be needed
+    // Main_InitMesgQueues();
+    // while (true) {
+    //     osRecvMesg(&gMainThreadMsgQueue, &ogMsg, OS_MESG_BLOCK);
+    //     mesg = ogMsg.data32;
+
+    //     switch (mesg) {
+    //         case EVENT_MESG_VI:
+    //             osSendMesg(&gAudioVImsgQueue, OS_MESG_32(EVENT_MESG_VI), OS_MESG_PRI_NORMAL);
+    //             osSendMesg(&gGfxVImsgQueue, OS_MESG_32(EVENT_MESG_VI), OS_MESG_PRI_NORMAL);
+    //             Main_GetNewTasks();
+    //             break;
+    //         case EVENT_MESG_SP:
+    //             Main_HandleRSP();
+    //             break;
+    //         case EVENT_MESG_DP:
+    //             Main_HandleRDP();
+    //             break;
+    //         case EVENT_MESG_PRENMI:
+    //             gStartNMI = 1;
+    //             break;
+    //     }
+    //     if (gStopTasks == 0) {
+    //         Main_StartNextTask();
+    //     }
+    // }
 }
 
 void Idle_ThreadEntry(void* arg0) {

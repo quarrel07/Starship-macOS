@@ -1724,6 +1724,9 @@ void Audio_PlayActiveSfx(u8 bankId) {
 }
 
 void Audio_KillSfxByBank(u8 bankId) {
+    // LAudioTODO: Stub for now
+    return;
+
     SfxBankEntry* entry;
     u8 next = sSfxBanks[bankId][0].next;
 
@@ -1744,6 +1747,8 @@ void Audio_KillSfxByBank(u8 bankId) {
 }
 
 void Audio_StopSfxByBankAndSource(u8 bankId, f32* sfxSource) {
+    // LAudioTODO: Stub for now
+    return;
     SfxBankEntry* entry;
     u8 curIndex = 0;
     u8 nextIndex = sSfxBanks[bankId][0].next;
@@ -1765,6 +1770,8 @@ void Audio_StopSfxByBankAndSource(u8 bankId, f32* sfxSource) {
 }
 
 void Audio_KillSfxByBankAndSource(u8 bankId, f32* sfxSource) {
+    // LAudioTODO: Stub for now
+    return;
     SfxBankEntry sp18;
 
     Audio_StopSfxByBankAndSource(bankId, sfxSource);
@@ -1774,6 +1781,8 @@ void Audio_KillSfxByBankAndSource(u8 bankId, f32* sfxSource) {
 }
 
 void Audio_KillSfxBySource(f32* sfxSource) {
+    // LAudioTODO: Stub for now
+    return;
     u8 i;
     SfxBankEntry sp24;
 
@@ -1785,6 +1794,9 @@ void Audio_KillSfxBySource(f32* sfxSource) {
 }
 
 void Audio_KillSfxBySourceAndId(f32* sfxSource, u32 sfxId) {
+    // LAudioTODO: Stub for now
+    return;
+
     u32 bankId = SFX_BANK(sfxId);
     u8 next = sSfxBanks[bankId][0].next;
     u8 current = 0;
@@ -1812,6 +1824,8 @@ void Audio_KillSfxBySourceAndId(f32* sfxSource, u32 sfxId) {
 }
 
 void Audio_KillSfxByTokenAndId(u8 token, u32 sfxId) {
+    // LAudioTODO: Stub for now
+    return;
     u32 bankId = SFX_BANK(sfxId);
     u8 next = sSfxBanks[bankId][0].next;
     u8 current = 0;
@@ -1838,6 +1852,8 @@ void Audio_KillSfxByTokenAndId(u8 token, u32 sfxId) {
 }
 
 void Audio_KillSfxById(u32 sfxId) {
+    // LAudioTODO: Stub for now
+    return;
     u32 bankId = SFX_BANK(sfxId);
     u8 next = sSfxBanks[bankId][0].next;
     u8 current = 0;
@@ -1991,6 +2007,8 @@ s32 Audio_GetCurrentVoice(void) {
 }
 
 s32 Audio_GetCurrentVoiceStatus(void) {
+    // LAudioTODO: Stub for now
+    return 0;
     SequenceChannel* channel = gSeqPlayers[SEQ_PLAYER_VOICE].channels[15];
     SequenceLayer* layer = channel->layers[0];
 
