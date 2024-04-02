@@ -17,6 +17,7 @@ assets/yaml/us/ast_test.yaml
 src/assets/*
 include/assets/*
 /build
+build-new/
 tools/mio0
 tools/ido-recomp
 debug/

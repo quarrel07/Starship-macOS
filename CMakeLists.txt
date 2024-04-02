@@ -45,7 +45,7 @@ endif()
 
 # Set game compilation version
 set(VERSION us)
-set(USE_NETWORKING ON)
+set(USE_NETWORKING OFF)
 
 # Add compile definitions for the target
 add_compile_definitions(

@@ -4,7 +4,7 @@
 #include <libultra/types.h>
 #include <math.h>
 
-#define M_PI    3.14159265358979323846264338327950288
+#define M_PI    3.14159265358979323846264338327950288f
 #define M_DTOR	(M_PI / 180.0f)
 #define M_RTOD	(180.0f / M_PI)
 #define M_SQRT2 1.41421356237309504880f

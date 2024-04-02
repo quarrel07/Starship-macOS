@@ -2,6 +2,7 @@
 #define SF64_MATH_H
 
 #include <libultraship.h>
+#include <math.h>
 
 typedef struct {
     /* 0x0 */ f32 x;
@@ -97,10 +98,6 @@ f32 Math_FAcosF(f32);
 
 #define __sinf sinf
 #define __cosf cosf
-
-s64 __ull_div(s64, s64);
-s64 __ll_mul(s64, s64);
-s64 __ll_rshift(s64, s64);
 
 f32 Math_FloorF(f32);
 f32 Math_CeilF(f32);

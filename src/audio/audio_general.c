@@ -2008,7 +2008,7 @@ s32 Audio_GetCurrentVoice(void) {
 
 s32 Audio_GetCurrentVoiceStatus(void) {
     // LAudioTODO: Stub for now
-    return 0;
+    return 1;
     SequenceChannel* channel = gSeqPlayers[SEQ_PLAYER_VOICE].channels[15];
     SequenceLayer* layer = channel->layers[0];
 

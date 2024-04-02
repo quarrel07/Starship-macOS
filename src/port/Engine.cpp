@@ -5,7 +5,7 @@
 
 #include <Fast3D/gfx_pc.h>
 #include <Fast3D/gfx_rendering_api.h>
-#include <SDL2/SDL_net.h>
+#include <SDL2/SDL.h>
 
 #include <utility>
 
@@ -122,10 +122,10 @@ extern "C" int GameEngine_OTRSigCheck(const char* data) {
 }
 
 extern "C" float SIN_DEG(float angle) {
-    return sinf(M_DTOR * angle);
+    return SDL_sinf(M_DTOR * angle);
 }
 extern "C" float COS_DEG(float angle) {
-    return cosf(M_DTOR * angle);
+    return SDL_cosf(M_DTOR * angle);
 }
 
 struct TimedEntry {

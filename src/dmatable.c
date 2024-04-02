@@ -5,7 +5,7 @@
 #define DMA_ENTRY_NONE \
     { NULL, { NULL, NULL }, false }
 
-DmaEntry gDmaTable[90] = {
+// DmaEntry gDmaTable[90] = {
     // { SEGMENT_ROM_START(makerom), { SEGMENT_ROM_START(makerom), SEGMENT_ROM_END(makerom) }, false },
     // { SEGMENT_ROM_START(main), { SEGMENT_ROM_START(main), SEGMENT_ROM_END(main) }, false },
     // { SEGMENT_ROM_START(dma_table), { SEGMENT_ROM_START(dma_table), SEGMENT_ROM_END(dma_table) }, false },
@@ -84,4 +84,4 @@ DmaEntry gDmaTable[90] = {
     // { SEGMENT_ROM_START(ovl_menu), { SEGMENT_ROM_START(ovl_menu), SEGMENT_ROM_END(ovl_menu) }, false },
     // { SEGMENT_ROM_START(ovl_ending), { SEGMENT_ROM_START(ovl_ending), SEGMENT_ROM_END(ovl_ending) }, false },
     // { SEGMENT_ROM_START(ovl_unused), { SEGMENT_ROM_START(ovl_unused), SEGMENT_ROM_END(ovl_unused) }, false },
-};
+// };
