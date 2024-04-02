@@ -201,6 +201,7 @@ extern u8 D_Tex_800DB4B8[];
 extern Gfx D_Gfx_800D94D0[];
 
 extern OSTime osClockRate;
-u32 osViClock = 0x02E6D354;
+
+#define osViClock 0x02E6D354;
 
 #endif // VARIABLES_H

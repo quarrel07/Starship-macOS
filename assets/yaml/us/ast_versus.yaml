@@ -35,26 +35,26 @@ D_versus_3000380:
 D_versus_30003A0:
   { type: TEXTURE, ctype: u8, format: CI4, width:  64, height: 10, offset: 0x30003A0, symbol: D_versus_30003A0, tlut: 0x30004E0 }
 D_versus_30004E0:
-  { type: TEXTURE, ctype: u16, format: TLUT, colors: 16, offset: 0x30004E0, symbol: D_versus_30004E0 }
+  { type: TEXTURE, ctype: u16, format: TLUT, colors: 17, offset: 0x30004E0, symbol: D_versus_30004E0 }
 
-BLOB_3000500:
-  { type: BLOB, size: 0x10, offset: 0x3000500, symbol: BLOB_3000500} # 17th color for D_versus_30004E0?
+# BLOB_3000500:
+#   { type: BLOB, size: 0x10, offset: 0x3000500, symbol: BLOB_3000500} # 17th color for D_versus_30004E0?
 
 D_versus_3000510:
   { type: TEXTURE, ctype: u8, format: CI4, width:  80, height: 10, offset: 0x3000510, symbol: D_versus_3000510, tlut: 0x30006A0 }
 D_versus_30006A0:
-  { type: TEXTURE, ctype: u16, format: TLUT, colors: 16, offset: 0x30006A0, symbol: D_versus_30006A0 }
+  { type: TEXTURE, ctype: u16, format: TLUT, colors: 17, offset: 0x30006A0, symbol: D_versus_30006A0 }
 
-BLOB_30006C0:
-  { type: BLOB, size: 0x10, offset: 0x30006C0, symbol: BLOB_30006C0} # 17th color for D_versus_30006A0?
+# BLOB_30006C0:
+#   { type: BLOB, size: 0x10, offset: 0x30006C0, symbol: BLOB_30006C0} # 17th color for D_versus_30006A0?
 
 D_versus_30006D0:
   { type: TEXTURE, ctype: u8, format: CI4, width:  64, height: 10, offset: 0x30006D0, symbol: D_versus_30006D0, tlut: 0x3000810 }
 D_versus_3000810:
-  { type: TEXTURE, ctype: u16, format: TLUT, colors: 16, offset: 0x3000810, symbol: D_versus_3000810 }
+  { type: TEXTURE, ctype: u16, format: TLUT, colors: 17, offset: 0x3000810, symbol: D_versus_3000810 }
 
-BLOB_3000830:
-  { type: BLOB, size: 0x10, offset: 0x3000830, symbol: BLOB_3000830} # 17th color for D_versus_3000810?
+# BLOB_3000830:
+#   { type: BLOB, size: 0x10, offset: 0x3000830, symbol: BLOB_3000830} # 17th color for D_versus_3000810?
 
 D_versus_3000840:
   { type: TEXTURE, ctype: u8, format: CI4, width:  32, height: 10, offset: 0x3000840, symbol: D_versus_3000840, tlut: 0x30008E0 }
@@ -738,25 +738,24 @@ D_versus_302F044:
 
 D_versus_302E56C:
   {type: VEC3F, count: 20, offset: 0x302E56C, symbol: D_versus_302E56C}
-  
+
 D_versus_302E65C:
   {type: VEC3F, count: 20, offset: 0x302E65C, symbol: D_versus_302E65C}
-  
+
 D_versus_302E74C:
   {type: VEC3F, count: 19, offset: 0x302E74C, symbol: D_versus_302E74C}
-  
+
 D_versus_302E830:
   {type: VEC3F, count: 25, offset: 0x302E830, symbol: D_versus_302E830}
-  
+
 D_versus_302E95C:
   {type: VEC3F, count: 20, offset: 0x302E95C, symbol: D_versus_302E95C}
-  
+
 D_versus_302EA4C:
   {type: VEC3F, count: 20, offset: 0x302EA4C, symbol: D_versus_302EA4C}
-  
+
 D_versus_302EB3C:
   {type: VEC3F, count: 19, offset: 0x302EB3C, symbol: D_versus_302EB3C}
-  
+
 D_versus_302EC20:
   {type: VEC3F, count: 25, offset: 0x302EC20, symbol: D_versus_302EC20}
-  

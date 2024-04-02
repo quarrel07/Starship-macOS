@@ -17,10 +17,10 @@ GameEngine* GameEngine::Instance;
 
 GameEngine::GameEngine() {
     std::vector<std::string> OTRFiles;
-    if (const std::string cube_path = LUS::Context::GetPathRelativeToAppDirectory("smcube.otr"); std::filesystem::exists(cube_path)) {
-        OTRFiles.push_back(cube_path);
-    }
-    if (const std::string sm64_otr_path = LUS::Context::GetPathRelativeToAppBundle("lylat.otr"); std::filesystem::exists(sm64_otr_path)) {
+    // if (const std::string cube_path = LUS::Context::GetPathRelativeToAppDirectory("lylat.otr"); std::filesystem::exists(cube_path)) {
+    //     OTRFiles.push_back(cube_path);
+    // }
+    if (const std::string sm64_otr_path = LUS::Context::GetPathRelativeToAppBundle("sm64.otr"); std::filesystem::exists(sm64_otr_path)) {
         OTRFiles.push_back(sm64_otr_path);
     }
     if (const std::string patches_path = LUS::Context::GetPathRelativeToAppDirectory("mods"); !patches_path.empty() && std::filesystem::exists(patches_path)) {
@@ -33,7 +33,7 @@ GameEngine::GameEngine() {
         }
     }
     this->context = LUS::Context::CreateInstance("Lylat64", "sf64", "lylat.cfg.json", OTRFiles,
-                                                 {0xFF2B5A63, 0xE3DAA4E}, 3);
+                                                 {}, 3);
     // this->context->GetResourceManager()->GetResourceLoader()->RegisterResourceFactory(
     //     LUS::ResourceType::SAnim, "Animation", std::make_shared<CubeOS::AnimationFactory>());
 }

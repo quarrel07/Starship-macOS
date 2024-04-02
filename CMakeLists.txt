@@ -90,9 +90,12 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 # Exclude specific files from the ALL_FILES list
 list(FILTER ALL_FILES EXCLUDE REGEX ".*.inc.c")
 
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_demo.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_versus.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_edisplay.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_A4290_colheaders.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_edata_1C.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_rcp_setup.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_load_inits.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/overlays/ovl_ending/fox_end2_data.c")
+
 # list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_hud.c")
 # list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_360.c")
 # list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_beam.c")
