@@ -36,7 +36,7 @@ void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
             for (var_a0 = 0; var_a0 < width; var_a0++) {
                 temp_a3 = temp_t0[var_a0];
                 for (var_t4 = 1; var_t4 < height; var_t4++) {
-                    temp_t0[(var_t4 - 1) * width + var_a0] = temp_t0[(var_t4) *width + var_a0];
+                    temp_t0[(var_t4 - 1) * width + var_a0] = temp_t0[(var_t4) * width + var_a0];
                 }
                 temp_t0[(height - 1) * width + var_a0] = temp_a3;
             }
@@ -45,7 +45,7 @@ void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
             for (var_a0 = 0; var_a0 < width; var_a0++) {
                 temp_a3 = temp_t0[(height - 1) * width + var_a0];
                 for (var_t4 = height - 2; var_t4 >= 0; var_t4--) {
-                    temp_t0[(var_t4 + 1) * width + var_a0] = temp_t0[(var_t4) *width + var_a0];
+                    temp_t0[(var_t4 + 1) * width + var_a0] = temp_t0[(var_t4) * width + var_a0];
                 }
                 temp_t0[var_a0] = temp_a3;
             }
@@ -69,6 +69,9 @@ void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
             }
             break;
     }
+
+    // LTodo: we should only invalidate one texture
+    gSPInvalidateTexCache(gMasterDisp++, NULL);
 }
 
 void Texture_Mottle(u16* dst, u16* src, u8 mode) {
@@ -83,7 +86,7 @@ void Texture_Mottle(u16* dst, u16* src, u8 mode) {
     switch (mode) {
         case 2:
             for (var_s3 = 0; var_s3 < 32 * 32; var_s3 += 32) {
-                temp_ft3 = 3.0f * __sinf((s32) (((var_s3 / 32) + (gGameFrameCount / 4)) % 32U) * (2 * M_PI / 32));
+                temp_ft3 = 3.0f * sinf((s32) (((var_s3 / 32) + (gGameFrameCount / 4)) % 32U) * (2 * M_PI / 32));
                 for (var_v1 = 0; var_v1 < 32; var_v1++) {
                     dst[var_s3 + (temp_ft3 + var_v1) % 32U] = src[var_s3 + var_v1];
                 }
@@ -91,7 +94,7 @@ void Texture_Mottle(u16* dst, u16* src, u8 mode) {
             break;
         case 3:
             for (var_s3 = 0; var_s3 < 22 * 64; var_s3 += 64) {
-                temp_ft3 = __sinf((s32) (((var_s3 / 64) + (gGameFrameCount / 4)) % 32U) * (2 * M_PI / 8));
+                temp_ft3 = sinf((s32) (((var_s3 / 64) + (gGameFrameCount / 4)) % 32U) * (2 * M_PI / 8));
                 for (var_v1 = 0; var_v1 < 64; var_v1++) {
                     dst[var_s3 + (temp_ft3 + var_v1) % 64U] = src[var_s3 + var_v1];
                 }
@@ -99,7 +102,7 @@ void Texture_Mottle(u16* dst, u16* src, u8 mode) {
             break;
         case 1:
             for (var_s3 = 0; var_s3 < 16 * 16; var_s3 += 16) {
-                temp_ft3 = 2.0f * __sinf((s32) (((var_s3 / 16) + (gGameFrameCount / 2)) % 16U) * (2 * M_PI / 16));
+                temp_ft3 = 2.0f * sinf((s32) (((var_s3 / 16) + (gGameFrameCount / 2)) % 16U) * (2 * M_PI / 16));
                 for (var_v1 = 0; var_v1 < 16; var_v1++) {
                     dst[var_s3 + (temp_ft3 + var_v1) % 16U] = src[var_s3 + var_v1];
                 }
@@ -107,7 +110,7 @@ void Texture_Mottle(u16* dst, u16* src, u8 mode) {
             break;
         case 0:
             for (var_s3 = 0; var_s3 < 32 * 32; var_s3 += 32) {
-                temp_ft3 = 2.0f * __sinf((s32) (((var_s3 / 32) + (gGameFrameCount / 2)) % 32U) * (2 * M_PI / 32));
+                temp_ft3 = 2.0f * sinf((s32) (((var_s3 / 32) + (gGameFrameCount / 2)) % 32U) * (2 * M_PI / 32));
                 for (var_v1 = 0; var_v1 < 32; var_v1++) {
                     dst[var_s3 + (temp_ft3 + var_v1) % 32U] = src[var_s3 + var_v1];
                 }
@@ -117,12 +120,15 @@ void Texture_Mottle(u16* dst, u16* src, u8 mode) {
             var_s0_2 = (u8*) dst;
             var_s4_2 = (u8*) src;
             for (var_s3 = 0; var_s3 < 64 * 64; var_s3 += 64) {
-                temp_ft3 = 4.0f * __sinf((s32) (((var_s3 / 64) + (gGameFrameCount / 4)) % 32U) * (2 * M_PI / 32));
+                temp_ft3 = 4.0f * sinf((s32) (((var_s3 / 64) + (gGameFrameCount / 4)) % 32U) * (2 * M_PI / 32));
                 for (var_v1 = 0; var_v1 < 64; var_v1++) {
                     var_s0_2[var_s3 + (temp_ft3 + var_v1) % 64U] = var_s4_2[var_s3 + var_v1];
                 }
             }
     }
+
+    // LTodo: we should only invalidate one texture
+    gSPInvalidateTexCache(gMasterDisp++, NULL);
 }
 
 s32 Animation_GetLimbIndex(Limb* limb, Limb** skeleton) {
