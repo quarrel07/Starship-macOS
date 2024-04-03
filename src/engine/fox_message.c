@@ -69,13 +69,12 @@ bool Message_DisplayText(Gfx** gfxPtr, u16* msgPtr, s32 xPos, s32 yPos, s32 len)
     s32 xChar = xPos;
     s32 yChar = yPos;
     s32 i;
-    s32 print;
+    s32 print = false;
 
     gDPSetPrimColor((*gfxPtr)++, 0x00, 0x00, 255, 255, 255, 255);
     gDPSetTextureLUT((*gfxPtr)++, G_TT_RGBA16);
     gDPLoadTLUT((*gfxPtr)++, 64, 256, gTextCharPalettes);
 
-    // bug: if the for loop is skipped, print is never initialized
     for (i = 0; msgPtr[i] != MSGCHAR_END && i < len; i++) {
         print = false;
         switch (msgPtr[i]) {
