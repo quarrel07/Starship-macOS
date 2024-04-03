@@ -73,43 +73,39 @@ include_directories(
 
 # Collect source files to build the executable
 file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    "src/assets/*.c"
+    "src/audio/*.c"
+    "src/audio/*.h"
+    "src/engine/*.c"
+    "src/engine/*.h"
     "src/libultra/io/aisetfreq.c"
     "src/libultra/gu/sqrtf.c"
     "src/libultra/gu/mtxutil.c"
     "src/libultra/gu/ortho.c"
-    "src/main/*.c"
-    "src/main/*.h"
-    "src/port/*.h"
-    "src/port/*.cpp"
-    "src/assets/*.c"
     "src/overlays/*.c"
-    "src/port/importer/*.cpp"
-    "src/port/importer/types/*.cpp"
+    "src/overlays/*.h"
+    "src/port/*.h"
+    "src/port/*.c"
+    "src/port/*.cpp"
+    "src/sys/*.c"
+    "src/sys/*.h"
+    "src/1FA60.c"
+    "src/buffers.c"
+    "src/dmatable.c"
+    "src/libc_math64.c"
+    "src/libc_sprintf.c"
 )
 
 # Exclude specific files from the ALL_FILES list
 list(FILTER ALL_FILES EXCLUDE REGEX ".*.inc.c")
 
-list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_A4290_colheaders.c")
-list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_edata_1C.c")
-list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_rcp_setup.c")
-list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_load_inits.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/engine/fox_A4290_colheaders.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/engine/fox_edata_info.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/engine/fox_rcp_setup.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/engine/fox_load_inits.c")
 list(FILTER ALL_FILES EXCLUDE REGEX "src/overlays/ovl_ending/fox_end2_data.c")
-list(FILTER ALL_FILES EXCLUDE REGEX "src/main/sys_timer.c")
-
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_hud.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_360.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_beam.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_bg.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_play.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_effect.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_tank.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_edata.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_enmy.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_enmy2.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_edata_1C.c")
-# list(FILTER ALL_FILES EXCLUDE REGEX "src/main/fox_display.c")
-list(FILTER ALL_FILES EXCLUDE REGEX "src/main/sys_fault.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/sys/sys_timer.c")
+list(FILTER ALL_FILES EXCLUDE REGEX "src/sys/sys_fault.c")
 
 add_executable(${PROJECT_NAME} ${ALL_FILES} ${GENERATED_SOURCES})
 
