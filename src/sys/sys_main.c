@@ -266,6 +266,7 @@ void Graphics_ThreadUpdate(){
     osRecvMesg(&gControllerMsgQueue, NULL, OS_MESG_BLOCK);
     osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_RUMBLE), OS_MESG_PRI_NORMAL);
     Controller_UpdateInput();
+    Controller_ReadData();
     osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
     if (gControllerPress[3].button & U_JPAD) {
         Main_SetVIMode();
@@ -296,7 +297,7 @@ void Graphics_ThreadUpdate(){
         osViSwapBuffer(&gFrameBuffers[(gSysFrameCount - 1) % 3]);
     }
 
-    Controller_ReadData();
+    
     // LTODO: FAULT_CRASH
     // func_80007FE4(&gFrameBuffers[(gSysFrameCount - 1) % 3], SCREEN_WIDTH, 16);
 
