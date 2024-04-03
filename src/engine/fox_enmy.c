@@ -140,40 +140,20 @@ void Object_SetInfo(ObjectInfo* info, u32 objId) {
 }
 
 void Object_80_Initialize(Object_80* obj80) {
-    s32 i;
-    u8* ptr = (u8*) obj80;
-
-    for (i = 0; i < sizeof(Object_80); i++, ptr++) {
-        *ptr = 0;
-    }
+    memset(obj80, 0, sizeof(Object_80));
 }
 
 void Object_4C_Initialize(Object_4C* obj4C) {
-    s32 i;
-    u8* ptr = (u8*) obj4C;
-
-    for (i = 0; i < sizeof(Object_4C); i++, ptr++) {
-        *ptr = 0;
-    }
+    memset(obj4C, 0, sizeof(Object_4C));
 }
 
 void Actor_Initialize(Actor* actor) {
-    s32 i;
-    u8* ptr = (u8*) actor;
-
-    for (i = 0; i < sizeof(Actor); i++, ptr++) {
-        *ptr = 0;
-    }
+    memset(actor, 0, sizeof(Actor));
     actor->scale = 1.0f;
 }
 
 void Boss_Initialize(Boss* boss) {
-    s32 i;
-    u8* ptr = (u8*) boss;
-
-    for (i = 0; i < sizeof(Boss); i++, ptr++) {
-        *ptr = 0;
-    }
+    memset(boss, 0, sizeof(Boss));
     boss->unk_3F8 = 1.0f;
 }
 
