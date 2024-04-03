@@ -1,4 +1,5 @@
 #include "global.h"
+#include "mods.h"
 
 u16* Message_PtrFromId(u16 msgId) {
     s32 i;
@@ -40,10 +41,15 @@ s32 Message_GetWidth(u16* msgPtr) {
 }
 
 s32 Message_GetCharCount(u16* msgPtr) {
+#if MODS_LEVEL_SELECT == 1
+    if (gCurrentPlanet == 6) {
+        return 0;
+    }
+#endif
     s32 count = 0;
     u16* msgChar = msgPtr;
 
-    while (*msgChar != 0) {
+    while (*msgChar != NULL) {
         count++;
         msgChar++;
     }
