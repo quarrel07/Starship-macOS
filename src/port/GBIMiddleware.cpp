@@ -28,18 +28,24 @@ extern "C" void gSPVertex(Gfx* pkt, uintptr_t v, int n, int v0) {
 }
 
 extern "C" void gSPInvalidateTexCache(Gfx* pkt, uintptr_t texAddr) {
-    char* imgData = (char*)texAddr;
+    auto data = reinterpret_cast<char*>(texAddr);
 
-    if (texAddr != 0 && GameEngine_OTRSigCheck(imgData)) {
-        auto res = LUS::Context::GetInstance()->GetResourceManager()->LoadResource(imgData);
+    if (texAddr != 0 && GameEngine_OTRSigCheck(data)) {
+        const auto res = LUS::Context::GetInstance()->GetResourceManager()->LoadResource(data);
+        const auto type = static_cast<LUS::ResourceType>(res->GetInitData()->Type);
 
-        if (res->GetInitData()->Type == LUS::ResourceType::DisplayList)
-            texAddr = (uintptr_t)&((std::static_pointer_cast<LUS::DisplayList>(res))->Instructions[0]);
-        else if (res->GetInitData()->Type == LUS::ResourceType::Array)
-            texAddr = (uintptr_t)(std::static_pointer_cast<LUS::Array>(res))->Vertices.data();
-        else {
-            texAddr = (uintptr_t) res->GetRawPointer();
+        switch(type) {
+            case LUS::ResourceType::DisplayList:
+                texAddr = reinterpret_cast<uintptr_t>(&std::static_pointer_cast<LUS::DisplayList>(res)->Instructions[0]);
+                break;
+            case LUS::ResourceType::Array:
+                texAddr = reinterpret_cast<uintptr_t>(std::static_pointer_cast<LUS::Array>(res)->Vertices.data());
+                break;
+            default:
+                texAddr = reinterpret_cast<uintptr_t>(res->GetRawPointer());
+                break;
         }
     }
+
    __gSPInvalidateTexCache(pkt, texAddr);
 }

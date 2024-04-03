@@ -1,9 +1,9 @@
 #pragma once
-#include "libultraship/src/Context.h"
 
 #ifdef __cplusplus
 #include <vector>
 #include <Fast3D/gfx_pc.h>
+#include "libultraship/src/Context.h"
 
 #define SAMPLES_HIGH 544
 #define SAMPLES_LOW 528
