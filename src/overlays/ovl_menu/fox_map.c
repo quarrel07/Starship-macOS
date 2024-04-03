@@ -4098,14 +4098,14 @@ bool Map_801A62FC(PlanetId planet) {
             break;
     }
 
-#ifdef MOD_LEVEL_SELECT
+#if MODS_LEVEL_SELECT == 1
     if (gCurrentPlanet == 6) {
         return false;
     }
 #endif
 
     if (gSaveFile.save.data.planet[planetSaveSlot].played & 1) {
-            ret = false;
+        ret = false;
     }
 
     return ret;
@@ -5399,6 +5399,12 @@ void Map_801A9A8C(void) {
     RCP_SetupDL(&gMasterDisp, 0x53);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
+    #if MODS_LEVEL_SELECT == 1
+        if (gCurrentPlanet == 6) {
+            return;
+        }
+    #endif
+
 #if MODS_LEVEL_SELECT == 1
     if (gCurrentPlanet == 6) {
         return;
@@ -5407,7 +5413,7 @@ void Map_801A9A8C(void) {
 
     TextureRect_8bIA(&gMasterDisp, &D_5000500, 112, 19, D_menu_801B6AC0[0], D_menu_801B6AC8[0], 1.0f, 1.0f);
     TextureRect_8bIA(&gMasterDisp, sp54, 16, 15, D_menu_801B6AC0[1], D_menu_801B6AC8[1], 1.0f, 1.0f);
-    /*
+
     for (i = 0; i < D_menu_801AF834[sp58].height; i++) {
         TextureRect_8bIA(&gMasterDisp, D_menu_801AF834[sp58].texture + (D_menu_801AF834[sp58].width * i),
                          D_menu_801AF834[sp58].width, 1, D_menu_801AF834[sp58].xPos, 94.0f + (1.0f * i), 1.0f, 1.0f);
@@ -5417,7 +5423,6 @@ void Map_801A9A8C(void) {
         TextureRect_8bIA(&gMasterDisp, D_menu_801AF914[sp58].texture + (D_menu_801AF914[sp58].width * i),
                          D_menu_801AF914[sp58].width, 1, D_menu_801AF914[sp58].xPos, 140.0f + (1.0f * i), 1.0f, 1.0f);
     }
-    */
 }
 
 void Map_801A9DE8(void) {
