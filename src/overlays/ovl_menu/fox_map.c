@@ -5944,6 +5944,11 @@ void Map_801AB300(void) {
     if ((D_menu_801CF018 > 0) && (D_menu_801CF018 != 100)) {
         Map_801AB978(D_ctx_801782A4);
         Map_801AB978(D_menu_801AF420[!D_menu_801CD940]);
+#if MODS_LEVEL_SELECT == 1
+        if (gCurrentPlanet == 6) {
+            return;
+        }
+#endif
         func_radio_800BB388();
     }
 }
