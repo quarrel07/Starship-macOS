@@ -88,7 +88,7 @@ void Controller_ReadData(void) {
         }
     } else {
         osContStartReadData(&gSerialEventQueue);
-        osRecvMesg(&gSerialEventQueue, NULL, OS_MESG_BLOCK);
+        osRecvMesg(&gSerialEventQueue, NULL, OS_MESG_NOBLOCK);
         osContGetReadData(sNextController);
     }
     osSendMesg(&gControllerMsgQueue, OS_MESG_32(SI_CONT_READ_DONE), OS_MESG_PRI_NORMAL);
@@ -112,10 +112,6 @@ void Save_WriteData(void) {
 
 void Controller_Rumble(void) {
     s32 i;
-
-    // osContStartQuery(&gSerialEventQueue);
-    osRecvMesg(&gSerialEventQueue, NULL, OS_MESG_BLOCK);
-    // osContGetQuery(sControllerStatus);
 
     for (i = 0; i < 4; i++) {
         if ((gControllerPlugged[i] != 0) && (sControllerStatus[i].err_no == 0)) {

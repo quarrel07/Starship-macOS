@@ -195,27 +195,17 @@ void Main_SetVIMode(void) {
     // }
 }
 
-void SerialInterface_ThreadEntry(void* arg0) {
+void SerialInterface_ThreadUpdate() {
     OSMesg sp34;
 
-    Controller_Init();
-    while (1) {
-        osRecvMesg(&gSerialThreadMsgQueue, &sp34, OS_MESG_BLOCK);
 
-        switch (sp34.data32) {
-            case SI_READ_CONTROLLER:
-                Controller_ReadData();
-                break;
-            case SI_READ_SAVE:
-                Save_ReadData();
-                break;
-            case SI_WRITE_SAVE:
-                Save_WriteData();
-                break;
-            case SI_RUMBLE:
-                Controller_Rumble();
-                break;
-        }
+    switch (sp34.data32) {
+        case SI_READ_SAVE:
+            Save_ReadData();
+            break;
+        case SI_WRITE_SAVE:
+            Save_WriteData();
+            break;
     }
 }
 
@@ -263,10 +253,11 @@ void Graphics_ThreadUpdate(){
 
     gSysFrameCount++;
     Graphics_InitializeTask(gSysFrameCount);
-    osRecvMesg(&gControllerMsgQueue, NULL, OS_MESG_BLOCK);
+    osRecvMesg(&gControllerMsgQueue, NULL, OS_MESG_NOBLOCK);
     osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_RUMBLE), OS_MESG_PRI_NORMAL);
     Controller_UpdateInput();
     Controller_ReadData();
+    Controller_Rumble();
     osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
     if (gControllerPress[3].button & U_JPAD) {
         Main_SetVIMode();
@@ -297,7 +288,7 @@ void Graphics_ThreadUpdate(){
         osViSwapBuffer(&gFrameBuffers[(gSysFrameCount - 1) % 3]);
     }
 
-    
+
     // LTODO: FAULT_CRASH
     // func_80007FE4(&gFrameBuffers[(gSysFrameCount - 1) % 3], SCREEN_WIDTH, 16);
 
