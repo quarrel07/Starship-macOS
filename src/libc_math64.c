@@ -1,15 +1,15 @@
 #include "sys.h"
 
 f32 Math_TanF(f32 x) {
-    return __sinf(x) / __cosf(x);
+    return tanf(x);
 }
 
 f32 Math_FloorF(f32 x) {
-    return __floorf(x);
+    return floorf(x);
 }
 
 f32 Math_CeilF(f32 x) {
-    return __ceilf(x);
+    return ceilf(x);
 }
 
 f64 Math_Fabs(f64 x) {
@@ -33,6 +33,8 @@ f32 Math_RoundF(f32 x) {
 }
 
 f32 Math_FAtanF(f32 x) {
+    return atanf(x);
+/*
     s32 sector;
     s32 i;
     f32 sq;
@@ -63,9 +65,12 @@ f32 Math_FAtanF(f32 x) {
     } else {
         return x / (1.0f + conv);
     }
+*/
 }
 
 f32 Math_FAtan2F(f32 y, f32 x) {
+    return atan2f(y, x);
+/*
     if ((y == 0.0f) && (x == 0.0f)) {
         return 0.0f;
     }
@@ -82,12 +87,13 @@ f32 Math_FAtan2F(f32 y, f32 x) {
         return M_PI - Math_FAtanF(fabs(y / x));
     }
     return Math_FAtanF(y / x);
+*/
 }
 
 f32 Math_FAsinF(f32 x) {
-    return Math_FAtan2F(x, sqrtf(1 - SQ(x)));
+    return asinf(x);
 }
 
 f32 Math_FAcosF(f32 x) {
-    return M_PI / 2.0f - Math_FAsinF(x);
+    return acosf(x);
 }
