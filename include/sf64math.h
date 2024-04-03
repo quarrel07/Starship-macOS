@@ -2,6 +2,7 @@
 #define SF64_MATH_H
 
 #include <libultraship.h>
+#include "libc/math.h"
 #include <math.h>
 
 typedef struct {
@@ -95,9 +96,6 @@ f32 Math_FAtanF(f32);
 f32 Math_FAtan2F(f32, f32);
 f32 Math_FAsinF(f32);
 f32 Math_FAcosF(f32);
-
-#define __sinf sinf
-#define __cosf cosf
 
 f32 Math_FloorF(f32);
 f32 Math_CeilF(f32);

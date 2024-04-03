@@ -323,8 +323,8 @@ void Matrix_RotateX(Matrix* mtx, f32 x, u8 mode) {
         if (x != 0) {
             cmf = mtx->m;
 
-            sin = sinf(x);
-            cos = cosf(x);
+            sin = __sinf(x);
+            cos = __cosf(x);
 
             tempY = cmf->xy;
             tempZ = cmf->xz;
@@ -350,8 +350,8 @@ void Matrix_RotateX(Matrix* mtx, f32 x, u8 mode) {
         cmf = mtx->m;
 
         if (x != 0) {
-            sin = sinf(x);
-            cos = cosf(x);
+            sin = __sinf(x);
+            cos = __cosf(x);
         } else {
             sin = zero;
             cos = one;
@@ -390,8 +390,8 @@ void Matrix_RotateY(Matrix* mtx, f32 y, u8 mode) {
         if (y != 0.0f) {
             cmf = mtx->m;
 
-            sin = sinf(y);
-            cos = cosf(y);
+            sin = __sinf(y);
+            cos = __cosf(y);
 
             tempX = cmf->xx;
             tempZ = cmf->xz;
@@ -417,8 +417,8 @@ void Matrix_RotateY(Matrix* mtx, f32 y, u8 mode) {
         cmf = mtx->m;
 
         if (y != 0.0f) {
-            sin = sinf(y);
-            cos = cosf(y);
+            sin = __sinf(y);
+            cos = __cosf(y);
         } else {
             cos = one;
             sin = zero;
@@ -455,8 +455,8 @@ void Matrix_RotateZ(Matrix* mtx, f32 z, u8 mode) {
         if (z != 0) {
             cmf = mtx->m;
 
-            sin = sinf(z);
-            cos = cosf(z);
+            sin = __sinf(z);
+            cos = __cosf(z);
 
             tempX = cmf->xx;
             tempY = cmf->xy;
@@ -482,8 +482,8 @@ void Matrix_RotateZ(Matrix* mtx, f32 z, u8 mode) {
         cmf = mtx->m;
 
         if (z != 0) {
-            sin = sinf(z);
-            cos = cosf(z);
+            sin = __sinf(z);
+            cos = __cosf(z);
         } else {
             sin = 0.0f;
             cos = 1.0f;
@@ -524,8 +524,8 @@ void Matrix_RotateAxis(Matrix* mtx, f32 angle, f32 x, f32 y, f32 z, u8 mode) {
         if (angle != 0) {
             cmf = mtx->m;
 
-            sin = sinf(angle);
-            cos = cosf(angle);
+            sin = __sinf(angle);
+            cos = __cosf(angle);
 
             temp1 = cmf->xx;
             temp2 = cmf->xy;
@@ -555,8 +555,8 @@ void Matrix_RotateAxis(Matrix* mtx, f32 angle, f32 x, f32 y, f32 z, u8 mode) {
         cmf = mtx->m;
 
         if (angle != 0) {
-            sin = sinf(angle);
-            cos = cosf(angle);
+            sin = __sinf(angle);
+            cos = __cosf(angle);
             versin = 1.0f - cos;
 
             cmf->xx = x * x * versin + cos;

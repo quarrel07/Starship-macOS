@@ -1,5 +1,6 @@
 #include <libultraship.h>
 #include <math.h>
+#include "libc/math.h"
 
 void guPerspectiveF(float mf[4][4], u16 *perspNorm, float fovy, float aspect, float near, float far,
                     float scale) {
@@ -8,7 +9,7 @@ void guPerspectiveF(float mf[4][4], u16 *perspNorm, float fovy, float aspect, fl
     int col;
     guMtxIdentF(mf);
     fovy *= GU_PI / 180.0;
-    yscale = cosf(fovy / 2) / sinf(fovy / 2);
+    yscale = __cosf(fovy / 2) / __sinf(fovy / 2);
     mf[0][0] = yscale / aspect;
     mf[1][1] = yscale;
     mf[2][2] = (near + far) / (near - far);

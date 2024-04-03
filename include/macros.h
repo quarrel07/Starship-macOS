@@ -5,9 +5,6 @@
 #include "libc/math.h"
 #include <math.h>
 
-#define __sinf sinf
-#define __cosf cosf
-
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
 

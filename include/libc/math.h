@@ -34,4 +34,7 @@
 #define __lnearbyintf lnearbyintf
 #define __lnearbyint lnearbyint
 
+extern f32 __sinf(f32);
+extern f32 __cosf(f32);
+
 #endif

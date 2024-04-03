@@ -19,6 +19,7 @@
 #include "i4.h"
 #include "i5.h"
 #include "i6.h"
+#include "libc/math.h"
 #include "assets/ast_common.h"
 #include "gfx_dimensions.h"
 #include <libultraship.h>

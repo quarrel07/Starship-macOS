@@ -121,6 +121,14 @@ extern "C" int GameEngine_OTRSigCheck(const char* data) {
     return strncmp(data, sOtrSignature, strlen(sOtrSignature)) == 0;
 }
 
+extern "C" float __cosf(float angle) {
+    return std::cosf(angle);
+}
+
+extern "C" float __sinf(float angle) {
+    return std::sinf(angle);
+}
+
 extern "C" float SIN_DEG(float angle) {
     return SDL_sinf(M_DTOR * angle);
 }
