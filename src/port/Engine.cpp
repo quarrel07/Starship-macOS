@@ -130,10 +130,10 @@ extern "C" float __sinf(float angle) {
 }
 
 extern "C" float SIN_DEG(float angle) {
-    return SDL_sinf(M_DTOR * angle);
+    return __sinf(M_DTOR * angle);
 }
 extern "C" float COS_DEG(float angle) {
-    return SDL_cosf(M_DTOR * angle);
+    return __cosf(M_DTOR * angle);
 }
 
 struct TimedEntry {
