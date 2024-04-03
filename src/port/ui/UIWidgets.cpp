@@ -7,9 +7,9 @@
 
 #include "UIWidgets.h"
 
-#define IMGUI_DEFINE_MATH_OPERATORS
 #include "libultraship/src/Context.h"
 
+#include <ImGui/imgui.h>
 #include <ImGui/imgui_internal.h>
 #include <libultraship/libultraship.h>
 #include <libultraship/libultra/types.h>
