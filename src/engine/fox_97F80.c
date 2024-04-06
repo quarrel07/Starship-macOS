@@ -626,6 +626,6 @@ bool func_80099254(Vec3f* objPos, Vec3f* colliderPos, Vec3f* objVel, CollisionHe
 
 bool func_col1_800998FC(Vec3f* objPos, Vec3f* colliderPos, Vec3f* objVel, s32 colId, Vec3f* hitPosOut,
                         f32* hitAnglesOut) {
-    return func_80099254(objPos, colliderPos, objVel, LOAD_ASSET(&D_800D2B38[colId]), hitPosOut,
+    return func_80099254(objPos, colliderPos, objVel, SEGMENTED_TO_VIRTUAL(&D_800D2B38[colId]), hitPosOut,
                          hitAnglesOut);
 }
