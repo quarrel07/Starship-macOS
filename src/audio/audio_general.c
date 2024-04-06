@@ -1993,6 +1993,8 @@ void Audio_ClearVoice(void) {
 }
 
 s32 Audio_GetCurrentVoice(void) {
+    // LAudioTODO: Stub for now
+    return 0;
     if (!IS_SEQUENCE_CHANNEL_VALID(gSeqPlayers[SEQ_PLAYER_VOICE].channels[15])) {
         return 0;
     }

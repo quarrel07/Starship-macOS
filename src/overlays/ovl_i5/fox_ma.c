@@ -273,8 +273,8 @@ void Macbeth_80199A40(u8* arg0, u8* arg1, f32 arg2) {
     Vec3f sp74;
 
     Matrix_Push(&gCalcMatrix);
-    arg0 = SEGMENTED_TO_VIRTUAL(arg0);
-    arg1 = SEGMENTED_TO_VIRTUAL(arg1);
+    arg0 = LOAD_ASSET(arg0);
+    arg1 = LOAD_ASSET(arg1);
     Matrix_RotateZ(gCalcMatrix, M_DTOR * arg2, 0);
     sp74.z = 0.0f;
     for (i = 0, var_fs4 = 0.0f; i < 32; i++, var_fs4++) {
@@ -299,7 +299,7 @@ void Macbeth_80199C20(u8* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     u8 a;
     u8 b;
 
-    temp_v1 = SEGMENTED_TO_VIRTUAL(arg0);
+    temp_v1 = LOAD_ASSET(arg0);
 
     for (i = arg3; i < arg3 + arg4; i++) {
         b = temp_v1[i];
@@ -320,7 +320,7 @@ void Macbeth_80199D88(u16* arg0, s32 arg1, s32 arg2) {
     s32 i;
     s32 j;
 
-    temp_t1 = SEGMENTED_TO_VIRTUAL(arg0);
+    temp_t1 = LOAD_ASSET(arg0);
 
     for (i = 0; i < arg1; i++) {
         a = temp_t1[(arg2 - 1) * arg1 + i];
@@ -1000,7 +1000,7 @@ void Macbeth_8019D048(Actor* actor) {
                                  actor->obj.pos.y + actor->fwork[8] + 290.0f, actor->obj.pos.z + 175.0f,
                                  actor->iwork[4] * 35.0f, actor->vel.z, actor->iwork[4] * -35.0f, 0.0f, 14, 5);
                 actor->iwork[3]++;
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035DD0);
+                actor->info.hitbox = LOAD_ASSET(D_MA_6035DD0);
             }
             break;
         case 2:
@@ -1187,27 +1187,27 @@ void Macbeth_8019D910(Actor* actor, s32* arg1, s32* arg2, s32 arg3, f32 arg4, f3
             actor->iwork[22] |= (var_v0);
             switch (actor->iwork[22]) {
                 case 1:
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035E68);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_6035E68);
                     break;
                 case 2:
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035ECC);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_6035ECC);
                     break;
                 case 3:
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035F30);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_6035F30);
                     break;
                 case 4:
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035F94);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_6035F94);
                     break;
                 case 5:
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035FF8);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_6035FF8);
                     break;
                 case 6:
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603605C);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_603605C);
                     break;
                 case 7:
                     actor->state = 1;
                     actor->timer_0BC = 60;
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_60359AC);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_60359AC);
                     break;
             }
             (*arg1)++;
@@ -1323,7 +1323,7 @@ void Macbeth_8019E624(Actor* actor, s32* arg1, s32* arg2, s32 arg3, f32 arg4, f3
         case 3:
             Macbeth_8019A8C8(actor, 1);
             *arg6 = 2;
-            actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_60359AC);
+            actor->info.hitbox = LOAD_ASSET(D_MA_60359AC);
             (*arg1)++;
             actor->state = 1;
             break;
@@ -1401,7 +1401,7 @@ void Macbeth_8019EBF8(Actor* actor, s32* arg1, s32* arg2, s32 arg3, f32 arg4, f3
         case 1:
             Macbeth_8019AF34(actor);
             *arg6 = 2;
-            actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_60359AC);
+            actor->info.hitbox = LOAD_ASSET(D_MA_60359AC);
             (*arg1)++;
             return;
         case 2:
@@ -1657,7 +1657,7 @@ void Macbeth_8019FC54(Actor* actor, s32* arg1, s32* arg2, s32 arg3, s32 arg4, f3
                                      0.0f, 0.0f, 0.0f, 20.0f, 20);
             }
             *arg7 = 2;
-            actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_60359AC);
+            actor->info.hitbox = LOAD_ASSET(D_MA_60359AC);
             (*arg1)++;
             actor->state = 1;
             break;
@@ -2771,7 +2771,7 @@ void Macbeth_801A3E98(Actor* actor) {
             Math_SmoothStepToF(&actor->fwork[1], -181.0f, 0.6f, 20.0f, 0.0f);
             if (actor->fwork[1] <= -180.0f) {
                 AUDIO_PLAY_SFX(0x19033008, actor->sfxSource, 0);
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603648C);
+                actor->info.hitbox = LOAD_ASSET(D_MA_603648C);
                 actor->iwork[0] = 2;
                 actor->state = 2;
             }
@@ -2983,7 +2983,7 @@ void Macbeth_801A4B24(Actor* actor) {
             break;
         case 1:
             if ((gPlayer[0].unk_138 - actor->obj.pos.z) < 2000.0f) {
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6036520);
+                actor->info.hitbox = LOAD_ASSET(D_MA_6036520);
                 actor->state = 2;
             }
             break;
@@ -3013,7 +3013,7 @@ void Macbeth_801A4B24(Actor* actor) {
                 actor->unk_0D0 = 0;
                 D_MA_801BE2F0[5] = 1;
 
-                D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+                D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
                 for (i = D_ctx_80177DC8 - 5, objInit = &D_ctx_80178310[i]; i < D_ctx_80177DC8 + 50; i++, objInit++) {
                     Object_Load(objInit, 40000.0f, -2000.0f, 40000.0f, -2000.0f);
@@ -3754,7 +3754,7 @@ void Macbeth_801A7D98(Actor* actor) {
     D_i5_801BE320[29] = 250;
     D_i5_801BE320[9] = 200;
     D_i5_801BE320[10] = 250;
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CBF34);
+    actor->info.hitbox = LOAD_ASSET(D_edata_800CBF34);
     D_i5_801BE320[14] = 0;
     D_i5_801BE320[15] = 0;
     gBossFrameCount = 0;
@@ -3817,7 +3817,7 @@ void Macbeth_801A7E7C(Actor* actor) {
                 D_i5_801BE320[7] = 1;
                 if ((actor->fwork[5] + 500.0f) <= actor->obj.pos.y) {
                     Radio_PlayMessage(gMsg_ID_17430, RCID_BOSS_MACBETH);
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603677C);
+                    actor->info.hitbox = LOAD_ASSET(D_MA_603677C);
                     actor->state = 3;
                 }
             }
@@ -3964,13 +3964,13 @@ void Macbeth_801A7E7C(Actor* actor) {
                 if (D_i5_801BE320[3] < (Animation_GetFrameCount(&D_MA_601D188) - 1)) {
                     D_i5_801BE320[3] = (s16) (D_i5_801BE320[3] + 1);
                     if ((D_i5_801BE320[3] == 26) && (D_i5_801BE320[10] > 0)) {
-                        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6036818);
+                        actor->info.hitbox = LOAD_ASSET(D_MA_6036818);
                         AUDIO_PLAY_SFX(0x2902405E, actor->sfxSource, 4);
                     }
                 } else {
-                    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CBF34);
+                    actor->info.hitbox = LOAD_ASSET(D_edata_800CBF34);
                     if ((gPlayer[0].pos.y + 1200.0f) < actor->obj.pos.y) {
-                        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603677C);
+                        actor->info.hitbox = LOAD_ASSET(D_MA_603677C);
                         D_i5_801BE320[3] = 0;
                         D_i5_801BE320[2] = 1;
                         D_i5_801BE320[31] = 30;
@@ -4169,7 +4169,7 @@ void Macbeth_801A7E7C(Actor* actor) {
                                      D_i5_801BE368[0] * 0.8f, -10.0f, 8.0f);
                     D_i5_801BE320[11]++;
                     if (D_i5_801BE320[11] >= var_s0) {
-                        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603677C);
+                        actor->info.hitbox = LOAD_ASSET(D_MA_603677C);
                         D_i5_801BE320[3] = 0;
                         D_i5_801BE320[2] = 1;
                         D_i5_801BE320[31] = 30;
@@ -4291,7 +4291,7 @@ void Macbeth_801A7E7C(Actor* actor) {
             D_i5_801BE320[8] = 1;
             if (actor->timer_0BC == 0) {
                 actor->vel.y = 0.0f;
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603677C);
+                actor->info.hitbox = LOAD_ASSET(D_MA_603677C);
                 D_i5_801BE320[3] = 0;
                 D_i5_801BE320[2] = 1;
                 D_i5_801BE320[31] = 30;
@@ -4431,7 +4431,7 @@ void Macbeth_801A7E7C(Actor* actor) {
             }
             if (actor->timer_0BC == 0) {
                 Audio_KillSfxBySourceAndId(actor->sfxSource, 0x19006035);
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_603677C);
+                actor->info.hitbox = LOAD_ASSET(D_MA_603677C);
                 D_i5_801BE320[3] = 0;
                 D_i5_801BE320[2] = 1;
                 D_i5_801BE320[31] = 30;
@@ -4849,7 +4849,7 @@ void Macbeth_801AC438(Actor* actor) {
             if (actor->iwork[1] != 0) {
                 Radio_PlayMessage(gMsg_ID_17420, RCID_BOSS_MACBETH);
                 AUDIO_PLAY_SFX(0x19034066, actor->sfxSource, 4);
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_MA_6035A94);
+                actor->info.hitbox = LOAD_ASSET(D_MA_6035A94);
                 actor->state += 1;
             }
             Macbeth_8019A830(actor);
@@ -4913,13 +4913,13 @@ void Macbeth_801AC754(Player* player) {
     switch (player->unk_1D0) {
         case 0:
 
-            var_s0 = D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_MA_6035678);
+            var_s0 = D_ctx_80178310 = LOAD_ASSET(D_MA_6035678);
 
             for (i = 0; var_s0->id != OBJ_INVALID; i++, var_s0++) {
                 Object_Load(var_s0, 4000.0f, -4000.0f, 4000.0f, -4000.0f);
             }
 
-            var_s0 = D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+            var_s0 = D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
             for (i = 0; i < 40; i++, var_s0++) {
                 Object_Load(var_s0, 4000.0f, -4000.0f, 4000.0f, -4000.0f);
@@ -5056,7 +5056,7 @@ void Macbeth_801ACF6C(void) {
 void Macbeth_801ACFBC(void) {
     ObjectInit* var_s0;
 
-    for (var_s0 = D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_MA_60357CC); var_s0->id != OBJ_INVALID; var_s0++) {
+    for (var_s0 = D_ctx_80178310 = LOAD_ASSET(D_MA_60357CC); var_s0->id != OBJ_INVALID; var_s0++) {
         Object_Load(var_s0, 4000.0f, -4000.0f, 4000.0f, -4000.0f);
     }
 }
@@ -5064,7 +5064,7 @@ void Macbeth_801ACFBC(void) {
 void Macbeth_801AD080(void) {
     ObjectInit* var_s0;
 
-    for (var_s0 = D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_MA_6035920); var_s0->id != OBJ_INVALID; var_s0++) {
+    for (var_s0 = D_ctx_80178310 = LOAD_ASSET(D_MA_6035920); var_s0->id != OBJ_INVALID; var_s0++) {
         Object_Load(var_s0, 4000.0f, -4000.0f, 4000.0f, -4000.0f);
     }
 }
@@ -6384,7 +6384,7 @@ void Macbeth_801AF8F4(Player* player) {
             break;
         case 1960:
             Macbeth_801AF27C(&gActors[3], 3);
-            gActors[3].info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CBF34);
+            gActors[3].info.hitbox = LOAD_ASSET(D_edata_800CBF34);
             break;
         case 2017:
             D_ctx_80177830 = 0;

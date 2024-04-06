@@ -1227,7 +1227,7 @@ void Solar_801A1F80(Boss* bossSO) {
         D_ctx_801779A8[gMainController] = 10.0f;
         gCameraShake = 120;
         bossSO->fwork[SO_FWK_3] = 2400.0f;
-        bossSO->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SO_60231A4);
+        bossSO->info.hitbox = LOAD_ASSET(D_SO_60231A4);
         bossSO->unk_04C = 0;
         bossSO->swork[SO_SWK_1] = 0;
         bossSO->info.hitbox[8] = bossSO->info.hitbox[12] = bossSO->info.hitbox[14] = bossSO->info.hitbox[18] =
@@ -1802,7 +1802,7 @@ void Solar_801A3C4C(Boss* bossSO) {
         bossSO->state = 0;
         bossSO->swork[SO_SWK_1] = 1;
         bossSO->fwork[SO_FWK_0] = 0.01f;
-        bossSO->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CBF34);
+        bossSO->info.hitbox = LOAD_ASSET(D_edata_800CBF34);
         bossSO->timer_058 = 20000;
         D_ctx_8017796C = -1;
         D_ctx_80178348 = D_ctx_80178350 = D_ctx_80178354 = D_ctx_80178340 = 255;

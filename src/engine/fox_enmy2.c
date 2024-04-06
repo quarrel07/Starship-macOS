@@ -996,52 +996,52 @@ void ActorEvent_ProcessScript(Actor* this) {
 
     switch (gCurrentLevel) {
         case LEVEL_VENOM_ANDROSS:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_ANDROSS_C037E3C);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_ANDROSS_C037E3C);
             break;
         case LEVEL_CORNERIA:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_CO_603D9E8);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_CO_603D9E8);
             break;
         case LEVEL_METEO:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_ME_602F3AC);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_ME_602F3AC);
             break;
         case LEVEL_AQUAS:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_AQ_60308B8);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_AQ_60308B8);
             break;
         case LEVEL_TITANIA:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_TI_600631C);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_TI_600631C);
             break;
         case LEVEL_SECTOR_X:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_SX_60320D0);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_SX_60320D0);
             break;
         case LEVEL_UNK_4:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_A6_60289FC);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_A6_60289FC);
             break;
         case LEVEL_AREA_6:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_A6_6027F50);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_A6_6027F50);
             break;
         case LEVEL_SECTOR_Y:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_SY_6032E18);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_SY_6032E18);
             break;
         case LEVEL_SOLAR:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_SO_6020DD0);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_SO_6020DD0);
             break;
         case LEVEL_ZONESS:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_ZO_602AAC0);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_ZO_602AAC0);
             break;
         case LEVEL_VENOM_1:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_VE1_601B1E4);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_VE1_601B1E4);
             break;
         case LEVEL_MACBETH:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_MA_60381D8);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_MA_60381D8);
             break;
         case LEVEL_TRAINING:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_TR_6009B34);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_TR_6009B34);
             break;
         default:
-            levelScripts = SEGMENTED_TO_VIRTUAL(D_CO_603D9E8);
+            levelScripts = (uint16_t**) LOAD_ASSET(D_CO_603D9E8);
             break;
     }
-    actorScript = SEGMENTED_TO_VIRTUAL(levelScripts[this->aiType]);
+    actorScript = LOAD_ASSET(levelScripts[this->aiType]);
 
     switch (EV_OPC_MASK(actorScript[this->aiIndex])) {
         case EV_OPC(EVOP_STOP_SCRIPT):
@@ -1121,11 +1121,11 @@ void ActorEvent_ProcessScript(Actor* this) {
             }
 
             if (this->unk_0B4 == EINFO_104) {
-                this->unk_0B6 = Animation_GetFrameCount(&D_VE2_6014658) - 1;
+                this->unk_0B6 = Animation_GetFrameCount(D_VE2_6014658) - 1;
             }
 
             if (this->unk_0B4 < EINFO_200) {
-                this->info.hitbox = SEGMENTED_TO_VIRTUAL(D_800D003C[this->unk_0B4].hitbox);
+                this->info.hitbox = LOAD_ASSET(D_800D003C[this->unk_0B4].hitbox);
                 this->scale = D_800D003C[this->unk_0B4].scale;
                 this->info.unk_16 = D_800D003C[this->unk_0B4].info_unk_16;
                 this->info.unk_14 = D_800D003C[this->unk_0B4].info_unk_14;
@@ -1220,7 +1220,7 @@ void ActorEvent_ProcessScript(Actor* this) {
             }
 
             if (actorScript[this->aiIndex + 1] == EVACT_15) {
-                this->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CBEC4);
+                this->info.hitbox = LOAD_ASSET(D_edata_800CBEC4);
                 this->state = EVSTATE_11;
                 this->aiIndex += 2;
                 break;
@@ -2845,7 +2845,7 @@ void ActorEvent_800720E8(Actor* this) {
 
                 if (this->health <= 0) {
                     this->unk_046 = 1;
-                    this->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SX_6032408);
+                    this->info.hitbox = (f32*) LOAD_ASSET(D_SX_6032408);
                     AUDIO_PLAY_SFX(0x1900000D, this->sfxSource, 0);
                 } else {
                     AUDIO_PLAY_SFX(0x2903300E, this->sfxSource, 0);
@@ -3228,7 +3228,7 @@ void ActorEvent_Update(Actor* this) {
                 }
 
                 if (var_s0 == 3) {
-                    this->info.hitbox = SEGMENTED_TO_VIRTUAL(D_ME_602F638);
+                    this->info.hitbox = (f32*) LOAD_ASSET(D_ME_602F638);
                     ActorEvent_ProcessScript(this);
                 }
                 break;
@@ -3462,21 +3462,21 @@ void ActorEvent_Update(Actor* this) {
             case EINFO_6:
                 this->unk_0B6++;
                 if (gCurrentLevel == LEVEL_SOLAR) {
-                    if (this->unk_0B6 >= Animation_GetFrameCount(&D_SO_600636C)) {
+                    if (this->unk_0B6 >= Animation_GetFrameCount(D_SO_600636C)) {
                         this->unk_0B6 = 0;
                     }
                     if (((s32) gGameFrameCount % 3) == 0) {
                         Solar_8019E9F4(this->obj.pos.x, this->obj.pos.y - 20, this->obj.pos.z - 180.0f, 0.0f,
                                        RAND_FLOAT(20.0f) * -1.0f, 0.0f, 4.0f, 2);
                     }
-                } else if (this->unk_0B6 >= Animation_GetFrameCount(&D_ENMY_PLANET_40057AC)) {
+                } else if (this->unk_0B6 >= Animation_GetFrameCount(D_ENMY_PLANET_40057AC)) {
                     this->unk_0B6 = 0;
                 }
                 break;
 
             case EINFO_9:
                 this->unk_0B6++;
-                if (this->unk_0B6 >= Animation_GetFrameCount(&D_ENMY_PLANET_40001A4)) {
+                if (this->unk_0B6 >= Animation_GetFrameCount(D_ENMY_PLANET_40001A4)) {
                     this->unk_0B6 = 0;
                 }
                 if (this->iwork[6] == 0) {
@@ -3501,7 +3501,7 @@ void ActorEvent_Update(Actor* this) {
             case EINFO_79:
                 if (this->timer_0C4 == 0) {
                     this->unk_0B6 += 1;
-                    if (Animation_GetFrameCount(&D_ZO_600E5EC) < this->unk_0B6) {
+                    if (Animation_GetFrameCount(D_ZO_600E5EC) < this->unk_0B6) {
                         this->unk_0B6 = 0;
                     }
                 }
@@ -3618,7 +3618,7 @@ void ActorEvent_Update(Actor* this) {
                 Math_SmoothStepToF(&this->fwork[15], 1.0f, 0.1f, 0.1f, 0.001f);
 
                 if (this->fwork[15] > 0.5f) {
-                    this->info.hitbox = SEGMENTED_TO_VIRTUAL(D_VE1_601B4C4);
+                    this->info.hitbox = (f32*) LOAD_ASSET(D_VE1_601B4C4);
                 }
 
                 if (this->unk_046 == 0) {
@@ -3754,7 +3754,7 @@ bool ActorEvent_OverrideLimbDraw2(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f*
 void ActorEvent_80074E3C(Actor* this) {
     Vec3f sp30[10];
 
-    Animation_GetFrameData(&D_SX_6013820, 0, sp30);
+    Animation_GetFrameData(D_SX_6013820, 0, sp30);
     sp30[6].y += this->fwork[15];
     sp30[5].z += this->fwork[16] + ((this->timer_0BE >> 2) & 1);
     sp30[4].z -= this->fwork[16] + ((this->timer_0BE >> 2) & 1);
@@ -3882,11 +3882,11 @@ void ActorEvent_Draw(Actor* this) {
                 case EINFO_6:
                     if (gCurrentLevel == LEVEL_SOLAR) {
                         gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
-                        Animation_GetFrameData(&D_SO_600636C, this->unk_0B6, sp114);
+                        Animation_GetFrameData(D_SO_600636C, this->unk_0B6, sp114);
                         Animation_DrawSkeleton(1, D_SO_6006558, sp114, NULL, NULL, this, &gIdentityMatrix);
                         gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
                     } else {
-                        Animation_GetFrameData(&D_ENMY_PLANET_40057AC, this->unk_0B6, sp114);
+                        Animation_GetFrameData(D_ENMY_PLANET_40057AC, this->unk_0B6, sp114);
                         Animation_DrawSkeleton(1, D_ENMY_PLANET_40058B8, sp114, NULL, NULL, this, &gIdentityMatrix);
                     }
                     break;
@@ -3898,7 +3898,7 @@ void ActorEvent_Draw(Actor* this) {
 
                 case EINFO_9:
                     Matrix_Translate(gGfxMatrix, 0.0f, -30.0f, 0.0f, 1);
-                    Animation_GetFrameData(&D_ENMY_PLANET_40001A4, this->unk_0B6, sp114);
+                    Animation_GetFrameData(D_ENMY_PLANET_40001A4, this->unk_0B6, sp114);
                     Animation_DrawSkeleton(1, D_ENMY_PLANET_4000270, sp114, NULL, NULL, this, &gIdentityMatrix);
                     break;
 
@@ -3966,7 +3966,7 @@ void ActorEvent_Draw(Actor* this) {
                     break;
 
                 case EINFO_33:
-                    Animation_GetFrameData(&D_ENMY_SPACE_400A30C, this->unk_0B6, sp114);
+                    Animation_GetFrameData(D_ENMY_SPACE_400A30C, this->unk_0B6, sp114);
                     Matrix_RotateY(gGfxMatrix, M_PI, 1);
                     Matrix_Scale(gGfxMatrix, 1.5f, 1.5f, 1.5f, 1);
                     Animation_DrawSkeleton(1, D_ENMY_SPACE_400A398, sp114, ActorEvent_OverrideLimbDraw1, NULL, this,
@@ -3975,7 +3975,7 @@ void ActorEvent_Draw(Actor* this) {
                     break;
 
                 case EINFO_36:
-                    Animation_GetFrameData(&D_TI1_700CAF4, this->unk_0B6, sp114);
+                    Animation_GetFrameData(D_TI1_700CAF4, this->unk_0B6, sp114);
                     sp114[2].z += this->fwork[15];
                     Animation_DrawSkeleton(1, D_TI1_700CB60, sp114, NULL, NULL, this, &gIdentityMatrix);
                     break;
@@ -3991,7 +3991,7 @@ void ActorEvent_Draw(Actor* this) {
                     break;
 
                 case EINFO_52:
-                    Animation_GetFrameData(&D_ZO_601F874, this->unk_0B6, sp114);
+                    Animation_GetFrameData(D_ZO_601F874, this->unk_0B6, sp114);
                     sp114[2].z -= this->fwork[15];
                     gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
                     Matrix_Scale(gGfxMatrix, 2.6f, 2.6f, 2.6f, 1);
@@ -4055,7 +4055,7 @@ void ActorEvent_Draw(Actor* this) {
 
                 case EINFO_83:
                     Matrix_Scale(gGfxMatrix, 3.0f, 3.0f, 3.0f, 1);
-                    Animation_GetFrameData(&D_AQ_602201C, this->unk_0B6, sp114);
+                    Animation_GetFrameData(D_AQ_602201C, this->unk_0B6, sp114);
                     Animation_DrawSkeleton(1, D_AQ_60220E8, sp114, NULL, NULL, this, &gIdentityMatrix);
                     break;
 
@@ -4093,7 +4093,7 @@ void ActorEvent_Draw(Actor* this) {
                     break;
 
                 case EINFO_106:
-                    Animation_GetFrameData(&D_ENMY_SPACE_4000080, this->unk_0B6, sp114);
+                    Animation_GetFrameData(D_ENMY_SPACE_4000080, this->unk_0B6, sp114);
                     Animation_DrawSkeleton(1, D_ENMY_SPACE_400014C, sp114, NULL, NULL, this, &gIdentityMatrix);
                     break;
 

@@ -551,8 +551,8 @@ bool func_80099254(Vec3f* objPos, Vec3f* colliderPos, Vec3f* objVel, CollisionHe
         objMinZ = swapBuff;
     }
 
-    colPoly = SEGMENTED_TO_VIRTUAL(colHeader->polys);
-    mesh = SEGMENTED_TO_VIRTUAL(colHeader->mesh);
+    colPoly = LOAD_ASSET(colHeader->polys);
+    mesh = LOAD_ASSET(colHeader->mesh);
     polyCount = colHeader->polyCount;
     speed = VEC3F_MAG(objVel);
 

@@ -390,7 +390,7 @@ void func_360_8002F180(void) {
             actor->iwork[11] = 1;
             if (actor->aiType <= AI360_PEPPY) {
                 AUDIO_PLAY_SFX(0x3100000C, actor->sfxSource, 4);
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CC01C);
+                actor->info.hitbox = LOAD_ASSET(D_edata_800CC01C);
                 actor->info.unk_1C = 0.0f;
                 actor->info.bonus = 0;
             } else {

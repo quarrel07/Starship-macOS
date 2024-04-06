@@ -172,7 +172,7 @@ void Venom2_80196968(void) {
     Object_58* obj58;
     s32 i;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
     for (obj58 = gObjects58, i = 0; i < 1000; i++) {
         if (D_ctx_80178310[i].id < 0) {

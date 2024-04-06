@@ -793,7 +793,7 @@ typedef struct {
 } JntHitbox;
 
 void Zoness_80190D0C(Actor* actor) {
-    Hitbox* var_s2 = (((JntHitbox*) SEGMENTED_TO_VIRTUAL(D_ZO_602BC58))->boxes);
+    Hitbox* var_s2 = (((JntHitbox*) LOAD_ASSET(D_ZO_602BC58))->boxes);
     s32 i;
     s32 k;
     PosRot* temp_s0;
@@ -4408,7 +4408,7 @@ void Zoness_Actor247_Init(Actor* actor) {
 
             actor->unk_046 = i + 1;
             Object_SetInfo(&gActors[i].info, gActors[i].obj.id);
-            gActors[i].info.hitbox = SEGMENTED_TO_VIRTUAL(D_ZO_602C028);
+            gActors[i].info.hitbox = LOAD_ASSET(D_ZO_602C028);
             break;
         }
     }

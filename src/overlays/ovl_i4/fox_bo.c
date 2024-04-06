@@ -724,7 +724,7 @@ bool Bolse_8018D584(Actor* actor) {
         }
 
         func_effect_8007B344(actor->obj.pos.x, actor->obj.pos.y + 730.0f, actor->obj.pos.z, 10.0f, 5);
-        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_BO_6011BA4);
+        actor->info.hitbox = LOAD_ASSET(D_BO_6011BA4);
         Audio_KillSfxBySourceAndId(actor->sfxSource, 0x11000028U);
         AUDIO_PLAY_SFX(0x2903B009U, actor->sfxSource, 0U);
     } else {
@@ -777,8 +777,8 @@ s32 Bolse_8018D9CC(void) {
     f32 spA8[17];
     f32 sp64[17];
     s32 j;
-    Vtx* sp5C = SEGMENTED_TO_VIRTUAL(D_BO_6011E28);
-    Vtx* sp58 = SEGMENTED_TO_VIRTUAL(D_BO_600C0B8);
+    Vtx* sp5C = LOAD_ASSET(D_BO_6011E28);
+    Vtx* sp58 = LOAD_ASSET(D_BO_600C0B8);
 
     for (i = 0; i < 17; i++) {
         if ((i == 0) || (i == 16)) {
@@ -2108,7 +2108,7 @@ void Bolse_80191ED8(void) {
     Boss* boss;
     Object_58* obj58;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
     for (obj58 = gObjects58, i = 0; i < 1000; i++) {
         if (D_ctx_80178310[i].id < 0) {

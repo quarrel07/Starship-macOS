@@ -2022,14 +2022,12 @@ void Map_801A0788(void) {
 }
 
 void Map_801A07E8(u8* arg0, u8* arg1, f32* arg2) {
-    return;
     s32* var_v0 = D_menu_801B0004;
     s32 temp;
     s32 i;
     s32 j;
     s32 k;
 
-    arg0 = LOAD_ASSET(arg0);
     arg1 = LOAD_ASSET(arg1);
 
     for (i = 1; i < 48; i++, var_v0++) {

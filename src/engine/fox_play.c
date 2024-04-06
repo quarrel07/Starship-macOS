@@ -86,11 +86,11 @@ void func_play_800A3FEC(void) {
     switch (gCurrentLevel) {
         case LEVEL_SOLAR:
             if (gGameFrameCount & 1) {
-                spB4 = SEGMENTED_TO_VIRTUAL(D_SO_6001C50);
+                spB4 = LOAD_ASSET(D_SO_6001C50);
             } else {
-                spB4 = SEGMENTED_TO_VIRTUAL(D_SO_6004500);
+                spB4 = LOAD_ASSET(D_SO_6004500);
             }
-            spB0 = SEGMENTED_TO_VIRTUAL(D_SO_6022760);
+            spB0 = LOAD_ASSET(D_SO_6022760);
             spA8 = 15;
             sp90 = 70.0f;
             sp8C = 0.1f;
@@ -99,11 +99,11 @@ void func_play_800A3FEC(void) {
             break;
         case LEVEL_ZONESS:
             if (gGameFrameCount & 1) {
-                spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_6009ED0);
+                spB4 = LOAD_ASSET(D_ZO_6009ED0);
             } else {
-                spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_600C780);
+                spB4 = LOAD_ASSET(D_ZO_600C780);
             }
-            spB0 = SEGMENTED_TO_VIRTUAL(D_ZO_602AC50);
+            spB0 = LOAD_ASSET(D_ZO_602AC50);
             spA8 = 7;
             sp90 = 40.0f;
             sp8C = 0.2f;
@@ -282,16 +282,16 @@ void func_play_800A4F7C(void) {
 
     switch (gVersusStage) {
         case VS_STAGE_CORNERIA:
-            D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_versus_302DE3C);
+            D_ctx_80178310 = LOAD_ASSET(D_versus_302DE3C);
             break;
         case VS_STAGE_KATINA:
-            D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_versus_302E0E4);
+            D_ctx_80178310 = LOAD_ASSET(D_versus_302E0E4);
             break;
         case VS_STAGE_SECTOR_Z:
             if (D_ctx_801778AC == 2) {
-                D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_versus_302E378);
+                D_ctx_80178310 = LOAD_ASSET(D_versus_302E378);
             } else {
-                D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_versus_302E170);
+                D_ctx_80178310 = LOAD_ASSET(D_versus_302E170);
             }
             break;
     }
@@ -337,7 +337,7 @@ void func_play_800A5338(void) {
     s32 i;
     s32 j;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_CO_603B074);
+    D_ctx_80178310 = LOAD_ASSET(D_CO_603B074);
 
     for (j = 0, obj58 = gObjects58; j < 200; j++) {
         if (D_ctx_80178310[j].id <= OBJ_INVALID) {
@@ -389,7 +389,7 @@ void func_play_800A55B0(void) {
     s32 i;
     s32 j;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_SY_6030B14);
+    D_ctx_80178310 = LOAD_ASSET(D_SY_6030B14);
 
     for (j = 0, obj58 = gObjects58; j < 200; j++) {
         if (D_ctx_80178310[j].id <= OBJ_INVALID) {
@@ -481,17 +481,17 @@ void func_play_800A594C(void) {
     if (gVersusMode) {
         switch (gVersusStage) {
             case 0:
-                sEnvSettings = SEGMENTED_TO_VIRTUAL(&D_versus_302DD70);
+                sEnvSettings = LOAD_ASSET(&D_versus_302DD70);
                 break;
             case 1:
-                sEnvSettings = SEGMENTED_TO_VIRTUAL(&D_versus_302DDB4);
+                sEnvSettings = LOAD_ASSET(&D_versus_302DDB4);
                 break;
             case 2:
-                sEnvSettings = SEGMENTED_TO_VIRTUAL(&D_versus_302DDF8);
+                sEnvSettings = LOAD_ASSET(&D_versus_302DDF8);
                 break;
         }
     } else {
-        sEnvSettings = SEGMENTED_TO_VIRTUAL(D_800D2F98[gCurrentLevel]);
+        sEnvSettings = LOAD_ASSET(D_800D2F98[gCurrentLevel]);
     }
     if (D_ctx_8017782C == 0) {
         if (gCurrentLevel == LEVEL_SOLAR) {
@@ -500,7 +500,7 @@ void func_play_800A594C(void) {
             Audio_KillSfxBySourceAndId(gPlayer[0].sfxSource, 0x3140807E);
         }
     } else if (gCurrentLevel == LEVEL_AQUAS) {
-        sEnvSettings = SEGMENTED_TO_VIRTUAL(&D_AQ_602E584);
+        sEnvSettings = LOAD_ASSET(&D_AQ_602E584);
     }
     gBgmSeqId = sEnvSettings->seqId;
     gLevelType = sEnvSettings->type;
@@ -999,12 +999,12 @@ bool func_play_800A73E4(f32* arg0, s32* arg1, f32 xPos, f32 yPos, f32 zPos) {
 
     switch (gCurrentLevel) {
         case LEVEL_SOLAR:
-            spA4 = SEGMENTED_TO_VIRTUAL(D_SO_6001C50);
-            spA0 = SEGMENTED_TO_VIRTUAL(D_SO_6022760);
+            spA4 = LOAD_ASSET(D_SO_6001C50);
+            spA0 = LOAD_ASSET(D_SO_6022760);
             break;
         case LEVEL_ZONESS:
-            spA4 = SEGMENTED_TO_VIRTUAL(D_ZO_6009ED0);
-            spA0 = SEGMENTED_TO_VIRTUAL(D_ZO_602AC50);
+            spA4 = LOAD_ASSET(D_ZO_6009ED0);
+            spA0 = LOAD_ASSET(D_ZO_602AC50);
             break;
         default:
             return false;
@@ -1926,7 +1926,7 @@ void func_play_800A8BA4(Player* player) {
                                                      actor->vwork[29].y, actor->vwork[29].z + actor->unk_0F4.z);
                         if (temp_v0 != 0) {
                             if ((temp_v0 < 0) && (actor->unk_0B4 == 38)) {
-                                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SX_6032328);
+                                actor->info.hitbox = LOAD_ASSET(D_SX_6032328);
                                 if (D_ctx_80177E80 >= 0) {
                                     actor->unk_046 = 2;
                                     D_ctx_80177E80++;
@@ -2456,10 +2456,10 @@ void func_play_800AB334(void) {
 
             switch (gCurrentLevel) {
                 case LEVEL_SOLAR:
-                    mesh = SEGMENTED_TO_VIRTUAL(D_SO_6001C50);
+                    mesh = LOAD_ASSET(D_SO_6001C50);
                     break;
                 case LEVEL_ZONESS:
-                    mesh = SEGMENTED_TO_VIRTUAL(D_ZO_6009ED0);
+                    mesh = LOAD_ASSET(D_ZO_6009ED0);
                     break;
             }
             for (i = 0; i < 17 * 17; i++, mesh++) {
@@ -2476,10 +2476,10 @@ void func_play_800AB334(void) {
 
             switch (gCurrentLevel) {
                 case LEVEL_SOLAR:
-                    mesh = SEGMENTED_TO_VIRTUAL(D_SO_6004500);
+                    mesh = LOAD_ASSET(D_SO_6004500);
                     break;
                 case LEVEL_ZONESS:
-                    mesh = SEGMENTED_TO_VIRTUAL(D_ZO_600C780);
+                    mesh = LOAD_ASSET(D_ZO_600C780);
                     break;
             }
             for (i = 0; i < 17 * 17; i++, mesh++) {
@@ -3984,16 +3984,16 @@ void func_play_800B0194(Player* player) {
             }
             switch (gPlayerNum) {
                 case 0:
-                    sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302E56C);
+                    sp48 = LOAD_ASSET(D_versus_302E56C);
                     break;
                 case 1:
-                    sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302E830);
+                    sp48 = LOAD_ASSET(D_versus_302E830);
                     break;
                 case 2:
-                    sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302E74C);
+                    sp48 = LOAD_ASSET(D_versus_302E74C);
                     break;
                 case 3:
-                    sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302E65C);
+                    sp48 = LOAD_ASSET(D_versus_302E65C);
                     break;
             }
             Math_SmoothStepToVec3fArray(sp48, player->jointTable, 1, 24, 0.2f, 10.0f, 0.01f);
@@ -4007,16 +4007,16 @@ void func_play_800B0194(Player* player) {
     if (player->unk_1D4 == 0) {
         switch (gPlayerNum) {
             case 0:
-                sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302E95C);
+                sp48 = LOAD_ASSET(D_versus_302E95C);
                 break;
             case 1:
-                sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302EC20);
+                sp48 = LOAD_ASSET(D_versus_302EC20);
                 break;
             case 2:
-                sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302EB3C);
+                sp48 = LOAD_ASSET(D_versus_302EB3C);
                 break;
             case 3:
-                sp48 = SEGMENTED_TO_VIRTUAL(D_versus_302EA4C);
+                sp48 = LOAD_ASSET(D_versus_302EA4C);
                 break;
         }
         Math_SmoothStepToVec3fArray(sp48, player->jointTable, 1, 24, 0.2f, 10.0f, 0.01f);
@@ -4228,16 +4228,16 @@ void func_play_800B0F50(Player* playerx) {
                 player->unk_068 = 0;
                 switch (gPlayerNum) {
                     case 0:
-                        sp38 = SEGMENTED_TO_VIRTUAL(D_versus_302E56C);
+                        sp38 = LOAD_ASSET(D_versus_302E56C);
                         break;
                     case 1:
-                        sp38 = SEGMENTED_TO_VIRTUAL(D_versus_302E830);
+                        sp38 = LOAD_ASSET(D_versus_302E830);
                         break;
                     case 2:
-                        sp38 = SEGMENTED_TO_VIRTUAL(D_versus_302E74C);
+                        sp38 = LOAD_ASSET(D_versus_302E74C);
                         break;
                     case 3:
-                        sp38 = SEGMENTED_TO_VIRTUAL(D_versus_302E65C);
+                        sp38 = LOAD_ASSET(D_versus_302E65C);
                         break;
                 }
                 for (j = 0; j < 30; j++, sp38++) {
@@ -4319,7 +4319,7 @@ void func_play_800B0F50(Player* playerx) {
             D_ctx_80177D20 = player->unk_144 = 3932.0f;
 
             D_ctx_80177DC8 = 40;
-            D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+            D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
             for (sp34 = D_ctx_80178310, i = 0; i < D_ctx_80177DC8; i++, sp34++) {
                 Object_Load(sp34, 4000.0f, -4000.0f, 4000.0f, -4000.0f);
             }

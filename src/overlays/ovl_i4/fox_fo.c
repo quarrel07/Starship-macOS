@@ -492,7 +492,7 @@ void Fortuna_80188AD0(Actor* actor) {
     if ((actor->unk_0D0 != 0) && (actor->state == 0)) {
         actor->unk_0D0 = 0;
         actor->state = 1;
-        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_FO_600FF64);
+        actor->info.hitbox = LOAD_ASSET(D_FO_600FF64);
         actor->info.unk_1C = 0.0f;
         actor->timer_0CA[0] = 0;
         actor->info.bonus = 0;
@@ -1440,7 +1440,7 @@ void Fortuna_8018BA2C(void) {
     Object_58* obj58;
     Boss* boss = &gBosses[0];
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
     for (obj58 = &gObjects58[0], i = 0; i < 1000; i++) {
         if (D_ctx_80178310[i].id < 0) {

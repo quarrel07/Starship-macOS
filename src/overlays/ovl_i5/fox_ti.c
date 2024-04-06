@@ -337,7 +337,7 @@ void Titania_80189B80(Actor* actor) {
 
     Ground_801B6E20(actor->obj.pos.x, actor->obj.pos.z + D_ctx_80177D20, &sp2C, &actor->obj.pos.y, &sp2C);
     actor->health = 10;
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_TI_60068F0);
+    actor->info.hitbox = LOAD_ASSET(D_TI_60068F0);
     Matrix_RotateY(gCalcMatrix, actor->obj.rot.y * M_DTOR, 0);
     Matrix_RotateX(gCalcMatrix, actor->obj.rot.x * M_DTOR, 1);
     Matrix_RotateZ(gCalcMatrix, actor->obj.rot.z * M_DTOR, 1);
@@ -368,7 +368,7 @@ void Titania_80189CC8(Actor* actor) {
                 actor->info.unk_1C = 0.0f;
                 func_enmy_80066254(actor);
                 actor->info.bonus = 0;
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_TI_6006924);
+                actor->info.hitbox = LOAD_ASSET(D_TI_6006924);
                 func_effect_8007D0E0(actor->fwork[0], actor->fwork[1], actor->fwork[2], 2.0f);
             }
         }
@@ -463,7 +463,7 @@ void Titania_8018A2E8(Actor* actor, f32 xPos, f32 yPos, f32 zPos, f32 xVel, f32 
     actor->obj.pos.z = zPos;
     actor->scale = RAND_FLOAT(0.2f) + 0.3f;
     Object_SetInfo(&actor->info, actor->obj.id);
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_i5_801B7568);
+    actor->info.hitbox = LOAD_ASSET(D_i5_801B7568);
 }
 
 void Titania_8018A3F4(f32 xPos, f32 yPos, f32 zPos, f32 xVel, f32 yVel, f32 zVel) {
@@ -760,7 +760,7 @@ void Titania_8018B1B4(s32 limbIndex, Vec3f* rot, void* data) {
     s32 i;
     PosRot* var_a2;
 
-    var_a2 = SEGMENTED_TO_VIRTUAL(D_i5_801BDA30);
+    var_a2 = LOAD_ASSET(D_i5_801BDA30);
 
     for (i = 0; i < 10; i++, var_a2++) {
         if (limbIndex == D_i5_801B75D0[i]) {
@@ -887,7 +887,7 @@ void Titania_8018B720(Actor* actor) {
 
     Matrix_RotateY(gCalcMatrix, actor->obj.rot.y * M_DTOR, 0);
 
-    var_s1 = SEGMENTED_TO_VIRTUAL(D_i5_801BDA30);
+    var_s1 = LOAD_ASSET(D_i5_801BDA30);
 
     for (i = 0; i < 10; i++, var_s1++) {
         actorPtr = func_game_800A3608(OBJ_ACTOR_189);
@@ -2138,13 +2138,13 @@ void Titania_8018F4D8(Object_80* obj80) {
     if (obj80->unk_44 != 0) {
         if (obj80->obj.rot.z == 0.0f) {
             obj80->obj.pos.x = obj80->vel.z;
-            obj80->info.hitbox = SEGMENTED_TO_VIRTUAL(D_TI_6006BF0);
+            obj80->info.hitbox = LOAD_ASSET(D_TI_6006BF0);
         } else if (obj80->obj.rot.z > 0.0f) {
             obj80->obj.pos.x = obj80->vel.z - 75.0f;
-            obj80->info.hitbox = SEGMENTED_TO_VIRTUAL(D_TI_6006C28);
+            obj80->info.hitbox = LOAD_ASSET(D_TI_6006C28);
         } else {
             obj80->obj.pos.x = obj80->vel.z + 75.0f;
-            obj80->info.hitbox = SEGMENTED_TO_VIRTUAL(D_TI_6006C0C);
+            obj80->info.hitbox = LOAD_ASSET(D_TI_6006C0C);
         }
     }
 }
@@ -2233,7 +2233,7 @@ void Titania_Boss306_Init(Boss* boss) {
         *sp1C = 0.0f;
     }
 
-    D_i5_801BBEF8 = SEGMENTED_TO_VIRTUAL(D_TI_8000FC0);
+    D_i5_801BBEF8 = LOAD_ASSET(D_TI_8000FC0);
 }
 
 bool Titania_8018FC70(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* data) {

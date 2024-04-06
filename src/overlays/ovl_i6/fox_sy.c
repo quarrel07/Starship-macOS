@@ -59,7 +59,7 @@ void SectorY_Boss314_Init(Boss* boss) {
     D_ctx_80177A10[8] = 0;
 
     if (boss->index == 0) {
-        boss->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_60342A0);
+        boss->info.hitbox = LOAD_ASSET(D_SY_60342A0);
         boss->health = 150;
 
         boss->swork[28] = 5;
@@ -75,7 +75,7 @@ void SectorY_Boss314_Init(Boss* boss) {
         SectorY_8019AEC0(boss);
     } else {
         boss->fwork[34] = 2.8f;
-        boss->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_6034304);
+        boss->info.hitbox = LOAD_ASSET(D_SY_6034304);
         boss->health = 100;
         boss->swork[28] = 0;
         boss->swork[25] = 1;
@@ -414,7 +414,7 @@ void SectorY_80198F5C(Boss* boss) {
         boss->unk_04C = 0;
         boss->swork[36] = 0;
         boss->swork[21] = 9;
-        boss->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CBF34);
+        boss->info.hitbox = LOAD_ASSET(D_edata_800CBF34);
 
         if (boss->index == 0) {
             boss->timer_058 = 20000;
@@ -622,7 +622,7 @@ void SectorY_80199438(Boss* boss) {
                     }
                 }
                 func_effect_8007D2C8(boss->obj.pos.x, boss->obj.pos.y, boss->obj.pos.z + 30.0f, 4.0f);
-                boss->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_6034304);
+                boss->info.hitbox = LOAD_ASSET(D_SY_6034304);
                 AUDIO_PLAY_SFX(0x2903A06F, boss->sfxSource, 4);
             }
         }
@@ -3496,20 +3496,20 @@ void SectorY_Actor204_Update(Actor* actor) {
     } else {
         Math_SmoothStepToF(&actor->fwork[27], 0.0f, 1.0f, 0.05f, 0.0f);
     }
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_603405C);
+    actor->info.hitbox = LOAD_ASSET(D_SY_603405C);
     if (actor->unk_046 == 1) {
-        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_603421C);
+        actor->info.hitbox = LOAD_ASSET(D_SY_603421C);
     }
     i = actor->iwork[17];
     if (i != 0) {
         if (i == 1) {
-            actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_6034124);
+            actor->info.hitbox = LOAD_ASSET(D_SY_6034124);
         } else if (i == 2) {
-            actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_60341A8);
+            actor->info.hitbox = LOAD_ASSET(D_SY_60341A8);
         }
     }
     if (actor->unk_046 == 2) {
-        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SY_60340C0);
+        actor->info.hitbox = LOAD_ASSET(D_SY_60340C0);
     }
 
     if ((actor->unk_0D0 != 0) && (actor->unk_046 != 3)) {

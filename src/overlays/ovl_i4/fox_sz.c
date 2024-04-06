@@ -195,7 +195,7 @@ void SectorZ_80199FCC(Actor* actor, s32 arg1) {
 
     actor->health = 250;
     actor->info.drawType = 2;
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_SZ_6009230);
+    actor->info.hitbox = LOAD_ASSET(D_SZ_6009230);
     actor->fwork[1] = 25.0f;
     actor->fwork[29] = 2.0f;
 
@@ -768,7 +768,7 @@ void SectorZ_8019B888(void) {
                 actor->health = 255;
                 actor->iwork[11] = 1;
                 AUDIO_PLAY_SFX(0x3100000CU, actor->sfxSource, 4U);
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CC01C);
+                actor->info.hitbox = LOAD_ASSET(D_edata_800CC01C);
                 actor->info.unk_16 = 0;
                 actor->info.unk_1C = 0.0f;
             }
@@ -1794,7 +1794,7 @@ void SectorZ_8019EA68(void) {
     Object_58* obj58;
     Boss* boss = &gBosses[0];
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
     Rand_SetSeed(1, 29000, 9876);
 

@@ -133,7 +133,7 @@ bool func_enmy_80061148(Vec3f* arg0, f32 arg1) {
 
 void Object_SetInfo(ObjectInfo* info, u32 objId) {
     *info = D_edata_800CC124[objId];
-    info->hitbox = SEGMENTED_TO_VIRTUAL(D_edata_800CC124[objId].hitbox);
+    info->hitbox = LOAD_ASSET(D_edata_800CC124[objId].hitbox);
     if (gLevelMode == LEVELMODE_UNK_2) {
         info->unk_10 += 200.0f;
     }
@@ -488,7 +488,7 @@ void func_enmy_80062568(void) {
     s32 var_s0;
     s32 temp = gCurrentLevel; // seems fake
     if (1) {}
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[temp]);
+    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[temp]);
     var_s0 = D_ctx_80177CA0 - 40;
     var_s1 = &D_ctx_80178310[var_s0];
 
@@ -507,15 +507,15 @@ void func_enmy_80062664(void) {
     s32 j;
 
     if ((gCurrentLevel == LEVEL_METEO) && (D_ctx_8017827C == 1)) {
-        D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_ME_602B148);
+        D_ctx_80178310 = LOAD_ASSET(D_ME_602B148);
     } else if ((gCurrentLevel == LEVEL_SECTOR_X) && (D_ctx_8017827C == 1)) {
-        D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_SX_602F18C);
+        D_ctx_80178310 = LOAD_ASSET(D_SX_602F18C);
     } else if ((gCurrentLevel == LEVEL_VENOM_ANDROSS) && (D_ctx_8017827C == 1)) {
-        D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_ANDROSS_C0356A4);
+        D_ctx_80178310 = LOAD_ASSET(D_ANDROSS_C0356A4);
     } else if ((gCurrentLevel == LEVEL_VENOM_1) && (D_ctx_8017827C == 1)) {
-        D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_VE1_6010088);
+        D_ctx_80178310 = LOAD_ASSET(D_VE1_6010088);
     } else {
-        D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+        D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
     }
     if (D_ctx_8017812C == 0) {
         for (j = 0; j < D_ctx_801782B8; j++) {
@@ -965,7 +965,7 @@ void func_enmy_80063E5C(Object_80* obj80, f32* hitboxData) {
             item->obj.pos.z = obj80->obj.pos.z;
             item->obj.rot.y = obj80->obj.rot.y;
             Object_SetInfo(&item->info, item->obj.id);
-            item->info.hitbox = SEGMENTED_TO_VIRTUAL(hitboxData);
+            item->info.hitbox = LOAD_ASSET(hitboxData);
             break;
         }
     }

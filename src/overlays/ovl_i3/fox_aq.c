@@ -306,8 +306,8 @@ void Aquas_801A8E30(void) {
     f32 spA8[17];
     f32 sp64[17];
     s32 j;
-    Vtx* sp5C = SEGMENTED_TO_VIRTUAL(D_AQ_6031D90);
-    Vtx* sp58 = SEGMENTED_TO_VIRTUAL(D_AQ_6011A78);
+    Vtx* sp5C = LOAD_ASSET(D_AQ_6031D90);
+    Vtx* sp58 = LOAD_ASSET(D_AQ_6011A78);
 
     for (i = 0; i < 17; i++) {
         if ((i == 0) || (i == 16)) {
@@ -1841,11 +1841,11 @@ void Aquas_801AEB44(Actor* actor) {
         actor->iwork[1]++;
         actor->iwork[1] %= 8;
     }
-    temp_v1_2 = SEGMENTED_TO_VIRTUAL(D_AQ_6019078);
+    temp_v1_2 = LOAD_ASSET(D_AQ_6019078);
     if (actor->iwork[1] < 4) {
-        var_t5 = SEGMENTED_TO_VIRTUAL(D_AQ_6018C78);
+        var_t5 = LOAD_ASSET(D_AQ_6018C78);
     } else {
-        var_t5 = SEGMENTED_TO_VIRTUAL(D_AQ_6018878);
+        var_t5 = LOAD_ASSET(D_AQ_6018878);
     }
     var_t1 = actor->iwork[1] % 4;
     if (var_t1 >= 3) {
@@ -4608,7 +4608,7 @@ void Aquas_801B91A4(Actor* actor) {
             actor->unk_0B6 = 19;
             actor->fwork[1] = actor->obj.pos.z;
             if (actor->obj.rot.z >= 4.0f) {
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_AQ_60314AC);
+                actor->info.hitbox = LOAD_ASSET(D_AQ_60314AC);
                 actor->health = 200;
                 actor->info.bonus = 1;
                 actor->state = 2;
@@ -4878,7 +4878,7 @@ void Aquas_801BA57C(Actor* actor) {
         actor->info.bonus = 0;
         actor->scale = 0.5f;
         actor->gravity = 0.1f;
-        actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_AQ_603151C);
+        actor->info.hitbox = LOAD_ASSET(D_AQ_603151C);
         actor->fwork[2] = RAND_FLOAT_CENTERED((actor->index & 3) + 1.0f);
     }
     actor->fwork[1] = RAND_FLOAT(50.0f);
@@ -5605,10 +5605,10 @@ void Aquas_801BC9A0(Actor* actor) {
                             var_s0->vel.z = sp98.z;
                             var_s0->gravity = 0.4f;
                             var_s0->state = 5;
-                            var_s0->info.hitbox = SEGMENTED_TO_VIRTUAL(D_AQ_6030D3C);
+                            var_s0->info.hitbox = LOAD_ASSET(D_AQ_6030D3C);
                         } else {
                             var_s0->state = 2;
-                            var_s0->info.hitbox = SEGMENTED_TO_VIRTUAL(D_AQ_6030D58);
+                            var_s0->info.hitbox = LOAD_ASSET(D_AQ_6030D58);
                         }
                         break;
                     }
@@ -6036,7 +6036,7 @@ void Aquas_801BE3F8(Actor* actor) {
             break;
         case 1:
             if (fabsf(gPlayer[0].pos.z - actor->obj.pos.z) <= 3000.0f) {
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_AQ_60314E4);
+                actor->info.hitbox = LOAD_ASSET(D_AQ_60314E4);
                 actor->info.damage = 0;
                 actor->info.bonus = 1;
                 actor->timer_0BC = 40.0f + RAND_FLOAT(30.0f);
@@ -6098,7 +6098,7 @@ void Aquas_801BE3F8(Actor* actor) {
                 }
             }
             if (actor->state == 1) {
-                actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_AQ_60314E4);
+                actor->info.hitbox = LOAD_ASSET(D_AQ_60314E4);
                 actor->info.damage = 0;
                 actor->info.bonus = 1;
                 actor->state = 2;

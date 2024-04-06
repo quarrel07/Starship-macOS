@@ -892,7 +892,7 @@ void Area6_80187944(Boss* bossA6) {
                         bossA6->fwork[A6_FWK_1] = 90.0f;
                         bossA6->fwork[A6_FWK_2] = 2.0f;
                         AUDIO_PLAY_SFX(0x31404066, bossA6->sfxSource, 4);
-                        bossA6->info.hitbox = SEGMENTED_TO_VIRTUAL(D_A6_6028578);
+                        bossA6->info.hitbox = LOAD_ASSET(D_A6_6028578);
                         D_i3_801C2250[A6_BSS_7] = 0;
                     }
                 }
@@ -931,7 +931,7 @@ void Area6_80187944(Boss* bossA6) {
                     D_i3_801C2250[A6_BSS_28] = 0;
                     bossA6->state = 4;
                     bossA6->fwork[A6_FWK_2] = 1.0f;
-                    bossA6->info.hitbox = SEGMENTED_TO_VIRTUAL(D_A6_6028454);
+                    bossA6->info.hitbox = LOAD_ASSET(D_A6_6028454);
                     D_i3_801C2250[A6_BSS_6] = 1;
                     Audio_KillSfxBySource(bossA6->sfxSource);
                     AUDIO_PLAY_SFX(0x31404067, bossA6->sfxSource, 4);
@@ -982,7 +982,7 @@ void Area6_80187944(Boss* bossA6) {
                     bossA6->fwork[A6_FWK_8] = bossA6->fwork[A6_FWK_9] = 0;
                     bossA6->fwork[A6_FWK_2] = 2.0f;
                     AUDIO_PLAY_SFX(0x31404066, bossA6->sfxSource, 4);
-                    bossA6->info.hitbox = SEGMENTED_TO_VIRTUAL(D_A6_6028578);
+                    bossA6->info.hitbox = LOAD_ASSET(D_A6_6028578);
                     D_i3_801C2250[A6_BSS_7] = bossA6->swork[A6_SWK_37] = 0;
                     bossA6->state = 3;
                     if (D_i3_801C2250[A6_BSS_6] == 0) {

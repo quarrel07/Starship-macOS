@@ -26,6 +26,7 @@ s32 Graphics_Printf(const char* fmt, ...) {
 }
 
 void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
+    return;
     u16* temp_t0 = LOAD_ASSET(texture);
     u16 temp_a3;
     s32 var_a0;
@@ -75,12 +76,14 @@ void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
 }
 
 void Texture_Mottle(u16* dst, u16* src, u8 mode) {
+    return;
     s32 var_v1;
     s32 var_s3;
     u8* var_s0_2;
     u8* var_s4_2;
     s32 temp_ft3;
 
+    // LTodo: [HD-Textures] This is broken
     dst = LOAD_ASSET(dst);
     src = LOAD_ASSET(src);
     switch (mode) {

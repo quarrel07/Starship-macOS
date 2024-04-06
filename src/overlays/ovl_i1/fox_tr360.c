@@ -11,7 +11,7 @@ void Training_80198C50(void) {
     Object_58* obj58;
     s32 i;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_TR_6008EF8);
+    D_ctx_80178310 = LOAD_ASSET(D_TR_6008EF8);
     Rand_SetSeed(1, 29000, 9876);
 
     obj58 = gObjects58;

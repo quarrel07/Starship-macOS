@@ -35,8 +35,8 @@ void func_tank_80043280(u16* text0, u16* text1, f32 zRot) {
     Vec3f sp74;
 
     Matrix_Push(&gCalcMatrix);
-    text0 = SEGMENTED_TO_VIRTUAL(text0);
-    text1 = SEGMENTED_TO_VIRTUAL(text1);
+    text0 = LOAD_ASSET(text0);
+    text1 = LOAD_ASSET(text1);
     Matrix_RotateZ(gCalcMatrix, M_DTOR * zRot, 0);
     sp74.z = 0.0f;
     for (i = 0, dy = 0.0f; i < 32; i++, dy += 1.0f) {

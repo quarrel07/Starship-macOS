@@ -6,7 +6,7 @@ bool func_col2_800A36FC(Vec3f* objPos, Vec3f* colliderPos, CollisionHeader2* col
 bool func_col2_800A3A74(Vec3f* point, Vec3f** tri, Vec3f* normOut);
 
 bool func_col2_800A3690(Vec3f* objPos, Vec3f* colliderPos, s32 colId, Vec3f* hitDataOut) {
-    return func_col2_800A36FC(objPos, colliderPos, SEGMENTED_TO_VIRTUAL(&D_800D2CA0[colId]), hitDataOut);
+    return func_col2_800A36FC(objPos, colliderPos, LOAD_ASSET(&D_800D2CA0[colId]), hitDataOut);
 }
 
 bool func_col2_800A36FC(Vec3f* objPos, Vec3f* colliderPos, CollisionHeader2* colHeader, Vec3f* hitDataOut) {
@@ -32,8 +32,8 @@ bool func_col2_800A36FC(Vec3f* objPos, Vec3f* colliderPos, CollisionHeader2* col
     }
     above = false;
     count = colHeader->polyCount;
-    polys = SEGMENTED_TO_VIRTUAL(colHeader->polys);
-    mesh = SEGMENTED_TO_VIRTUAL(colHeader->mesh);
+    polys = LOAD_ASSET(colHeader->polys);
+    mesh = LOAD_ASSET(colHeader->mesh);
     for (i = 0; i < count; i++, polys++) {
         for (j = 0; j < 3; j++) {
             tri[j] = &mesh[polys->vtx[j]];

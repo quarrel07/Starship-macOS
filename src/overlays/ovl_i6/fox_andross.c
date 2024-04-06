@@ -51,7 +51,7 @@ void Andross_80187530(Actor* actor) {
     }
 
     index = actor->unk_0B6 / 18.0f;
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(D_i6_801A6760[index]);
+    actor->info.hitbox = LOAD_ASSET(D_i6_801A6760[index]);
     actor->obj.rot.z = D_Andross_801A7F68;
 }
 
@@ -76,8 +76,8 @@ void Andross_801876FC(void) {
     s32 i;
     s32 j;
 
-    var_s0 = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C039290);
-    var_s3 = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C03A290);
+    var_s0 = LOAD_ASSET(&D_ANDROSS_C039290);
+    var_s3 = LOAD_ASSET(&D_ANDROSS_C03A290);
 
     for (i = 0; i < 32 * 32; i += 32) {
         temp_ft3 = 4.0f * __sinf((s32) (((i / 32) + (gGameFrameCount / 2)) % 32U) * (2 * M_PI / 32));
@@ -94,7 +94,7 @@ void Andross_801878A8() {
     Object_58* obj58;
     s32 i;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C0356CC);
+    D_ctx_80178310 = LOAD_ASSET(&D_ANDROSS_C0356CC);
 
     for (obj58 = gObjects58, i = 0; i < 1000; i++) {
         if (D_ctx_80178310[i].id < 0) {
@@ -112,7 +112,7 @@ void Andross_801878A8() {
             obj58->obj.rot.y = D_ctx_80178310[i].rot.y;
             Object_SetInfo(&obj58->info, obj58->obj.id);
             if (obj58->obj.id == OBJ_80_131) {
-                obj58->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C038CCC);
+                obj58->info.hitbox = LOAD_ASSET(&D_ANDROSS_C038CCC);
             }
             obj58++;
         }
@@ -163,14 +163,14 @@ void Andross_80187C5C(void) {
 
     switch (RAND_INT(2.9f)) {
         case 0:
-            D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C036310);
+            D_ctx_80178310 = LOAD_ASSET(&D_ANDROSS_C036310);
             break;
         case 1:
-            D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C036B6C);
+            D_ctx_80178310 = LOAD_ASSET(&D_ANDROSS_C036B6C);
             break;
         default:
         case 2:
-            D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C03733C);
+            D_ctx_80178310 = LOAD_ASSET(&D_ANDROSS_C03733C);
             break;
     }
 
@@ -193,7 +193,7 @@ void Andross_80187C5C(void) {
             }
             Object_SetInfo(&obj58->info, obj58->obj.id);
             if (obj58->obj.id == OBJ_80_131) {
-                obj58->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C038CCC);
+                obj58->info.hitbox = LOAD_ASSET(&D_ANDROSS_C038CCC);
             }
             obj58++;
         }
@@ -542,7 +542,7 @@ void Andross_80189098(Boss* boss) {
     actor->obj.pos.y = 0.0f;
     actor->obj.pos.z = boss->obj.pos.z;
     Object_SetInfo(&actor->info, actor->obj.id);
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_edata_800CBEA8);
+    actor->info.hitbox = LOAD_ASSET(&D_edata_800CBEA8);
 
     actor++;
 
@@ -556,7 +556,7 @@ void Andross_80189098(Boss* boss) {
     actor->obj.pos.y = 0.0f;
     actor->obj.pos.z = boss->obj.pos.z;
     Object_SetInfo(&actor->info, actor->obj.id);
-    actor->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_edata_800CBEA8);
+    actor->info.hitbox = LOAD_ASSET(&D_edata_800CBEA8);
 
     gActors[0].state = 2;
 }
@@ -761,7 +761,7 @@ void Andross_80189B70(Boss* boss) {
 
     Andross_80188A4C(boss);
     Andross_80188CB8(boss);
-    boss->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_ANDROSS_C038F24);
+    boss->info.hitbox = LOAD_ASSET(&D_ANDROSS_C038F24);
     Math_SmoothStepToF(&D_bg_800C9C30, 255.0f, 1.0f, 4.0f, 0);
     Math_SmoothStepToF(&boss->unk_3F8, 10.0f, 0.2f, 0.2f, 0);
     if (!(gGameFrameCount & 0x10)) {
@@ -833,7 +833,7 @@ void Andross_80189B70(Boss* boss) {
             }
             break;
         case 11:
-            boss->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_edata_800CBF34);
+            boss->info.hitbox = LOAD_ASSET(&D_edata_800CBF34);
             if (boss->timer_050 < 120) {
                 D_ctx_80178348 = D_ctx_80178350 = D_ctx_80178354 = 255;
                 D_ctx_80178358 = 80;
@@ -882,7 +882,7 @@ void Andross_80189B70(Boss* boss) {
             boss->fwork[5] = gPlayer[0].unk_138;
             break;
         case 12:
-            boss->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_edata_800CBF34);
+            boss->info.hitbox = LOAD_ASSET(&D_edata_800CBF34);
             boss->fwork[1] = 0;
             boss->fwork[24] = 0.2f;
             boss->fwork[22] = 0.0f;
@@ -903,7 +903,7 @@ void Andross_80189B70(Boss* boss) {
             }
             break;
         case 13:
-            boss->info.hitbox = SEGMENTED_TO_VIRTUAL(&D_edata_800CBF34);
+            boss->info.hitbox = LOAD_ASSET(&D_edata_800CBF34);
             boss->fwork[24] = 0.0f;
             boss->fwork[22] = 255.0f;
             if (250.0f < boss->fwork[22]) {
@@ -1254,8 +1254,8 @@ void Andross_8018BDD8(void) {
     Vtx* sp74;
     Vtx* sp70;
 
-    sp74 = SEGMENTED_TO_VIRTUAL(D_ANDROSS_C038FE8);
-    sp70 = SEGMENTED_TO_VIRTUAL(D_ANDROSS_C017598);
+    sp74 = LOAD_ASSET(D_ANDROSS_C038FE8);
+    sp70 = LOAD_ASSET(D_ANDROSS_C017598);
 
     for (i = 0; i < 17; i++) {
         if (i == 0 || i == 16) {
@@ -3281,7 +3281,7 @@ void Andross_80193380(Object_80* obj80) {
         case 0:
             if (fabsf(obj80->obj.pos.z - gPlayer[0].unk_138) < 1800.0f) {
                 obj80->state = 1;
-                obj80->info.hitbox = SEGMENTED_TO_VIRTUAL(D_ANDROSS_C038AC4);
+                obj80->info.hitbox = LOAD_ASSET(D_ANDROSS_C038AC4);
             }
             break;
         case 1:
@@ -3355,7 +3355,7 @@ void Andross_80193710(void) {
     Boss* boss;
     s32 i;
 
-    D_ctx_80178310 = SEGMENTED_TO_VIRTUAL(D_enmy_800CFDA0[gCurrentLevel]);
+    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
 
     for (obj58 = gObjects58, i = 0; i < 1000; i++) {
         if (D_ctx_80178310[i].id < 0) {
