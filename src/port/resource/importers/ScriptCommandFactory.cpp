@@ -1,0 +1,23 @@
+#include "ScriptCommandFactory.h"
+#include "../type/Script.h"
+#include "spdlog/spdlog.h"
+#include "ResourceUtil.h"
+
+namespace SF64 {
+std::shared_ptr<LUS::IResource> ResourceFactoryBinaryScriptCMDV0::ReadResource(std::shared_ptr<LUS::File> file) {
+    if (!FileHasValidFormatAndReader(file)) {
+        return nullptr;
+    }
+
+    auto cmds = std::make_shared<ScriptCMDs>(file->InitData);
+    auto reader = std::get<std::shared_ptr<LUS::BinaryReader>>(file->Reader);
+
+    auto size = reader->ReadUInt32();
+
+    for (uint32_t i = 0; i < size * 2; i++) {
+        cmds->mCommands.push_back(reader->ReadUInt16());
+    }
+
+    return cmds;
+}
+} // namespace LUS
