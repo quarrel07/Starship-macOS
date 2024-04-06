@@ -2,6 +2,12 @@
 #include "ui/ImguiUI.h"
 #include "ZAPDUtils/Utils/StringHelper.h"
 #include "libultraship/src/Context.h"
+#include "resource/type/ResourceType.h"
+#include "resource/importers/AnimFactory.h"
+#include "resource/importers/LimbFactory.h"
+#include "resource/importers/MessageFactory.h"
+#include "resource/importers/MessageLookupFactory.h"
+#include "resource/importers/SkeletonFactory.h"
 
 #include <Fast3D/gfx_pc.h>
 #include <Fast3D/gfx_rendering_api.h>
@@ -16,13 +22,12 @@ float gInterpolationStep = 0.0f;
 }
 
 GameEngine* GameEngine::Instance;
-// TimerTask sTimerTasks[0x10];
 
 GameEngine::GameEngine() {
     std::vector<std::string> OTRFiles;
-    // if (const std::string cube_path = LUS::Context::GetPathRelativeToAppDirectory("lylat.otr"); std::filesystem::exists(cube_path)) {
-    //     OTRFiles.push_back(cube_path);
-    // }
+    if (const std::string cube_path = LUS::Context::GetPathRelativeToAppDirectory("lylat.otr"); std::filesystem::exists(cube_path)) {
+        OTRFiles.push_back(cube_path);
+    }
     if (const std::string sm64_otr_path = LUS::Context::GetPathRelativeToAppBundle("sm64.otr"); std::filesystem::exists(sm64_otr_path)) {
         OTRFiles.push_back(sm64_otr_path);
     }
@@ -35,10 +40,15 @@ GameEngine::GameEngine() {
             }
         }
     }
-    this->context = LUS::Context::CreateInstance("Lylat64", "sf64", "lylat.cfg.json", OTRFiles,
-                                                 {}, 3);
-    // this->context->GetResourceManager()->GetResourceLoader()->RegisterResourceFactory(
-    //     LUS::ResourceType::SAnim, "Animation", std::make_shared<CubeOS::AnimationFactory>());
+
+    this->context = LUS::Context::CreateInstance("Lylat64", "sf64", "lylat.cfg.json", OTRFiles, {}, 3);
+
+    auto loader = context->GetResourceManager()->GetResourceLoader();
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY, "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(), RESOURCE_FORMAT_BINARY, "Skeleton", static_cast<uint32_t>(SF64::ResourceType::Skeleton), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryLimbV0>(), RESOURCE_FORMAT_BINARY, "Limb", static_cast<uint32_t>(SF64::ResourceType::Limb), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryMessageV0>(), RESOURCE_FORMAT_BINARY, "Message", static_cast<uint32_t>(SF64::ResourceType::Message), 0);
+    loader->RegisterResourceFactory( std::make_shared<SF64::ResourceFactoryBinaryMessageLookupV0>(), RESOURCE_FORMAT_BINARY, "MessageTable", static_cast<uint32_t>(SF64::ResourceType::MessageTable), 0);
 }
 
 void GameEngine::Create(){

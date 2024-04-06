@@ -4,6 +4,7 @@
 #include "Engine.h"
 
 extern "C" {
+#include <sf64mesg.h>
     void Main_SetVIMode(void);
     void Main_Initialize(void);
     void Main_ThreadEntry(void* arg);

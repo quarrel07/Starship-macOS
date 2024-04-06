@@ -56,6 +56,7 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
     s32 var_v1;
     s32 temp_v0;
     s32 priority;
+    msg = LOAD_ASSET(msg);
 
     switch (msg[0]) {
         default:
@@ -156,7 +157,6 @@ void func_radio_800BAAE8(void) {
     s32 i;
     f32 sp38;
     f32 temp_fa0;
-    s32 j;
 
     D_radio_80178744 = 0;
 
@@ -425,21 +425,13 @@ void func_radio_800BAAE8(void) {
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
 
         if (mirror) {
-            for (i = 0, j = 0; i < 2; i++, j += 880) {
-                TextureRect_16bRGBA_MirX(&gMasterDisp, &sp44[j], 44, 20, D_radio_8017873C,
-                                         D_radio_80178740 + 20.0f + sp38 + (i * 20.0f * D_ctx_80177D38), 1.0f,
+            TextureRect_16bRGBA_MirX(&gMasterDisp, sp44, 44, 44, D_radio_8017873C,
+                                         D_radio_80178740 + 20.0f + sp38 + D_ctx_80177D38, 1.0f,
                                          D_ctx_80177D38);
-            }
-            TextureRect_16bRGBA_MirX(&gMasterDisp, &sp44[2 * 880], 44, 4, D_radio_8017873C,
-                                     D_radio_80178740 + 20.0f + sp38 + (40.0f * D_ctx_80177D38), 1.0f, D_ctx_80177D38);
         } else {
-            for (i = 0, j = 0; i < 2; i++, j += 880) {
-                TextureRect_16bRGBA(&gMasterDisp, &sp44[j], 44, 20, D_radio_8017873C,
-                                    D_radio_80178740 + 20.0f + sp38 + (i * 20.0f * D_ctx_80177D38), 1.0f,
-                                    D_ctx_80177D38);
-            }
-            TextureRect_16bRGBA(&gMasterDisp, &sp44[2 * 880], 44, 4, D_radio_8017873C,
-                                D_radio_80178740 + 20.0f + sp38 + (40.0f * D_ctx_80177D38), 1.0f, D_ctx_80177D38);
+            TextureRect_16bRGBA(&gMasterDisp, sp44, 44, 44, D_radio_8017873C,
+                                         D_radio_80178740 + 20.0f + sp38 + D_ctx_80177D38, 1.0f,
+                                         D_ctx_80177D38);
         }
     }
 }

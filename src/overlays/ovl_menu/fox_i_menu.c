@@ -12,6 +12,8 @@ void Map_801A01A8(void);
 s32 D_menu_801B7BA0;
 s32 D_menu_801AD9F0 = 0;
 
+extern void Title_8018F77C(void);
+
 void OvlMenu_CallFunction(u32 mode, void* ptr) {
     switch (mode) {
         case 103:
@@ -44,6 +46,11 @@ void OvlMenu_CallFunction(u32 mode, void* ptr) {
 
         case 110:
             Map_8019E8C8();
+            break;
+
+        case 999:
+            Title_8018F77C();
+            break;
 
         default:
             break;

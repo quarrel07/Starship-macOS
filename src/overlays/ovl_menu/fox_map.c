@@ -2022,11 +2022,15 @@ void Map_801A0788(void) {
 }
 
 void Map_801A07E8(u8* arg0, u8* arg1, f32* arg2) {
+    return;
     s32* var_v0 = D_menu_801B0004;
     s32 temp;
     s32 i;
     s32 j;
     s32 k;
+
+    arg0 = LOAD_ASSET(arg0);
+    arg1 = LOAD_ASSET(arg1);
 
     for (i = 1; i < 48; i++, var_v0++) {
         for (k = 0, j = *var_v0; j < (95 - *var_v0); j++, k++) {
@@ -2156,13 +2160,14 @@ void Map_801A0954(void) {
     }
 }
 
+static const char* D_menu_801B6954[] = {
+    D_MAP_6041A80, D_MAP_6035780, D_MAP_6033080, D_MAP_603A580, D_MAP_603F380, D_MAP_6037E80, D_MAP_603CC80,
+};
+
 void Map_801A0D14(void) {
     s32 i;
     static f32 D_menu_801B694C = 71.0f;
     static f32 D_menu_801B6950 = 205.0f;
-    static u16* D_menu_801B6954[] = {
-        D_MAP_6041A80, D_MAP_6035780, D_MAP_6033080, D_MAP_603A580, D_MAP_603F380, D_MAP_6037E80, D_MAP_603CC80,
-    };
 
     Map_801A116C();
 
@@ -2187,18 +2192,12 @@ void Map_801A0D14(void) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, D_menu_801CD9E8);
 
-    for (i = 0; i < 13; i++) {
-        TextureRect_16bRGBA(&gMasterDisp, D_menu_801B6954[D_menu_801CD9F0] + (96 * 4 * i), 96, 4, 109.0f,
-                            24.0f + (4.0f * i), 1.0f, 1.0f);
-    }
+    TextureRect_16bRGBA(&gMasterDisp, D_menu_801B6954[D_menu_801CD9F0], 96, 52, 109.0f, 24.0f, 1.0f, 1.0f);
 
     if ((D_menu_801CD9E4 != 0) && (D_menu_801CD9F0 + 1 < 7)) {
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, D_menu_801CD9E4);
 
-        for (i = 0; i < 13; i++) {
-            TextureRect_16bRGBA(&gMasterDisp, D_menu_801B6954[D_menu_801CD9F0 + 1] + (i * 96 * 4), 96, 4, 109.0f,
-                                24.0f + (i * 4.0f), 1.0f, 1.0f);
-        }
+        TextureRect_16bRGBA(&gMasterDisp, D_menu_801B6954[D_menu_801CD9F0 + 1], 96, 52, 109.0f, 24.0f, 1.0f, 1.0f);
 
         if (D_menu_801CD9E4 == 255) {
             D_menu_801CD9E4 = 0;
@@ -2378,10 +2377,7 @@ void Map_801A19A8(void) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) D_menu_801CEA9C);
 
-    for (i = 0; i < 4; i++) {
-        TextureRect_8bIA(&gMasterDisp, D_MAP_600D590 + (i * 168 * 4), 168, 4, 72.0f, 104.0f + (4.0f * i), 1.0f, 1.0f);
-    }
-    TextureRect_8bIA(&gMasterDisp, D_MAP_600D590 + (168 * 16), 168, 3, 72.0f, 104.0f + 16.0f, 1.0f, 1.0f);
+    TextureRect_8bIA(&gMasterDisp, D_MAP_600D590, 168, 19, 72.0f, 104.0f, 1.0f, 1.0f);
 }
 
 void Map_801A1AE8(void) {
@@ -5306,11 +5302,8 @@ void Map_801A9910(void) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) D_menu_801CEA6C);
 
-    for (i = 0; i < D_menu_801AF834[var_s0].height; i++) {
-        TextureRect_8bIA(&gMasterDisp, D_menu_801AF834[var_s0].texture + (D_menu_801AF834[var_s0].width * i),
-                         D_menu_801AF834[var_s0].width, 1, D_menu_801AF834[var_s0].xPos, 20.0f + (1.0f * i), 1.0f,
-                         1.0f);
-    }
+    TextureRect_8bIA(&gMasterDisp, D_menu_801AF834[var_s0].texture,
+        D_menu_801AF834[var_s0].width, D_menu_801AF834[var_s0].height, D_menu_801AF834[var_s0].xPos, 20.0f, 1.0f, 1.0f);
 
     Math_SmoothStepToF(&D_menu_801CEA6C, 255.0f, D_menu_801CEA70, 10.0f, 1.0f);
 
@@ -5411,18 +5404,18 @@ void Map_801A9A8C(void) {
     }
 #endif
 
-    TextureRect_8bIA(&gMasterDisp, &D_5000500, 112, 19, D_menu_801B6AC0[0], D_menu_801B6AC8[0], 1.0f, 1.0f);
+    TextureRect_8bIA(&gMasterDisp, D_5000500, 112, 19, D_menu_801B6AC0[0], D_menu_801B6AC8[0], 1.0f, 1.0f);
     TextureRect_8bIA(&gMasterDisp, sp54, 16, 15, D_menu_801B6AC0[1], D_menu_801B6AC8[1], 1.0f, 1.0f);
 
     for (i = 0; i < D_menu_801AF834[sp58].height; i++) {
-        TextureRect_8bIA(&gMasterDisp, D_menu_801AF834[sp58].texture + (D_menu_801AF834[sp58].width * i),
-                         D_menu_801AF834[sp58].width, 1, D_menu_801AF834[sp58].xPos, 94.0f + (1.0f * i), 1.0f, 1.0f);
+
     }
 
-    for (i = 0; i < D_menu_801AF914[sp58].height; i++) {
-        TextureRect_8bIA(&gMasterDisp, D_menu_801AF914[sp58].texture + (D_menu_801AF914[sp58].width * i),
-                         D_menu_801AF914[sp58].width, 1, D_menu_801AF914[sp58].xPos, 140.0f + (1.0f * i), 1.0f, 1.0f);
-    }
+    TextureRect_8bIA(&gMasterDisp, D_menu_801AF834[sp58].texture, D_menu_801AF834[sp58].width, D_menu_801AF834[sp58].height,
+        D_menu_801AF834[sp58].xPos, 94.0f, 1.0f, 1.0f);
+
+    TextureRect_8bIA(&gMasterDisp, D_menu_801AF914[sp58].texture, D_menu_801AF914[sp58].width, D_menu_801AF914[sp58].height,
+        D_menu_801AF914[sp58].xPos, 140.0f, 1.0f, 1.0f);
 }
 
 void Map_801A9DE8(void) {
@@ -5975,11 +5968,7 @@ void Map_801AB978(s32 arg0) {
                 xPos = 205.0f;
                 yPos = 77.0f;
 
-                for (i = 0; i < 12; i++) {
-                    TextureRect_16bRGBA(&gMasterDisp, D_MAP_6044820 + (i * 92 * 4), 92, 4, xPos, yPos + (i * 4.0f),
-                                        1.0f, 1.0f);
-                }
-                TextureRect_16bRGBA(&gMasterDisp, D_MAP_6044820 + (92 * 12 * 4), 92, 3, xPos, yPos + 48.0f, 1.0f, 1.0f);
+                TextureRect_16bRGBA(&gMasterDisp, D_MAP_6044820, 92, 51, xPos, yPos, 1.0f, 1.0f);
 
                 if (arg0 == 21) {
                     TextureRect_16bRGBA(&gMasterDisp, D_MAP_6046CD0, 32, 34, xPos + 47.0, yPos, 1.0f, 1.0f);

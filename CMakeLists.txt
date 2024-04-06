@@ -73,7 +73,7 @@ include_directories(
 
 # Collect source files to build the executable
 file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    "src/assets/*.c"
+    # "src/assets/*.c"
     "src/audio/*.c"
     "src/audio/*.h"
     "src/engine/*.c"
@@ -107,7 +107,8 @@ list(FILTER ALL_FILES EXCLUDE REGEX "src/overlays/ovl_ending/fox_end2_data.c")
 list(FILTER ALL_FILES EXCLUDE REGEX "src/sys/sys_timer.c")
 list(FILTER ALL_FILES EXCLUDE REGEX "src/sys/sys_fault.c")
 
-add_executable(${PROJECT_NAME} ${ALL_FILES} ${GENERATED_SOURCES})
+add_executable(${PROJECT_NAME} ${ALL_FILES} ${GENERATED_SOURCES}
+		src/port/resource/importers/ResourceUtil.h)
 
 ################################################################################
 # MSVC runtime library

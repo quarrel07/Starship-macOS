@@ -3,7 +3,7 @@
 
 u16* Message_PtrFromId(u16 msgId) {
     s32 i;
-    MsgLookup* lookup = gMsgLookup;
+    MsgLookup* lookup = (MsgLookup*) LOAD_ASSET(gMsgLookup);
 
     while (lookup->msgId != -1) {
         if (lookup->msgId == msgId) {
@@ -16,7 +16,7 @@ u16* Message_PtrFromId(u16 msgId) {
 
 u16 Message_IdFromPtr(u16* msgPtr) {
     s32 i;
-    MsgLookup* lookup = gMsgLookup;
+    MsgLookup* lookup = (MsgLookup*) LOAD_ASSET(gMsgLookup);
 
     while (lookup->msgPtr != NULL) {
         if (lookup->msgPtr == msgPtr) {
@@ -29,7 +29,7 @@ u16 Message_IdFromPtr(u16* msgPtr) {
 
 s32 Message_GetWidth(u16* msgPtr) {
     s32 width = 0;
-    u16* msgChar = msgPtr;
+    u16* msgChar = LOAD_ASSET(msgPtr);
 
     while (*msgChar != MSGCHAR_END) {
         if (*msgChar > 15 || *msgChar == 12) {
@@ -42,7 +42,7 @@ s32 Message_GetWidth(u16* msgPtr) {
 
 s32 Message_GetCharCount(u16* msgPtr) {
     s32 count = 0;
-    u16* msgChar = msgPtr;
+    u16* msgChar = LOAD_ASSET(msgPtr);
     
 #if MODS_LEVEL_SELECT == 1
     if (gCurrentPlanet == 6) {
@@ -58,7 +58,8 @@ s32 Message_GetCharCount(u16* msgPtr) {
 }
 
 void Message_DisplayChar(Gfx** gfxPtr, u16 msgChar, s32 xpos, s32 ypos) {
-    gDPLoadTextureBlock_4b((*gfxPtr)++, gTextCharTextures[msgChar >> 2], G_IM_FMT_CI, 16, 13, msgChar & 3,
+    const char* mChar = gTextCharTextures[msgChar >> 2];
+    gDPLoadTextureBlock_4b((*gfxPtr)++, mChar, G_IM_FMT_CI, 16, 13, msgChar & 3,
                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                            G_TX_NOLOD);
     gSPTextureRectangle((*gfxPtr)++, xpos << 2, ypos << 2, (xpos + 13) << 2, (ypos + 13) << 2, G_TX_RENDERTILE, 64, 0,
@@ -70,6 +71,7 @@ bool Message_DisplayText(Gfx** gfxPtr, u16* msgPtr, s32 xPos, s32 yPos, s32 len)
     s32 yChar = yPos;
     s32 i;
     s32 print = false;
+    msgPtr = LOAD_ASSET(msgPtr);
 
     gDPSetPrimColor((*gfxPtr)++, 0x00, 0x00, 255, 255, 255, 255);
     gDPSetTextureLUT((*gfxPtr)++, G_TT_RGBA16);
@@ -121,6 +123,7 @@ void Message_DisplayScrollingText(Gfx** gfxPtr, u16* msgPtr, s32 xPos, s32 yPos,
     s32 var_s2 = xPos;
     s32 var_s4 = yPos;
     s32 i;
+    msgPtr = LOAD_ASSET(msgPtr);
 
     gDPSetTextureLUT((*gfxPtr)++, G_TT_RGBA16);
     gDPLoadTLUT((*gfxPtr)++, 64, 256, gTextCharPalettes);
@@ -165,6 +168,7 @@ void Message_DisplayScrollingText(Gfx** gfxPtr, u16* msgPtr, s32 xPos, s32 yPos,
 bool Message_IsPrintingChar(u16* msgPtr, s32 charPos) {
     s32 i;
     s32 print;
+    msgPtr = LOAD_ASSET(msgPtr);
 
     // bug: if the for loop is skipped, print is never initialized
     for (i = 0; msgPtr[i] != 0 && i < charPos; i++) {

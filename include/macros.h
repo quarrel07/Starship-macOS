@@ -65,4 +65,10 @@ extern f32 COS_DEG(f32 angle);
 #define __attribute__(x)
 #endif
 
+#if defined(_WIN32)
+    #define ALIGN_ASSET(x) __declspec(align(x))
+#else
+    #define ALIGN_ASSET(x) __attribute__((aligned (x)))
+#endif
+
 #endif // MACROS_H

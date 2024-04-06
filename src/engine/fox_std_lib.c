@@ -26,7 +26,7 @@ s32 Graphics_Printf(const char* fmt, ...) {
 }
 
 void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
-    u16* temp_t0 = SEGMENTED_TO_VIRTUAL(texture);
+    u16* temp_t0 = LOAD_ASSET(texture);
     u16 temp_a3;
     s32 var_a0;
     s32 var_t4;
@@ -81,8 +81,8 @@ void Texture_Mottle(u16* dst, u16* src, u8 mode) {
     u8* var_s4_2;
     s32 temp_ft3;
 
-    dst = SEGMENTED_TO_VIRTUAL(dst);
-    src = SEGMENTED_TO_VIRTUAL(src);
+    dst = LOAD_ASSET(dst);
+    src = LOAD_ASSET(src);
     switch (mode) {
         case 2:
             for (var_s3 = 0; var_s3 < 32 * 32; var_s3 += 32) {
@@ -154,6 +154,7 @@ void Animation_DrawLimb(s32 mode, Limb* limb, Limb** skeleton, Vec3f* jointTable
 
     Matrix_Push(&gCalcMatrix);
 
+    skeleton = LOAD_ASSET(skeleton);
     limbIndex = Animation_GetLimbIndex(limb, skeleton);
     limb = SEGMENTED_TO_VIRTUAL(limb);
     rot = jointTable[limbIndex];
@@ -211,7 +212,7 @@ void Animation_DrawSkeleton(s32 mode, Limb** skeletonSegment, Vec3f* jointTable,
 
     Matrix_Push(&gCalcMatrix);
     Matrix_Copy(gCalcMatrix, transform);
-    skeleton = SEGMENTED_TO_VIRTUAL(skeletonSegment);
+    skeleton = LOAD_ASSET(skeletonSegment);
     rootLimb = SEGMENTED_TO_VIRTUAL(skeleton[0]);
     rootIndex = Animation_GetLimbIndex(skeleton[0], skeleton);
     baseRot = jointTable[rootIndex];
@@ -255,8 +256,8 @@ void Animation_DrawSkeleton(s32 mode, Limb** skeletonSegment, Vec3f* jointTable,
     }
 }
 
-s16 Animation_GetFrameData(Animation* animationSegmemt, s32 frame, Vec3f* frameTable) {
-    Animation* animation = SEGMENTED_TO_VIRTUAL(animationSegmemt);
+s16 Animation_GetFrameData(Animation* anim, s32 frame, Vec3f* frameTable) {
+    Animation* animation = LOAD_ASSET(anim);
     u16 var4 = animation->limbCount;
     JointKey* key = SEGMENTED_TO_VIRTUAL(animation->jointKey);
     u16* frameData = SEGMENTED_TO_VIRTUAL(animation->frameData);
@@ -282,8 +283,8 @@ s16 Animation_GetFrameData(Animation* animationSegmemt, s32 frame, Vec3f* frameT
     return var4 + 1;
 }
 
-s32 Animation_GetFrameCount(Animation* animationSegment) {
-    Animation* animation = SEGMENTED_TO_VIRTUAL(animationSegment);
+s32 Animation_GetFrameCount(Animation* anim) {
+    Animation* animation = LOAD_ASSET(anim);
 
     return animation->frameCount;
 }
@@ -355,12 +356,12 @@ void Animation_GetSkeletonBoundingBox(Limb** skeletonSegment, Animation* animati
     Vec3f boundBox[8];
     Vec3f boundBoxRot[8];
     s32 i;
-    Limb** skeleton = (Limb**) SEGMENTED_TO_VIRTUAL(skeletonSegment);
+    Limb** skeleton = LOAD_ASSET(skeletonSegment);
 
-    limb = (Limb*) SEGMENTED_TO_VIRTUAL(skeleton[0]);
-    animation = (Animation*) SEGMENTED_TO_VIRTUAL(animationSegment);
-    key = (JointKey*) SEGMENTED_TO_VIRTUAL(animation->jointKey);
-    frameData = (u16*) SEGMENTED_TO_VIRTUAL(animation->frameData);
+    limb = SEGMENTED_TO_VIRTUAL(skeleton[0]);
+    animation = LOAD_ASSET(animationSegment);
+    key = SEGMENTED_TO_VIRTUAL(animation->jointKey);
+    frameData = SEGMENTED_TO_VIRTUAL(animation->frameData);
 
     if (frame < (s16) key[1].zLen) {
         var_t6 = frameData[(s16) key[1].z + frame];
@@ -589,10 +590,14 @@ void TextureRect_8bCI(Gfx** gfxPtr, void* texture, void* palette, u32 width, u32
                         (s32) (1.0f / yScale * 1024.0f));
 }
 
-void TextureRect_16bRGBA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale,
-                         f32 yScale) {
-    gDPLoadTextureBlock((*gfxPtr)++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+void TextureRect_16bRGBA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
+    gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    gDPSetTextureImage((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, texture);
+    gDPLoadSync((*gfxPtr)++);
+    gDPLoadTile((*gfxPtr)++, G_TX_LOADTILE, 0, 0, width - 1 << 2, height - 1 << 2);
+
     gSPTextureRectangle((*gfxPtr)++, (s32) (xPos * 4.0f), (s32) (yPos * 4.0f), (s32) ((xPos + width * xScale) * 4.0f),
                         (s32) ((yPos + height * yScale) * 4.0f), 0, 0, 0, (s32) (1.0f / xScale * 1024.0f),
                         (s32) (1.0f / yScale * 1024.0f));
@@ -600,16 +605,26 @@ void TextureRect_16bRGBA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32
 
 void TextureRect_16bRGBA_MirX(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale,
                               f32 yScale) {
-    gDPLoadTextureBlock((*gfxPtr)++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    gDPSetTextureImage((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, texture);
+    gDPLoadSync((*gfxPtr)++);
+    gDPLoadTile((*gfxPtr)++, G_TX_LOADTILE, 0, 0, width - 1 << 2, height - 1 << 2);
+
     gSPTextureRectangle((*gfxPtr)++, (s32) (xPos * 4.0f), (s32) (yPos * 4.0f), (s32) ((xPos + width * xScale) * 4.0f),
                         (s32) ((yPos + height * yScale) * 4.0f), G_TX_RENDERTILE, (width - 1) * 32, 0,
                         (u16) (s32) (-1.0f / xScale * 1024.0f), (s32) (1.0f / yScale * 1024.0f));
 }
 
 void TextureRect_8bIA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
-    gDPLoadTextureBlock((*gfxPtr)++, texture, G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    gDPSetTextureImage((*gfxPtr)++, G_IM_FMT_IA, G_IM_SIZ_8b, width, texture);
+    gDPLoadSync((*gfxPtr)++);
+    gDPLoadTile((*gfxPtr)++, G_TX_LOADTILE, 0, 0, width - 1 << 2, height - 1 << 2);
+
     gSPTextureRectangle((*gfxPtr)++, (s32) (xPos * 4.0f), (s32) (yPos * 4.0f), (s32) ((xPos + width * xScale) * 4.0f),
                         (s32) ((yPos + height * yScale) * 4.0f), 0, 0, 0, (s32) (1.0f / xScale * 1024.0f),
                         (s32) (1.0f / yScale * 1024.0f));
@@ -1187,9 +1202,9 @@ void func_stdlib_800A1540(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 // 20 kinds of fake. Try to improve it here: https://decomp.me/scratch/NMQZB
 void Texture_BlendRGBA16(f32 weight, u16 size, u16* src1, u16* src2, u16* dst) {
     s32 i;
-    u16* var_a1 = SEGMENTED_TO_VIRTUAL(src1);
-    u16* var_a2 = SEGMENTED_TO_VIRTUAL(src2);
-    u16* var_a3 = SEGMENTED_TO_VIRTUAL(dst);
+    u16* var_a1 = LOAD_ASSET(src1);
+    u16* var_a2 = LOAD_ASSET(src2);
+    u16* var_a3 = LOAD_ASSET(dst);
     u16 temp1;
     u16 temp2;
     u16 temp3;

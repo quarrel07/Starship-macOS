@@ -1,5 +1,8 @@
 #pragma once
 
+#define LOAD_ASSET(path) (GameEngine_OTRSigCheck((const char*) path) ? ResourceGetDataByName((const char*) path) : path)
+#define LOAD_ASSET_RAW(path) ResourceGetDataByName((const char*) path)
+
 #ifdef __cplusplus
 #include <vector>
 #include <Fast3D/gfx_pc.h>
