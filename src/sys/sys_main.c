@@ -1,6 +1,8 @@
 #include "sys.h"
 #include "sf64audio_external.h"
 
+#include <functions.h>
+
 s32 sGammaMode = 1;
 
 SPTask* gCurrentTask;

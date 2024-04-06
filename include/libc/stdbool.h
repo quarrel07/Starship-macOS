@@ -1,3 +1,4 @@
+#define LIBC_STDBOOL_H
 #ifndef LIBC_STDBOOL_H
 #define LIBC_STDBOOL_H
 
