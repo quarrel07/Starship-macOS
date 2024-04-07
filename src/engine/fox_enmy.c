@@ -97,6 +97,7 @@ bool func_enmy_80060FE4(Vec3f* arg0, f32 arg1) {
     if ((gLevelMode != LEVELMODE_ALL_RANGE) && (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_2)) {
         return true;
     }
+
     Matrix_RotateY(gCalcMatrix, gPlayer[gPlayerNum].unk_058, 0);
     sp2C.x = arg0->x - gPlayer[gPlayerNum].camEye.x;
     sp2C.y = 0.0f;
