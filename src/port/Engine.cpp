@@ -6,6 +6,7 @@
 #include "resource/importers/AnimFactory.h"
 #include "resource/importers/ColPolyFactory.h"
 #include "resource/importers/EnvSettingsFactory.h"
+#include "resource/importers/GenericArrayFactory.h"
 #include "resource/importers/HitboxFactory.h"
 #include "resource/importers/LimbFactory.h"
 #include "resource/importers/MessageFactory.h"
@@ -65,6 +66,7 @@ GameEngine::GameEngine() {
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryColPolyV0>(), RESOURCE_FORMAT_BINARY, "ColPoly", static_cast<uint32_t>(SF64::ResourceType::ColPoly), 0);
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3fV0>(), RESOURCE_FORMAT_BINARY, "Vec3f", static_cast<uint32_t>(SF64::ResourceType::Vec3f), 0);
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3sV0>(), RESOURCE_FORMAT_BINARY, "Vec3s", static_cast<uint32_t>(SF64::ResourceType::Vec3s), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryGenericArrayV0>(), RESOURCE_FORMAT_BINARY, "GenericArray", static_cast<uint32_t>(SF64::ResourceType::GenericArray), 0);
 }
 
 void GameEngine::Create(){

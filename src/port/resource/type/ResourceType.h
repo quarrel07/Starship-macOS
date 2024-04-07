@@ -16,5 +16,6 @@ enum class ResourceType {
     ObjectInit = 0x4F42494E,   // OBIN
     Vec3f = 0x56433346,        // VC3F
     Vec3s = 0x56433353,        // VC3S
+    GenericArray = 0x47415252, // GARR
 };
 } // namespace SOH
