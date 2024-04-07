@@ -17,8 +17,6 @@
 
 /* ************************* */
 
-#if MODS_LEVEL_SELECT == 1
 void Map_LevelSelect(void);
-#endif
 
 #endif

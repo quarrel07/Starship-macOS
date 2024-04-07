@@ -37,7 +37,7 @@ void decimalToHex(int num, char* hexString, size_t hexStringLength) {
     }
 }
 
-void Option_ExpertSoundUpdate(void) {
+void Option_JukeboxSoundUpdate(void) {
     char hexString[9]; // Buffer to store the hexadecimal string
 
     if ((gControllerPress[gMainController].button & R_TRIG) && (sfxBank < 4)) {

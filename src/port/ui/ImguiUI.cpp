@@ -12,6 +12,10 @@
 #include <Fast3D/gfx_pc.h>
 #include "port/Engine.h"
 
+extern "C" {
+#include "sys.h"
+}
+
 namespace GameUI {
 std::shared_ptr<GameMenuBar> mGameMenuBar;
 std::shared_ptr<LUS::GuiWindow> mConsoleWindow;
@@ -391,7 +395,7 @@ void DrawGameMenu() {
                 "Ctrl+R"
 #endif
         )) {
-            std::reinterpret_pointer_cast<LUS::ConsoleWindow>(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetGuiWindow("Console"))->Dispatch("reset");
+            gNextGameState = GSTATE_BOOT;
         }
 #if !defined(__SWITCH__) && !defined(__WIIU__)
 
@@ -455,19 +459,17 @@ void DrawDebugMenu() {
         });
 
         UIWidgets::CVarCheckbox("Debug mode", "gEnableDebugMode", {
-            .tooltip = "Various debug features, including a level selector from the main menu"
+            .tooltip = "TBD"
         });
 
-        UIWidgets::CVarCheckbox("Better Level Select", "gDeveloper.BetterLevelSelect", {
-            .tooltip = "Tweaks to the level select screen, like naming and allowing C-buttons to be used"
+        UIWidgets::CVarCheckbox("Level Selector", "gLevelSelector", {
+            .tooltip = "Allows you to select any level from the main menu"
         });
 
-        UIWidgets::CVarCheckbox("Draw DebugInfo", "gDeveloper.DrawDebugInfo");
-        if (CVarGetInteger("gDeveloper.DrawDebugInfo", 0)) {
-            UIWidgets::CVarCombobox("DebugInfo mode", "gDeveloper.DebugInfoPage", debugInfoPages, {
-                .defaultIndex = 0,
-            });
-        }
+        UIWidgets::CVarCheckbox("SFX Jukebox", "gSfxJukebox", {
+            .tooltip = "Allows you to play sound effects from the game"
+        });
+
         UIWidgets::Spacer(0);
 
         UIWidgets::WindowButton("Stats", "gStatsEnabled", GameUI::mStatsWindow, {

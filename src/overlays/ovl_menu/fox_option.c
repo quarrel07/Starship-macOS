@@ -384,13 +384,11 @@ void Option_Setup(void) {
             continue;
         }
         if (!(gSaveFile.save.data.planet[i].normalMedal & 1)) {
-#if MODS_LEVEL_SELECT == 1
-            enableExpertModes = true;
-#elif MODS_SFX_JUKEBOX == 1
-            enableExpertModes = true;
-#else
-            enableExpertModes = false;
-#endif
+            if(CVarGetInteger("gLevelSelector", 0) || CVarGetInteger("gSfxJukebox", 0)) {
+                enableExpertModes = true;
+            } else {
+                enableExpertModes = false;
+            }
             break;
         }
     }
@@ -1643,13 +1641,17 @@ void Option_ExpertSoundInit(void) {
     // clang-format on
 }
 
-// Expert Sound Options
-#if MODS_SFX_JUKEBOX == 1
 #include "../../mods/sfxjukebox.c"
-#else
+
+// Expert Sound Options
 void Option_ExpertSoundUpdate(void) {
     s32 pad;
     f32 sp28 = D_menu_801B931C;
+
+    if(CVarGetInteger("gSfxJukebox", 0) == 1) {
+        Option_JukeboxSoundUpdate();
+        return;
+    }
 
     if (Option_8019C66C(&sp28, 0.0f, 49.0f, &D_menu_801B9290) != 0) {
         AUDIO_PLAY_SFX(0x49000002, gDefaultSfxSource, 4);
@@ -1685,7 +1687,6 @@ void Option_ExpertSoundUpdate(void) {
         }
     }
 }
-#endif
 
 void Option_ExpertSoundDraw(void) {
     u8* temp_v0_4;

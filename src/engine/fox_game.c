@@ -10,7 +10,7 @@ s32 D_game_80161A28;
 u8 D_game_80161A2C;
 u16 D_game_80161A2E;
 u16 gNextLevel;
-u16 gNextGameState;
+GameState gNextGameState;
 u16 D_game_80161A34;
 u16 gBgColor;
 u8 gBlurAlpha;

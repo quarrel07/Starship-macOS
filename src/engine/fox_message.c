@@ -43,12 +43,10 @@ s32 Message_GetWidth(u16* msgPtr) {
 s32 Message_GetCharCount(u16* msgPtr) {
     s32 count = 0;
     u16* msgChar = LOAD_ASSET(msgPtr);
-    
-#if MODS_LEVEL_SELECT == 1
-    if (gCurrentPlanet == 6) {
+
+    if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
         return 0;
     }
-#endif
 
     while (*msgChar != NULL) {
         count++;

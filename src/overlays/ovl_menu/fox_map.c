@@ -1872,9 +1872,9 @@ void Map_8019FF48(void) {
                            D_menu_801CDA08);
     }
     gGameFrameCount++;
-#if MODS_LEVEL_SELECT == true
-    Map_LevelSelect();
-#endif
+    if(CVarGetInteger("gLevelSelector", 0)){
+        Map_LevelSelect();
+    }
 }
 
 void Map_801A01A8(void) {
@@ -4092,11 +4092,9 @@ bool Map_801A62FC(PlanetId planet) {
             break;
     }
 
-#if MODS_LEVEL_SELECT == 1
-    if (gCurrentPlanet == 6) {
+    if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
         return false;
     }
-#endif
 
     if (gSaveFile.save.data.planet[planetSaveSlot].played & 1) {
         ret = false;
@@ -5390,17 +5388,9 @@ void Map_801A9A8C(void) {
     RCP_SetupDL(&gMasterDisp, 0x53);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    #if MODS_LEVEL_SELECT == 1
-        if (gCurrentPlanet == 6) {
-            return;
-        }
-    #endif
-
-#if MODS_LEVEL_SELECT == 1
-    if (gCurrentPlanet == 6) {
+    if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
         return;
     }
-#endif
 
     TextureRect_8bIA(&gMasterDisp, D_5000500, 112, 19, D_menu_801B6AC0[0], D_menu_801B6AC8[0], 1.0f, 1.0f);
     TextureRect_8bIA(&gMasterDisp, sp54, 16, 15, D_menu_801B6AC0[1], D_menu_801B6AC8[1], 1.0f, 1.0f);
@@ -5935,11 +5925,9 @@ void Map_801AB300(void) {
     if ((D_menu_801CF018 > 0) && (D_menu_801CF018 != 100)) {
         Map_801AB978(D_ctx_801782A4);
         Map_801AB978(D_menu_801AF420[!D_menu_801CD940]);
-#if MODS_LEVEL_SELECT == 1
-        if (gCurrentPlanet == 6) {
+        if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
             return;
         }
-#endif
         func_radio_800BB388();
     }
 }
@@ -6731,6 +6719,4 @@ void Map_801AD7EC(s32 xPos, s32 yPos, s32 number) {
     }
 }
 
-#if MODS_LEVEL_SELECT == 1
 #include "../../mods/levelselect.c"
-#endif
