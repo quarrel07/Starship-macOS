@@ -1352,8 +1352,8 @@ void func_hud_80088784(s32 arg0) {
 }
 
 void func_hud_80088970(void) {
-    s32 i;
-    s32 j;
+    s32 i = 0;
+    s32 j = 0;
     Player* player;
     f32 x0;
     f32 y0;

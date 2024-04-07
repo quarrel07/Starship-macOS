@@ -152,7 +152,7 @@ s32 D_radio_80178744;
 
 void func_radio_800BAAE8(void) {
     static f32 D_800D4A74 = -1.0f;
-    u16* sp44;
+    u16* sp44 = NULL;
     s32 mirror;
     s32 i;
     f32 sp38;

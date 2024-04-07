@@ -710,8 +710,8 @@ bool func_enmy_8006326C(Vec3f* arg0, Vec3f* arg1, ObjectId objId, Object* obj) {
     Vec3f sp50;
     Vec3f sp44;
     s32 colId;
-    s32 pad1[3];
-    f32 sp30;
+    s32 pad1[2];
+    f32 sp30[2];
     s32 pad2;
 
     sp74.x = arg0->x - obj->pos.x;
@@ -745,7 +745,7 @@ bool func_enmy_8006326C(Vec3f* arg0, Vec3f* arg1, ObjectId objId, Object* obj) {
             } else if (objId == OBJ_BOSS_313) {
                 colId = COL1_8;
             }
-            if (func_col1_800998FC(&sp5C, &sp50, arg1, colId, &sp44, &sp30) > 0) {
+            if (func_col1_800998FC(&sp5C, &sp50, arg1, colId, &sp44, sp30) > 0) {
                 return true;
             }
         } else {
