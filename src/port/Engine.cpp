@@ -4,6 +4,7 @@
 #include "libultraship/src/Context.h"
 #include "resource/type/ResourceType.h"
 #include "resource/importers/AnimFactory.h"
+#include "resource/importers/ColPolyFactory.h"
 #include "resource/importers/EnvSettingsFactory.h"
 #include "resource/importers/HitboxFactory.h"
 #include "resource/importers/LimbFactory.h"
@@ -13,6 +14,8 @@
 #include "resource/importers/ScriptCommandFactory.h"
 #include "resource/importers/ScriptFactory.h"
 #include "resource/importers/SkeletonFactory.h"
+#include "resource/importers/Vec3fFactory.h"
+#include "resource/importers/Vec3sFactory.h"
 
 #include <Fast3D/gfx_pc.h>
 #include <Fast3D/gfx_rendering_api.h>
@@ -59,6 +62,9 @@ GameEngine::GameEngine() {
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryHitboxV0>(), RESOURCE_FORMAT_BINARY, "Hitbox", static_cast<uint32_t>(SF64::ResourceType::Hitbox), 0);
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptV0>(), RESOURCE_FORMAT_BINARY, "Script", static_cast<uint32_t>(SF64::ResourceType::Script), 0);
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptCMDV0>(), RESOURCE_FORMAT_BINARY, "ScriptCMD", static_cast<uint32_t>(SF64::ResourceType::ScriptCmd), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryColPolyV0>(), RESOURCE_FORMAT_BINARY, "ColPoly", static_cast<uint32_t>(SF64::ResourceType::ColPoly), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3fV0>(), RESOURCE_FORMAT_BINARY, "Vec3f", static_cast<uint32_t>(SF64::ResourceType::Vec3f), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3sV0>(), RESOURCE_FORMAT_BINARY, "Vec3s", static_cast<uint32_t>(SF64::ResourceType::Vec3s), 0);
 }
 
 void GameEngine::Create(){
