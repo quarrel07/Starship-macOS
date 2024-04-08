@@ -173,9 +173,8 @@ void Graphics_InitializeTask(u32 frameCount) {
 }
 
 void Main_SetVIMode(void) {
-    if ((gControllerHold[0].button & D_JPAD) && (gControllerHold[1].button & D_JPAD) &&
-        (gControllerHold[2].button & D_JPAD) && (gControllerHold[3].button & L_TRIG) &&
-        (gControllerHold[3].button & R_TRIG) && (gControllerHold[3].button & Z_TRIG)) {
+    if ((gControllerHold[0].button & D_JPAD) && (gControllerHold[0].button & L_TRIG) &&
+        (gControllerHold[0].button & R_TRIG) && (gControllerHold[0].button & Z_TRIG)) {
         sGammaMode = 1 - sGammaMode;
     }
     // switch (osTvType) {
@@ -260,9 +259,7 @@ void Graphics_ThreadUpdate(){
     Controller_ReadData();
     Controller_Rumble();
     osSendMesg(&gSerialThreadMsgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
-    if (gControllerPress[3].button & U_JPAD) {
-        Main_SetVIMode();
-    }
+    Main_SetVIMode();
     {
         gSPSegment(gUnkDisp1++, 0, 0);
         gSPDisplayList(gMasterDisp++, gGfxPool->unkDL1);
