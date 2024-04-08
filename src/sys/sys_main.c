@@ -190,16 +190,15 @@ void Main_SetVIMode(void) {
     //         osViSetMode(&osViModeNtscLan1);
     //         break;
     // }
-    // if (sGammaMode != 0) {
-    //     osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON | OS_VI_DIVOT_OFF | OS_VI_GAMMA_ON | OS_VI_GAMMA_DITHER_ON);
-    // } else {
-    //     osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON | OS_VI_DIVOT_OFF | OS_VI_GAMMA_OFF | OS_VI_GAMMA_DITHER_OFF);
-    // }
+    if (sGammaMode != 0) {
+        osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON | OS_VI_DIVOT_OFF | OS_VI_GAMMA_ON | OS_VI_GAMMA_DITHER_ON);
+    } else {
+        osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON | OS_VI_DIVOT_OFF | OS_VI_GAMMA_OFF | OS_VI_GAMMA_DITHER_OFF);
+    }
 }
 
 void SerialInterface_ThreadUpdate() {
     OSMesg sp34;
-
 
     switch (sp34.data32) {
         case SI_READ_SAVE:
