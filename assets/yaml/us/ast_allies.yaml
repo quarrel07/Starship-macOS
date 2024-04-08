@@ -98,6 +98,9 @@ D_D00B7F0:
 D_D00B870:
   { type: TEXTURE, ctype: u16, format: TLUT, colors: 8, offset: 0xD00B870, symbol: D_D00B870 }
 
+ast_allies_seg13_vtx_BB70:
+  { type: VTX, count: 144, offset: 0xD00BB70, symbol: ast_allies_seg13_vtx_BB70 }
+
 D_D00B880:
   { type: GFX, offset: 0xD00B880, symbol: D_D00B880 }
 
