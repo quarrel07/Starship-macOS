@@ -57,6 +57,7 @@ add_compile_definitions(
     CIMGUI_DEFINE_ENUMS_AND_STRUCTS
     NON_MATCHING=1
     NON_EQUIVALENT=1
+	AVOID_UB=1
 )
 
 # Find necessary libraries
