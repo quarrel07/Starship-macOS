@@ -26,6 +26,7 @@ s32 Graphics_Printf(const char* fmt, ...) {
 }
 
 void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
+    return;
     // LTodo: [HD-Textures] This is broken
     u16* temp_t0 = LOAD_ASSET(texture);
     u16 temp_a3;
