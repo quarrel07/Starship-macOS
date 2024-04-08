@@ -6117,11 +6117,19 @@ void func_play_800B73E0(Player* player) {
 }
 
 void func_play_800B79B0(void) {
+#ifdef AVOID_UB
+    s32 var_v0_2 = 0;
+    s32 sp40;
+    f32 sp3C;
+    u8 var_a0;
+    u8 sp3A = 0;
+#else
     s32 var_v0_2;
     s32 sp40;
     f32 sp3C;
     u8 var_a0;
     u8 sp3A;
+#endif
 
     switch (gCurrentLevel) {
         case LEVEL_TRAINING:

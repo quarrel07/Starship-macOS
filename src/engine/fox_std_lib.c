@@ -37,7 +37,7 @@ void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
             for (var_a0 = 0; var_a0 < width; var_a0++) {
                 temp_a3 = temp_t0[var_a0];
                 for (var_t4 = 1; var_t4 < height; var_t4++) {
-                    temp_t0[(var_t4 - 1) * width + var_a0] = temp_t0[(var_t4) * width + var_a0];
+                    temp_t0[(var_t4 - 1) * width + var_a0] = temp_t0[(var_t4) *width + var_a0];
                 }
                 temp_t0[(height - 1) * width + var_a0] = temp_a3;
             }
@@ -46,7 +46,7 @@ void Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
             for (var_a0 = 0; var_a0 < width; var_a0++) {
                 temp_a3 = temp_t0[(height - 1) * width + var_a0];
                 for (var_t4 = height - 2; var_t4 >= 0; var_t4--) {
-                    temp_t0[(var_t4 + 1) * width + var_a0] = temp_t0[(var_t4) * width + var_a0];
+                    temp_t0[(var_t4 + 1) * width + var_a0] = temp_t0[(var_t4) *width + var_a0];
                 }
                 temp_t0[var_a0] = temp_a3;
             }
@@ -593,9 +593,10 @@ void TextureRect_8bCI(Gfx** gfxPtr, void* texture, void* palette, u32 width, u32
                         (s32) (1.0f / yScale * 1024.0f));
 }
 
-void TextureRect_16bRGBA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
+void TextureRect_16bRGBA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale,
+                         f32 yScale) {
     gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
-                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                     G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
     gDPSetTextureImage((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, texture);
     gDPLoadSync((*gfxPtr)++);
@@ -609,7 +610,7 @@ void TextureRect_16bRGBA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32
 void TextureRect_16bRGBA_MirX(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale,
                               f32 yScale) {
     gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
-                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                     G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
     gDPSetTextureImage((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, texture);
     gDPLoadSync((*gfxPtr)++);
@@ -622,7 +623,7 @@ void TextureRect_16bRGBA_MirX(Gfx** gfxPtr, void* texture, u32 width, u32 height
 
 void TextureRect_8bIA(Gfx** gfxPtr, void* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
     gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
-                    G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                     G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
     gDPSetTextureImage((*gfxPtr)++, G_IM_FMT_IA, G_IM_SIZ_8b, width, texture);
     gDPLoadSync((*gfxPtr)++);
@@ -1132,38 +1133,40 @@ void Graphics_DisplaySmallText(s32 xPos, s32 yPos, f32 xScale, f32 yScale, char*
     f32 xPosCurrent = xPos;
     s32 width;
 
-    while (text[0] != 0) {
-        var_t0 = 0;
-        while ((var_t0 < ARRAY_COUNT(sSmallChars)) && sSmallChars[var_t0] != text[0]) {
-            var_t0++;
-        }
-        if (sSmallChars[var_t0] == text[0]) {
-            if (sSmallCharTex[var_t0] != NULL) {
-                width = 8;
-                if (var_t0 > 30) {
-                    width = 16;
-                }
-                TextureRect_8bIA(&gMasterDisp, sSmallCharTex[var_t0], width, 8, xPosCurrent, yPos, xScale, yScale);
-                if (1) {}
+    if (text != NULL) {
+        while (text[0] != 0) {
+            var_t0 = 0;
+            while ((var_t0 < ARRAY_COUNT(sSmallChars)) && sSmallChars[var_t0] != text[0]) {
+                var_t0++;
             }
-            switch (text[0]) {
-                case '!':
-                case ':':
-                case 'I':
-                    xPosCurrent += 4.0f * xScale;
-                    break;
-                case '-':
-                    xPosCurrent += 6.0f * xScale;
-                    break;
-                default:
-                    if (var_t0 > 29) {
-                        xPosCurrent += 9.0f * xScale;
-                    } else {
-                        xPosCurrent += 8.0f * xScale;
+            if (sSmallChars[var_t0] == text[0]) {
+                if (sSmallCharTex[var_t0] != NULL) {
+                    width = 8;
+                    if (var_t0 > 30) {
+                        width = 16;
                     }
+                    TextureRect_8bIA(&gMasterDisp, sSmallCharTex[var_t0], width, 8, xPosCurrent, yPos, xScale, yScale);
+                    if (1) {}
+                }
+                switch (text[0]) {
+                    case '!':
+                    case ':':
+                    case 'I':
+                        xPosCurrent += 4.0f * xScale;
+                        break;
+                    case '-':
+                        xPosCurrent += 6.0f * xScale;
+                        break;
+                    default:
+                        if (var_t0 > 29) {
+                            xPosCurrent += 9.0f * xScale;
+                        } else {
+                            xPosCurrent += 8.0f * xScale;
+                        }
+                }
             }
+            text++;
         }
-        text++;
     }
 }
 
