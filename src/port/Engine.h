@@ -31,5 +31,5 @@ class GameEngine {
 #else
 void GameEngine_ProcessGfxCommands(Gfx* commands);
 float GameEngine_GetAspectRatio();
-int GameEngine_OTRSigCheck(char* imgData);
+uint8_t GameEngine_OTRSigCheck(char* imgData);
 #endif

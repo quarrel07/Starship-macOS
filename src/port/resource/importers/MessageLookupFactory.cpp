@@ -14,9 +14,10 @@ std::shared_ptr<LUS::IResource> ResourceFactoryBinaryMessageLookupV0::ReadResour
     auto reader = std::get<std::shared_ptr<LUS::BinaryReader>>(file->Reader);
     auto count = reader->ReadUInt32();
 
-    for (uint32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count - 1; i++) {
         SPDLOG_INFO("Reading message lookup table entry {}", i);
         auto id = reader->ReadInt32();
+
         uint16_t* ptr = static_cast<uint16_t*>(ResourceGetDataByCrc(reader->ReadUInt64()));
         table->mLookupTable.push_back({ id, ptr });
     }

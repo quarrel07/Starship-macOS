@@ -36,21 +36,20 @@ struct Vec4s {
     Vec4s(int16_t x, int16_t y, int16_t z, int16_t w) : x(x), y(y), z(z), w(w) {}
 };
 
-typedef std::variant<uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, uint64_t, float, double, Vec2f, Vec3f, Vec3s, Vec3i, Vec4f, Vec4s> GenericArrayData;
-
 enum class ArrayType {
     u8, s8, u16, s16, u32, s32, u64, f32, f64, Vec2f, Vec3f, Vec3s, Vec3i, Vec4f, Vec4s,
 };
 
-class GenericArray : public LUS::Resource<GenericArrayData> {
+class GenericArray : public LUS::Resource<uint8_t> {
   public:
     using Resource::Resource;
 
     GenericArray() : Resource(std::shared_ptr<LUS::ResourceInitData>()) {}
 
-    GenericArrayData* GetPointer();
+    uint8_t* GetPointer();
     size_t GetPointerSize();
 
-    std::vector<GenericArrayData> mData;
+    std::vector<uint8_t> mData;
+    size_t mSize;
 };
 }

@@ -144,8 +144,12 @@ extern "C" uint32_t GameEngine_GetGameVersion() {
     return 0x00000001;
 }
 
-extern "C" int GameEngine_OTRSigCheck(const char* data) {
-    static const char* sOtrSignature = "__OTR__";
+static const char* sOtrSignature = "__OTR__";
+
+extern "C" uint8_t GameEngine_OTRSigCheck(const char* data) {
+    if(data == nullptr) {
+        return 0;
+    }
     return strncmp(data, sOtrSignature, strlen(sOtrSignature)) == 0;
 }
 
