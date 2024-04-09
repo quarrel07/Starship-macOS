@@ -41,4 +41,10 @@ void Timer_CompleteTask(TimerTask* task) {
     task->active = false;
 }
 
-void
+void Timer_Wait(u64 time) {
+    OSTimer timer;
+    OSMesg dummy;
+
+    osSetTimer(&timer, time, 0, &gTimerWaitMesgQueue, NULL);
+    MQ_WAIT_FOR_MESG(&gTimerWaitMesgQueue, &dummy);
+}

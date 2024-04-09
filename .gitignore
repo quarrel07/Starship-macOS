@@ -4,16 +4,21 @@ __pycache__
 .splat/
 starfox64.ld
 starfox64.uncompressed.ld
-starfox64.us.yaml
+starfox64.*.*.yaml
+starfox64.us.modded.map
 ctx.c
 ctx.c.m2c
 *.d
 *_auto.ld
 *.n64
 *.z64
+*.v64
+*.u64
 *.bin
 *.otr
+*.eeprom
 assets/yaml/us/ast_test.yaml
+/audio_data
 src/assets/*
 include/assets/*
 /build
@@ -27,3 +32,4 @@ TempComp.bin.mio0
 torch.hash.yml
 cmake-build-*/
 .idea/
+.vs

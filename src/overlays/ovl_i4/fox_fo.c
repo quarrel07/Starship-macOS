@@ -7,347 +7,364 @@
 #include "global.h"
 #include "assets/ast_fortuna.h"
 
-void Fortuna_801875F0(Actor* actor) {
+// Spawns up to 10 enemies from the center base.
+void Fortuna_SpawnEnemies(ActorEvent* this) {
     s32 i;
-    s32 counter;
-    Actor* actorPtr = &gActors[10];
-    f32 D_i4_8019EDE0[] = { 180.0f, 60.0f, 300.0f };
+    s32 enemyCount;
+    ActorAllRange* enemy = &gActors[10];
+    f32 sEnemySpawnAngle[] = { 180.0f, 60.0f, 300.0f };
 
-    for (counter = 0, i = 0; i < 10; i++, actorPtr++) {
-        if (actorPtr->obj.status != OBJ_FREE) {
-            counter++;
+    for (enemyCount = 0, i = 0; i < 10; i++, enemy++) {
+        if (enemy->obj.status != OBJ_FREE) {
+            enemyCount++;
         }
     }
 
-    if ((counter < 10) && (actor->timer_0C0 == 0)) {
-        if (D_360_8015F928 < (D_360_800C9B4C - 500)) {
-            actor->timer_0C0 = 40;
+    if ((enemyCount < 10) && (this->timer_0C0 == 0)) {
+        if (gAllRangeEventTimer < (gAllRangeSpawnEvent - 500)) {
+            this->timer_0C0 = 40;
 
-            actor->unk_04E++;
-            if (actor->unk_04E >= 3) {
-                actor->unk_04E = 0;
+            this->counter_04E++;
+            if (this->counter_04E >= 3) {
+                this->counter_04E = 0;
             }
 
-            for (i = 0, actorPtr = &gActors[10]; i < 10; i++, actorPtr++) {
-                if (actorPtr->obj.status == OBJ_FREE) {
-                    Actor_Initialize(actorPtr);
-                    actorPtr->obj.status = OBJ_ACTIVE;
-                    actorPtr->obj.id = OBJ_ACTOR_ALLRANGE;
-                    actorPtr->obj.pos.x = gBosses[0].obj.pos.x;
-                    actorPtr->obj.pos.y = gBosses[0].obj.pos.y + 20.0f;
-                    actorPtr->obj.pos.z = gBosses[0].obj.pos.z;
-                    actorPtr->state = 1;
-                    actorPtr->timer_0BC = 100;
-                    actorPtr->aiType = i + AI360_10;
-                    actorPtr->aiIndex = -1;
+            for (i = 0, enemy = &gActors[AI360_ENEMY]; i < 10; i++, enemy++) {
+                if (enemy->obj.status == OBJ_FREE) {
+                    Actor_Initialize(enemy);
+                    enemy->obj.status = OBJ_ACTIVE;
+                    enemy->obj.id = OBJ_ACTOR_ALLRANGE;
+                    enemy->obj.pos.x = gBosses[0].obj.pos.x;
+                    enemy->obj.pos.y = gBosses[0].obj.pos.y + 20.0f;
+                    enemy->obj.pos.z = gBosses[0].obj.pos.z;
+                    enemy->state = 1;
+                    enemy->timer_0BC = 100;
+                    enemy->aiType = i + AI360_ENEMY;
+                    enemy->aiIndex = -1;
 
                     if ((i == 3) && (Rand_ZeroOne() < 0.3f)) {
-                        actorPtr->aiIndex = AI360_SLIPPY;
+                        enemy->aiIndex = AI360_SLIPPY;
                     }
                     if ((i == 4) && (Rand_ZeroOne() < 0.3f)) {
-                        actorPtr->aiIndex = AI360_PEPPY;
+                        enemy->aiIndex = AI360_PEPPY;
                     }
                     if ((i == 5) && (Rand_ZeroOne() < 0.3f)) {
-                        actorPtr->aiIndex = AI360_FALCO;
+                        enemy->aiIndex = AI360_FALCO;
                     }
 
-                    actorPtr->unk_0F4.x = 3.0f;
-                    actorPtr->unk_0F4.y = D_i4_8019EDE0[actor->unk_04E];
-                    actorPtr->health = 24;
-                    actorPtr->unk_0C9 = actorPtr->iwork[11] = 1;
-                    actorPtr->itemDrop = DROP_SILVER_RING_50p;
-                    Object_SetInfo(&actorPtr->info, actorPtr->obj.id);
-                    AUDIO_PLAY_SFX(0x31000011U, actorPtr->sfxSource, 4);
+                    enemy->rot_0F4.x = 3.0f;
+                    enemy->rot_0F4.y = sEnemySpawnAngle[this->counter_04E];
+                    enemy->health = 24;
+                    enemy->drawShadow = enemy->iwork[11] = 1;
+                    enemy->itemDrop = DROP_SILVER_RING_50p;
+                    Object_SetInfo(&enemy->info, enemy->obj.id);
+                    AUDIO_PLAY_SFX(NA_SE_EN_ENGINE_01, enemy->sfxSource, 4);
                     break;
                 }
             }
         }
     }
-    func_360_8002F69C(actor);
+    ActorAllRange_UpdateStarWolfEvents(this);
 }
 
-f32 D_8019EDEC[] = { 0.0f, 700.0f, 12000.0f };
+void Fortuna_SetupStarWolfFlee(ActorAllRange* this, f32 xPos, f32 yPos, f32 zPos, f32 yRot) {
+    s32 health = this->health;
 
-void Fortuna_80187884(Actor* actor, f32 xPos, f32 yPos, f32 zPos, f32 arg4) {
-    s32 health = actor->health;
-    PRINTF("Enm->work[0]=%d\n");
-    PRINTF("tim %d\n");
-
-    Actor_Initialize(actor);
-    actor->health = health;
-    actor->obj.status = OBJ_ACTIVE;
-    actor->obj.pos.x = xPos;
-    actor->obj.pos.y = yPos;
-    actor->obj.pos.z = zPos;
-    actor->obj.id = OBJ_ACTOR_ALLRANGE;
-    actor->aiType = AI360_WOLF;
-    actor->unk_0C9 = 1;
-    actor->state = 0;
-    actor->timer_0BC = 10000;
-    actor->unk_0F4.y = arg4;
-    actor->iwork[11] = 1;
-    actor->unk_0F4.x = 0.0f;
-    Object_SetInfo(&actor->info, actor->obj.id);
-    AUDIO_PLAY_SFX(0x31004005U, actor->sfxSource, 4U);
+    Actor_Initialize(this);
+    this->health = health;
+    this->obj.status = OBJ_ACTIVE;
+    this->obj.pos.x = xPos;
+    this->obj.pos.y = yPos;
+    this->obj.pos.z = zPos;
+    this->obj.id = OBJ_ACTOR_ALLRANGE;
+    this->aiType = AI360_WOLF;
+    this->drawShadow = true;
+    this->state = 0;
+    this->timer_0BC = 10000;
+    this->rot_0F4.y = yRot;
+    this->iwork[11] = 1;
+    this->rot_0F4.x = 0.0f;
+    Object_SetInfo(&this->info, this->obj.id);
+    AUDIO_PLAY_SFX(NA_SE_EN_WOLF_ENGINE, this->sfxSource, 4);
 }
 
-Vec3f D_i4_8019EDF8[] = { { -300.0f, 1000.0f, 13000.0f }, { 300.0f, 700.0f, 14000.0f }, { 1000.0f, 300.0f, 0.0f } };
-Vec3f D_i4_8019EE1C[] = { { -1000.0f, 300.0f, 0 }, { 0.0f, 500.0f, 0 } };
+Vec3f sCsTeamInitialPos[] = {
+    { 0.0f, 700.0f, 12000.0f },
+    { -300.0f, 1000.0f, 13000.0f },
+    { 300.0f, 700.0f, 14000.0f },
+};
+Vec3f sTeamInitialPos[] = {
+    { 1000.0f, 300.0f, 0.0f },
+    { -1000.0f, 300.0f, 0 },
+    { 0.0f, 500.0f, 0 },
+};
 
-void Fortuna_80187960(Actor* actor) {
+void Fortuna_UpdateEvents(ActorEvent* this) {
     s32 i;
     Player* player = &gPlayer[0];
-    Actor* actorPtr;
-    Actor* actor0 = &gActors[0];
-    Actor* actor1 = &gActors[1];
-    Actor* actor2 = &gActors[2];
-    Actor* actor3 = &gActors[3];
-    Actor* actor4 = &gActors[4];
-    Actor* actor19 = &gActors[19];
-    s32 pad[2];
+    ActorAllRange* team;
+    ActorAllRange* falco = &gActors[AI360_FALCO];
+    ActorAllRange* slippy = &gActors[AI360_SLIPPY];
+    ActorAllRange* peppy = &gActors[AI360_PEPPY];
+    ActorAllRange* wolf = &gActors[AI360_WOLF];
+    ActorAllRange* greatFox = &gActors[19];
+    s32 pad2[3];
 
-    if ((player->state_1C8 == PLAYERSTATE_1C8_4) || (player->state_1C8 == PLAYERSTATE_1C8_6)) {
-        D_360_8015F928 = 20000;
+    PRINTF("Enm->work[0]=%d\n", this->iwork[0]);
+    PRINTF("tim %d\n", gAllRangeEventTimer);
+
+    if ((player->state_1C8 == PLAYERSTATE_1C8_DOWN) || (player->state_1C8 == PLAYERSTATE_1C8_NEXT)) {
+        gAllRangeEventTimer = 20000;
         return;
     }
 
-    if (D_360_8015F928 == 50) {
+    if (gAllRangeEventTimer == 50) {
         Radio_PlayMessage(gMsg_ID_9000, RCID_FOX);
     }
 
-    if ((D_360_8015F928 + 400) == (0, D_360_800C9B4C)) {
+    if ((gAllRangeEventTimer + 400) == (0, gAllRangeSpawnEvent)) {
         Radio_PlayMessage(gMsg_ID_9010, RCID_SLIPPY);
     }
 
-    if ((D_360_8015F928 + 240) == (0, D_360_800C9B4C)) {
+    if ((gAllRangeEventTimer + 240) == (0, gAllRangeSpawnEvent)) {
         Radio_PlayMessage(gMsg_ID_9375, RCID_ROB64);
         SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 1);
         SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_FANFARE, 1);
     }
 
-    if ((D_360_8015F928 + 100) == (0, D_360_800C9B4C)) {
+    if ((gAllRangeEventTimer + 100) == (0, gAllRangeSpawnEvent)) {
         Radio_PlayMessage(gMsg_ID_9380, RCID_FOX);
     }
 
-    if (D_360_8015F928 == 7160) {
+    if (gAllRangeEventTimer == 7160) {
         Radio_PlayMessage(gMsg_ID_9385, RCID_FOX);
     }
 
-    if (D_360_8015F928 == 7000) {
-        AUDIO_PLAY_SFX(0x11030016U, gBosses[0].sfxSource, 4U);
-        func_360_8002EE34();
+    if (gAllRangeEventTimer == 7000) {
+        AUDIO_PLAY_SFX(NA_SE_EXPLOSION_DEMO2, gBosses[0].sfxSource, 4);
+        AllRange_ClearRadio();
         Radio_PlayMessage(gMsg_ID_9390, RCID_ROB64);
-        D_360_8015F944 = 1.0f;
-        D_360_8015F93C = 1;
-        D_360_8015F930[0] = 1;
-        D_360_8015F930[1] = PLAYERSTATE_1C8_4;
-        D_360_8015F930[2] = 99;
+        gAllRangeCountdownScale = 1.0f;
+        gShowAllRangeCountdown = 1;
+        gAllRangeCountdown[0] = 1;
+        gAllRangeCountdown[1] = 4;
+        gAllRangeCountdown[2] = 99;
     }
 
-    if (D_360_8015F928 == 8036) {
+    if (gAllRangeEventTimer == 8036) {
         Radio_PlayMessage(gMsg_ID_9395, RCID_ROB64);
     }
 
-    if (D_360_8015F928 == 8540) {
+    if (gAllRangeEventTimer == 8540) {
         Radio_PlayMessage(gMsg_ID_9400, RCID_ROB64);
-        Audio_PlaySequence(SEQ_PLAYER_BGM, SEQ_ID_FORTUNA | SEQ_FLAG, 0, 0);
+        Audio_PlaySequence(SEQ_PLAYER_BGM, NA_BGM_STAGE_FO, 0, 0);
         gActors[1].aiIndex = gActors[2].aiIndex = gActors[3].aiIndex = gActors[4].aiIndex = gActors[5].aiIndex =
             gActors[6].aiIndex = gActors[7].aiIndex = -1;
     }
 
-    if ((D_360_800C9B4C < D_360_8015F928) && (D_360_8015F928 < 9970) && (D_ctx_80177CD0[0] == 0) &&
-        (D_ctx_80177CD0[1] == 0) && (D_ctx_80177CD0[2] == 0) && (D_ctx_80177CD0[3] == 0)) {
-        D_360_8015F928 = 9970;
+    if ((gAllRangeSpawnEvent < gAllRangeEventTimer) && (gAllRangeEventTimer < 9970) && (gStarWolfTeamAlive[0] == 0) &&
+        (gStarWolfTeamAlive[1] == 0) && (gStarWolfTeamAlive[2] == 0) && (gStarWolfTeamAlive[3] == 0)) {
+        gAllRangeEventTimer = 9970;
     }
 
-    if (D_360_8015F928 == 9056) {
-        if ((D_ctx_80177CD0[0] != 0) || (D_ctx_80177CD0[1] != 0) || (D_ctx_80177CD0[2] != 0) ||
-            ((D_ctx_80177CD0[3] != 0))) {
+    if (gAllRangeEventTimer == 9056) {
+        if ((gStarWolfTeamAlive[0] != 0) || (gStarWolfTeamAlive[1] != 0) || (gStarWolfTeamAlive[2] != 0) ||
+            ((gStarWolfTeamAlive[3] != 0))) {
             Radio_PlayMessage(gMsg_ID_9405, RCID_ROB64);
         } else {
-            D_360_8015F928 = 9995;
+            gAllRangeEventTimer = 9995;
         }
     }
 
-    if (D_360_8015F928 == 9206) {
-        D_360_8015F93C = 0;
-        actor->state = 5;
-        gPlayer[0].state_1C8 = PLAYERSTATE_1C8_0;
-        actor->iwork[0] = 0;
-        actor->fwork[0] = 0.0f;
-        func_360_8002EE34();
+    if (gAllRangeEventTimer == 9206) {
+        gShowAllRangeCountdown = false;
+        this->state = 5;
+        gPlayer[0].state_1C8 = PLAYERSTATE_1C8_STANDBY;
+        this->iwork[0] = 0;
+        this->fwork[0] = 0.0f;
+        AllRange_ClearRadio();
         for (i = 4; i < 8; i++) {
             Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
         }
     }
 
-    if ((D_360_8015F928 == 10000) && ((D_ctx_80177CD0[0] != 0) || (D_ctx_80177CD0[1] != 0) ||
-                                      (D_ctx_80177CD0[2] != 0) || (D_ctx_80177CD0[3] != 0))) {
+    if ((gAllRangeEventTimer == 10000) && ((gStarWolfTeamAlive[0] != 0) || (gStarWolfTeamAlive[1] != 0) ||
+                                           (gStarWolfTeamAlive[2] != 0) || (gStarWolfTeamAlive[3] != 0))) {
         Radio_PlayMessage(gMsg_ID_9420, RCID_FOX);
     }
 
-    if (D_360_8015F928 == 10100) {
-        D_360_8015F93C = 0;
-        actor->iwork[0] = 0;
-        actor->state = 6;
-        gPlayer[0].state_1C8 = PLAYERSTATE_1C8_7;
-        gPlayer[0].unk_1D0 = 0;
+    if (gAllRangeEventTimer == 10100) {
+        gShowAllRangeCountdown = 0;
+        this->iwork[0] = 0;
+        this->state = 6;
+        gPlayer[0].state_1C8 = PLAYERSTATE_1C8_LEVEL_COMPLETE;
+        gPlayer[0].csState = 0;
         gPlayer[0].unk_000 = 0.0f;
 
-        func_360_8002EE34();
+        AllRange_ClearRadio();
 
         for (i = 4; i < 8; i++) {
             Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
         }
 
-        if ((D_ctx_80177CD0[0] == 0) && (D_ctx_80177CD0[1] == 0) && (D_ctx_80177CD0[2] == 0) &&
-            (D_ctx_80177CD0[3] == 0)) {
+        if ((gStarWolfTeamAlive[0] == 0) && (gStarWolfTeamAlive[1] == 0) && (gStarWolfTeamAlive[2] == 0) &&
+            (gStarWolfTeamAlive[3] == 0)) {
             Radio_PlayMessage(gMsg_ID_9411, RCID_FOX);
-            D_ctx_80177930 = 1;
-            gPlayer[0].timer_1F8 = 50;
+            gMissionStatus = MISSION_ACCOMPLISHED;
+            gPlayer[0].csTimer = 50;
             player->unk_190 = 5.0f;
             player->unk_194 = 5.0f;
-            AUDIO_PLAY_SFX(0x09000002U, player->sfxSource, 0U);
+            AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, player->sfxSource, 0);
             SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 30);
             SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_FANFARE, 30);
         } else {
-            D_ctx_80177930 = 0;
-            gPlayer[0].timer_1F8 = 30;
+            gMissionStatus = MISSION_COMPLETE;
+            gPlayer[0].csTimer = 30;
         }
     }
 
-    switch (actor->state) {
+    switch (this->state) {
         case 0:
-            D_360_800C9B4C = 2880;
+            gAllRangeSpawnEvent = TIME_IN_SECONDS(96);
+
             for (i = 0; i < 6; i++) {
-                D_ctx_80177CF0[i] = 1;
-                D_ctx_80177CD0[i] = 1;
+                gSavedStarWolfTeamAlive[i] = true;
+                gStarWolfTeamAlive[i] = true;
             }
-            D_360_8015F928 = 0;
-            D_360_8015F908 = 0;
-            if (player->state_1C8 == PLAYERSTATE_1C8_3) {
-                actor->state = 2;
+
+            gAllRangeEventTimer = 0;
+            gStarWolfMsgTimer = 0;
+
+            if (player->state_1C8 == PLAYERSTATE_1C8_ACTIVE) {
+                this->state = 2;
                 player->pos.x = 0.0f;
                 player->pos.z = 8000.0f;
                 player->pos.y = 670.0f;
-                D_360_8015F928 = 200;
-                if (D_360_8015F924 != 0) {
-                    D_360_8015F928 = D_360_800C9B4C - 1;
+
+                gAllRangeEventTimer = 200;
+                if (gAllRangeCheckpoint != 0) {
+                    gAllRangeEventTimer = gAllRangeSpawnEvent - 1;
                     gHitCount = gSavedHitCount;
                 }
             } else {
-                actor->state = 1;
+                this->state = 1;
                 player->pos.x = 0.0f;
                 player->pos.z = 15000.0f;
                 player->pos.y = 670.0f;
-                player->unk_114 = 0.0f;
+                player->yRot_114 = 0.0f;
 
-                for (actorPtr = &gActors[1], i = 0; i < 3; i++, actorPtr++) {
-                    actorPtr->obj.pos.x = D_i4_8019EDF8[i - 1].x;
-                    actorPtr->obj.pos.y = D_i4_8019EDF8[i - 1].y;
-                    actorPtr->obj.pos.z = D_i4_8019EDF8[i - 1].z;
+                for (team = &gActors[AI360_FALCO], i = AI360_FALCO; i <= AI360_PEPPY; i++, team++) {
+                    team->obj.pos.x = sCsTeamInitialPos[i - 1].x;
+                    team->obj.pos.y = sCsTeamInitialPos[i - 1].y;
+                    team->obj.pos.z = sCsTeamInitialPos[i - 1].z;
                 }
             }
-            func_play_800B63BC(player, 1);
+            Camera_UpdateArwing360(player, true);
             break;
 
         case 1:
-            for (actorPtr = actor0 + 1, i = 0; i < 3; i++, actorPtr++) {
-                actorPtr->fwork[4] = D_i4_8019EE1C[i - 1].x;
-                actorPtr->fwork[5] = D_i4_8019EE1C[i - 1].y;
-                actorPtr->fwork[6] = D_i4_8019EE1C[i - 1].z;
-                actorPtr->state = 3;
-                actorPtr->timer_0BC = 3;
+            for (team = &gActors[AI360_FALCO], i = AI360_FALCO; i <= AI360_PEPPY; i++, team++) {
+                team->fwork[4] = sTeamInitialPos[i - 1].x;
+                team->fwork[5] = sTeamInitialPos[i - 1].y;
+                team->fwork[6] = sTeamInitialPos[i - 1].z;
+                team->state = 3;
+                team->timer_0BC = 3;
+
                 if (gCsFrameCount == 264) {
-                    actorPtr->state = 2;
-                    actor->state = 2;
-                    player->state_1C8 = PLAYERSTATE_1C8_3;
+                    team->state = 2;
+                    this->state = 2;
+                    player->state_1C8 = PLAYERSTATE_1C8_ACTIVE;
                     player->unk_014 = 0.0001f;
                     AUDIO_PLAY_BGM(gBgmSeqId);
-                    D_ctx_80177838 = 80;
+                    gLevelStartStatusScreenTimer = 80;
                 }
             };
             break;
 
         case 2:
-            Fortuna_801875F0(actor);
+            Fortuna_SpawnEnemies(this);
             break;
 
         case 3:
-            player->camEye.x += actor4->vel.x * 0.23f;
-            player->camEye.y += actor4->vel.y * 0.23f;
-            player->camEye.z += actor4->vel.z * 0.23f;
-            Math_SmoothStepToF(&player->camAt.x, actor4->obj.pos.x, 1.0f, 20000.0f, 0.0f);
-            Math_SmoothStepToF(&player->camAt.y, actor4->obj.pos.y, 1.0f, 20000.0f, 0.0f);
-            Math_SmoothStepToF(&player->camAt.z, actor4->obj.pos.z, 1.0f, 20000.0f, 0.0f);
-            Math_SmoothStepToF(&player->unk_034, 0.0f, 1.0f, 1000.0f, 0.0f);
-            if (D_360_8015F928 == (D_360_800C9B4C + 2)) {
-                D_360_8015F908 = 883;
-                D_360_8015F924 = 1;
+            player->cam.eye.x += wolf->vel.x * 0.23f;
+            player->cam.eye.y += wolf->vel.y * 0.23f;
+            player->cam.eye.z += wolf->vel.z * 0.23f;
+
+            Math_SmoothStepToF(&player->cam.at.x, wolf->obj.pos.x, 1.0f, 20000.0f, 0.0f);
+            Math_SmoothStepToF(&player->cam.at.y, wolf->obj.pos.y, 1.0f, 20000.0f, 0.0f);
+            Math_SmoothStepToF(&player->cam.at.z, wolf->obj.pos.z, 1.0f, 20000.0f, 0.0f);
+            Math_SmoothStepToF(&player->camRoll, 0.0f, 1.0f, 1000.0f, 0.0f);
+
+            if (gAllRangeEventTimer == (gAllRangeSpawnEvent + 2)) {
+                gStarWolfMsgTimer = 883;
+                gAllRangeCheckpoint = 1;
 
                 gSavedHitCount = gHitCount;
 
-                for (i = 1; i < 4; i++) {
+                for (i = TEAM_ID_FALCO; i <= TEAM_ID_PEPPY; i++) {
                     gSavedTeamShields[i] = gTeamShields[i];
                 };
             }
 
-            if ((gControllerPress->button & START_BUTTON) || (D_360_8015F928 == (D_360_800C9B4C + 440))) {
-                actor->state = 2;
-                player->state_1C8 = PLAYERSTATE_1C8_3;
-                func_play_800B7184(player, 1);
+            if ((gControllerPress->button & START_BUTTON) || (gAllRangeEventTimer == (gAllRangeSpawnEvent + 440))) {
+                this->state = 2;
+                player->state_1C8 = PLAYERSTATE_1C8_ACTIVE;
+                Camera_Update360(player, true);
                 player->unk_014 = 0.0f;
                 D_hud_80161708 = 0;
             }
-            D_ctx_801779BC = 0;
+            gPauseEnabled = false;
             break;
 
         case 5:
-            D_360_8015F928 = 9207;
-            actor->iwork[0] += 1;
-            actor->fwork[0] += 10.0f;
-            player->camEye.x = 300.0f;
-            player->camEye.y = 300.0f;
-            player->camEye.z = -1000.0f;
-            player->camAt.x = actor->fwork[0] + 300.0f;
-            player->camAt.y = actor->fwork[0] + 500.0f;
-            player->camAt.z = -15000.0f;
-            player->unk_034 = 0.0f;
+            gAllRangeEventTimer = 9207;
+            this->iwork[0]++;
+            this->fwork[0] += 10.0f;
+            player->cam.eye.x = 300.0f;
+            player->cam.eye.y = 300.0f;
+            player->cam.eye.z = -1000.0f;
+            player->cam.at.x = this->fwork[0] + 300.0f;
+            player->cam.at.y = this->fwork[0] + 500.0f;
+            player->cam.at.z = -15000.0f;
+            player->camRoll = 0.0f;
 
-            if ((actor->iwork[0] == 50) && (D_ctx_80177CD0[0] != 0)) {
+            if ((this->iwork[0] == 50) && (gStarWolfTeamAlive[0] != 0)) {
                 if (gRadioState == 0) {
                     Radio_PlayMessage(gMsg_ID_9431, RCID_WOLF);
                 }
-                Fortuna_80187884(&gActors[4], player->camEye.x - 200.0f, player->camEye.y, player->camEye.z, 160.0f);
+                Fortuna_SetupStarWolfFlee(&gActors[AI360_WOLF], player->cam.eye.x - 200.0f, player->cam.eye.y,
+                                          player->cam.eye.z, 160.0f);
             }
 
-            if ((actor->iwork[0] == 70) && (D_ctx_80177CD0[1] != 0)) {
+            if ((this->iwork[0] == 70) && (gStarWolfTeamAlive[1] != 0)) {
                 if (gRadioState == 0) {
                     Radio_PlayMessage(gMsg_ID_9432, RCID_LEON);
                 }
-                Fortuna_80187884(&gActors[5], player->camEye.x, player->camEye.y + 50.0f, player->camEye.z, 160.0f);
+                Fortuna_SetupStarWolfFlee(&gActors[AI360_LEON], player->cam.eye.x, player->cam.eye.y + 50.0f,
+                                          player->cam.eye.z, 160.0f);
             }
 
-            if ((actor->iwork[0] == 90) && (D_ctx_80177CD0[2] != 0)) {
+            if ((this->iwork[0] == 90) && (gStarWolfTeamAlive[2] != 0)) {
                 if (gRadioState == 0) {
                     Radio_PlayMessage(gMsg_ID_9433, RCID_PIGMA);
                 }
-                Fortuna_80187884(gActors + 6, player->camEye.x - 200.0f, player->camEye.y + 200.0f, player->camEye.z,
-                                 160.0f);
+                Fortuna_SetupStarWolfFlee(&gActors[AI360_PIGMA], player->cam.eye.x - 200.0f, player->cam.eye.y + 200.0f,
+                                          player->cam.eye.z, 160.0f);
             }
 
-            if ((actor->iwork[0] == 110) && (D_ctx_80177CD0[3] != 0)) {
+            if ((this->iwork[0] == 110) && (gStarWolfTeamAlive[3] != 0)) {
                 if (gRadioState == 0) {
                     Radio_PlayMessage(gMsg_ID_9434, RCID_ANDREW);
                 }
-                Fortuna_80187884(gActors + 7, player->camEye.x - 300.0f, player->camEye.y, player->camEye.z, 160.0f);
+                Fortuna_SetupStarWolfFlee(&gActors[AI360_ANDREW], player->cam.eye.x - 300.0f, player->cam.eye.y,
+                                          player->cam.eye.z, 160.0f);
             }
 
-            if (actor->iwork[0] == 250) {
-                actor->state = 2;
-                player->state_1C8 = PLAYERSTATE_1C8_3;
+            if (this->iwork[0] == 250) {
+                this->state = 2;
+                player->state_1C8 = PLAYERSTATE_1C8_ACTIVE;
 
-                func_play_800B7184(player, 1);
+                Camera_Update360(player, true);
 
                 player->unk_014 = 0.0f;
                 D_hud_80161708 = 0;
@@ -356,66 +373,66 @@ void Fortuna_80187960(Actor* actor) {
                     Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
                 }
 
-                D_360_8015F93C = 1;
-                D_360_8015F928 = 9970;
+                gShowAllRangeCountdown = 1;
+                gAllRangeEventTimer = 9970;
             }
             break;
 
         case 6:
-            actor->iwork[0] += 1;
-            if (D_ctx_80177930 == 0) {
-                actor1->aiIndex = AI360_FOX;
-                actor1->state = 2;
-                actor2->aiIndex = AI360_FOX;
-                actor2->state = 2;
-                actor3->aiIndex = AI360_FOX;
-                actor3->state = 2;
-                if (actor->iwork[0] == 130) {
+            this->iwork[0]++;
+            if (gMissionStatus == MISSION_COMPLETE) {
+                falco->aiIndex = AI360_FOX;
+                falco->state = 2;
+                slippy->aiIndex = AI360_FOX;
+                slippy->state = 2;
+                peppy->aiIndex = AI360_FOX;
+                peppy->state = 2;
+                if (this->iwork[0] == 130) {
                     Vec3f sp50 = { 0.0f, 0.0f, -10000 };
 
-                    Actor_Initialize(actor19);
-                    Matrix_Translate(gCalcMatrix, player->pos.x, player->pos.y, player->unk_138, 0);
-                    Matrix_RotateY(gCalcMatrix, (player->unk_0E8 + player->unk_114) * M_DTOR, 1);
-                    Matrix_RotateX(gCalcMatrix, player->unk_0E4 * M_DTOR, 1);
-                    Matrix_MultVec3f(gCalcMatrix, &sp50, &actor19->obj.pos);
+                    Actor_Initialize(greatFox);
+                    Matrix_Translate(gCalcMatrix, player->pos.x, player->pos.y, player->trueZpos, MTXF_NEW);
+                    Matrix_RotateY(gCalcMatrix, (player->rot.y + player->yRot_114) * M_DTOR, MTXF_APPLY);
+                    Matrix_RotateX(gCalcMatrix, player->rot.x * M_DTOR, MTXF_APPLY);
+                    Matrix_MultVec3f(gCalcMatrix, &sp50, &greatFox->obj.pos);
 
-                    actor19->obj.status = OBJ_ACTIVE;
-                    actor19->obj.id = OBJ_ACTOR_ALLRANGE;
-                    actor19->state = 4;
-                    actor19->unk_0F4.y = player->unk_0E8 + player->unk_114 + 180.0f;
-                    actor19->unk_0F4.x = 15.0f;
-                    actor19->aiType = AI360_GREAT_FOX;
-                    actor19->fwork[1] = 90.0f;
-                    actor19->fwork[0] = 90.0f;
-                    Object_SetInfo(&actor19->info, actor19->obj.id);
+                    greatFox->obj.status = OBJ_ACTIVE;
+                    greatFox->obj.id = OBJ_ACTOR_ALLRANGE;
+                    greatFox->state = 4;
+                    greatFox->rot_0F4.y = player->rot.y + player->yRot_114 + 180.0f;
+                    greatFox->rot_0F4.x = 15.0f;
+                    greatFox->aiType = AI360_GREAT_FOX;
+                    greatFox->fwork[1] = 90.0f;
+                    greatFox->fwork[0] = 90.0f;
+                    Object_SetInfo(&greatFox->info, greatFox->obj.id);
                 }
             }
-            gOverlayStage = 1;
-            D_game_80161A44 = 30000.0f;
+            gSceneSetup = 1;
+            gProjectFar = 30000.0f;
             break;
 
         default:
             break;
     }
 
-    if (D_360_8015F908 != 0) {
-        D_360_8015F908--;
-        switch (D_360_8015F908) {
+    if (gStarWolfMsgTimer != 0) {
+        gStarWolfMsgTimer--;
+        switch (gStarWolfMsgTimer) {
             case 860:
-                if (D_ctx_80177CD0[0] != 0) {
+                if (gStarWolfTeamAlive[0] != 0) {
                     Radio_PlayMessage(gMsg_ID_9250, RCID_WOLF);
                 }
                 break;
 
             case 760:
-                if (D_ctx_80177CD0[1] != 0) {
+                if (gStarWolfTeamAlive[1] != 0) {
                     Radio_PlayMessage(gMsg_ID_9260, RCID_LEON);
                 }
                 break;
 
             case 660:
-                if (D_ctx_80177CD0[2] != 0) {
-                    if (gTeamShields[3] > 0) {
+                if (gStarWolfTeamAlive[2] != 0) {
+                    if (gTeamShields[TEAM_ID_PEPPY] > 0) {
                         Radio_PlayMessage(gMsg_ID_9275, RCID_PIGMA);
                     } else {
                         Radio_PlayMessage(gMsg_ID_9270, RCID_PIGMA);
@@ -424,7 +441,7 @@ void Fortuna_80187960(Actor* actor) {
                 break;
 
             case 540:
-                if (D_ctx_80177CD0[3] != 0) {
+                if (gStarWolfTeamAlive[3] != 0) {
                     Radio_PlayMessage(gMsg_ID_9280, RCID_ANDREW);
                 }
                 break;
@@ -440,69 +457,69 @@ void Fortuna_80187960(Actor* actor) {
     }
 }
 
-void Fortuna_801888C0(Actor* actor, Vec3f* pos, Vec3f* rot, f32 xVel, f32 yVel, f32 zVel, s32 state) {
-    Actor_Initialize(actor);
-    actor->obj.status = OBJ_ACTIVE;
-    actor->obj.id = OBJ_ACTOR_189;
-    actor->state = state;
+void Fortuna_ActorDebris_Setup(ActorDebris* this, Vec3f* pos, Vec3f* rot, f32 xVel, f32 yVel, f32 zVel, s32 state) {
+    Actor_Initialize(this);
+    this->obj.status = OBJ_ACTIVE;
+    this->obj.id = OBJ_ACTOR_DEBRIS;
+    this->state = state;
 
-    actor->obj.pos = *pos;
-    actor->obj.rot = *rot;
+    this->obj.pos = *pos;
+    this->obj.rot = *rot;
 
-    actor->vel.x = xVel;
-    actor->vel.y = yVel;
-    actor->vel.z = zVel;
+    this->vel.x = xVel;
+    this->vel.y = yVel;
+    this->vel.z = zVel;
 
-    actor->scale = 2.5f;
-    actor->timer_0BC = RAND_INT(15.0f) + 25.0f;
-    actor->gravity = 0.5f;
-    Object_SetInfo(&actor->info, actor->obj.id);
+    this->scale = 2.5f;
+    this->timer_0BC = RAND_INT(15.0f) + 25.0f;
+    this->gravity = 0.5f;
+    Object_SetInfo(&this->info, this->obj.id);
 }
 
-void Fortuna_80188A48(Vec3f* pos, Vec3f* rot, f32 xVel, f32 yVel, f32 zVel, s32 state) {
+void Fortuna_ActorDebris_Spawn(Vec3f* pos, Vec3f* rot, f32 xVel, f32 yVel, f32 zVel, s32 state) {
     s32 i;
 
     for (i = ARRAY_COUNT(gActors) - 1; i >= 30; i--) {
         if (gActors[i].obj.status == 0) {
-            Fortuna_801888C0(&gActors[i], pos, rot, xVel, yVel, zVel, state);
+            Fortuna_ActorDebris_Setup(&gActors[i], pos, rot, xVel, yVel, zVel, state);
             break;
         }
     }
 }
 
-void Fortuna_80188AD0(Actor* actor) {
-    actor->fwork[0] += 2.0f;
-    if (actor->state == 2) {
-        actor->state = 3;
-        Fortuna_80188A48(actor->vwork, &actor->vwork[6], RAND_FLOAT_CENTERED(50.0f), RAND_FLOAT(10.0f) + 10.0f,
-                         RAND_FLOAT_CENTERED(50.0f), 36);
-        Fortuna_80188A48(&actor->vwork[1], &actor->vwork[7], RAND_FLOAT_CENTERED(50.0f), RAND_FLOAT(10.0f) + 10.0f,
-                         RAND_FLOAT_CENTERED(50.0f), 36);
-        Fortuna_80188A48(&actor->vwork[2], &actor->vwork[8], RAND_FLOAT_CENTERED(50.0f), RAND_FLOAT(10.0f) + 10.0f,
-                         RAND_FLOAT_CENTERED(50.0f), 35);
-        Fortuna_80188A48(&actor->vwork[3], &actor->vwork[9], RAND_FLOAT_CENTERED(50.0f), RAND_FLOAT(10.0f) + 10.0f,
-                         RAND_FLOAT_CENTERED(50.0f), 35);
-        func_effect_8007BFFC(actor->obj.pos.x, actor->obj.pos.y + 180.0f, actor->obj.pos.z, 0.0f, 0.0f, 0.0f, 5.0f, 10);
-        actor->itemDrop = DROP_SILVER_RING;
-        actor->obj.pos.y += 230.0f;
-        func_enmy_80066254(actor);
-        actor->obj.pos.y -= 230.0f;
+void Fortuna_FoRadar_Update(FoRadar* this) {
+    this->fwork[0] += 2.0f;
+    if (this->state == 2) {
+        this->state = 3;
+        Fortuna_ActorDebris_Spawn(this->vwork, &this->vwork[6], RAND_FLOAT_CENTERED(50.0f), RAND_FLOAT(10.0f) + 10.0f,
+                                  RAND_FLOAT_CENTERED(50.0f), 36);
+        Fortuna_ActorDebris_Spawn(&this->vwork[1], &this->vwork[7], RAND_FLOAT_CENTERED(50.0f),
+                                  RAND_FLOAT(10.0f) + 10.0f, RAND_FLOAT_CENTERED(50.0f), 36);
+        Fortuna_ActorDebris_Spawn(&this->vwork[2], &this->vwork[8], RAND_FLOAT_CENTERED(50.0f),
+                                  RAND_FLOAT(10.0f) + 10.0f, RAND_FLOAT_CENTERED(50.0f), 35);
+        Fortuna_ActorDebris_Spawn(&this->vwork[3], &this->vwork[9], RAND_FLOAT_CENTERED(50.0f),
+                                  RAND_FLOAT(10.0f) + 10.0f, RAND_FLOAT_CENTERED(50.0f), 35);
+        Effect386_Spawn1(this->obj.pos.x, this->obj.pos.y + 180.0f, this->obj.pos.z, 0.0f, 0.0f, 0.0f, 5.0f, 10);
+        this->itemDrop = DROP_SILVER_RING;
+        this->obj.pos.y += 230.0f;
+        Actor_Despawn(this);
+        this->obj.pos.y -= 230.0f;
     }
 
-    if ((actor->unk_0D0 != 0) && (actor->state == 0)) {
-        actor->unk_0D0 = 0;
-        actor->state = 1;
-        actor->info.hitbox = LOAD_ASSET(D_FO_600FF64);
-        actor->info.unk_1C = 0.0f;
-        actor->timer_0CA[0] = 0;
-        actor->info.bonus = 0;
-        AUDIO_PLAY_SFX(0x2903B009U, actor->sfxSource, 4U);
+    if ((this->dmgType != DMG_NONE) && (this->state == 0)) {
+        this->dmgType = DMG_NONE;
+        this->state = 1;
+        this->info.hitbox = SEGMENTED_TO_VIRTUAL(D_FO_600FF64);
+        this->info.targetOffset = 0.0f;
+        this->lockOnTimers[TEAM_ID_FOX] = 0;
+        this->info.bonus = 0;
+        AUDIO_PLAY_SFX(NA_SE_EN_EXPLOSION_M, this->sfxSource, 4);
     }
 }
 
-void Fortuna_80188DA0(s32 limbIndex, Vec3f* rot, void* ptr) {
+void Fortuna_FoRadar_PostLimbDraw(s32 limbIndex, Vec3f* rot, void* thisx) {
     Vec3f vec = { 0.0f, 0.0f, 0.0f };
-    Actor* actor = (Actor*) ptr;
+    FoRadar* actor = (FoRadar*) thisx;
 
     if (actor->state == 1) {
         switch (limbIndex) {
@@ -539,8 +556,8 @@ void Fortuna_80188DA0(s32 limbIndex, Vec3f* rot, void* ptr) {
     }
 }
 
-bool Fortuna_80188F08(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* ptr) {
-    Actor* actor = (Actor*) ptr;
+bool Fortuna_FoRadar_OverrideLimbDraw(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* thisx) {
+    FoRadar* actor = (FoRadar*) thisx;
 
     gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
 
@@ -570,323 +587,325 @@ bool Fortuna_80188F08(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
     return false;
 }
 
-void Fortuna_80188FE4(Actor* actor) {
-    Vec3f vec[20];
+void Fortuna_FoRadar_Draw(FoRadar* this) {
+    Vec3f frameTable[20];
 
-    Animation_GetFrameData(&D_FO_6007854, 0, vec);
-    Animation_DrawSkeleton(3, D_FO_6007980, vec, Fortuna_80188F08, Fortuna_80188DA0, actor, gCalcMatrix);
+    Animation_GetFrameData(&aFoRadarAnim, 0, frameTable);
+    Animation_DrawSkeleton(3, aFoRadarSkel, frameTable, Fortuna_FoRadar_OverrideLimbDraw, Fortuna_FoRadar_PostLimbDraw,
+                           this, gCalcMatrix);
 
-    if (actor->state == 1) {
-        actor->state = 2;
+    if (this->state == 1) {
+        this->state = 2;
     }
 }
 
-void Fortuna_8018906C(void) {
-    Actor* actor = &gActors[50];
+// Explosion seen from space if the mission fails.
+void Fortuna_CsExplosion(void) {
+    ActorCutscene* actor = &gActors[50];
 
     Actor_Initialize(actor);
     actor->obj.status = OBJ_INIT;
-    actor->obj.id = OBJ_ACTOR_195;
+    actor->obj.id = OBJ_ACTOR_CUTSCENE;
     actor->obj.pos.x = 0.0f;
     actor->obj.pos.y = 0.0f;
     actor->obj.pos.z = -9000.0f;
-    actor->unk_0B6 = 11;
+    actor->animFrame = ACTOR_CS_FO_EXPLOSION;
     actor->scale = 0.0f;
     Object_SetInfo(&actor->info, actor->obj.id);
 }
 
-f32 D_i4_8019EE4C[] = { -200.0f, 200.0f, -50.0f, -2000.0f };
-f32 D_i4_8019EE5C[] = { 0.0f, 30.0f, -90.0f, 0.0f };
-f32 D_i4_8019EE6C[] = { -100.0f, -200.0f, -300.0f, 0.0f };
-s32 D_i4_8019EE7C = 0; // padding for dword aligned matrix?
-Matrix D_BO_8019EE80 = { {
-    { 0.0f, 0.0f, 0.0f, 0.0f },
-    { 0.0f, 0.0f, 0.0f, 0.0f },
-    { 0.0f, 0.0f, 0.0f, 0.0f },
-    { 0.0f, 0.0f, 0.0f, 0.0f },
-} };
+f32 sLevelCompleteCsActorInitPosX[] = { -200.0f, 200.0f, -50.0f, -2000.0f };
+f32 sLevelCompleteCsActorInitPosY[] = { 0.0f, 30.0f, -90.0f, 0.0f };
+f32 sLevelCompleteCsActorInitPosZ[] = { -100.0f, -200.0f, -300.0f, 0.0f };
 
-void Fortuna_801890EC(Actor* actor, s32 arg1) {
-    Actor_Initialize(actor);
-    actor->obj.status = OBJ_INIT;
-    actor->obj.id = OBJ_ACTOR_195;
-    actor->obj.pos.x = D_i4_8019EE4C[arg1] + gPlayer[0].pos.x;
-    actor->obj.pos.y = D_i4_8019EE5C[arg1] + gPlayer[0].pos.y;
-    actor->obj.pos.z = D_i4_8019EE6C[arg1] + gPlayer[0].unk_138;
-    actor->vel.z = gPlayer[0].unk_0D0;
+void Fortuna_LevelComplete_CsSpawnTeam(ActorCutscene* this, s32 actorIdx) {
+    Actor_Initialize(this);
+    this->obj.status = OBJ_INIT;
+    this->obj.id = OBJ_ACTOR_CUTSCENE;
 
-    Object_SetInfo(&actor->info, actor->obj.id);
+    this->obj.pos.x = sLevelCompleteCsActorInitPosX[actorIdx] + gPlayer[0].pos.x;
+    this->obj.pos.y = sLevelCompleteCsActorInitPosY[actorIdx] + gPlayer[0].pos.y;
+    this->obj.pos.z = sLevelCompleteCsActorInitPosZ[actorIdx] + gPlayer[0].trueZpos;
 
-    if (arg1 < 3) {
-        actor->iwork[11] = 1;
-        AUDIO_PLAY_SFX(0x3100000CU, actor->sfxSource, 4U);
+    this->vel.z = gPlayer[0].baseSpeed;
+
+    Object_SetInfo(&this->info, this->obj.id);
+
+    if (actorIdx < 3) {
+        this->iwork[11] = 1;
+        AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
     } else {
-        actor->obj.pos.z = -9500.0f;
-        actor->unk_0B6 = 1;
-        actor->vel.z = 22.0f;
-
-        AUDIO_PLAY_SFX(0x11030010U, actor->sfxSource, 0U);
-        AUDIO_PLAY_SFX(0x31024059U, actor->sfxSource, 0U);
+        this->obj.pos.z = -9500.0f;
+        this->animFrame = ACTOR_CS_GREAT_FOX;
+        this->vel.z = 22.0f;
+        AUDIO_PLAY_SFX(NA_SE_GREATFOX_ENGINE, this->sfxSource, 0);
+        AUDIO_PLAY_SFX(NA_SE_GREATFOX_BURNER, this->sfxSource, 0);
     }
 }
 
-void Fortuna_8018927C(Player* player) {
+void Fortuna_LevelComplete(Player* player) {
     s32 i;
     Vec3f src;
     Vec3f dest;
-    Actor* actor0 = &gActors[0];
-    Actor* actor1 = &gActors[1];
-    Actor* actor2 = &gActors[2];
-    Actor* actor3 = &gActors[3];
+    ActorCutscene* greatFox = &gActors[0];
+    ActorCutscene* slippy = &gActors[1];
+    ActorCutscene* peppy = &gActors[2];
+    ActorCutscene* falco = &gActors[3];
     s32 pad[3];
 
-    if ((player->unk_1D0 < 10) && (player->unk_1D0 >= 0)) {
-        Math_SmoothStepToF(&player->unk_130, 0.0f, 0.1f, 15.0f, 0.0f);
-        Math_SmoothStepToF(&player->unk_12C, 0.0f, 0.1f, 15.0f, 0.0f);
-        Math_SmoothStepToF(&player->unk_034, 0.0f, 0.1f, 3.0f, 0.0f);
-        Math_SmoothStepToAngle(&player->unk_4D8, 0.0f, 0.1f, 20.0f, 0.0f);
-        if (D_ctx_80177930 == 0) {
+    if ((player->csState < 10) && (player->csState >= 0)) {
+        Math_SmoothStepToF(&player->zRotBarrelRoll, 0.0f, 0.1f, 15.0f, 0.0f);
+        Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.1f, 15.0f, 0.0f);
+        Math_SmoothStepToF(&player->camRoll, 0.0f, 0.1f, 3.0f, 0.0f);
+        Math_SmoothStepToAngle(&player->aerobaticPitch, 0.0f, 0.1f, 20.0f, 0.0f);
+
+        if (gMissionStatus == MISSION_COMPLETE) {
             if (player->pos.y < 700.0f) {
                 Math_SmoothStepToF(&player->pos.y, 700.0f, 0.1f, 10.0f, 0.0f);
             }
         } else if (player->pos.y < 500.0f) {
             Math_SmoothStepToF(&player->pos.y, 500.0f, 0.1f, 5.0f, 0.0f);
         }
-        func_play_800B7184(player, 0);
-        player->camEye.x += player->vel.x * 0.1f;
-        player->camEye.y += player->vel.y * 0.1f;
-        player->camEye.z += player->vel.z * 0.1f;
+
+        Camera_Update360(player, false);
+        player->cam.eye.x += player->vel.x * 0.1f;
+        player->cam.eye.y += player->vel.y * 0.1f;
+        player->cam.eye.z += player->vel.z * 0.1f;
     }
 
-    player->wings.unk_04 = 0.0f;
-    player->wings.unk_0C = 0.0f;
-    player->wings.unk_08 = 0.0f;
-    player->wings.unk_10 = 0.0f;
+    player->arwing.upperRightFlapYrot = 0.0f;
+    player->arwing.upperLeftFlapYrot = 0.0f;
+    player->arwing.bottomRightFlapYrot = 0.0f;
+    player->arwing.bottomLeftFlapYrot = 0.0f;
 
-    Math_SmoothStepToF(&player->unk_110, 0.0f, 0.1f, 1.5f, 0.0f);
+    Math_SmoothStepToF(&player->boostSpeed, 0.0f, 0.1f, 1.5f, 0.0f);
 
-    switch (player->unk_1D0) {
+    switch (player->csState) {
         case -1:
-            player->wings.unk_2C = 1;
-            player->unk_0E8 = 0.0f;
-            player->unk_0D0 = 30.0f;
-            player->unk_114 = 180.0f;
-            player->unk_0E4 = -7.0f;
-            Math_SmoothStepToF(&player->unk_0EC, 0.0f, 0.05f, 1.0f, 0.0f);
-            player->unk_12C = 0.0f;
-            player->unk_130 = 0.0f;
-            player->unk_4D8 = 0.0f;
-            player->camEye.x = -200.0f;
-            player->camEye.y = 100.0f;
-            player->camEye.z = -1500.0f;
-            player->camAt.x = player->pos.x;
-            player->camAt.y = player->pos.y;
-            player->camAt.z = player->unk_138;
+            player->arwing.drawFace = true;
+            player->rot.y = 0.0f;
+            player->baseSpeed = 30.0f;
+            player->yRot_114 = 180.0f;
+            player->rot.x = -7.0f;
+            Math_SmoothStepToF(&player->rot.z, 0.0f, 0.05f, 1.0f, 0.0f);
+            player->zRotBank = 0.0f;
+            player->zRotBarrelRoll = 0.0f;
+            player->aerobaticPitch = 0.0f;
+            player->cam.eye.x = -200.0f;
+            player->cam.eye.y = 100.0f;
+            player->cam.eye.z = -1500.0f;
+            player->cam.at.x = player->pos.x;
+            player->cam.at.y = player->pos.y;
+            player->cam.at.z = player->trueZpos;
 
-            if (player->timer_1F8 < 80) {
-                D_ctx_80178358 = 255;
-                D_ctx_8017835C = 10;
-                D_ctx_80178350 = D_ctx_80178348 = D_ctx_80178354 = 0;
-                if (player->timer_1F8 == 0) {
-                    player->timer_1F8 = 0;
-                    player->unk_1D0 = 1;
+            if (player->csTimer < 80) {
+                gFillScreenAlphaTarget = 255;
+                gFillScreenAlphaStep = 10;
+                gFillScreenGreen = gFillScreenRed = gFillScreenBlue = 0;
+                if (player->csTimer == 0) {
+                    player->csTimer = 0;
+                    player->csState = 1;
                 }
             }
             break;
 
         case 0:
-            if (D_ctx_80177930 == 0) {
-                Math_SmoothStepToF(&player->unk_0E8, 40.0f, 0.1f, 2.5f, 0.0f);
-                Math_SmoothStepToF(&player->unk_0EC, 60.0f, 0.2f, 5.0f, 0.0f);
-                Math_SmoothStepToF(&player->unk_0E4, 0.0f, 0.1f, 2.5f, 0.0f);
+            if (gMissionStatus == MISSION_COMPLETE) {
+                Math_SmoothStepToF(&player->rot.y, 40.0f, 0.1f, 2.5f, 0.0f);
+                Math_SmoothStepToF(&player->rot.z, 60.0f, 0.2f, 5.0f, 0.0f);
+                Math_SmoothStepToF(&player->rot.x, 0.0f, 0.1f, 2.5f, 0.0f);
             } else {
                 player->unk_190 = 2.0f;
-                player->camEye.y += 3.0f;
-                Math_SmoothStepToF(&player->unk_0EC,
-                                   Math_SmoothStepToF(&player->unk_114,
-                                                      Math_RadToDeg(Math_Atan2F(player->pos.x, player->unk_138)), 0.1f,
+                player->cam.eye.y += 3.0f;
+                Math_SmoothStepToF(&player->rot.z,
+                                   Math_SmoothStepToF(&player->yRot_114,
+                                                      Math_RadToDeg(Math_Atan2F(player->pos.x, player->trueZpos)), 0.1f,
                                                       4.0f, 0.0f) *
                                        20.0f,
                                    0.2f, 5.0f, 0.0f);
-                Math_SmoothStepToF(&player->unk_0E4, 0.0f, 0.1f, 2.5f, 0.0f);
+                Math_SmoothStepToF(&player->rot.x, 0.0f, 0.1f, 2.5f, 0.0f);
             }
 
-            if (player->timer_1F8 == 0) {
-                if (D_ctx_80177930 != 0) {
-                    player->timer_1F8 = 150;
-                    player->unk_1D0 = -1;
+            if (player->csTimer == 0) {
+                if (gMissionStatus != MISSION_COMPLETE) {
+                    player->csTimer = 150;
+                    player->csState = -1;
                     player->pos.x = 0.0f;
-                    player->unk_110 = 0.0f;
-                    player->unk_0D0 = 0.0f;
+                    player->boostSpeed = 0.0f;
+                    player->baseSpeed = 0.0f;
                     player->pos.y = 350.0f;
                     player->pos.z = -2800.0f;
                 } else {
-                    player->timer_1F8 = 280;
-                    player->unk_1D0 = 1;
+                    player->csTimer = 280;
+                    player->csState = 1;
                 }
                 player->unk_194 = 5.0f;
                 player->unk_190 = 5.0f;
-                AUDIO_PLAY_SFX(0x09000002U, player->sfxSource, 0U);
+                AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, player->sfxSource, 0);
             }
             break;
 
         case 1:
             player->unk_190 = 2.0f;
-            Math_SmoothStepToF(&player->unk_0E4, 15.0f, 0.1f, 0.4f, 0.0f);
-            Math_SmoothStepToF(&player->unk_0EC, -40.0f, 0.2f, 5.0f, 0.0f);
-            Math_SmoothStepToF(&player->unk_0E8, -120.0f, 0.1f, 2.0f, 0.0f);
-            player->unk_0D0 += 1.0f;
-            if (player->unk_0D0 >= 70.0f) {
-                player->unk_0D0 = 70.0f;
-                player->unk_25C += 0.04f;
-                if (player->unk_25C > 0.6f) {
-                    player->unk_25C = 0.6f;
+            Math_SmoothStepToF(&player->rot.x, 15.0f, 0.1f, 0.4f, 0.0f);
+            Math_SmoothStepToF(&player->rot.z, -40.0f, 0.2f, 5.0f, 0.0f);
+            Math_SmoothStepToF(&player->rot.y, -120.0f, 0.1f, 2.0f, 0.0f);
+
+            player->baseSpeed += 1.0f;
+            if (player->baseSpeed >= 70.0f) {
+                player->baseSpeed = 70.0f;
+                player->contrailScale += 0.04f;
+                if (player->contrailScale > 0.6f) {
+                    player->contrailScale = 0.6f;
                 }
             }
-            if (player->timer_1F8 == 0) {
-                player->unk_1D0 = 2;
-                player->timer_1F8 = 1000;
+
+            if (player->csTimer == 0) {
+                player->csState = 2;
+                player->csTimer = 1000;
                 for (i = 0; i < ARRAY_COUNT(gActors); i++) {
                     Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
                 }
                 //! FAKE:
                 if (((&dest) && (&dest)) && (&dest)) {}
 
-                func_8001CA24(0);
+                Audio_StopPlayerNoise(0);
                 Audio_KillSfxBySource(player->sfxSource);
-                player->unk_234 = 0;
-                D_ctx_80178340 = 255;
-                D_ctx_80178358 = 255;
-                D_ctx_80178348 = D_ctx_80178350 = D_ctx_80178354 = 0;
-                D_ctx_8017835C = 0;
+                player->draw = false;
+                gFillScreenAlpha = 255;
+                gFillScreenAlphaTarget = 255;
+                gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 0;
+                gFillScreenAlphaStep = 0;
             }
             break;
 
         case 2:
-            if (!(D_ctx_80177930) && (player->timer_1F8) > 830) {
-                D_ctx_80178358 = 0;
-                D_ctx_8017835C = 8;
+            if ((gMissionStatus == MISSION_COMPLETE) && (player->csTimer) > 830) {
+                gFillScreenAlphaTarget = 0;
+                gFillScreenAlphaStep = 8;
             }
-            if (player->timer_1F8 == 810) {
+            if (player->csTimer == 810) {
                 Audio_KillSfxBySource(gBosses[0].sfxSource);
             }
-            if (player->timer_1F8 == 830) {
-                D_ctx_80178358 = 255;
-                D_ctx_8017835C = 2;
-                D_ctx_80178348 = D_ctx_80178350 = D_ctx_80178354 = 255;
+            if (player->csTimer == 830) {
+                gFillScreenAlphaTarget = 255;
+                gFillScreenAlphaStep = 2;
+                gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 255;
             }
 
             gBosses[0].swork[0] = 1;
 
-            if ((func_hud_80090200(&gBosses[0]) == 2) || (D_ctx_80177930 != 0)) {
-                func_play_800A6148();
-                if (D_ctx_80177930 == 0) {
-                    player->unk_1D0 = 10;
+            if ((FoBase_ExplodeCs(&gBosses[0]) == 2) || (gMissionStatus != MISSION_COMPLETE)) {
+                Play_ClearObjectData();
+                if (gMissionStatus == MISSION_COMPLETE) {
+                    player->csState = 10;
                 } else {
-                    player->unk_1D0 = 20;
+                    player->csState = 20;
                 }
 
                 for (i = 0; i < 200; i++) {
-                    gObjects58[i].obj.status = OBJ_FREE;
+                    gScenery360[i].obj.status = OBJ_FREE;
                 }
 
-                func_play_800A5EBC();
-                gLevelType = 1;
-                D_ctx_801784AC = gBgColor = gFogRed = gFogGreen = gFogBlue = 0;
+                Play_SetupStarfield();
+                gLevelType = LEVELTYPE_SPACE;
+                gGroundType = gBgColor = gFogRed = gFogGreen = gFogBlue = 0;
                 gLight1R = gLight2R = D_ctx_80161A70 = 86;
                 gLight1G = gLight2G = D_ctx_80161A74 = 58;
                 gLight1B = gLight2B = D_ctx_80161A78 = 25;
                 gAmbientR = 11;
                 gAmbientG = 8;
                 gAmbientB = 24;
-                D_ctx_801784D0 = D_ctx_801784C4 = D_ctx_801784C4 = D_ctx_801784F8 = D_ctx_801784C4 = -59.0f;
-                D_ctx_801784D4 = D_ctx_801784C8 = D_ctx_801784C8 = D_ctx_801784FC = D_ctx_801784C8 = 58.0f;
-                D_ctx_801784D8 = D_ctx_801784CC = D_ctx_801784CC = D_ctx_80178500 = D_ctx_801784CC = 13.0f;
+                gEnvLightxRot = gLight1xRotTarget = gLight1xRotTarget = gLight2xRotTarget = gLight1xRotTarget = -59.0f;
+                gEnvLightyRot = gLight1yRotTarget = gLight1yRotTarget = gLight2yRotTarget = gLight1yRotTarget = 58.0f;
+                gEnvLightzRot = gLight1zRotTarget = gLight1zRotTarget = gLight2zRotTarget = gLight1zRotTarget = 13.0f;
 
-                if (D_ctx_80177930 == 0) {
+                if (gMissionStatus == MISSION_COMPLETE) {
                     player->pos.x = 0.0f;
                     player->pos.y = 0.0f;
-                    player->unk_0E4 = 0.0f;
-                    player->unk_0EC = 0.0f;
-                    player->unk_0D0 = 0.0f;
-                    player->unk_114 = 0.0f;
-                    player->unk_0E8 = 180.0f;
-                    Fortuna_8018906C();
+                    player->rot.x = 0.0f;
+                    player->rot.z = 0.0f;
+                    player->baseSpeed = 0.0f;
+                    player->yRot_114 = 0.0f;
+                    player->rot.y = 180.0f;
+                    Fortuna_CsExplosion();
                 } else {
                     player->pos.x = 0.0f;
-                    player->unk_0E4 = 0.0f;
-                    player->unk_0EC = 0.0f;
-                    player->unk_114 = 0.0f;
-                    player->unk_0D0 = 0.0f;
-                    player->camAt.y = 16.0f;
+                    player->rot.x = 0.0f;
+                    player->rot.z = 0.0f;
+                    player->yRot_114 = 0.0f;
+                    player->baseSpeed = 0.0f;
+                    player->cam.at.y = 16.0f;
                     player->pos.y = -100.0f;
-                    player->unk_0E8 = 180.0f;
+                    player->rot.y = 180.0f;
                 }
                 player->pos.z = -10000.0f;
                 gCsFrameCount = 0;
-                player->wings.unk_2C = 1;
-                player->unk_204 = 1;
+                player->arwing.drawFace = true;
+                player->wingPosition = 1;
                 SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 100);
                 SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_FANFARE, 100);
-                func_8001C8B8(0);
-                if (D_ctx_80177930 == 0) {
-                    Fortuna_801890EC(actor0, 3);
+
+                Audio_StartPlayerNoise(0);
+
+                if (gMissionStatus == MISSION_COMPLETE) {
+                    Fortuna_LevelComplete_CsSpawnTeam(greatFox, 3);
                 }
             }
             break;
 
         case 10:
-            player->unk_234 = 1;
-            D_ctx_80178358 = 0;
-            D_ctx_8017835C = 4;
-            player->camEye.x = 400.0f;
-            player->camEye.y = 0;
-            player->camEye.z = 0.0f;
-            player->camAt.x = actor0->obj.pos.x;
-            player->camAt.y = actor0->obj.pos.y;
-            player->camAt.z = actor0->obj.pos.z;
+            player->draw = true;
+            gFillScreenAlphaTarget = 0;
+            gFillScreenAlphaStep = 4;
+            player->cam.eye.x = 400.0f;
+            player->cam.eye.y = 0;
+            player->cam.eye.z = 0.0f;
+            player->cam.at.x = greatFox->obj.pos.x;
+            player->cam.at.y = greatFox->obj.pos.y;
+            player->cam.at.z = greatFox->obj.pos.z;
 
             if (gCsFrameCount == 100) {
-                player->unk_0D0 = 30.0f;
-                if (gTeamShields[1] > 0) {
-                    Fortuna_801890EC(actor3, 0);
+                player->baseSpeed = 30.0f;
+                if (gTeamShields[TEAM_ID_FALCO] > 0) {
+                    Fortuna_LevelComplete_CsSpawnTeam(falco, 0);
                 }
-                if (gTeamShields[2] > 0) {
-                    Fortuna_801890EC(actor1, 1);
+                if (gTeamShields[TEAM_ID_SLIPPY] > 0) {
+                    Fortuna_LevelComplete_CsSpawnTeam(slippy, 1);
                 }
-                if (gTeamShields[3] > 0) {
-                    Fortuna_801890EC(actor2, 2);
+                if (gTeamShields[TEAM_ID_PEPPY] > 0) {
+                    Fortuna_LevelComplete_CsSpawnTeam(peppy, 2);
                 }
             }
 
             if (gCsFrameCount == 496) {
-                player->unk_1D0 = 11;
+                player->csState = 11;
                 D_ctx_80177A48[0] = 0.01f;
                 D_ctx_80177A48[1] = 0.0f;
                 D_ctx_80177A48[2] = -400.0f;
                 D_ctx_80177A48[3] = 0.0f;
-                actor3->iwork[14] = 2;
-                actor1->iwork[14] = 3;
-                actor2->iwork[14] = 4;
+                falco->iwork[14] = 2;
+                slippy->iwork[14] = 3;
+                peppy->iwork[14] = 4;
             }
 
             if (gCsFrameCount == 200) {
-                if (D_ctx_80177930 == 0) {
-                    AUDIO_PLAY_BGM(SEQ_ID_BAD_END);
+                if (gMissionStatus == MISSION_COMPLETE) {
+                    AUDIO_PLAY_BGM(NA_BGM_COURSE_FAILURE);
                 } else {
-                    AUDIO_PLAY_BGM(SEQ_ID_GOOD_END);
+                    AUDIO_PLAY_BGM(NA_BGM_COURSE_CLEAR);
                 }
             }
 
             if (gCsFrameCount == 420) {
-                D_ctx_80177840 = 100;
+                gLevelClearScreenTimer = 100;
             }
             break;
 
         case 11:
             D_ctx_80177A48[1] += D_ctx_80177A48[3];
-            Matrix_RotateX(gCalcMatrix, -0.17453292f, 0);
-            Matrix_RotateY(gCalcMatrix, D_ctx_80177A48[1] * M_DTOR, 1);
+            Matrix_RotateX(gCalcMatrix, -M_DTOR * 10.0f, MTXF_NEW);
+            Matrix_RotateY(gCalcMatrix, D_ctx_80177A48[1] * M_DTOR, MTXF_APPLY);
             src.x = 0;
             src.y = 0.0f;
             src.z = D_ctx_80177A48[2];
@@ -900,29 +919,29 @@ void Fortuna_8018927C(Player* player) {
 
             Math_SmoothStepToF(D_ctx_80177A48, 0.05f, 1.0f, 0.001f, 0);
 
-            Math_SmoothStepToF(&player->camEye.x, gCsCamEyeX, D_ctx_80177A48[0], 20000.0f, 0);
-            Math_SmoothStepToF(&player->camEye.y, gCsCamEyeY, D_ctx_80177A48[0], 20000.0f, 0);
-            Math_SmoothStepToF(&player->camEye.z, gCsCamEyeZ, D_ctx_80177A48[0], 20000.0f, 0);
+            Math_SmoothStepToF(&player->cam.eye.x, gCsCamEyeX, D_ctx_80177A48[0], 20000.0f, 0);
+            Math_SmoothStepToF(&player->cam.eye.y, gCsCamEyeY, D_ctx_80177A48[0], 20000.0f, 0);
+            Math_SmoothStepToF(&player->cam.eye.z, gCsCamEyeZ, D_ctx_80177A48[0], 20000.0f, 0);
 
-            Math_SmoothStepToF(&player->camAt.x, gCsCamAtX, D_ctx_80177A48[0], 20000.0f, 0);
-            Math_SmoothStepToF(&player->camAt.y, gCsCamAtY, D_ctx_80177A48[0], 20000.0f, 0);
-            Math_SmoothStepToF(&player->camAt.z, gCsCamAtZ, D_ctx_80177A48[0], 20000.0f, 0);
+            Math_SmoothStepToF(&player->cam.at.x, gCsCamAtX, D_ctx_80177A48[0], 20000.0f, 0);
+            Math_SmoothStepToF(&player->cam.at.y, gCsCamAtY, D_ctx_80177A48[0], 20000.0f, 0);
+            Math_SmoothStepToF(&player->cam.at.z, gCsCamAtZ, D_ctx_80177A48[0], 20000.0f, 0);
 
-            Math_SmoothStepToF(&player->unk_0D0, 0.0f, 0.05f, 2.0f, 0);
+            Math_SmoothStepToF(&player->baseSpeed, 0.0f, 0.05f, 2.0f, 0);
 
-            Math_SmoothStepToF(&actor3->vel.z, 0.0f, 0.05f, 2.0f, 0);
-            Math_SmoothStepToF(&actor1->vel.z, 0.0f, 0.05f, 2.0f, 0);
-            Math_SmoothStepToF(&actor2->vel.z, 0.0f, 0.05f, 2.0f, 0);
-            Math_SmoothStepToF(&actor0->vel.z, 0.0f, 0.05f, 2.0f, 0);
+            Math_SmoothStepToF(&falco->vel.z, 0.0f, 0.05f, 2.0f, 0);
+            Math_SmoothStepToF(&slippy->vel.z, 0.0f, 0.05f, 2.0f, 0);
+            Math_SmoothStepToF(&peppy->vel.z, 0.0f, 0.05f, 2.0f, 0);
+            Math_SmoothStepToF(&greatFox->vel.z, 0.0f, 0.05f, 2.0f, 0);
 
             if (gCsFrameCount == 500) {
                 Radio_PlayMessage(gMsg_ID_20010, RCID_FOX);
             }
 
-            if (D_ctx_80177930 == 0) {
+            if (gMissionStatus == MISSION_COMPLETE) {
                 switch (gCsFrameCount) {
                     case 588:
-                        switch (gTeamShields[2]) {
+                        switch (gTeamShields[TEAM_ID_SLIPPY]) {
                             case -1:
                                 Radio_PlayMessage(gMsg_ID_20339, RCID_ROB64);
                                 break;
@@ -936,7 +955,7 @@ void Fortuna_8018927C(Player* player) {
                         break;
 
                     case 735:
-                        switch (gTeamShields[3]) {
+                        switch (gTeamShields[TEAM_ID_PEPPY]) {
                             case -1:
                                 Radio_PlayMessage(gMsg_ID_20338, RCID_ROB64);
                                 break;
@@ -950,7 +969,7 @@ void Fortuna_8018927C(Player* player) {
                         break;
 
                     case 881:
-                        switch (gTeamShields[1]) {
+                        switch (gTeamShields[TEAM_ID_FALCO]) {
                             case -1:
                                 Radio_PlayMessage(gMsg_ID_20337, RCID_ROB64);
                                 break;
@@ -966,7 +985,7 @@ void Fortuna_8018927C(Player* player) {
             } else {
                 switch (gCsFrameCount) {
                     case 588:
-                        switch (gTeamShields[2]) {
+                        switch (gTeamShields[TEAM_ID_SLIPPY]) {
                             case -1:
                                 Radio_PlayMessage(gMsg_ID_20339, RCID_ROB64);
                                 break;
@@ -980,7 +999,7 @@ void Fortuna_8018927C(Player* player) {
                         break;
 
                     case 735:
-                        switch (gTeamShields[3]) {
+                        switch (gTeamShields[TEAM_ID_PEPPY]) {
                             case -1:
                                 Radio_PlayMessage(gMsg_ID_20338, RCID_ROB64);
                                 break;
@@ -994,7 +1013,7 @@ void Fortuna_8018927C(Player* player) {
                         break;
 
                     case 881:
-                        switch (gTeamShields[1]) {
+                        switch (gTeamShields[TEAM_ID_FALCO]) {
                             case -1:
                                 Radio_PlayMessage(gMsg_ID_20337, RCID_ROB64);
                                 break;
@@ -1012,16 +1031,16 @@ void Fortuna_8018927C(Player* player) {
             if (gCsFrameCount < 1136) {
                 Math_SmoothStepToF(&D_ctx_80177A48[3], 0.55f, 1.0f, 0.02f, 0);
             } else {
-                D_ctx_80178430 += 0.3f;
-                D_ctx_8017842C += 0.3f;
+                gStarfieldScrollY += 0.3f;
+                gStarfieldScrollX += 0.3f;
                 Math_SmoothStepToF(&D_ctx_80177A48[3], 0.0f, 1.0f, 0.02f, 0);
                 if (gCsFrameCount == 1216) {
-                    player->unk_1D0 = 12;
-                    player->timer_1F8 = 1000;
+                    player->csState = 12;
+                    player->csTimer = 1000;
                     D_ctx_80177A48[4] = 1.0f;
-                    actor2->vel.y = 0.1f;
-                    actor1->vel.y = 0.1f;
-                    AUDIO_PLAY_SFX(0x09000002U, player->sfxSource, 0U);
+                    peppy->vel.y = 0.1f;
+                    slippy->vel.y = 0.1f;
+                    AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, player->sfxSource, 0);
                     player->unk_194 = 5.0f;
                     player->unk_190 = 5.0f;
                     SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 50);
@@ -1031,109 +1050,109 @@ void Fortuna_8018927C(Player* player) {
             break;
 
         case 12:
-            D_ctx_80178430 += 0.3f;
-            D_ctx_8017842C += 0.3f;
-            player->unk_0D0 += 1.0f;
-            player->unk_0D0 *= 1.15f;
+            gStarfieldScrollY += 0.3f;
+            gStarfieldScrollX += 0.3f;
+            player->baseSpeed += 1.0f;
+            player->baseSpeed *= 1.15f;
             player->pos.y += D_ctx_80177A48[4];
             D_ctx_80177A48[4] *= 1.19f;
             player->unk_190 = 2.0f;
 
-            if (gTeamShields[1] > 0) {
-                if (player->timer_1F8 == 980) {
-                    AUDIO_PLAY_SFX(0x09000002U, actor3->sfxSource, 0U);
-                    actor3->vel.y = 1.0f;
-                    actor3->fwork[29] = 5.0f;
+            if (gTeamShields[TEAM_ID_FALCO] > 0) {
+                if (player->csTimer == 980) {
+                    AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, falco->sfxSource, 0);
+                    falco->vel.y = 1.0f;
+                    falco->fwork[29] = 5.0f;
                 }
-                if (player->timer_1F8 < 980) {
-                    actor3->vel.z += 1.0f;
-                    actor3->vel.z *= 1.15f;
-                    actor3->vel.y *= 1.19f;
-                    actor3->iwork[11] = 2;
-                }
-            }
-
-            if ((gTeamShields[3] > 0) && (player->timer_1F8 == 960)) {
-                AUDIO_PLAY_SFX(0x09000002U, actor2->sfxSource, 0U);
-                actor2->vel.y = 1.0f;
-                actor2->fwork[29] = 5.0f;
-            }
-
-            if (player->timer_1F8 < 960) {
-                actor2->vel.z += 1.0f;
-                actor2->vel.z *= 1.15f;
-                actor2->vel.y *= 1.19f;
-                actor2->iwork[11] = 2;
-            }
-
-            if (gTeamShields[2] > 0) {
-                if (player->timer_1F8 == 940) {
-                    AUDIO_PLAY_SFX(0x09000002U, actor1->sfxSource, 0U);
-                    actor1->vel.y = 1.0f;
-                    actor1->fwork[29] = 5.0f;
-                }
-
-                if (player->timer_1F8 < 940) {
-                    actor1->vel.z += 1.0f;
-                    actor1->vel.z *= 1.15f;
-                    actor1->vel.y *= 1.19f;
-                    actor1->iwork[11] = 2;
+                if (player->csTimer < 980) {
+                    falco->vel.z += 1.0f;
+                    falco->vel.z *= 1.15f;
+                    falco->vel.y *= 1.19f;
+                    falco->iwork[11] = 2;
                 }
             }
 
-            if (player->timer_1F8 == 910) {
-                actor0->vel.y = 1.0f;
-                actor0->obj.rot.x = -2.0f;
+            if ((gTeamShields[TEAM_ID_PEPPY] > 0) && (player->csTimer == 960)) {
+                AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, peppy->sfxSource, 0);
+                peppy->vel.y = 1.0f;
+                peppy->fwork[29] = 5.0f;
             }
 
-            if (player->timer_1F8 < 910) {
-                actor0->vel.z += 1.0f;
-                actor0->vel.z *= 1.02f;
-                actor0->vel.y *= 1.06f;
-                actor0->obj.rot.x *= 1.03f;
+            if (player->csTimer < 960) {
+                peppy->vel.z += 1.0f;
+                peppy->vel.z *= 1.15f;
+                peppy->vel.y *= 1.19f;
+                peppy->iwork[11] = 2;
+            }
+
+            if (gTeamShields[TEAM_ID_SLIPPY] > 0) {
+                if (player->csTimer == 940) {
+                    AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, slippy->sfxSource, 0);
+                    slippy->vel.y = 1.0f;
+                    slippy->fwork[29] = 5.0f;
+                }
+
+                if (player->csTimer < 940) {
+                    slippy->vel.z += 1.0f;
+                    slippy->vel.z *= 1.15f;
+                    slippy->vel.y *= 1.19f;
+                    slippy->iwork[11] = 2;
+                }
+            }
+
+            if (player->csTimer == 910) {
+                greatFox->vel.y = 1.0f;
+                greatFox->obj.rot.x = -2.0f;
+            }
+
+            if (player->csTimer < 910) {
+                greatFox->vel.z += 1.0f;
+                greatFox->vel.z *= 1.02f;
+                greatFox->vel.y *= 1.06f;
+                greatFox->obj.rot.x *= 1.03f;
             }
 
             if (gCsFrameCount == 1382) {
-                player->state_1C8 = PLAYERSTATE_1C8_6;
-                player->timer_1F8 = 0;
-                D_ctx_8017837C = 4;
+                player->state_1C8 = PLAYERSTATE_1C8_NEXT;
+                player->csTimer = 0;
+                gFadeoutType = 4;
                 Audio_FadeOutAll(10);
                 for (i = 0; i < 6; i++) {
-                    D_ctx_80177CF0[i] = D_ctx_80177CD0[i];
+                    gSavedStarWolfTeamAlive[i] = gStarWolfTeamAlive[i];
                 }
-                D_play_800D3180[LEVEL_FORTUNA] = Play_CheckMedalStatus(50) + 1;
+                gLeveLClearStatus[LEVEL_FORTUNA] = Play_CheckMedalStatus(50) + 1;
             }
             break;
 
         case 20:
-            if (gTeamShields[1] > 0) {
-                Fortuna_801890EC(actor3, 0);
-                actor3->obj.pos.x = (player->pos.x - 100.0f) - 400.0f;
-                actor3->obj.pos.y = player->pos.y + 400.0f;
-                actor3->obj.pos.z = player->unk_138 - 150.0f;
-                actor3->obj.rot.z = 90.0f;
+            if (gTeamShields[TEAM_ID_FALCO] > 0) {
+                Fortuna_LevelComplete_CsSpawnTeam(falco, 0);
+                falco->obj.pos.x = (player->pos.x - 100.0f) - 400.0f;
+                falco->obj.pos.y = player->pos.y + 400.0f;
+                falco->obj.pos.z = player->trueZpos - 150.0f;
+                falco->obj.rot.z = 90.0f;
             }
-            if (gTeamShields[2] > 0) {
-                Fortuna_801890EC(actor1, 1);
-                actor1->obj.pos.x = player->pos.x + 100.0f + 400.0f;
-                actor1->obj.pos.y = player->pos.y + 400.0f;
-                actor1->obj.pos.z = player->unk_138 - 150.0f;
-                actor1->obj.rot.z = -90.0f;
+            if (gTeamShields[TEAM_ID_SLIPPY] > 0) {
+                Fortuna_LevelComplete_CsSpawnTeam(slippy, 1);
+                slippy->obj.pos.x = player->pos.x + 100.0f + 400.0f;
+                slippy->obj.pos.y = player->pos.y + 400.0f;
+                slippy->obj.pos.z = player->trueZpos - 150.0f;
+                slippy->obj.rot.z = -90.0f;
             }
-            if (gTeamShields[3] > 0) {
-                Fortuna_801890EC(actor2, 2);
-                actor2->obj.pos.x = player->pos.x;
-                actor2->obj.pos.y = player->pos.y + 100.0f + 400.0f;
-                actor2->obj.pos.z = player->unk_138 - 250.0f;
+            if (gTeamShields[TEAM_ID_PEPPY] > 0) {
+                Fortuna_LevelComplete_CsSpawnTeam(peppy, 2);
+                peppy->obj.pos.x = player->pos.x;
+                peppy->obj.pos.y = player->pos.y + 100.0f + 400.0f;
+                peppy->obj.pos.z = player->trueZpos - 250.0f;
             }
-            Fortuna_801890EC(actor0, 3);
+            Fortuna_LevelComplete_CsSpawnTeam(greatFox, 3);
 
-            actor0->obj.pos.z = player->pos.z + 400.0f;
-            actor0->vel.z = 0.0f;
-            actor0->info.bonus = 1;
+            greatFox->obj.pos.z = player->pos.z + 400.0f;
+            greatFox->vel.z = 0.0f;
+            greatFox->info.bonus = 1;
             gCsFrameCount = 0;
-            player->unk_1D0 = 21;
-            player->unk_234 = 1;
+            player->csState = 21;
+            player->draw = true;
 
             for (i = 0; i < 9; i++) {
                 D_ctx_80177A48[i] = 0.0f;
@@ -1149,30 +1168,30 @@ void Fortuna_8018927C(Player* player) {
                 break;
             }
 
-            if (D_ctx_80178340 != 0) {
-                D_ctx_80178358 = 0;
-                D_ctx_8017835C = 1;
+            if (gFillScreenAlpha != 0) {
+                gFillScreenAlphaTarget = 0;
+                gFillScreenAlphaStep = 1;
             }
 
             if (gCsFrameCount == 140) {
-                player->unk_0D0 = 30.0f;
-                actor3->vel.z = 30.0f;
-                actor1->vel.z = 30.0f;
-                actor2->vel.z = 30.0f;
-                actor0->vel.z = 30.0f;
+                player->baseSpeed = 30.0f;
+                falco->vel.z = 30.0f;
+                slippy->vel.z = 30.0f;
+                peppy->vel.z = 30.0f;
+                greatFox->vel.z = 30.0f;
             }
             if (gCsFrameCount > 140) {
-                Math_SmoothStepToF(&actor3->obj.rot.z, 0.0f, 0.03f, 1.2f, 0.0001f);
-                Math_SmoothStepToF(&actor3->obj.pos.x, -100.0f, 0.03f, 1000.0f, 0.0001f);
-                Math_SmoothStepToF(&actor3->obj.pos.y, 40.0f, 0.03f, 1000.0f, 0.0001f);
+                Math_SmoothStepToF(&falco->obj.rot.z, 0.0f, 0.03f, 1.2f, 0.0001f);
+                Math_SmoothStepToF(&falco->obj.pos.x, -100.0f, 0.03f, 1000.0f, 0.0001f);
+                Math_SmoothStepToF(&falco->obj.pos.y, 40.0f, 0.03f, 1000.0f, 0.0001f);
             }
             if (gCsFrameCount > 180) {
-                Math_SmoothStepToF(&actor1->obj.rot.z, 0.0f, 0.03f, 1.2f, 0.0001f);
-                Math_SmoothStepToF(&actor1->obj.pos.x, 100.0f, 0.03f, 1000.0f, 0.0001f);
-                Math_SmoothStepToF(&actor1->obj.pos.y, 40.0f, 0.03f, 1000.0f, 0.0001f);
+                Math_SmoothStepToF(&slippy->obj.rot.z, 0.0f, 0.03f, 1.2f, 0.0001f);
+                Math_SmoothStepToF(&slippy->obj.pos.x, 100.0f, 0.03f, 1000.0f, 0.0001f);
+                Math_SmoothStepToF(&slippy->obj.pos.y, 40.0f, 0.03f, 1000.0f, 0.0001f);
             }
             if (gCsFrameCount > 220) {
-                Math_SmoothStepToF(&actor2->obj.pos.y, 90.0f, 0.03f, 1000.0f, 0.0001f);
+                Math_SmoothStepToF(&peppy->obj.pos.y, 90.0f, 0.03f, 1000.0f, 0.0001f);
             }
             if (gCsFrameCount > 340) {
                 Math_SmoothStepToF(&player->pos.y, -10.0f, 0.03f, 1000.0f, 0.0001f);
@@ -1180,58 +1199,58 @@ void Fortuna_8018927C(Player* player) {
             if (gCsFrameCount > 530) {
                 Radio_PlayMessage(gMsg_ID_20010, RCID_FOX);
                 player->pos.y = -10.0f;
-                actor3->obj.rot.z = 0.0f;
-                actor3->obj.pos.x = -100.0f;
-                actor3->obj.pos.y = 40.0f;
-                actor1->obj.rot.z = 0.0f;
-                actor1->obj.pos.x = 100.0f;
-                actor1->obj.pos.y = 40.0f;
-                actor2->obj.pos.y = 90.0f;
-                player->unk_1D0 = 22;
+                falco->obj.rot.z = 0.0f;
+                falco->obj.pos.x = -100.0f;
+                falco->obj.pos.y = 40.0f;
+                slippy->obj.rot.z = 0.0f;
+                slippy->obj.pos.x = 100.0f;
+                slippy->obj.pos.y = 40.0f;
+                peppy->obj.pos.y = 90.0f;
+                player->csState = 22;
             }
 
             switch (gCsFrameCount) {
                 case 140:
-                    AUDIO_PLAY_BGM(SEQ_ID_GOOD_END);
+                    AUDIO_PLAY_BGM(NA_BGM_COURSE_CLEAR);
                     break;
                 case 450:
-                    D_ctx_80177840 = 100;
+                    gLevelClearScreenTimer = 100;
                     break;
             }
             src.x = 0.0f;
             src.y = D_ctx_80177A48[7];
             src.z = D_ctx_80177A48[5];
-            Matrix_Translate(gCalcMatrix, player->pos.x, 0.0f, player->pos.z + D_ctx_80177D20, 0);
-            Matrix_RotateY(gCalcMatrix, -(D_ctx_80177A48[4] * M_DTOR), 1);
+            Matrix_Translate(gCalcMatrix, player->pos.x, 0.0f, player->pos.z + gPathProgress, MTXF_NEW);
+            Matrix_RotateY(gCalcMatrix, -(D_ctx_80177A48[4] * M_DTOR), MTXF_APPLY);
             Matrix_MultVec3f(gCalcMatrix, &src, &dest);
-            player->camEye.x = gCsCamEyeX = dest.x;
-            player->camEye.y = gCsCamEyeY = dest.y;
-            player->camEye.z = gCsCamEyeZ = dest.z;
+            player->cam.eye.x = gCsCamEyeX = dest.x;
+            player->cam.eye.y = gCsCamEyeY = dest.y;
+            player->cam.eye.z = gCsCamEyeZ = dest.z;
             Math_SmoothStepToF(&gCsCamAtY, 0.0f, 0.005f, 1000.0f, 0.0001f);
-            player->camAt.x = player->pos.x;
-            player->camAt.y = gCsCamAtY;
-            player->camAt.z = player->pos.z + D_ctx_80177D20;
+            player->cam.at.x = player->pos.x;
+            player->cam.at.y = gCsCamAtY;
+            player->cam.at.z = player->pos.z + gPathProgress;
             break;
 
         case 22:
             if ((gCsFrameCount >= 1110) && (gCsFrameCount < 1240)) {
-                Math_SmoothStepToF(&player->unk_0D0, 0.0f, 0.02f, 1000.0f, 0.001f);
-                Math_SmoothStepToF(&actor3->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
-                Math_SmoothStepToF(&actor1->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
-                Math_SmoothStepToF(&actor2->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
-                Math_SmoothStepToF(&actor0->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&player->baseSpeed, 0.0f, 0.02f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&falco->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&slippy->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&peppy->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&greatFox->vel.z, 0.0f, 0.02f, 1000.0f, 0.001f);
             }
             if (gCsFrameCount == 1239) {
-                player->unk_0D0 = 0.0f;
-                actor3->vel.z = 0.0f;
-                actor1->vel.z = 0.0f;
-                actor2->vel.z = 0.0f;
-                actor0->vel.z = 0.0f;
+                player->baseSpeed = 0.0f;
+                falco->vel.z = 0.0f;
+                slippy->vel.z = 0.0f;
+                peppy->vel.z = 0.0f;
+                greatFox->vel.z = 0.0f;
             }
 
             switch (gCsFrameCount) {
                 case 618:
-                    switch (gTeamShields[2]) {
+                    switch (gTeamShields[TEAM_ID_SLIPPY]) {
                         case -1:
                             Radio_PlayMessage(gMsg_ID_20339, RCID_ROB64);
                             break;
@@ -1245,7 +1264,7 @@ void Fortuna_8018927C(Player* player) {
                     break;
 
                 case 765:
-                    switch (gTeamShields[3]) {
+                    switch (gTeamShields[TEAM_ID_PEPPY]) {
                         case -1:
                             Radio_PlayMessage(gMsg_ID_20338, RCID_ROB64);
                             break;
@@ -1259,7 +1278,7 @@ void Fortuna_8018927C(Player* player) {
                     break;
 
                 case 911:
-                    switch (gTeamShields[1]) {
+                    switch (gTeamShields[TEAM_ID_FALCO]) {
                         case -1:
                             Radio_PlayMessage(gMsg_ID_20337, RCID_ROB64);
                             break;
@@ -1273,36 +1292,36 @@ void Fortuna_8018927C(Player* player) {
                     break;
 
                 case 1080:
-                    D_ctx_80177830 = 1;
+                    gShowLevelClearStatusScreen = true;
                     break;
 
                 case 1240:
-                    if (gTeamShields[1] > 0) {
-                        AUDIO_PLAY_SFX(0x09000002U, actor3->sfxSource, 0U);
-                        actor3->fwork[29] = 5.0f;
-                        actor3->iwork[11] = 2;
+                    if (gTeamShields[TEAM_ID_FALCO] > 0) {
+                        AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, falco->sfxSource, 0);
+                        falco->fwork[29] = 5.0f;
+                        falco->iwork[11] = 2;
                     }
                     break;
 
                 case 1260:
-                    if (gTeamShields[2] > 0) {
-                        AUDIO_PLAY_SFX(0x09000002U, actor1->sfxSource, 0U);
-                        actor1->fwork[29] = 5.0f;
-                        actor1->iwork[11] = 2;
+                    if (gTeamShields[TEAM_ID_SLIPPY] > 0) {
+                        AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, slippy->sfxSource, 0);
+                        slippy->fwork[29] = 5.0f;
+                        slippy->iwork[11] = 2;
                     }
                     break;
 
                 case 1280:
-                    if (gTeamShields[3] > 0) {
-                        AUDIO_PLAY_SFX(0x09000002U, actor2->sfxSource, 0U);
-                        actor2->fwork[29] = 5.0f;
-                        actor2->iwork[11] = 2;
+                    if (gTeamShields[TEAM_ID_PEPPY] > 0) {
+                        AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, peppy->sfxSource, 0);
+                        peppy->fwork[29] = 5.0f;
+                        peppy->iwork[11] = 2;
                     }
-                    D_ctx_80177830 = 0;
+                    gShowLevelClearStatusScreen = false;
                     break;
 
                 case 1300:
-                    AUDIO_PLAY_SFX(0x09000002U, player->sfxSource, 0U);
+                    AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, player->sfxSource, 0);
                     player->unk_190 = 2.0f;
                     player->unk_194 = 5.0f;
                     break;
@@ -1314,22 +1333,22 @@ void Fortuna_8018927C(Player* player) {
             }
 
             if ((gCsFrameCount >= 1400)) {
-                D_ctx_80178358 = 255;
-                D_ctx_8017835C = 16;
-                if (D_ctx_80178340 == 255) {
-                    player->state_1C8 = PLAYERSTATE_1C8_6;
-                    player->timer_1F8 = 0;
-                    D_ctx_8017837C = 4;
+                gFillScreenAlphaTarget = 255;
+                gFillScreenAlphaStep = 16;
+                if (gFillScreenAlpha == 255) {
+                    player->state_1C8 = PLAYERSTATE_1C8_NEXT;
+                    player->csTimer = 0;
+                    gFadeoutType = 4;
                     Audio_FadeOutAll(10);
 
                     // clang-format off
                     for (i = 0; i < 6; i++) { \
-                        D_ctx_80177CF0[i] = D_ctx_80177CD0[i];
+                        gSavedStarWolfTeamAlive[i] = gStarWolfTeamAlive[i];
                     }
                     // clang-format on
 
-                    D_play_800D3180[LEVEL_FORTUNA] = Play_CheckMedalStatus(50) + 1;
-                    func_play_800A6148();
+                    gLeveLClearStatus[LEVEL_FORTUNA] = Play_CheckMedalStatus(50) + 1;
+                    Play_ClearObjectData();
                     break;
                 }
             }
@@ -1374,52 +1393,52 @@ void Fortuna_8018927C(Player* player) {
                 src.x = 0.0f;
                 src.y = D_ctx_80177A48[7];
                 src.z = D_ctx_80177A48[5];
-                Matrix_Translate(gCalcMatrix, player->pos.x, 0.0f, player->pos.z + D_ctx_80177D20, 0);
-                Matrix_RotateY(gCalcMatrix, -(D_ctx_80177A48[4] * M_DTOR), 1);
+                Matrix_Translate(gCalcMatrix, player->pos.x, 0.0f, player->pos.z + gPathProgress, MTXF_NEW);
+                Matrix_RotateY(gCalcMatrix, -(D_ctx_80177A48[4] * M_DTOR), MTXF_APPLY);
                 Matrix_MultVec3f(gCalcMatrix, &src, &dest);
-                player->camEye.x = gCsCamEyeX = dest.x;
-                player->camEye.y = gCsCamEyeY = dest.y;
-                player->camEye.z = gCsCamEyeZ = dest.z;
+                player->cam.eye.x = gCsCamEyeX = dest.x;
+                player->cam.eye.y = gCsCamEyeY = dest.y;
+                player->cam.eye.z = gCsCamEyeZ = dest.z;
             }
 
             if (gCsFrameCount >= 1240) {
-                Math_SmoothStepToF(&actor3->vel.z, 50.0f, 0.1f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&falco->vel.z, 50.0f, 0.1f, 1000.0f, 0.001f);
             }
             if (gCsFrameCount >= 1260) {
-                Math_SmoothStepToF(&actor1->vel.z, 50.0f, 0.1f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&slippy->vel.z, 50.0f, 0.1f, 1000.0f, 0.001f);
             }
             if (gCsFrameCount >= 1280) {
-                Math_SmoothStepToF(&actor2->vel.z, 50.0f, 0.1f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&peppy->vel.z, 50.0f, 0.1f, 1000.0f, 0.001f);
             }
             if (gCsFrameCount >= 1300) {
-                Math_SmoothStepToF(&player->unk_0D0, 50.0f, 0.1f, 1000.0f, 0.001f);
-                Math_SmoothStepToF(&actor0->vel.z, 40.0f, 0.1f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&player->baseSpeed, 50.0f, 0.1f, 1000.0f, 0.001f);
+                Math_SmoothStepToF(&greatFox->vel.z, 40.0f, 0.1f, 1000.0f, 0.001f);
             }
             Math_SmoothStepToF(&gCsCamAtY, player->pos.y, 0.005f, 1000.0f, 0.0001f);
 
-            player->camAt.x = gCsCamAtX = player->pos.x;
-            player->camAt.y = gCsCamAtY;
-            player->camAt.z = gCsCamAtZ = player->pos.z - D_ctx_80177A48[6] + D_ctx_80177D20;
+            player->cam.at.x = gCsCamAtX = player->pos.x;
+            player->cam.at.y = gCsCamAtY;
+            player->cam.at.z = gCsCamAtZ = player->pos.z - D_ctx_80177A48[6] + gPathProgress;
             break;
     }
 
-    if (player->unk_1D0 < 20) {
+    if (player->csState < 20) {
         switch (gCsFrameCount) {
             case 1020:
-                D_ctx_80177830 = 1;
+                gShowLevelClearStatusScreen = true;
                 break;
             case 1220:
-                D_ctx_80177830 = 0;
+                gShowLevelClearStatusScreen = false;
                 break;
         }
     }
 
-    Matrix_RotateY(gCalcMatrix, (player->unk_114 + player->unk_0E8 + 180.0f) * M_DTOR, 0);
-    Matrix_RotateX(gCalcMatrix, -((player->unk_120 + player->unk_0E4 + player->unk_4D8) * M_DTOR), 1);
+    Matrix_RotateY(gCalcMatrix, (player->yRot_114 + player->rot.y + 180.0f) * M_DTOR, MTXF_NEW);
+    Matrix_RotateX(gCalcMatrix, -((player->xRot_120 + player->rot.x + player->aerobaticPitch) * M_DTOR), MTXF_APPLY);
 
     src.x = 0.0f;
     src.y = 0.0f;
-    src.z = player->unk_0D0 + player->unk_110;
+    src.z = player->baseSpeed + player->boostSpeed;
 
     Matrix_MultVec3fNoTranslate(gCalcMatrix, &src, &dest);
 
@@ -1429,72 +1448,73 @@ void Fortuna_8018927C(Player* player) {
     player->pos.x += player->vel.x;
     player->pos.y += player->vel.y;
     player->pos.z += player->vel.z;
-    player->unk_138 = player->pos.z;
-    player->unk_0F8 = player->unk_0EC + player->unk_12C + player->unk_130;
+    player->trueZpos = player->pos.z;
+    player->bankAngle = player->rot.z + player->zRotBank + player->zRotBarrelRoll;
 }
 
-void Fortuna_8018BA2C(void) {
+void Fortuna_LoadLevelObjects(void) {
     s32 i;
     Actor* actor;
-    Object_4C* obj4C;
-    Object_58* obj58;
-    Boss* boss = &gBosses[0];
+    Sprite* sprite;
+    Scenery360* scenery360;
+    FoBase* base = &gBosses[0];
 
-    D_ctx_80178310 = LOAD_ASSET(D_enmy_800CFDA0[gCurrentLevel]);
+    gLevelObjects = SEGMENTED_TO_VIRTUAL(gLevelObjectInits[gCurrentLevel]);
 
-    for (obj58 = &gObjects58[0], i = 0; i < 1000; i++) {
-        if (D_ctx_80178310[i].id < 0) {
+    for (scenery360 = &gScenery360[0], i = 0; i < 1000; i++) {
+        if (gLevelObjects[i].id <= OBJ_INVALID) {
             break;
         }
-        if (D_ctx_80178310[i].id < 161) {
-            Object_58_Initialize(obj58);
-            obj58->obj.status = OBJ_ACTIVE;
-            obj58->obj.id = D_ctx_80178310[i].id;
-            obj58->obj.pos.x = D_ctx_80178310[i].xPos;
-            obj58->obj.pos.z = D_ctx_80178310[i].zPos1;
-            obj58->obj.pos.y = D_ctx_80178310[i].yPos;
-            obj58->obj.rot.y = D_ctx_80178310[i].rot.y;
-            Object_SetInfo(&obj58->info, obj58->obj.id);
-            obj58++;
+        if (gLevelObjects[i].id < OBJ_SCENERY_MAX) {
+            Scenery360_Initialize(scenery360);
+            scenery360->obj.status = OBJ_ACTIVE;
+            scenery360->obj.id = gLevelObjects[i].id;
+            scenery360->obj.pos.x = gLevelObjects[i].xPos;
+            scenery360->obj.pos.z = gLevelObjects[i].zPos1;
+            scenery360->obj.pos.y = gLevelObjects[i].yPos;
+            scenery360->obj.rot.y = gLevelObjects[i].rot.y;
+            Object_SetInfo(&scenery360->info, scenery360->obj.id);
+            scenery360++;
         }
     }
 
     for (actor = &gActors[20], i = 0; i < 1000; i++) {
-        if (D_ctx_80178310[i].id < 0) {
+        if (gLevelObjects[i].id <= OBJ_INVALID) {
             break;
         }
-        if ((D_ctx_80178310[i].id >= 176) && (D_ctx_80178310[i].id < 292)) {
+        if ((gLevelObjects[i].id >= OBJ_ACTOR_START) && (gLevelObjects[i].id < OBJ_ACTOR_MAX)) {
             Actor_Initialize(actor);
             actor->obj.status = OBJ_INIT;
-            actor->obj.id = D_ctx_80178310[i].id;
-            actor->obj.pos.x = D_ctx_80178310[i].xPos;
-            actor->obj.pos.z = D_ctx_80178310[i].zPos1;
-            actor->obj.pos.y = D_ctx_80178310[i].yPos;
+            actor->obj.id = gLevelObjects[i].id;
+            actor->obj.pos.x = gLevelObjects[i].xPos;
+            actor->obj.pos.z = gLevelObjects[i].zPos1;
+            actor->obj.pos.y = gLevelObjects[i].yPos;
             Object_SetInfo(&actor->info, actor->obj.id);
             actor++;
         }
     }
 
-    for (obj4C = &gObjects4C[0], i = 0; i < 1000; i++) {
-        if (D_ctx_80178310[i].id < 0) {
+    for (sprite = &gSprites[0], i = 0; i < 1000; i++) {
+        if (gLevelObjects[i].id <= OBJ_INVALID) {
             break;
         }
-        if (D_ctx_80178310[i].id == 163) {
-            Object_4C_Initialize(obj4C);
-            obj4C->obj.status = OBJ_INIT;
-            obj4C->obj.id = D_ctx_80178310[i].id;
-            obj4C->obj.pos.x = D_ctx_80178310[i].xPos;
-            obj4C->obj.pos.z = D_ctx_80178310[i].zPos1;
-            obj4C->obj.pos.y = D_ctx_80178310[i].yPos;
-            Object_SetInfo(&obj4C->info, obj4C->obj.id);
-            obj4C++;
+        if (gLevelObjects[i].id == OBJ_SPRITE_FO_POLE) {
+            Sprite_Initialize(sprite);
+            sprite->obj.status = OBJ_INIT;
+            sprite->obj.id = gLevelObjects[i].id;
+            sprite->obj.pos.x = gLevelObjects[i].xPos;
+            sprite->obj.pos.z = gLevelObjects[i].zPos1;
+            sprite->obj.pos.y = gLevelObjects[i].yPos;
+            Object_SetInfo(&sprite->info, sprite->obj.id);
+            sprite++;
         }
     }
-    Boss_Initialize(boss);
-    boss->obj.status = OBJ_INIT;
-    boss->obj.pos.x = 0.0f;
-    boss->obj.pos.y = 0.0f;
-    boss->obj.pos.z = 0.0f;
-    boss->obj.id = OBJ_BOSS_308;
-    Object_SetInfo(&boss->info, boss->obj.id);
+
+    Boss_Initialize(base);
+    base->obj.status = OBJ_INIT;
+    base->obj.pos.x = 0.0f;
+    base->obj.pos.y = 0.0f;
+    base->obj.pos.z = 0.0f;
+    base->obj.id = OBJ_BOSS_FO_BASE;
+    Object_SetInfo(&base->info, base->obj.id);
 }

@@ -2,18 +2,16 @@
 
 s32 gBossFrameCount;
 
-s32 D_boss_800C9E90[] = {
-    SEQ_ID_CO_BOSS_1 | SEQ_FLAG, SEQ_ID_ME_BOSS | SEQ_FLAG, SEQ_ID_SX_BOSS | SEQ_FLAG,   SEQ_ID_A6_BOSS | SEQ_FLAG,
-    SEQ_ID_A6_BOSS | SEQ_FLAG,   SEQ_ID_SY_BOSS | SEQ_FLAG, SEQ_ID_VE_BOSS | SEQ_FLAG,   SEQ_ID_SO_BOSS | SEQ_FLAG,
-    SEQ_ID_ZO_BOSS | SEQ_FLAG,   SEQ_ID_VE_BOSS | SEQ_FLAG, SEQ_ID_CO_BOSS_1 | SEQ_FLAG, SEQ_ID_MA_BOSS | SEQ_FLAG,
-    SEQ_ID_TI_BOSS | SEQ_FLAG,   SEQ_ID_AQ_BOSS | SEQ_FLAG,
+s32 gBossBgms[] = {
+    NA_BGM_BOSS_CO, NA_BGM_BOSS_ME, NA_BGM_BOSS_SX, NA_BGM_BOSS_A6, NA_BGM_BOSS_SB, NA_BGM_BOSS_SY, NA_BGM_BOSS_VE,
+    NA_BGM_BOSS_SO, NA_BGM_BOSS_ZO, NA_BGM_BOSS_VE, NA_BGM_BOSS_CO, NA_BGM_BOSS_MA, NA_BGM_BOSS_TI, NA_BGM_BOSS_AQ,
 };
 
 s32 PAD_boss_C9EC4[14] = { 0 };
 
-const f32 D_boss_800D55D0[] = { 6000.0f, 18000.0f, -6000.0f, -18000.0f };
+const f32 D_boss_800D55D0[] = { 6000.0f, 18000.0f, -6000.0f, -18000.0f }; // unused?
 
-void func_boss_80042EC0(Boss* boss) {
+void Boss_AwardBonus(Boss* this) {
     s32 bonus;
     f32 yOffset;
 
@@ -28,94 +26,105 @@ void func_boss_80042EC0(Boss* boss) {
     } else {
         bonus = 0;
     }
+
     if (bonus != 0) {
         yOffset = 0.0f;
-        if (boss->obj.id == OBJ_BOSS_292) {
+        if (this->obj.id == OBJ_BOSS_CO_GRANGA) {
             yOffset = 300.0f;
-        } else if (boss->obj.id == OBJ_BOSS_306) {
+        } else if (this->obj.id == OBJ_BOSS_TI_GORAS) {
             yOffset = 200.0f;
         }
-        BonusText_Display(boss->obj.pos.x, boss->obj.pos.y + yOffset, boss->obj.pos.z, bonus);
+        BonusText_Display(this->obj.pos.x, this->obj.pos.y + yOffset, this->obj.pos.z, bonus);
     }
+
     gHitCount += bonus + 1;
     D_ctx_80177850 = 15;
 }
 
-void Boss299_Init(Boss* boss) {
+void Boss299_Init(Boss299* this) {
+    /* Unimplemented */
 }
 
-void Boss299_Update(Boss* boss) {
+void Boss299_Update(Boss299* this) {
+    /* Unimplemented */
 }
 
-void Boss299_Draw(Boss* boss) {
+void Boss299_Draw(Boss299* this) {
+    /* Unimplemented */
 }
 
-void Boss300_Init(Boss* boss) {
+void Boss300_Init(Boss300* this) {
+    /* Unimplemented */
 }
 
-void Boss300_Update(Boss* boss) {
+void Boss300_Update(Boss300* this) {
+    /* Unimplemented */
 }
 
-void Boss300_Draw(Boss* boss) {
+void Boss300_Draw(Boss300* this) {
+    /* Unimplemented */
 }
 
-void func_boss_80042FF4(Actor* actor, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7, f32 arg8,
-                        f32 arg9, f32 argA, s32 argB, s32 argC) {
-    Actor_Initialize(actor);
-    actor->obj.status = OBJ_INIT;
-    actor->obj.id = OBJ_ACTOR_189;
-    actor->state = argB;
-    actor->obj.pos.x = arg1;
-    actor->obj.pos.y = arg2;
-    actor->obj.pos.z = arg3;
-    actor->obj.rot.x = arg4;
-    actor->obj.rot.y = arg5;
-    actor->obj.rot.z = arg6;
-    actor->vel.x = arg7;
-    actor->vel.y = arg8;
-    actor->vel.z = arg9;
-    actor->scale = argA;
-    actor->timer_0BC = argC;
-    actor->timer_0BE = 20;
-    Object_SetInfo(&actor->info, actor->obj.id);
+void Boss_SetupDebris(ActorDebris* this, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7, f32 arg8,
+                      f32 arg9, f32 argA, s32 argB, s32 argC) {
+    Actor_Initialize(this);
+    this->obj.status = OBJ_INIT;
+    this->obj.id = OBJ_ACTOR_DEBRIS;
+    this->state = argB;
+    this->obj.pos.x = arg1;
+    this->obj.pos.y = arg2;
+    this->obj.pos.z = arg3;
+    this->obj.rot.x = arg4;
+    this->obj.rot.y = arg5;
+    this->obj.rot.z = arg6;
+    this->vel.x = arg7;
+    this->vel.y = arg8;
+    this->vel.z = arg9;
+    this->scale = argA;
+    this->timer_0BC = argC;
+    this->timer_0BE = 20;
+    Object_SetInfo(&this->info, this->obj.id);
     if (gLevelType == LEVELTYPE_PLANET) {
-        actor->gravity = 0.5f;
+        this->gravity = 0.5f;
     }
 }
 
-void func_boss_800430DC(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7, f32 arg8,
-                        f32 arg9, s32 argA, s32 argB) {
+void Boss_SpawnDebris(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7, f32 arg8,
+                      f32 arg9, s32 argA, s32 argB) {
     s32 i;
 
-    for (i = 59; i >= 0; i--) {
+    for (i = (ARRAY_COUNT(gActors)) - 1; i >= 0; i--) {
         if (gActors[i].obj.status == OBJ_FREE) {
-            func_boss_80042FF4(&gActors[i], arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, argA, argB);
-            return;
+            Boss_SetupDebris(&gActors[i], arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, argA, argB);
+            break;
         }
     }
 }
 
-void func_boss_80043188(Boss* boss) {
-    boss->info.unk_10 = 30000.0f;
+void Boss_SetCullDistance(Boss* this) {
+    this->info.cullDistance = 30000.0f;
 }
 
-void func_boss_8004319C(Player* player, f32 arg1, f32 arg2, f32 arg3) {
+void Boss_CompleteLevel(Player* player, f32 xPos, f32 yPos, f32 zPos) {
     SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 80);
     SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_FANFARE, 80);
 
     gCsFrameCount = 0;
-    D_ctx_80178448 = arg3 + D_ctx_80177D20;
-    D_ctx_80178440 = arg1;
-    D_ctx_80178444 = arg2;
+    gBossDeathCamAtZ = zPos + gPathProgress;
+    gBossDeathCamAtX = xPos;
+    gBossDeathCamAtY = yPos;
 
-    player->state_1C8 = PLAYERSTATE_1C8_7;
-    player->unk_1D0 = 10;
-    player->timer_1F8 = 50;
-    player->timer_1FC = 50;
+    player->state_1C8 = PLAYERSTATE_1C8_LEVEL_COMPLETE;
+    player->csState = 10;
+    player->csTimer = 50;
+    player->csEventTimer = 50;
+
     player->unk_000 = 0.0f;
     player->unk_004 = 1.0f;
-    if (player->pos.x < player->unk_0AC) {
+
+    if (player->pos.x < player->xPath) {
         player->unk_004 = -1.0f;
     }
+
     gPlayer[0].vel.x = 0.0f;
 }

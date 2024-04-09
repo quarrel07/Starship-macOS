@@ -1,46 +1,46 @@
 #include "global.h"
 
-void Fortuna_8018927C(void*);
-void Bolse_8018D394(void*);
-void Bolse_8018D454(void*);
-void Bolse_8018D7F0(void*);
-void Bolse_8018D960(void*);
-void Bolse_8018E710(void*);
-void Bolse_8018E870(void*);
-void Bolse_80191BAC(void*);
-void Bolse_80191DB0(void*);
+void Fortuna_LevelComplete(Player*);
+void Bolse_BoLaserCannon_Update(Boss*);
+void Bolse_BoLaserCannon_Draw(BoLaserCannon*);
+void Bolse_BoShieldReactor_Update(BoShieldReactor*);
+void Bolse_BoShieldReactor_Draw(Boss*);
+void Bolse_BoBase_Update(Actor*);
+void Bolse_BoBase_Draw(Actor*);
+void Bolse_BoBaseShield_Update(Actor*);
+void Bolse_BoBaseShield_Draw(Actor*);
 
 UNK_TYPE D_i4_801A03C0;
 s32 D_i4_8019EDD0 = 0;
 
-void OvlI4_CallFunction(u32 arg0, void* arg1) {
-    switch (arg0) {
-        case 90:
-            Fortuna_8018927C(arg1);
+void OvlI4_CallFunction(u32 mode, void* ptr) {
+    switch (mode) {
+        case OVLCALL_FO_CS_COMPLETE:
+            Fortuna_LevelComplete(ptr);
             break;
-        case 91:
-            Bolse_8018E710(arg1);
+        case OVLCALL_BO_BASE_UPDATE:
+            Bolse_BoBase_Update(ptr);
             break;
-        case 92:
-            Bolse_8018E870(arg1);
+        case OVLCALL_BO_BASE_DRAW:
+            Bolse_BoBase_Draw(ptr);
             break;
-        case 93:
-            Bolse_80191BAC(arg1);
+        case OVLCALL_BO_BASE_SHIELD_UPDATE:
+            Bolse_BoBaseShield_Update(ptr);
             break;
-        case 94:
-            Bolse_80191DB0(arg1);
+        case OVLCALL_BO_BASE_SHIELD_DRAW:
+            Bolse_BoBaseShield_Draw(ptr);
             break;
-        case 95:
-            Bolse_8018D7F0(arg1);
+        case OVLCALL_BO_SHIELD_REACTOR_UPDATE:
+            Bolse_BoShieldReactor_Update(ptr);
             break;
-        case 96:
-            Bolse_8018D960(arg1);
+        case OVLCALL_BO_SHIELD_REACTOR_DRAW:
+            Bolse_BoShieldReactor_Draw(ptr);
             break;
-        case 97:
-            Bolse_8018D394(arg1);
+        case OVLCALL_BO_LASER_CANNON_UPDATE:
+            Bolse_BoLaserCannon_Update(ptr);
             break;
-        case 98:
-            Bolse_8018D454(arg1);
+        case OVLCALL_BO_LASER_CANNON_DRAW:
+            Bolse_BoLaserCannon_Draw(ptr);
         default:
             PRINTF("i4 指定外！\n"); // Not specified!
             break;

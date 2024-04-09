@@ -4,11 +4,11 @@ OSContPad gControllerHold[4];
 OSContPad gControllerPress[4];
 u8 gControllerPlugged[4];
 u32 gControllerLock;
-u8 gControllerRumble[4];
-OSContPad sNextController[4];      //
-OSContPad sPrevController[4];      //
-OSContStatus sControllerStatus[4]; //
-OSPfs sControllerMotor[4];         //
+u8 gControllerRumbleEnabled[4];
+OSContPad sNextController[4];
+OSContPad sPrevController[4];
+OSContStatus sControllerStatus[4];
+OSPfs sControllerMotor[4];
 
 void Controller_AddDeadZone(s32 contrNum) {
     s32 temp_v0 = gControllerHold[contrNum].stick_x;
@@ -55,7 +55,7 @@ void Controller_Init(void) {
     osContInit(&gSerialEventQueue, &sp1F, sControllerStatus);
     for (i = 0; i < 4; i++) {
         gControllerPlugged[i] = (sp1F >> i) & 1;
-        gControllerRumble[i] = 0;
+        gControllerRumbleEnabled[i] = 0;
     }
 }
 
@@ -63,7 +63,7 @@ void Controller_UpdateInput(void) {
     s32 i;
 
     for (i = 0; i < 4; i++) {
-        if (gControllerPlugged[i] == 1 && sNextController[i].err_no == 0) {
+        if ((gControllerPlugged[i] == 1) && (sNextController[i].errno == 0)) {
             sPrevController[i] = gControllerHold[i];
             gControllerHold[i] = sNextController[i];
             gControllerPress[i].button =
@@ -88,26 +88,26 @@ void Controller_ReadData(void) {
         }
     } else {
         osContStartReadData(&gSerialEventQueue);
-        osRecvMesg(&gSerialEventQueue, NULL, OS_MESG_NOBLOCK);
+        MQ_WAIT_FOR_MESG(&gSerialEventQueue, NULL);
         osContGetReadData(sNextController);
     }
-    osSendMesg(&gControllerMsgQueue, OS_MESG_32(SI_CONT_READ_DONE), OS_MESG_PRI_NORMAL);
+    osSendMesg(&gControllerMesgQueue, OS_MESG_32(SI_CONT_READ_DONE), OS_MESG_PRI_NORMAL);
 }
 
 void Save_ReadData(void) {
     if ((gStartNMI == 0) && (Save_ReadEeprom(&gSaveIOBuffer) == 0)) {
-        osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
+        osSendMesg(&gSaveMesgQueue, (OSMesg) SI_SAVE_SUCCESS, OS_MESG_NOBLOCK);
         return;
     }
-    osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
+    osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
 }
 
 void Save_WriteData(void) {
     if ((gStartNMI == 0) && (Save_WriteEeprom(&gSaveIOBuffer) == 0)) {
-        osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
+        osSendMesg(&gSaveMesgQueue, (OSMesg) SI_SAVE_SUCCESS, OS_MESG_NOBLOCK);
         return;
     }
-    osSendMesg(&gSaveMsgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
+    osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
 }
 
 void Controller_Rumble(void) {
@@ -116,30 +116,30 @@ void Controller_Rumble(void) {
     for (i = 0; i < 4; i++) {
         if ((gControllerPlugged[i] != 0) && (sControllerStatus[i].err_no == 0)) {
             if (sControllerStatus[i].status & 1) {
-                if (gControllerRumble[i] == 0) {
+                if (gControllerRumbleEnabled[i] == 0) {
                     if (osMotorInit(&gSerialEventQueue, &sControllerMotor[i], i)) {
-                        gControllerRumble[i] = 0;
+                        gControllerRumbleEnabled[i] = 0;
                     } else {
-                        gControllerRumble[i] = 1;
+                        gControllerRumbleEnabled[i] = 1;
                     }
                 }
-                if (gControllerRumble[i] == 1) {
-                    if (D_80137E84[i] != 0) {
+                if (gControllerRumbleEnabled[i] == 1) {
+                    if (gControllerRumbleFlags[i] != 0) {
                         if (osMotorStart(&sControllerMotor[i])) {
-                            gControllerRumble[i] = 0;
+                            gControllerRumbleEnabled[i] = 0;
                         }
                     } else {
                         if (osMotorStop(&sControllerMotor[i])) {
-                            gControllerRumble[i] = 0;
+                            gControllerRumbleEnabled[i] = 0;
                         }
                     }
                 }
             } else {
-                gControllerRumble[i] = 0;
+                gControllerRumbleEnabled[i] = 0;
             }
         }
     }
     for (i = 0; i < 4; i++) {
-        D_80137E84[i] = 0;
+        gControllerRumbleFlags[i] = 0;
     }
 }

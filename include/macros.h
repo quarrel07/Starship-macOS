@@ -7,6 +7,9 @@
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
+#define SCREEN_MARGIN 8
+
+#define TIME_IN_SECONDS(x) (x * 30);
 
 #define RAND_FLOAT(max) (Rand_ZeroOne()*(max))
 #define RAND_INT(max) ((s32)(Rand_ZeroOne()*(max)))
@@ -18,11 +21,10 @@
 #define RAND_INT_SEEDED(max) ((s32)(Rand_ZeroOneSeeded()*(max)))
 #define RAND_FLOAT_CENTERED_SEEDED(width) ((Rand_ZeroOneSeeded()-0.5f)*(width))
 
-#define SEGMENTED_TO_VIRTUAL(segment) (segment)
+#define SEGMENTED_TO_VIRTUAL(segment) LOAD_ASSET(segment) 
 
 #define ARRAY_COUNT(arr) (s32)(sizeof(arr) / sizeof(arr[0]))
 #define ARRAY_COUNTU(arr) (u32)(sizeof(arr) / sizeof(arr[0]))
-
 #define SIGN_OF(x) (((x) > 0) ? 1 : ((x) == 0) ? 0 : -1)
 #define SQ(x) ((x) * (x))
 #define CUBE(x) ((x) * (x) * (x))
@@ -45,6 +47,8 @@ extern f32 COS_DEG(f32 angle);
 #define CYCLES_TO_USEC(c)    (((u64)(c)*(1000000LL/15625LL))/(OS_CLOCK_RATE/15625LL))
 #define CYCLES_TO_MSEC(c) ((s32)CYCLES_TO_USEC(c)/1000)
 #define CYCLES_TO_MSEC_PC(c) (CYCLES_TO_USEC(c)/1000)
+
+#define UNPACK_BYTE(data, bytenum) (((data) & (0xFF << ((bytenum) * 8))) >> ((bytenum) * 8))
 
 /*
  * Macros for libultra
