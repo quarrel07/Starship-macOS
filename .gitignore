@@ -33,3 +33,4 @@ torch.hash.yml
 cmake-build-*/
 .idea/
 .vs
+build*
