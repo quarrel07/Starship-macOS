@@ -428,12 +428,10 @@ void func_radio_800BAAE8(void) {
 
         if (mirror) {
             Lib_TextureRect_RGBA16_MirX(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
-                                         gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f,
-                                         gRadioPortraitScaleY);
+                                     gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
         } else {
             Lib_TextureRect_RGBA16(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
-                                         gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f,
-                                         gRadioPortraitScaleY);
+                                gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
         }
     }
 }
