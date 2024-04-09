@@ -395,7 +395,7 @@ void Option_Setup(void) {
             continue;
         }
         if (!(gSaveFile.save.data.planet[i].normalMedal & 1)) {
-            if(CVarGetInteger("gLevelSelector", 0) || CVarGetInteger("gSfxJukebox", 0)) {
+            if (CVarGetInteger("gLevelSelector", 0) || CVarGetInteger("gSfxJukebox", 0)) {
                 enableExpertModes = true;
             } else {
                 enableExpertModes = false;
@@ -1655,7 +1655,7 @@ void Option_ExpertSound_Update(void) {
     s32 pad;
     f32 sp28 = D_menu_801B931C;
 
-    if(CVarGetInteger("gSfxJukebox", 0) == 1) {
+    if (CVarGetInteger("gSfxJukebox", 0) == 1) {
         Option_JukeboxSoundUpdate();
         return;
     }
@@ -2801,17 +2801,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    {
-        for (i = 0; i < 4; i++) {
-            Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex + (80 * 16 * i) / 2, aVsHandicapFrameTLUT, 80, 16,
-                                sVsHandicapFrameXpos[PlayerIdx], sVsHandicapFrameYpos[PlayerIdx] + (16.0f * i), 1.0f,
-                                1.0f);
-        }
-        Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex + (80 * 16 * 4) / 2, aVsHandicapFrameTLUT, 80, 7,
-                            sVsHandicapFrameXpos[PlayerIdx], sVsHandicapFrameYpos[PlayerIdx] + (16.0f * 4), 1.0f, 1.0f);
-    }
-
-    gDPSetPrimColor(gMasterDisp++, 0, 0, sCharNameR[PlayerIdx], sCharNameG[PlayerIdx], sCharNameB[PlayerIdx], 255);
+    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71, sVsHandicapFrameXpos[arg0],
+                     sVsHandicapFrameYpos[arg0], 1.0f, 1.0f);
 
     Lib_TextureRect_CI8(&gMasterDisp, sVsCharNameTex[PlayerIdx], sVsCharNameTLUT[PlayerIdx], sCharNameWidth[PlayerIdx],
                         sCharNameHeight[PlayerIdx], sVsHandicapFrameXpos[PlayerIdx] + sCharNameXoffsetPos[PlayerIdx],
@@ -2853,17 +2844,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    {
-        for (i = 0; i < 2; i++) {
-            Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[PlayerIdx] + (44 * 20 * i), 44, 20,
-                                   sVsHandicapFrameXpos[PlayerIdx] + sPlayerFaceXoffsetPos,
-                                   sVsHandicapFrameYpos[PlayerIdx] + sPlayerFaceYoffsetPos + (i * 20.0f * 0.7f), 0.7f,
-                                   0.7f);
-        }
-        Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[PlayerIdx] + 44 * 20 * 2, 44, 4,
-                               sVsHandicapFrameXpos[PlayerIdx] + sPlayerFaceXoffsetPos,
-                               sVsHandicapFrameYpos[PlayerIdx] + sPlayerFaceYoffsetPos + 28.0f, 0.7f, 0.7f);
-    }
+    Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[arg0], 44, 44, sVsHandicapFrameXpos[arg0] + sPlayerFaceXoffsetPos,
+                        sVsHandicapFrameYpos[arg0] + sPlayerFaceYoffsetPos, 0.7f, 0.7f);
 
     width = 24;
     if (PlayerIdx == 0) {
@@ -2882,11 +2864,7 @@ void Option_VS_N64Console_Draw(void) {
 
     RCP_SetupDL_76();
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-
-    for (i = 0; i < 3; i++) {
-        Lib_TextureRect_RGBA16(&gMasterDisp, aVsN64ConsoleTex + (144 * 14 * i), 144, 14, 87.0f, 84 + (i * 14.0f), 1.0f,
-                               1.0f);
-    }
+    Lib_TextureRect_RGBA16(&gMasterDisp, aVsN64ConsoleTex, 144, 42, 87.0f, 84, 1.0f, 1.0f);
 }
 
 void Option_VersusStage_Setup(void) {
