@@ -230,6 +230,10 @@ void Title_Main(void) {
 }
 
 void Title_UpdateEntry(void) {
+    
+    // LTODO: Verify this is correct
+    gMainController = Title_80187ABC();
+
     if (sTimer1 > 0) {
         sTimer1--;
     }
