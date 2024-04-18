@@ -261,15 +261,15 @@ s32 AudioLoad_SyncLoadSample(Sample* sample, s32 fontId) {
     u8* sampleAddr;
 
     if ((sample->isRelocated == true) && (sample->medium != MEDIUM_RAM)) {
-        sampleAddr = AudioHeap_AllocPersistentSampleCache(sample->size, fontId, sample->sampleAddr, sample->medium);
+        sampleAddr = AudioHeap_AllocPersistentSampleCache(sample->size, fontId, (uintptr_t) sample->sampleAddr, sample->medium);
         if (sampleAddr == NULL) {
             return -1;
         }
         if (sample->medium == MEDIUM_UNK) {
-            AudioLoad_SyncDmaUnkMedium(sample->sampleAddr, sampleAddr, sample->size,
+            AudioLoad_SyncDmaUnkMedium((uintptr_t) sample->sampleAddr, sampleAddr, sample->size,
                                        gSampleBankTable->base.unkMediumParam);
         } else {
-            AudioLoad_SyncDma(sample->sampleAddr, sampleAddr, sample->size, sample->medium);
+            AudioLoad_SyncDma((uintptr_t) sample->sampleAddr, sampleAddr, sample->size, sample->medium);
         }
         sample->medium = MEDIUM_RAM;
         sample->sampleAddr = sampleAddr;
