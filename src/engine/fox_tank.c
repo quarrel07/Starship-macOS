@@ -866,7 +866,6 @@ void func_tank_8004641C(Player* player, s32 arg1, f32 arg2, f32 arg3, f32 arg4, 
             player->rollRate = player->baseRollRate = -20;
         }
     }
-
     if (Play_CheckPolyCollision(arg1, arg2, arg3, arg4, sp84, arg3, sp7C, &sp58, &sp4C) &&
         (D_800C9F10 <= arg3 + sp58.y)) {
         D_800C9F10 = arg3 + sp58.y;
@@ -1458,7 +1457,6 @@ void func_tank_800481F4(Player* player) {
                         player->vel.x = 0.0f;
                         player->vel.y = 30.0f;
                         player->pos.x = player->basePos.x;
-
                         actor->dmgType = DMG_COLLISION;
                         if (actor->info.damage != 0) {
                             Player_ApplyDamage(player, 0, 20);

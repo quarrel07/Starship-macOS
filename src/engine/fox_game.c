@@ -114,7 +114,6 @@ void Game_SetGameState(void) {
     gSceneSetup = 0;
     gFillScreenColor = gBgColor = 0;
     gPathProgress = 0.0f;
-
     if ((gCurrentLevel == LEVEL_VENOM_2) && (gLevelPhase == 2)) {
         gFillScreenColor = gBgColor = 0xFFFF; // 248, 248, 248
         gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 255;
@@ -343,7 +342,6 @@ void Game_Update(void) {
     u8 soundMode;
 
     Game_SetGameState();
-
     if (gGameStandby) {
         Game_InitStandbyDL(&gUnkDisp1);
         gGameStandby = false;
@@ -440,14 +438,12 @@ void Game_Update(void) {
                 gVersusStage = 0;
                 gVsPointsToWin = 3;
                 gBlurAlpha = 255;
-
                 for (i = 0; i < ARRAY_COUNT(gLeveLClearStatus); i++) {
                     gLeveLClearStatus[i] = 0;
                 }
 
                 gExpertMode = false;
                 gOptionSoundMode = gSaveFile.save.data.soundMode;
-
                 switch (gOptionSoundMode) {
                     case OPTIONSOUND_STEREO:
                         soundMode = SOUNDMODE_STEREO;
@@ -463,12 +459,10 @@ void Game_Update(void) {
                         soundMode = SOUNDMODE_STEREO;
                         break;
                 }
-
                 SEQCMD_SET_SOUND_MODE(soundMode);
                 gVolumeSettings[AUDIO_TYPE_MUSIC] = gSaveFile.save.data.musicVolume;
                 gVolumeSettings[AUDIO_TYPE_VOICE] = gSaveFile.save.data.voiceVolume;
                 gVolumeSettings[AUDIO_TYPE_SFX] = gSaveFile.save.data.sfxVolume;
-
                 if (gVolumeSettings[AUDIO_TYPE_MUSIC] > 99) {
                     gVolumeSettings[AUDIO_TYPE_MUSIC] = 99;
                 }

@@ -34,7 +34,7 @@ void Audio_PlayPauseSfx(u8 active);
 void Audio_PlayMapMenuSfx(u8 active);
 void Audio_KillAllSfx(void);
 
-#define AUDIO_PLAY_SFX(sfxId, srcPos, token) (Audio_PlaySfx((sfxId),(srcPos),(token),&gDefaultMod,&gDefaultMod,&gDefaultReverb))
+#define AUDIO_PLAY_SFX(sfxId, srcPos, token) //(Audio_PlaySfx((sfxId),(srcPos),(token),&gDefaultMod,&gDefaultMod,&gDefaultReverb))
 
 #define SFX_FLAG_18 (1 << 18)  // makes distance ignore z position? probably more
 #define SFX_FLAG_19 (1 << 19)

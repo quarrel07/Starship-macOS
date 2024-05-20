@@ -658,7 +658,6 @@ void Fortuna_LevelComplete(Player* player) {
         Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.1f, 15.0f, 0.0f);
         Math_SmoothStepToF(&player->camRoll, 0.0f, 0.1f, 3.0f, 0.0f);
         Math_SmoothStepToAngle(&player->aerobaticPitch, 0.0f, 0.1f, 20.0f, 0.0f);
-
         if (gMissionStatus == MISSION_COMPLETE) {
             if (player->pos.y < 700.0f) {
                 Math_SmoothStepToF(&player->pos.y, 700.0f, 0.1f, 10.0f, 0.0f);
@@ -750,7 +749,6 @@ void Fortuna_LevelComplete(Player* player) {
             Math_SmoothStepToF(&player->rot.x, 15.0f, 0.1f, 0.4f, 0.0f);
             Math_SmoothStepToF(&player->rot.z, -40.0f, 0.2f, 5.0f, 0.0f);
             Math_SmoothStepToF(&player->rot.y, -120.0f, 0.1f, 2.0f, 0.0f);
-
             player->baseSpeed += 1.0f;
             if (player->baseSpeed >= 70.0f) {
                 player->baseSpeed = 70.0f;
@@ -759,7 +757,6 @@ void Fortuna_LevelComplete(Player* player) {
                     player->contrailScale = 0.6f;
                 }
             }
-
             if (player->csTimer == 0) {
                 player->csState = 2;
                 player->csTimer = 1000;

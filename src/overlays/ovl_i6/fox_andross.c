@@ -1138,7 +1138,6 @@ void Andross_AndBrain_Update(AndBrain* this) {
 
                 Matrix_MultVec3fNoTranslate(gCalcMatrix, &vec, &sp58);
                 Matrix_RotateZ(gCalcMatrix, 2.0f * RAND_FLOAT(M_PI), MTXF_APPLY);
-
                 vec.x = RAND_FLOAT(50.0f) + 120.0f;
                 vec.y = 0.0f;
                 vec.z = 0.0f;
@@ -1261,7 +1260,6 @@ bool Andross_8018B47C(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
         Matrix_RotateZ(gCalcMatrix, rot->z * M_DTOR, MTXF_APPLY);
         Matrix_RotateY(gCalcMatrix, rot->y * M_DTOR, MTXF_APPLY);
         Matrix_RotateX(gCalcMatrix, rot->x * M_DTOR, MTXF_APPLY);
-
         if (*dList != NULL) {
             Matrix_Push(&gGfxMatrix);
             Matrix_Push(&gCalcMatrix);
@@ -3307,7 +3305,6 @@ bool Andross_801917F0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, *dList);
                 RCP_SetupDL(&gMasterDisp, SETUPDL_41);
-
                 switch (gGameFrameCount % 4U) {
                     case 0:
                         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
@@ -3322,7 +3319,6 @@ bool Andross_801917F0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
                         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
                         break;
                 }
-
                 Matrix_Translate(gGfxMatrix, D_i6_801A67DC.x, D_i6_801A67DC.y, D_i6_801A67DC.z, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, D_i6_801A67F0 * M_DTOR, MTXF_APPLY);
                 Matrix_RotateY(gGfxMatrix, D_i6_801A67EC * M_DTOR, MTXF_APPLY);
@@ -3352,7 +3348,6 @@ bool Andross_801917F0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, *dList);
                 RCP_SetupDL(&gMasterDisp, SETUPDL_41);
-
                 switch (gGameFrameCount % 4U) {
                     case 0:
                         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
@@ -3367,7 +3362,6 @@ bool Andross_801917F0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
                         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
                         break;
                 }
-
                 Matrix_Translate(gGfxMatrix, D_i6_801A67C4.x, D_i6_801A67C4.y, D_i6_801A67C4.z, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, D_i6_801A67D8 * M_DTOR, MTXF_APPLY);
                 Matrix_RotateY(gGfxMatrix, D_i6_801A67D4 * M_DTOR, MTXF_APPLY);
@@ -3814,7 +3808,6 @@ void Andross_80193AE4(s32 actorIndex) {
     Actor_Initialize(actor);
     actor->obj.status = OBJ_ACTIVE;
     actor->obj.id = OBJ_ACTOR_CUTSCENE;
-
     actor->obj.pos.x = D_i6_801A6878[actorIndex].x;
     actor->obj.pos.y = D_i6_801A6878[actorIndex].y;
     actor->obj.pos.z = D_i6_801A6878[actorIndex].z;
@@ -3882,7 +3875,6 @@ void Andross_80193C4C(Player* player) {
             Math_SmoothStepToF(&player->vel.y, 0.0f, 1.0f, 3.0f, 0.0f);
             Math_SmoothStepToF(&player->cam.eye.x, player->pos.x, 0.1f, 15.0f, 0.0f);
             Math_SmoothStepToF(&player->cam.eye.y, player->pos.y + 30.0f, 0.1f, 15.0f, 0.0f);
-
             if (player->csTimer == 0) {
                 player->pos.y += SIN_DEG(player->rot.x) * 15.0f;
                 Math_SmoothStepToF(&player->rot.x, 180.0f, 0.1f, 5.0f, 0.0f);
@@ -3965,7 +3957,6 @@ void Andross_80193C4C(Player* player) {
 
             Math_SmoothStepToF(&D_ctx_80177A48[5], 3.0f, 1.0f, 0.05f, 0.0f);
             player->cam.eye.z += player->vel.z * D_ctx_80177A48[2];
-
             if (gCsFrameCount > 230) {
                 player->camDist -= 7.0f;
             }
@@ -3988,7 +3979,6 @@ void Andross_80193C4C(Player* player) {
             gCsCamAtX = player->pos.x;
             gCsCamAtY = player->pos.y;
             gCsCamAtZ = player->trueZpos + gPathProgress;
-
             if (gCsFrameCount > 200) {
                 player->contrailScale += 0.03f;
                 if (player->contrailScale > 0.6f) {
@@ -4121,7 +4111,6 @@ void Andross_80193C4C(Player* player) {
 
         case 4:
             player->camRoll += D_ctx_80177A48[3];
-
             if (gCsFrameCount > 190) {
                 Math_SmoothStepToF(&D_ctx_80177A48[3], 0.3f, 0.05f, 0.02f, 0.0f);
             }
@@ -4217,7 +4206,6 @@ void Andross_80193C4C(Player* player) {
             if (player->csTimer == 1) {
                 gFillScreenAlpha = gFillScreenAlphaTarget = 0;
             }
-
             if (gVenomHardClear != 0) {
                 if (gCsFrameCount >= 1000) {
                     gCsCamAtX += D_ctx_80177A48[4] * 0.15f;
@@ -4287,7 +4275,6 @@ void Andross_80193C4C(Player* player) {
                 Math_SmoothStepToF(&player->cam.eye.y, gCsCamEyeY, D_ctx_80177A48[0], 50000.0f, 0);
                 Math_SmoothStepToF(&player->cam.eye.z, gCsCamEyeZ, D_ctx_80177A48[0], 50000.0f, 0);
             }
-
             if (gVenomHardClear != 0) {
                 switch (gCsFrameCount) {
                     case 400:
@@ -4374,7 +4361,6 @@ void Andross_80193C4C(Player* player) {
             player->vel.x = sp68.x;
             player->vel.z = sp68.z;
             player->vel.y = sp68.y;
-
             if (player->csTimer == 0) {
                 player->state_1C8 = PLAYERSTATE_1C8_ACTIVE;
                 player->unk_014 = 0.2f;

@@ -152,6 +152,8 @@
     "ast_a_ti.h": "c",
     "fox_co.h": "c",
     "ast_map.h": "c"
+    "xmemory": "c",
+    "iosfwd": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": ""
 }

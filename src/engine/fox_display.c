@@ -35,13 +35,11 @@ void Display_DrawHelpAlert(void) {
     if ((gPlayState == PLAY_PAUSE) || (gTeamHelpActor == NULL)) {
         return;
     }
-
     if ((gTeamHelpActor->obj.status != OBJ_ACTIVE) || (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_ACTIVE)) {
         gTeamHelpActor = NULL;
         gTeamHelpTimer = 0;
         return;
     }
-
     if (gTeamHelpTimer != 0) {
         gTeamHelpTimer--;
         if (gTeamHelpTimer == 0) {
@@ -262,7 +260,6 @@ void Display_OnFootCharacter(Player* player) {
     Matrix_Push(&gGfxMatrix);
     Matrix_Scale(gCalcMatrix, 0.5f, 0.5f, 0.5f, MTXF_APPLY);
     Matrix_Translate(gCalcMatrix, 0.0f, 35.0f, 0.0f, MTXF_APPLY);
-
     switch (player->num) {
         case 0:
             Animation_DrawSkeleton(5, aVsOnFootFoxSkel, player->jointTable, Display_OnFootCharacter_OverrideLimbDraw,
@@ -303,7 +300,6 @@ void Display_Landmaster(Player* player) {
     Matrix_Translate(gGfxMatrix, 0.0f, 51.0f, -10.0f, MTXF_APPLY);
     Matrix_RotateY(gGfxMatrix, -player->unk_180 * M_DTOR, MTXF_APPLY);
     Matrix_RotateX(gGfxMatrix, player->unk_17C * M_DTOR, MTXF_APPLY);
-
     if (gPlayerNum == player->num) {
         sp64 = 0.0f;
         if (gChargeTimers[player->num] >= 20) {
@@ -343,7 +339,6 @@ f32 sPlayerShadowing = 0.0f;
 
 void Display_LandmasterMuzzleFlash(Player* player) {
     Matrix_Push(&gGfxMatrix);
-
     if ((player->state_1C8 == PLAYERSTATE_1C8_ACTIVE) && (player->unk_1A0 != 0)) {
         Matrix_Translate(gGfxMatrix, D_display_80161548[player->num].x, D_display_80161548[player->num].y,
                          D_display_80161548[player->num].z, MTXF_APPLY);
@@ -718,7 +713,6 @@ void Display_Reticle(Player* player) {
             translate = &D_display_801613E0[i];
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, translate->x, translate->y, translate->z, MTXF_APPLY);
-
             if (gChargeTimers[player->num] >= 20) {
                 RCP_SetupDL(&gMasterDisp, SETUPDL_63);
                 if (i == 1) {
@@ -844,7 +838,6 @@ void Display_LandmasterEngineGlow_Draw(Player* player) {
     gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 100);
     Matrix_Push(&gGfxMatrix);
     Matrix_RotateZ(gGfxMatrix, player->bankAngle * M_DTOR, MTXF_APPLY);
-
     if (player->form == FORM_LANDMASTER) {
         if (player->unk_194 <= 0.0f) {
             Matrix_Pop(&gGfxMatrix);
@@ -904,7 +897,6 @@ void Display_BarrelRollShield(Player* player) {
         } else {
             Matrix_Scale(gGfxMatrix, 1.2f, 1.2f, 1.2f, MTXF_APPLY);
         }
-
         if (player->baseRollRate < 0) {
             Matrix_RotateX(gGfxMatrix, M_PI, MTXF_APPLY);
         }
@@ -948,7 +940,6 @@ void Display_ArwingLaserCharge(Player* player) {
     if (gChargeTimers[player->num] > 10) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_67);
         Matrix_Copy(gCalcMatrix, &D_display_80161418[player->num]);
-
         if (player->alternateView && (gLevelMode == LEVELMODE_ON_RAILS)) {
             Matrix_MultVec3f(gCalcMatrix, &spB8, &sp94);
         } else {
@@ -968,7 +959,6 @@ void Display_ArwingLaserCharge(Player* player) {
         } else {
             Matrix_Scale(gGfxMatrix, 10.0f, 10.0f, 10.0f, MTXF_APPLY);
         }
-
         RCP_SetupDL(&gMasterDisp, SETUPDL_49);
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 128);
 
@@ -1014,7 +1004,6 @@ void Display_ArwingLaserCharge(Player* player) {
         gSPDisplayList(gMasterDisp++, aOrbDL);
         Matrix_Pop(&gGfxMatrix);
     }
-
     if (gMuzzleFlashScale[player->num] > 0.1f) {
         Matrix_Push(&gGfxMatrix);
         RCP_SetupDL(&gMasterDisp, SETUPDL_67);
@@ -1029,7 +1018,6 @@ void Display_ArwingLaserCharge(Player* player) {
             case LASERS_SINGLE:
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 192, 255, 192, 128);
                 gDPSetEnvColor(gMasterDisp++, 64, 255, 64, 128);
-
                 if (player->alternateView && (gLevelMode == LEVELMODE_ON_RAILS)) {
                     Matrix_MultVec3f(gCalcMatrix, &spB8, &sp94);
                 } else {
@@ -1037,7 +1025,6 @@ void Display_ArwingLaserCharge(Player* player) {
                 }
 
                 Matrix_Push(&gGfxMatrix);
-
                 Matrix_Translate(gGfxMatrix, sp94.x, sp94.y, sp94.z, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, gMuzzleFlashScale[player->num], gMuzzleFlashScale[player->num], 1.0f,
                              MTXF_APPLY);
@@ -1160,7 +1147,6 @@ void Display_PlayerFeatures(Player* player) {
                 Matrix_RotateZ(gCalcMatrix, -((player->bankAngle + player->rockAngle + player->damageShake) * M_DTOR),
                                MTXF_APPLY);
                 Matrix_Translate(gCalcMatrix, player->xShake, player->yBob, 0.0f, MTXF_APPLY);
-
                 var_fv0 = player->unk_194 * 30.0f;
                 if (var_fv0 > 30.0f) {
                     var_fv0 = 30.0f;
@@ -1213,7 +1199,6 @@ void Display_ArwingWingTrail_Draw(Player* player) {
         sp5C = 108.0f;
         sp58 = -22.0f;
     }
-
     if (player->contrailScale != 0.0f) {
         sp54 = 0.0f;
         if ((gGameFrameCount % 2) != 0) {
@@ -1588,7 +1573,6 @@ void Display_LockOnIndicator(void) {
             }
         }
     }
-
     for (j = 0; j < gCamCount; j++) {
         gLockOnTargetViewPos[j].x = gLockOnTargetViewPos[j].y = 0.f;
         gLockOnTargetViewPos[j].z = 100.0f;
@@ -1644,7 +1628,6 @@ void Display_CsLevelCompleteHandleCamera(Player* player) {
             if (sp38 < 0.0f) {
                 sp38 += 360.0f;
             }
-
             sp3C = (Math_RadToDeg(player->camYaw) + 180.0f) - player->rot.y;
             if (sp3C > 360.0f) {
                 sp3C -= 360.0f;
@@ -1692,13 +1675,11 @@ void Display_Update(void) {
     }
 
     Matrix_Push(&gGfxMatrix);
-
     if ((gCurrentLevel == LEVEL_AQUAS) && (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_ACTIVE)) {
         Math_SmoothStepToF(&gCamDistortion, 0.01f, 0.2f, 0.002f, 0.0f);
     } else {
         Math_SmoothStepToF(&gCamDistortion, 0.0f, 0.2f, 0.002f, 0.0f);
     }
-
     Matrix_RotateZ(gGfxMatrix, gGameFrameCount * 10.0f * M_DTOR, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 1.0f + gCamDistortion, 1.0f - gCamDistortion, 1.0f, MTXF_APPLY);
     Matrix_RotateZ(gGfxMatrix, -(f32) gGameFrameCount * 10.0f * M_DTOR, MTXF_APPLY);
@@ -1745,7 +1726,6 @@ void Display_Update(void) {
         gPlayCamAt.y = camPlayer->cam.at.y;
         gPlayCamAt.z = camPlayer->cam.at.z;
     }
-
     camPlayer->camYaw = -Math_Atan2F(gPlayCamEye.x - gPlayCamAt.x, gPlayCamEye.z - gPlayCamAt.z);
     camPlayer->camPitch = -Math_Atan2F(gPlayCamEye.y - gPlayCamAt.y,
                                        sqrtf(SQ(gPlayCamEye.z - gPlayCamAt.z) + SQ(gPlayCamEye.x - gPlayCamAt.x)));
@@ -1756,7 +1736,6 @@ void Display_Update(void) {
     tempVec.y = 100.0f;
     tempVec.z = 0.0f;
     Matrix_MultVec3f(gCalcMatrix, &tempVec, &playerCamUp);
-
     if (gStarCount != 0) {
         gStarfieldRoll = DEG_TO_RAD(gPlayer[0].camRoll);
         Camera_SetStarfieldPos(gPlayCamEye.x, gPlayCamEye.y, gPlayCamEye.z, gPlayCamAt.x, gPlayCamAt.y, gPlayCamAt.z);
@@ -1816,7 +1795,6 @@ void Display_Update(void) {
     TexturedLine_Draw();
     gReflectY = 1;
     PlayerShot_DrawAll();
-
     if ((gGroundSurface == SURFACE_WATER) && (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_LEVEL_INTRO)) {
         Matrix_Push(&gGfxMatrix);
         Matrix_Scale(gGfxMatrix, 1.0f, -1.0f, 1.0f, MTXF_APPLY);
@@ -1842,7 +1820,6 @@ void Display_Update(void) {
     if (gCurrentLevel == LEVEL_AQUAS) {
         Effect_Draw(0);
     }
-
     if ((gGroundSurface == SURFACE_WATER) || (gAqDrawMode != 0)) {
         D_bg_8015F964 = true;
         Effect_Draw(1);

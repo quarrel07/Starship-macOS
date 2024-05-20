@@ -2398,7 +2398,6 @@ void Zoness_ZoSarumarine_Update(ZoSarumarine* this) {
                 sp104 = Math_RadToDeg(sp104);
                 sp108 = Math_Atan2F(spB4.y, sqrtf(SQ(spB4.x) + SQ(spB4.z)));
                 sp108 = Math_RadToDeg(-sp108);
-
                 if ((sp104 > 40.0f) && (sp104 < 180.0f)) {
                     sp104 = 40.0f;
                 }
@@ -2536,7 +2535,6 @@ void Zoness_ZoSarumarine_Update(ZoSarumarine* this) {
 
         case 6:
             D_ctx_801779A8[0] = 20;
-
             if (gCameraShake == 0) {
                 gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 255;
                 gFillScreenAlpha = gFillScreenAlphaTarget = 255;
@@ -2801,7 +2799,6 @@ void Zoness_ZoSarumarine_Update(ZoSarumarine* this) {
             sZoFwork[ZO_BSF_82] -= 10.0f;
 
             func_effect_8007D0E0(sZoFwork[ZO_BSF_29_X], sZoFwork[ZO_BSF_29_Y], sZoFwork[ZO_BSF_29_Z], 5.0f);
-
             if ((Play_CheckDynaFloorCollision(&sp134, &sp130, sZoFwork[ZO_BSF_29_X], sZoFwork[ZO_BSF_29_Y] - 100.0f,
                                               sZoFwork[ZO_BSF_29_Z]) != 0) &&
                 (sZoSwork[ZO_BSS_46] == 0)) {
@@ -3114,7 +3111,6 @@ void Zoness_ZoSarumarine_Update(ZoSarumarine* this) {
             sZoLimbTimers[sp124]--;
         }
     }
-
     for (i = ZO_BSS_49, sp124 = 0; sp124 < 6; sp124++, i++) {
         if (sZoSwork[i] != 0) {
             sZoSwork[i]--;
@@ -4702,7 +4698,6 @@ void Zoness_LevelStart(Player* player) {
     player->yBob = -SIN_DEG(player->bobPhase) * 0.5f;
     player->rockPhase += 3.0f;
     player->rockAngle = SIN_DEG(player->rockPhase) * 1.5f;
-
     switch (player->csState) {
         case 0:
             gCsFrameCount = 0;
@@ -4718,7 +4713,6 @@ void Zoness_LevelStart(Player* player) {
         case 1:
             Math_SmoothStepToF(&player->pos.z, 0.0f, 0.1f, 48.0f, 0);
             Math_SmoothStepToF(&player->cam.at.y, (player->pos.y * player->unk_148) + 20.0f, 0.1f, 1.0f, 0.0f);
-
             if (gCsFrameCount >= 230) {
                 Math_SmoothStepToF(&player->cam.at.z, player->trueZpos, 0.2f, 20000.0f, 0.0f);
             }
@@ -4780,7 +4774,6 @@ void Zoness_LevelComplete(Player* player) {
             gCsCamAtX = player->cam.at.x;
             gCsCamAtY = player->cam.at.y;
             gCsCamAtZ = player->cam.at.z;
-
             for (i = 10; i < ARRAY_COUNT(gActors); i++) {
                 if (gActors[i].animFrame == 0) {
                     Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
@@ -4842,7 +4835,6 @@ void Zoness_LevelComplete(Player* player) {
 
         case 2:
             gPathTexScroll += 60.0f;
-
             if (player->csTimer == 0) {
                 player->pos.x = 0.0f;
                 player->pos.y = 200.0f;

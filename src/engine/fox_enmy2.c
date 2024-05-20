@@ -153,7 +153,6 @@ void MeHopBot_Update(MeHopBot* this) {
 
     this->obj.rot.y = Math_RadToDeg(
         Math_Atan2F(gPlayer[gPlayerNum].pos.x - this->obj.pos.x, gPlayer[gPlayerNum].trueZpos - this->obj.pos.z));
-
     if (this->obj.pos.y < -500.0f) {
         this->obj.pos.y = -500.0f;
         this->vel.y = 0.0f;
@@ -457,7 +456,6 @@ void CoMoleMissile_Update(CoMoleMissile* this) {
             if (this->vel.y < 12.0f) {
                 Math_SmoothStepToF(&this->obj.rot.x, 180.0f, 0.1f, 7.0f, 0.01f);
             }
-
             if (this->obj.pos.y < (gGroundHeight + 10.0f)) {
                 this->obj.pos.y = gGroundHeight;
                 this->state = 4;

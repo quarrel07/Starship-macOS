@@ -2276,14 +2276,12 @@ void PlayerShot_Update(PlayerShot* shot) {
     switch (shot->obj.status) {
         case SHOT_FREE:
             break;
-
         case SHOT_ACTIVE:
             ticks = 1;
             switch (shot->obj.id) {
                 case PLAYERSHOT_GFOX_LASER:
                     ticks = 4;
                     break;
-
                 case PLAYERSHOT_SINGLE_LASER:
                 case PLAYERSHOT_TWIN_LASER:
                     if ((shot->unk_58 == 0) || (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO)) {
@@ -2292,12 +2290,10 @@ void PlayerShot_Update(PlayerShot* shot) {
                         ticks = 3;
                     }
                     break;
-
                 case PLAYERSHOT_TANK:
                     ticks = 2;
                     break;
             }
-
             for (i = 0; i < ticks && (shot->obj.status == SHOT_ACTIVE); i++) {
                 if (shot->timer > 0) {
                     shot->timer--;
@@ -2308,7 +2304,6 @@ void PlayerShot_Update(PlayerShot* shot) {
                 PlayerShot_UpdateShot(shot, i);
             }
             break;
-
         case SHOT_HITMARK:
             PlayerShot_UpdateHitmark(shot);
             break;

@@ -10,11 +10,19 @@
     header:
       - '#include "gfx.h"'
       - '#include "sf64object.h"'
+<<<<<<< HEAD
   external_files:
     - "assets/yaml/us/rev1/ast_7_ti_2.yaml"
     - "assets/yaml/us/rev1/ast_8_ti.yaml"
     - "assets/yaml/us/rev1/ast_9_ti.yaml"
 
+=======
+<<<<<<<< HEAD:assets/yaml/jp/rev0/ast_A_ti.yaml
+
+========
+      
+>>>>>>>> 6fe91928 (Repo upstreamed):assets/yaml/us/rev1/ast_A_ti.yaml
+>>>>>>> 6fe91928 (Repo upstreamed)
 D_TI_A000000:
   {type: GFX, offset: 0xA000000, symbol: D_TI_A000000}
 
@@ -65,4 +73,7 @@ D_TI_A002170:
 
 D_TI_A009990:
   {type: SF64:ANIM, offset: 0xA009990, symbol: D_TI_A009990}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6fe91928 (Repo upstreamed)

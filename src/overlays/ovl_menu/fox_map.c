@@ -4094,7 +4094,7 @@ bool Map_LevelPlayedStatus_Check(PlanetId planet) {
             break;
     }
 
-    if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
+    if (CVarGetInteger("gLevelSelector", 0) && gMissionNumber == 6) {
         return false;
     }
 
@@ -5384,7 +5384,7 @@ void Map_801A9A8C(void) {
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
+    if (CVarGetInteger("gLevelSelector", 0) && gMissionNumber == 6) {
         return;
     }
 

@@ -1406,7 +1406,6 @@ void func_800168BC(void) {
         gSeqLayers[i].channel = NULL;
         gSeqLayers[i].enabled = false;
     }
-
     for (i = 0; i < ARRAY_COUNT(gSeqPlayers); i++) {
         for (j = 0; j < 16; j++) {
             gSeqPlayers[i].channels[j] = &gSeqChannelNone;

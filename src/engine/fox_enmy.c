@@ -562,7 +562,6 @@ void Object_LoadLevelObjects(void) {
     } else {
         gLevelObjects = SEGMENTED_TO_VIRTUAL(gLevelObjectInits[gCurrentLevel]);
     }
-
     if (gGroundClipMode == 0) {
         for (j = 0; j < gDrawSmallRocks; j++) {
             if (gCurrentLevel == LEVEL_AQUAS) {
@@ -697,7 +696,6 @@ bool Object_CheckHitboxCollision(Vec3f* pos, f32* hitboxData, Object* obj, f32 x
         for (i = 0; i < count; i++, hitboxData += 6) {
             rotate = 0.0f;
             hitRot.x = hitRot.y = hitRot.z = 0.0f;
-
             if (*hitboxData >= HITBOX_SHADOW) {
                 return false;
             }
@@ -2003,7 +2001,6 @@ void Item_CheckBounds(Item* this) {
             Math_SmoothStepToF(&this->obj.pos.x, gPlayer[0].xPath - var_fa1, 0.1f, 10.0f, 0.01f);
         }
     }
-
     if (this->obj.pos.y > 650.0f) {
         Math_SmoothStepToF(&this->obj.pos.y, 650.0f, 0.1f, 10.0f, 0.01f);
     }
@@ -2018,7 +2015,6 @@ void Item_CheckBounds(Item* this) {
     } else if (this->obj.pos.y < -500.0f) {
         Math_SmoothStepToF(&this->obj.pos.y, -500.0f, 0.1f, 5.0f, 0.01f);
     }
-
     if (gVersusMode && (this->index == 0) && (gItems[1].obj.status == OBJ_ACTIVE)) {
         if (fabsf(this->obj.pos.x - gItems[1].obj.pos.x) < 200.0f) {
             if (fabsf(this->obj.pos.z - gItems[1].obj.pos.z) < 200.0f) {
@@ -2103,7 +2099,6 @@ void ActorSupplies_Update(ActorSupplies* this) {
             Math_SmoothStepToF(&this->obj.pos.y, 300.0f, 0.05f, 50.0f, 0.01f);
         }
     }
-
     if (this->dmgType != DMG_NONE) {
         this->dmgType = DMG_NONE;
         this->health -= this->damage;
@@ -2184,7 +2179,6 @@ void func_enmy_80067A40(void) {
 void Item1up_Update(Item1UP* this) {
     Item_CheckBounds(this);
     Item_SpinPickup(this);
-
     if (this->collected) {
         Object_Kill(&this->obj, this->sfxSource);
         Object_PlayerSfx(gPlayer[this->playerNum].sfxSource, NA_SE_ONE_UP, this->playerNum);
@@ -2201,7 +2195,6 @@ void Item1up_Update(Item1UP* this) {
 void ItemPickup_Update(Item* this) {
     Item_CheckBounds(this);
     Item_SpinPickup(this);
-
     if (this->state == 0) {
         switch (this->obj.id) {
             case OBJ_ITEM_BOMB:
@@ -2219,7 +2212,6 @@ void ItemPickup_Update(Item* this) {
 
             case OBJ_ITEM_LASERS:
                 this->width = 18.0f;
-
                 if (this->collected) {
                     this->timer_4A = 50;
                     this->state = 1;
@@ -2238,7 +2230,6 @@ void ItemPickup_Update(Item* this) {
                     } else {
                         gRightWingHealth[this->playerNum] = gLeftWingHealth[this->playerNum] = 60;
                     }
-
                     gRightWingFlashTimer[this->playerNum] = 1030;
                     gLeftWingFlashTimer[this->playerNum] = 1030;
                 }
@@ -2246,7 +2237,6 @@ void ItemPickup_Update(Item* this) {
         }
     } else {
         Math_SmoothStepToF(&this->width, 2.5f, 1.0f, 0.5f, 0.0f);
-
         this->obj.pos.x += (gPlayer[this->playerNum].pos.x - this->obj.pos.x) * 0.5f;
 
         if (gPlayer[this->playerNum].form == FORM_LANDMASTER) {
@@ -2284,7 +2274,6 @@ void ItemSupplyRing_Update(Item* this) {
             Math_SmoothStepToF(&this->width, 0.4f, 1.0f, 0.05f, 0.0f);
             Item_CheckBounds(this);
             Item_SpinPickup(this);
-
             if (this->collected) {
                 this->state = 1;
                 this->timer_48 = 50;
@@ -2332,7 +2321,6 @@ void ItemSupplyRing_Update(Item* this) {
             } else {
                 this->obj.pos.y += (gPlayer[this->playerNum].pos.y - this->obj.pos.y) * 0.5f;
             }
-
             if (gPlayer[0].alternateView && (gLevelMode == LEVELMODE_ON_RAILS)) {
                 this->obj.pos.z += (gPlayer[this->playerNum].trueZpos - 300.0f - this->obj.pos.z) * 0.3f;
             } else {
@@ -2340,7 +2328,6 @@ void ItemSupplyRing_Update(Item* this) {
             }
 
             this->obj.rot.z += 22.0f;
-
             Math_SmoothStepToAngle(&this->obj.rot.y, Math_RadToDeg(-gPlayer[this->playerNum].camYaw), 0.2f, 10.0f,
                                    0.0f);
             if (this->timer_48 == 0) {
@@ -2372,7 +2359,6 @@ void ItemGoldRing_Update(ItemGoldRing* this) {
 void ItemWingRepair_Update(ItemWingRepair* this) {
     Item_CheckBounds(this);
     Item_SpinPickup(this);
-
     if (this->collected) {
         func_enmy_80067A40();
         Object_Kill(&this->obj, this->sfxSource);
@@ -2385,7 +2371,6 @@ void ItemWingRepair_Update(ItemWingRepair* this) {
 
 void ItemMeteoWarp_Update(ItemMeteoWarp* this) {
     Item_CheckBounds(this);
-
     if (this->state > 0) {
         if (this->state == 1) {
             this->obj.rot.z -= 10.0f;
@@ -2404,7 +2389,6 @@ void ItemMeteoWarp_Update(ItemMeteoWarp* this) {
         }
     } else {
         this->width = 100.0f;
-
         if (gRingPassCount < 0) {
             this->state = 2;
             this->unk_44 = 255;
@@ -2491,7 +2475,6 @@ void ItemRingCheck_Update(Item* this) {
 
 void ItemPathChange_Update(Item* this) {
     gLastPathChange = this->obj.id;
-
     if (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_ACTIVE) {
         Object_Kill(&this->obj, this->sfxSource);
     } else if (((gCurrentLevel == LEVEL_METEO) || (gCurrentLevel == LEVEL_SECTOR_X)) && (gLevelPhase == 1)) {
@@ -3032,7 +3015,6 @@ void TexturedLine_Update(TexturedLine* this) {
                 }
             }
         }
-
         if (((this->posAA.z + gPathProgress) > 1000.0f) && (gLevelMode != LEVELMODE_ALL_RANGE)) {
             this->mode = 0;
         }

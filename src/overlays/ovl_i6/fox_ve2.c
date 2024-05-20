@@ -110,7 +110,6 @@ void Venom2_UpdateEvents(ActorAllRange* this) {
                 (gActors[7].obj.status == OBJ_FREE) && (this->timer_0BE == 0)) {
                 this->timer_0BE = 80;
             }
-
             if ((this->timer_0BE == 1) && (player->state_1C8 != PLAYERSTATE_1C8_LEVEL_COMPLETE)) {
                 for (i = 1; i < ARRAY_COUNT(gTeamShields); i++) {
                     gPrevPlanetTeamShields[i] = gSavedTeamShields[i];
@@ -138,7 +137,6 @@ void Venom2_UpdateEvents(ActorAllRange* this) {
                 player->cam.eye.y += wolf->vel.y * 0.23f;
                 player->cam.eye.z += wolf->vel.z * 0.23f;
             }
-
             Math_SmoothStepToF(&player->cam.at.x, wolf->obj.pos.x, 1.0f, 20000.0f, 0.0f);
             Math_SmoothStepToF(&player->cam.at.y, wolf->obj.pos.y, 1.0f, 20000.0f, 0.0f);
             Math_SmoothStepToF(&player->cam.at.z, wolf->obj.pos.z, 1.0f, 20000.0f, 0.0f);
@@ -334,7 +332,6 @@ void Venom2_LevelComplete(Player* player) {
                 D_ctx_80177A48[5] = sp58.x;
                 D_ctx_80177A48[6] = sp58.z;
             }
-
             if (gLevelPhase == 2) {
                 player->csEventTimer = 240;
             } else {
@@ -352,7 +349,6 @@ void Venom2_LevelComplete(Player* player) {
 
             Math_SmoothStepToF(&D_ctx_80177A48[1], 0.8f, 1.0f, 0.05f, 0.0f);
             Math_SmoothStepToF(&player->zRotBank, 0.0f, 0.1f, 15.0f, 0.0f);
-
             if (player->csTimer == 1) {
                 D_ctx_80177A48[4] = 0.0f;
             }
@@ -371,7 +367,6 @@ void Venom2_LevelComplete(Player* player) {
             Math_SmoothStepToF(&D_ctx_80177A48[4], 3.0f, 1.0f, 0.1f, 0.0f);
             Matrix_RotateX(gCalcMatrix, -(D_PI / 9), MTXF_NEW);
             Matrix_RotateY(gCalcMatrix, (D_ctx_80177A48[3] + player->yRot_114) * M_DTOR, MTXF_APPLY);
-
             D_ctx_80177A48[3] += 1.0f;
 
             sp64.x = 0.0f;
@@ -386,7 +381,6 @@ void Venom2_LevelComplete(Player* player) {
 
             Math_SmoothStepToF(D_ctx_80177A48, 0.5f, 1.0f, 0.01f, 0.0f);
             Math_SmoothStepToF(&player->camRoll, 0.0f, 0.1f, 3.0f, 0.0f);
-
             if ((player->csTimer == 0) && (fabsf(sp94) < 50.0f) && (fabsf(sp8C) < 50.0f)) {
                 player->csState++;
                 D_ctx_80177A48[2] = 0.75f;
@@ -446,7 +440,6 @@ void Venom2_LevelComplete(Player* player) {
 
                     gNextGameState = GSTATE_PLAY;
                     gNextLevel = LEVEL_VENOM_ANDROSS;
-
                     if (gLeveLClearStatus[gCurrentLevel] != 0) {
                         gNextLevelPhase = 1;
                     }
@@ -463,7 +456,6 @@ void Venom2_LevelComplete(Player* player) {
             }
             break;
     }
-
     if (player->csEventTimer == 150) {
         Radio_PlayMessage(gMsg_ID_8215, RCID_FOX);
         AUDIO_PLAY_BGM(NA_BGM_DASH_INTO_BASE);

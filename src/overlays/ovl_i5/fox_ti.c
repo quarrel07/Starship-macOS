@@ -2299,7 +2299,6 @@ bool Titania_8018FC70(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
             rot->z += D_i5_801BBEF4[66];
             break;
     }
-
     Matrix_Translate(gCalcMatrix, pos->x, pos->y, pos->z, MTXF_APPLY);
     Matrix_RotateZ(gCalcMatrix, rot->z * M_DTOR, MTXF_APPLY);
     Matrix_RotateY(gCalcMatrix, rot->y * M_DTOR, MTXF_APPLY);
@@ -2313,7 +2312,6 @@ bool Titania_8018FC70(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
         case 3:
         case 7:
             RCP_SetupDL(&gMasterDisp, SETUPDL_30);
-
             if ((D_i5_801BBEF0[30] % 2) != 0) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
             } else {
@@ -2330,7 +2328,6 @@ bool Titania_8018FC70(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
         case 10:
         case 11:
             RCP_SetupDL(&gMasterDisp, SETUPDL_61);
-
             if ((D_i5_801BBEF0[30] % 2) != 0) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
             } else {
@@ -2342,7 +2339,6 @@ bool Titania_8018FC70(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
             if (*dList != NULL) {
                 gSPDisplayList(gMasterDisp++, *dList);
             }
-
             RCP_SetupDL(&gMasterDisp, SETUPDL_29);
             break;
     }
@@ -2604,7 +2600,6 @@ bool Titania_801903A0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
             rot->z += SIN_DEG((D_i5_801BBEF0[34] / (f32) D_i5_801BBEF0[36]) * 360.0f) * sp24;
         }
     }
-
     Matrix_Translate(gCalcMatrix, pos->x, pos->y, pos->z, MTXF_APPLY);
     Matrix_RotateZ(gCalcMatrix, rot->z * M_DTOR, MTXF_APPLY);
     Matrix_RotateY(gCalcMatrix, rot->y * M_DTOR, MTXF_APPLY);
@@ -2616,7 +2611,6 @@ bool Titania_801903A0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
         case 1:
         case 2:
             RCP_SetupDL(&gMasterDisp, SETUPDL_30);
-
             if ((sp20 % 2) != 0) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
             } else {
@@ -2633,7 +2627,6 @@ bool Titania_801903A0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
         case 5:
         case 6:
             RCP_SetupDL(&gMasterDisp, SETUPDL_61);
-
             if ((sp20 % 2) != 0) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
             } else {
@@ -2645,7 +2638,6 @@ bool Titania_801903A0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
             if (*dList != NULL) {
                 gSPDisplayList(gMasterDisp++, *dList);
             }
-
             RCP_SetupDL(&gMasterDisp, SETUPDL_29);
             break;
     }
@@ -2969,7 +2961,6 @@ bool Titania_80190A08(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
                             break;
                     }
                 }
-
                 Matrix_Mult(gGfxMatrix, gCalcMatrix, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
 
@@ -3398,7 +3389,6 @@ void Titania_80192118(TiGoras* this) {
             Math_SmoothStepToVec3fArray(&D_i5_801BC978[0], &D_i5_801BCDC8[0], 1, 8, 0.5f, 360.0f, 0.01f);
             Math_SmoothStepToVec3fArray(&D_i5_801BC978[8], &D_i5_801BCDC8[8], 1, 8, 0.5f, 360.0f, 0.01f);
             Math_SmoothStepToVec3fArray(&D_i5_801BC978[16], &D_i5_801BCDC8[16], 1, 13, 0.5f, 5.0f, 0.01f);
-
             D_i5_801BBEF0[24]++;
             D_i5_801BBEF0[22]++;
             D_i5_801BBEF0[23]++;
@@ -4992,7 +4982,6 @@ void Titania_TiGoras_Update(Boss* boss) {
         AUDIO_PLAY_SFX(NA_SE_EN_REFLECT, boss->sfxSource, 4);
         boss->dmgType = DMG_NONE;
     }
-
     if ((gPlayer[0].grounded != 0) && (boss->swork[39] > 0)) {
         gControllerRumbleFlags[0] = 1;
         boss->swork[39]--;
@@ -5334,7 +5323,6 @@ void Titania_TiGoras_Draw(TiGoras* boss) {
                 }
                 Matrix_Pop(&gGfxMatrix);
             }
-
             Matrix_Translate(gGfxMatrix, boss->fwork[17], boss->fwork[18], boss->fwork[19], MTXF_APPLY);
 
             if (D_i5_801BBEF0[7] != 0) {
@@ -5371,7 +5359,6 @@ void Titania_TiGoras_Draw(TiGoras* boss) {
                              MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 RCP_SetupDL(&gMasterDisp, SETUPDL_49);
-
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 178);
                 gDPSetEnvColor(gMasterDisp++, 0, 128, 60, 0);
                 gSPDisplayList(gMasterDisp++, D_TI2_7005300);
@@ -5402,17 +5389,14 @@ void Titania_TiGoras_Draw(TiGoras* boss) {
             if (boss->swork[25] != 0) {
                 sp120 = boss->fwork[41] / 40.0f;
                 temp_fs2 = boss->fwork[42] / 700.0f;
-
                 Matrix_RotateY(gGfxMatrix, (boss->fwork[21] - 90.0f) * M_DTOR, MTXF_APPLY);
                 Matrix_RotateX(gGfxMatrix, (boss->fwork[22] - 180.0f) * M_DTOR, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, (boss->fwork[20] - ((s32) (boss->swork[38] % 8U) * 43.0f)) * M_DTOR,
                                MTXF_APPLY);
-
                 Matrix_Push(&gGfxMatrix);
                 Matrix_Scale(gGfxMatrix, half * sp120, half * sp120, temp_fs2, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 RCP_SetupDL(&gMasterDisp, SETUPDL_72);
-
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 178);
                 gDPSetEnvColor(gMasterDisp++, 0, 128, 60, 0);
                 gSPDisplayList(gMasterDisp++, D_TI_8000D90);
@@ -5443,20 +5427,17 @@ void Titania_TiGoras_Draw(TiGoras* boss) {
                         spF4.z = boss->fwork[42];
 
                         Matrix_MultVec3f(gCalcMatrix, &spF4, &spE8);
-
                         gTexturedLines[temp_v1_28].posAA.x = temp_fs0;
                         gTexturedLines[temp_v1_28].posAA.y = temp_fs1;
                         gTexturedLines[temp_v1_28].posAA.z = temp_fs2;
                         gTexturedLines[temp_v1_28].posBB.x = temp_fs0 + spE8.x;
                         gTexturedLines[temp_v1_28].posBB.y = temp_fs1 + spE8.y;
                         gTexturedLines[temp_v1_28].posBB.z = temp_fs2 + spE8.z;
-
                         if (boss->swork[32] == 0) {
                             gTexturedLines[temp_v1_28].mode = 0;
                         } else {
                             gTexturedLines[temp_v1_28].mode = 1;
                         }
-
                         gTexturedLines[temp_v1_28].prim.r = 0;
                         gTexturedLines[temp_v1_28].prim.b = 0;
                         gTexturedLines[temp_v1_28].prim.g = 0;
@@ -5560,7 +5541,6 @@ void Titania_801990DC(TiGoras* this) {
                 actor->obj.pos.x = gPlayer[0].pos.x;
                 actor->obj.pos.y = 500.0f;
                 actor->obj.pos.z = gPlayer[0].trueZpos + actor->fwork[4];
-
                 actor->obj.rot.y = (RAND_FLOAT(5.0f) + 90.0f) - 2.5f;
                 actor->obj.rot.z = (RAND_FLOAT(5.0f) + 180.0f) - 2.5f;
 
@@ -5589,7 +5569,6 @@ void Titania_801990DC(TiGoras* this) {
                 actor->obj.pos.x = gPlayer[0].pos.x + actor->fwork[3];
                 actor->obj.pos.y = 500.0f;
                 actor->obj.pos.z = gPlayer[0].trueZpos + actor->fwork[4];
-
                 actor->obj.rot.z = 90.0f;
                 actor->vel.y = -10.0f;
                 actor->gravity = 0.8f;
@@ -5616,7 +5595,6 @@ void Titania_801990DC(TiGoras* this) {
                 actor->obj.pos.x = gPlayer[0].pos.x + actor->fwork[3];
                 actor->obj.pos.y = 500.0f;
                 actor->obj.pos.z = gPlayer[0].trueZpos + actor->fwork[4];
-
                 actor->obj.rot.z = 90.0f;
                 actor->vel.y = -10.0f;
                 actor->gravity = 0.8f;

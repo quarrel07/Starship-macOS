@@ -1648,7 +1648,7 @@ void Option_ExpertSound_Setup(void) {
     // clang-format on
 }
 
-#include "../../mods/sfxjukebox.c"
+#include "../../mods/sfxjukebox2.c"
 
 // Expert Sound Options
 void Option_ExpertSound_Update(void) {
@@ -1656,8 +1656,13 @@ void Option_ExpertSound_Update(void) {
     f32 sp28 = D_menu_801B931C;
 
     if (CVarGetInteger("gSfxJukebox", 0) == 1) {
-        Option_JukeboxSoundUpdate();
-        return;
+        if (gControllerPress[gMainController].button & L_TRIG) {
+            showJukebox ^= 1;
+        }
+        if (showJukebox) {
+            Jukebox_Update();
+            return;
+        }
     }
 
     if (Option_Input_Sound_X(&sp28, 0.0f, 49.0f, &D_menu_801B9290) != 0) {

@@ -115,7 +115,6 @@ void Audio_ThreadEntry(void* arg0) {
         osWritebackDCacheAll();
         osSendMesg(&gTaskMesgQueue, OS_MESG_PTR(task), OS_MESG_PRI_NORMAL);
     }
-
     while (true) {
         task = AudioThread_CreateTask();
         if (task != NULL) {
@@ -124,7 +123,6 @@ void Audio_ThreadEntry(void* arg0) {
             osWritebackDCacheAll();
         }
         MQ_GET_MESG(&gAudioTaskMesgQueue, NULL);
-
         if (task != NULL) {
             osSendMesg(&gTaskMsgQueue, OS_MESG_PTR(task), OS_MESG_PRI_NORMAL);
         }

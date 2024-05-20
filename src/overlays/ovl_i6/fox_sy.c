@@ -3405,14 +3405,12 @@ void SectorY_801A0AC0(Player* player) {
                 player->csState = 0;
                 player->csTimer = 0;
                 player->csEventTimer = 0;
-
                 gCsCamEyeX = player->pos.x;
                 gCsCamEyeY = (player->pos.y * player->unk_148) + 50.0f;
                 gCsCamEyeZ = 400.0f;
                 gCsCamAtX = player->pos.x;
                 gCsCamAtY = (player->pos.y * player->unk_148) + 20.0f;
                 gCsCamAtZ = player->trueZpos;
-
                 player->cam.eye.x = player->pos.x;
                 player->cam.eye.y = player->pos.y * player->unk_148;
                 player->cam.eye.y += 50.0f;

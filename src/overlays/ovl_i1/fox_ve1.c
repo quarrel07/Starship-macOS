@@ -1065,7 +1065,6 @@ void Venom1_80193D64(s32 limbIndex, Vec3f* rot, void* thisx) {
             }
             break;
     }
-
     RCP_SetupDL(&gMasterDisp, SETUPDL_64);
     gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
 

@@ -158,7 +158,10 @@ void AudioLoad_InitSampleDmaBuffers(s32 numNotes) {
     u8* dma;
 
     gSampleDmaBuffSize = 0x2D0;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6fe91928 (Repo upstreamed)
     for (i = 0; i < (3 * gNumNotes * gAudioBufferParams.count); i++) {
         dma = AudioHeap_Alloc(&gMiscPool, gSampleDmaBuffSize);
         gSampleDmas[gSampleDmaCount].ramAddr = dma;
@@ -966,7 +969,6 @@ void AudioLoad_Init(void) {
 static const char devstr38[] = "Entry--- %d %d\n";
 static const char devstr39[] = "---Block LPS here\n";
 static const char devstr40[] = "===Block LPS end\n";
-
 s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
     Sample* sample;
     AudioSlowLoad* slowLoad;

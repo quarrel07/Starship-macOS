@@ -684,7 +684,6 @@ void Object_SetShadowDL(ObjectId objId, s32 index) {
             }
             RCP_SetupDL(&gMasterDisp, SETUPDL_64);
             break;
-
         case OBJ_ACTOR_CUTSCENE:
         case OBJ_ACTOR_TEAM_BOSS:
         case OBJ_ACTOR_EVENT:
@@ -739,7 +738,6 @@ void Object_SetShadowDL(ObjectId objId, s32 index) {
         case OBJ_BOSS_CO_CARRIER_UPPER:
         case OBJ_BOSS_CO_CARRIER_BOTTOM:
             COS_DEG(gBosses[index].obj.rot.z);
-
             if (gGroundSurface == SURFACE_WATER) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 90);
             } else {
@@ -1103,7 +1101,6 @@ void Actor_DrawOnRails(Actor* this) {
                     Matrix_MultVec3f(gGfxMatrix, &sp34, &gTeamArrowsViewPos[this->aiType]);
                 }
             }
-
             if ((this->lockOnTimers[TEAM_ID_FOX] != 0) && (gReflectY > 0)) {
                 sp34.y += this->info.targetOffset;
                 Matrix_MultVec3f(gGfxMatrix, &sp34, &gLockOnTargetViewPos[TEAM_ID_FOX]);
@@ -1124,7 +1121,6 @@ void Actor_DrawAllRange(Actor* this) {
     f32 var_fv1;
 
     sDrewActor = false;
-
     if (this->info.drawType == 2) {
         Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, gPathProgress, MTXF_APPLY);
         Matrix_Translate(gCalcMatrix, this->obj.pos.x, this->obj.pos.y, this->obj.pos.z, MTXF_NEW);
@@ -1139,7 +1135,6 @@ void Actor_DrawAllRange(Actor* this) {
             var_fv0 = 1000.0f;
             var_fv1 = -25000.0f;
         }
-
         if ((var_fv0 > sViewPos.z) && (sViewPos.z > var_fv1)) {
             if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * 0.5f) + 500.0f)) {
                 if (fabsf(sViewPos.y) < (fabsf(sViewPos.z * 0.5f) + 500.0f)) {
@@ -1172,7 +1167,6 @@ void Actor_DrawAllRange(Actor* this) {
             var_fv1 = -20000.0f;
             var_fa1 = 0.5f;
         }
-
         if ((var_fv0 > sViewPos.z) && (sViewPos.z > var_fv1)) {
             if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * var_fa1) + var_ft5)) {
                 if (fabsf(sViewPos.y) < (fabsf(sViewPos.z * var_fa1) + var_ft5)) {
@@ -1212,7 +1206,6 @@ void Actor_DrawAllRange(Actor* this) {
             }
         }
     }
-
     Object_SetSfxSourceToView(this->sfxSource, &sViewPos);
     this->iwork[24] = sDrewActor;
 }
@@ -1444,7 +1437,6 @@ void Object_DrawShadow(s32 index, Object* obj) {
                 Matrix_Translate(gGfxMatrix, obj->pos.x, gGroundHeight + 2.0f, obj->pos.z + gPathProgress, MTXF_APPLY);
                 break;
         }
-
         if ((gGroundType != 4) || (obj->id == OBJ_ACTOR_EVENT) || (obj->id == OBJ_ACTOR_CUTSCENE) ||
             (obj->id == OBJ_ACTOR_TEAM_BOSS)) {
             Matrix_Scale(gGfxMatrix, 1.0f, 0.0f, 1.0f, MTXF_APPLY);
@@ -1598,7 +1590,6 @@ void Display_SetSecondLight(Vec3f* pos) {
         sp9C.x = pos->x - gLight3x;
         sp9C.y = pos->y - gLight3y;
         sp9C.z = pos->z - gLight3z;
-
         lightDist = VEC3F_MAG(&sp9C);
         if (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO) {
             lightFade = 700.0f / lightDist;
@@ -1622,7 +1613,6 @@ void Display_SetSecondLight(Vec3f* pos) {
         Matrix_RotateX(gCalcMatrix, -gPlayer[gPlayerNum].camPitch, MTXF_APPLY);
         Matrix_RotateY(gCalcMatrix, gPlayer[gPlayerNum].camYaw + sp94, MTXF_APPLY);
         Matrix_RotateX(gCalcMatrix, sp98, MTXF_APPLY);
-
         sp6C.x = 0.0f;
         sp6C.y = 0.0f;
         sp6C.z = -100.0f;
@@ -1698,7 +1688,6 @@ void Object_DrawAll(s32 arg0) {
         }
     } else {
         RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
-
         for (i = 0, scenery = gScenery; i < ARRAY_COUNT(gScenery); i++, scenery++) {
             if (scenery->obj.status >= OBJ_ACTIVE) {
                 if (arg0 > 0) {
@@ -1720,7 +1709,6 @@ void Object_DrawAll(s32 arg0) {
                 RCP_SetupDL_27();
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 64, 64, 255, 255);
             }
-
             Object_SetCullDirection(arg0);
             Matrix_Push(&gGfxMatrix);
             Boss_Draw(boss, arg0);
@@ -1773,7 +1761,6 @@ void Object_DrawAll(s32 arg0) {
                 case LEVELMODE_ON_RAILS:
                 case LEVELMODE_TURRET:
                     Matrix_Push(&gGfxMatrix);
-
                     if ((gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO) ||
                         (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_COMPLETE) || (gCurrentLevel == LEVEL_AQUAS)) {
                         Display_SetSecondLight(&actor->obj.pos);
@@ -1874,7 +1861,6 @@ void Effect_DrawAll(s32 arg0) {
 void Object_Draw(s32 arg0) {
     gReflectY = 1;
     Object_DrawAll(1);
-
     if ((gGroundSurface == SURFACE_WATER) && (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_LEVEL_INTRO)) {
         gReflectY = -1;
         Lights_SetOneLight(&gMasterDisp, gLight1x, -1 * gLight1y, gLight1z, gLight1R, gLight1G, gLight1B, gAmbientR,

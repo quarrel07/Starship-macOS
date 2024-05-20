@@ -1503,7 +1503,6 @@ void SectorX_LevelStart(Player* player) {
             player->cam.at.z = gCsCamAtZ = -1000.0f;
             player->camRoll = -5.0f;
             player->baseSpeed = 0.0f;
-
             gFillScreenAlpha = 255;
             /* fallthrough */
         case 1:

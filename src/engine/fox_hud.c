@@ -184,7 +184,6 @@ void HUD_TeamDownWrench_Draw(s32 arg0) {
     };
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_36);
-
     if (arg0 == 0) {
         for (i = 1; i < 4; i++) {
             if (((gTeamShields[i] != 0) || (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_LEVEL_COMPLETE)) &&
@@ -2947,7 +2946,6 @@ void HUD_BoostGauge_Draw(f32 xPos, f32 yPos) {
         HUD_BoostGaugeOverheat_Draw(boostGaugeXpos[playerNum] + temp + 1.0f, boostGaugeYpos[playerNum] + sp60, temp_fs0,
                                     1.0f);
     }
-
     RCP_SetupDL(&gMasterDisp, SETUPDL_76);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
     HUD_BoostGaugeFrame_Draw(boostGaugeXpos[playerNum], boostGaugeYpos[playerNum], 1.0f, 1.0f);
@@ -3098,8 +3096,8 @@ void HUD_DrawBossHealth(void) {
         }
 
         if (D_801616C4 >= 0.88f) {
-            temp6 = sp3C + 9.0f;
-            temp7 = 101.0f - (31.884058f * D_801616C8) + temp1;
+            temp6 = sp3C + 8.0f;
+            temp7 = 101.0f - ((2200.0f / 69.0f) * D_801616C8) + temp1;
             if (D_801616C8 > 0.0f) {
                 Lib_TextureRect_RGBA16(&gMasterDisp, D_Tex_800D99F8, 32, 32, temp6, temp7, 0.2f, D_801616C8);
             }
@@ -3277,7 +3275,6 @@ void HUD_Hitpoints_Update(f32 xPos, f32 yPos) {
             b = 200;
         }
     }
-
     RCP_SetupDL(&gMasterDisp, SETUPDL_76);
     gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, 255);
     HUD_Hitpoints_Draw(xPos, yPos);

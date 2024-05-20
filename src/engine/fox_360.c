@@ -158,7 +158,6 @@ void AllRange_GreatFoxRepair(Player* player) {
             } else {
                 gCsCamEyeZ = 480.0f;
             }
-
             player->rot.y = 0.0f;
             player->pos.x = 2100.0f;
             player->baseSpeed = 30.0f;
@@ -193,7 +192,6 @@ void AllRange_GreatFoxRepair(Player* player) {
                 player->pos.y = -420.0f;
                 player->pos.z = 0.0f;
                 player->rot.z = 0.0f;
-
                 gCsCamEyeX = -683.0f;
                 gCsCamEyeY = -346.0f;
                 gCsCamEyeZ = 305.0f;
@@ -396,7 +394,6 @@ void ActorAllRange_SpawnTeam(void) {
             actor->obj.pos.y = sTeamSpawnPos[i].y;
             actor->obj.pos.z = sTeamSpawnPos[i].z;
             actor->aiType = sTeamAi[i];
-
             if (gCurrentLevel == LEVEL_KATINA) {
                 actor->aiIndex = sTeamSpawnTargetsKA[i];
             } else {
@@ -528,7 +525,6 @@ void ActorAllRange_UpdateStarWolfEvents(ActorAllRange* this) {
         gPlayer[0].cam.at.y = gActors[AI360_WOLF].obj.pos.y;
         gPlayer[0].cam.at.z = gActors[AI360_WOLF].obj.pos.z;
     }
-
     if ((gAllRangeEventTimer > gAllRangeSpawnEvent) && (gStarWolfMsgTimer == 0)) {
         gAllRangeFrameCount++;
         for (i = AI360_FALCO, actor = &gActors[AI360_FALCO]; i <= AI360_ANDREW; i++, actor++) {
@@ -538,12 +534,10 @@ void ActorAllRange_UpdateStarWolfEvents(ActorAllRange* this) {
                     gActors[actor->aiIndex].iwork[2] = AI360_FOX;
                     gActors[actor->aiIndex].state = STATE360_2;
                     gActors[actor->aiIndex].aiIndex = actor->aiType;
-
                     if (gTeamHelpActor == &gActors[actor->aiIndex]) {
                         gTeamHelpActor = NULL;
                         gTeamHelpTimer = 0;
                     }
-
                     if (gActors[actor->aiIndex].iwork[3] == 0) {
                         switch (gActors[actor->aiIndex].aiType) {
                             case AI360_FALCO:
@@ -559,7 +553,6 @@ void ActorAllRange_UpdateStarWolfEvents(ActorAllRange* this) {
                         gActors[actor->aiIndex].iwork[3] = 200;
                     }
                 }
-
                 if (actor->aiType == AI360_WOLF) {
                     if (gCurrentLevel != LEVEL_VENOM_2) {
                         actor->state = STATE360_3;
@@ -571,7 +564,6 @@ void ActorAllRange_UpdateStarWolfEvents(ActorAllRange* this) {
                 }
             }
         }
-
         if (gTeamShields[TEAM_ID_FALCO] <= 0) {
             gActors[AI360_LEON].aiIndex = AI360_FOX;
         }
@@ -629,7 +621,6 @@ void ActorAllRange_UpdateEnemyEvents(Actor* this) {
                     return;
                 }
             }
-
             if (gTeamShields[enemy->aiIndex] > 0) {
                 ActorAllRange_ChooseNewTarget(&gActors[enemy->aiIndex]);
                 if ((enemy->iwork[5] != 0) && (enemy->dmgSource == AI360_FOX + 1) &&
@@ -707,7 +698,6 @@ void ActorAllRange_SpawnSupplies(Actor* this) {
             }
         }
     }
-
     if ((gPlayer[0].state_1C8 == PLAYERSTATE_1C8_ACTIVE) && !gAllRangeSuppliesSent) {
         if (gAllRangeWingRepairTimer != 0) {
             gAllRangeWingRepairTimer--;
@@ -879,12 +869,10 @@ void ActorAllRange_ApplyDamage(ActorAllRange* this) {
         if (this->aiType == AI360_GREAT_FOX) {
             this->dmgType = DMG_NONE;
         }
-
         if ((this->dmgType >= DMG_EXPLOSION) && (this->aiType >= AI360_WOLF) && (this->aiType <= AI360_ANDREW)) {
             this->damage = 10;
             this->timer_0C2 = 10;
         }
-
         if (((this->aiType <= AI360_PEPPY) || (this->aiType == AI360_BILL) || (this->aiType == AI360_KATT)) &&
             (this->dmgType == DMG_EXPLOSION)) {
             this->dmgType = DMG_NONE;
@@ -911,7 +899,6 @@ void ActorAllRange_ApplyDamage(ActorAllRange* this) {
                     this->dmgSource = 0;
                 }
             }
-
             if (this->aiType >= AI360_WOLF) {
                 if (!((this->dmgType == DMG_COLLISION) && (this->aiType == AI360_WOLF)) &&
                     !((this->aiType == AI360_MISSILE) && (this->dmgType == DMG_EXPLOSION))) {
@@ -954,7 +941,6 @@ void ActorAllRange_ApplyDamage(ActorAllRange* this) {
                     }
                     return;
                 }
-
                 this->timer_0C6 = 50;
                 this->iwork[8] = 20;
                 this->obj.status = OBJ_DYING;
@@ -1008,7 +994,6 @@ void ActorAllRange_ApplyDamage(ActorAllRange* this) {
                     }
                     gKaAllyKillCount++;
                 }
-
                 switch (this->aiType) {
                     case AI360_WOLF:
                         gStarWolfTeamAlive[0] = 0;
@@ -1067,7 +1052,6 @@ void ActorAllRange_ApplyDamage(ActorAllRange* this) {
                             }
                         }
                         break;
-
                     case AI360_FALCO + NPC_SHOT_ID + 1:
                     case AI360_SLIPPY + NPC_SHOT_ID + 1:
                     case AI360_PEPPY + NPC_SHOT_ID + 1:
@@ -1230,7 +1214,6 @@ void ActorAllRange_ApplyDamage(ActorAllRange* this) {
                                 } else {
                                     Radio_PlayMessage(gMsg_ID_9153, RCID_PEPPY);
                                 }
-
                                 if ((gTeamHelpActor == NULL) || (gTeamShields[this->aiType] <= 50)) {
                                     gTeamHelpActor = this;
                                     gTeamHelpTimer = 320;
@@ -1317,7 +1300,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
         ActorAllRange_UpdateEvents(this);
         return;
     }
-
     if ((this->iwork[17] != 0) && (this->iwork[16] == STATE360_0) && (this->aiType >= AI360_WOLF)) {
         switch (RAND_INT(3.9f)) {
             case 0:
@@ -1358,7 +1340,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 }
                 this->work_046 = 0;
                 break;
-
             case STATE360_9:
                 this->timer_0BC = RAND_INT(20.0f) + 30;
                 if (Rand_ZeroOne() < 0.5f) {
@@ -1373,7 +1354,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                     this->fwork[19] += 360.0f;
                 }
                 break;
-
             case STATE360_10:
                 this->timer_0BC = 35;
                 if (Rand_ZeroOne() < 0.5f) {
@@ -1389,7 +1369,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 break;
         }
     }
-
     this->iwork[16] = STATE360_0;
     spCC = spC8 = spC4 = 0.0f;
 
@@ -1461,7 +1440,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
 
     sp104 = 0;
     this->iwork[5] = 0;
-
     if ((this->aiType >= AI360_FALCO) && (this->aiType <= AI360_PEPPY) && (gTeamShields[this->aiType] <= 0) &&
         (this->state != STATE360_6)) {
         this->state = STATE360_6;
@@ -1517,7 +1495,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
             }
             sp104 = 2;
             break;
-
         case STATE360_5:
             SectorZ_Missile_Update(this);
             sp104 = 1;
@@ -1551,7 +1528,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 Math_SmoothStepToAngle(&this->obj.rot.z, 0.0f, 0.03f, 0.5f, 0.0f);
             }
             break;
-
         case STATE360_1:
             this->fwork[1] = 40.0f;
 
@@ -1566,7 +1542,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 }
             }
             break;
-
         case STATE360_2:
             sp104 = 1;
             spF8 = 800.0f;
@@ -1618,14 +1593,12 @@ void ActorAllRange_Update(ActorAllRange* this) {
                         spC8 = COS_DEG((this->index * 45) + (gGameFrameCount * 2)) * 100.0f;
                         spC4 = SIN_DEG((this->index * 45) + gGameFrameCount) * 100.0f;
                     }
-
                     if (!gPlayer[0].somersault) {
                         this->fwork[4] = gPlayer[0].pos.x + spCC;
                         this->fwork[5] = gPlayer[0].pos.y + spC8;
                         this->fwork[6] = gPlayer[0].trueZpos + spC4;
                         this->fwork[1] = gPlayer[0].baseSpeed + 10.0f;
                     }
-
                     if ((gActors[0].state == STATE360_6) && (this->aiType <= AI360_PEPPY)) {
                         this->fwork[3] = 3.0f;
                         this->fwork[1] = gPlayer[0].baseSpeed - 5.0f;
@@ -1676,7 +1649,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                     this->fwork[6] = gBosses[0].obj.pos.z;
                     this->fwork[1] = 40.0f;
                 }
-
                 if ((this->aiIndex > -1) && (this->aiIndex != AI360_GREAT_FOX) && (gActors[0].state != STATE360_6)) {
                     if (spE8 < spF8) {
                         if (spEC < spF8) {
@@ -1899,7 +1871,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                     } else {
                         this->iwork[4] = 0;
                     }
-
                     if ((this->aiIndex >= AI360_FALCO) && ((gActors[this->aiIndex].obj.status == OBJ_DYING) ||
                                                            (gActors[this->aiIndex].state == STATE360_6) ||
                                                            (gActors[this->aiIndex].obj.status == OBJ_FREE))) {
@@ -1911,7 +1882,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 }
             }
             break;
-
         case STATE360_3:
             sp104 = 1;
             if (this->timer_0BC == 0) {
@@ -1932,7 +1902,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                     this->fwork[3] = 1.0f;
                     this->fwork[1] = 38.0f;
                 }
-
                 if ((gCurrentLevel == LEVEL_SECTOR_Z) && (gActors[0].state == STATE360_10)) {
                     this->fwork[10] = 30.0f;
                 }
@@ -1991,7 +1960,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 }
             }
             break;
-
         case STATE360_7:
             this->fwork[1] = 40.0f;
             Math_SmoothStepToF(&this->rot_0F4.x, 360.0f, 0.1f, 5.0f, 0.0001f);
@@ -2000,7 +1968,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 this->state = STATE360_3;
             }
             break;
-
         case STATE360_8:
             this->fwork[1] = 40.0f;
             if ((this->index % 2) != 0) {
@@ -2034,7 +2001,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                     break;
             }
             break;
-
         case STATE360_9:
             this->fwork[1] = 40.0f;
             if (Math_SmoothStepToAngle(&this->rot_0F4.y, this->fwork[19], 0.5f, 5.0f, 0.0f) < 0.0f) {
@@ -2047,7 +2013,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
                 this->state = STATE360_3;
             }
             break;
-
         case STATE360_10:
             sp104 = 1;
             if (this->timer_0BC == 0) {
@@ -2069,7 +2034,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
         if (gCurrentLevel == LEVEL_VENOM_2) {
             var_v0 = 2 - 1;
         }
-
         if (((this->index + gGameFrameCount) & var_v0) == 0) {
             this->fwork[19] = Math_RadToDeg(Math_Atan2F(spE4, spDC));
             this->fwork[20] = Math_RadToDeg(Math_Atan2F(spE0, sqrtf(SQ(spE4) + SQ(spDC))));
@@ -2156,7 +2120,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
     }
     this->obj.rot.x = -this->rot_0F4.x;
     this->obj.rot.y = this->rot_0F4.y;
-
     Math_SmoothStepToF(&this->fwork[0], this->fwork[1], 0.2f, 1.0f, 0.1f);
     Math_SmoothStepToF(&this->fwork[2], this->fwork[3], 1.0f, 0.1f, 0.1f);
 
@@ -2177,7 +2140,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
     this->fwork[13] -= (this->fwork[13] * 0.1f);
     this->fwork[14] -= (this->fwork[14] * 0.1f);
     this->fwork[12] -= (this->fwork[12] * 0.1f);
-
     if ((this->obj.pos.y < gGroundHeight + 40.0f) && (this->vel.y < 0.0f)) {
         this->obj.pos.y = gGroundHeight + 40.0f;
         this->vel.y = 0.0f;
@@ -2238,7 +2200,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
     radarMark->pos.y = this->obj.pos.y;
     radarMark->pos.z = this->obj.pos.z;
     radarMark->yRot = this->rot_0F4.y + 180.0f;
-
     if (this->iwork[1] != 0) {
         this->iwork[1]--;
         if ((this->iwork[1] == 0) && (gActors[0].state == STATE360_2) && (gRadioState == 0)) {
@@ -2272,7 +2233,6 @@ void ActorAllRange_Update(ActorAllRange* this) {
             sp90.x = this->vel.x;
             sp90.y = this->vel.y;
             sp90.z = this->vel.z;
-
             temp_v0_27 = Object_CheckCollision(this->index, &this->obj.pos, &sp90, var_a3);
             if (temp_v0_27 != 0) {
                 this->obj.pos.x -= this->vel.x;
