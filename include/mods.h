@@ -17,7 +17,7 @@
  * state. Two presets (map and main menu) are provided.
  * For the full list of game states, see sf64thread.h.
 */
-#define MODS_BOOT_STATE 3  // main menu
+// #define MODS_BOOT_STATE 3  // main menu
 // #define MODS_BOOT_STATE 4 // map
 
 /**
