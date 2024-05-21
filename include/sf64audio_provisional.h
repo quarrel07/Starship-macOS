@@ -93,8 +93,8 @@ typedef enum {
 } SampleMedium;
 
 typedef enum {
-    /* 0 */ CODEC_ADPCM,       // 16 2-byte samples (32 bytes) compressed into 4-bit samples (8 bytes) + 1 header byte
-    /* 1 */ CODEC_S8,          // 16 2-byte samples (32 bytes) compressed into 8-bit samples (16 bytes)
+    /* 0 */ CODEC_ADPCM, // 16 2-byte samples (32 bytes) compressed into 4-bit samples (8 bytes) + 1 header byte
+    /* 1 */ CODEC_S8,    // 16 2-byte samples (32 bytes) compressed into 8-bit samples (16 bytes)
     /* 2 */ CODEC_S16_INMEMORY,
     /* 3 */ CODEC_SMALL_ADPCM, // 16 2-byte samples (32 bytes) compressed into 2-bit samples (4 bytes) + 1 header byte
     /* 4 */ CODEC_REVERB,
@@ -229,8 +229,8 @@ typedef struct {
 } AdpcmBook; // size >= 8, 0x8 aligned
 
 typedef struct {
-    /* 0x00 */ u32 codec : 4;       // The state of compression or decompression
-    /* 0x00 */ u32 medium : 2;      // Medium where sample is currently stored
+    /* 0x00 */ u32 codec : 4;  // The state of compression or decompression
+    /* 0x00 */ u32 medium : 2; // Medium where sample is currently stored
     /* 0x00 */ u32 unk_bit26 : 1;
     /* 0x00 */ u32 isRelocated : 1; // Has the sample header been relocated (offsets to pointers)
     /* 0x01 */ u32 size : 24;       // Size of the sample
@@ -261,7 +261,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 adsrDecayIndex; // index used to obtain adsr decay rate from adsrDecayTable
     /* 0x01 */ u8 pan;
-    /* 0x02 */ u8 isRelocated;    // have tunedSample.sample and envelope been relocated (offsets to pointers)
+    /* 0x02 */ u8 isRelocated; // have tunedSample.sample and envelope been relocated (offsets to pointers)
     /* 0x04 */ TunedSample tunedSample;
     /* 0x0C */ EnvelopePoint* envelope;
 } Drum; // size = 0x10
@@ -318,7 +318,7 @@ typedef struct {
 } SynthesisReverb; // size = 0x1D4
 
 typedef struct {
-    /* 0x00 */ u8* pc;             // program counter
+    /* 0x00 */ u8* pc; // program counter
     /* 0x04 */ u8* stack[4];
     /* 0x14 */ u8 remLoopIters[4]; // remaining loop iterations
     /* 0x18 */ u8 depth;
@@ -485,7 +485,7 @@ typedef struct SequenceLayer {
     /* 0x00 */ u8 continuousNotes : 1; // keep the same note for consecutive notes with the same sound
     /* 0x00 */ u8 bit3 : 1;            // "loaded"?
     /* 0x00 */ u8 ignoreDrumPan : 1;
-    /* 0x00 */ u8 bit1 : 1;            // "has initialized continuous notes"?
+    /* 0x00 */ u8 bit1 : 1; // "has initialized continuous notes"?
     /* 0x00 */ u8 notePropertiesNeedInit : 1;
     /* 0x01 */ Stereo stereo;
     /* 0x02 */ u8 instOrWave;
@@ -643,15 +643,15 @@ typedef struct {
     /* 0x10 */ u32 persistentSeqCacheSize;  // size of cache on audio pool to store sequences persistently
     /* 0x14 */ u32 persistentFontCacheSize; // size of cache on audio pool to store soundFonts persistently
     /* 0x18 */ u32
-        persistentSampleBankCacheSize;      // size of cache on audio pool to store entire sample banks persistently
-    /* 0x1C */ u32 temporarySeqCacheSize;   // size of cache on audio pool to store sequences temporarily
-    /* 0x20 */ u32 temporaryFontCacheSize;  // size of cache on audio pool to store soundFonts temporarily
+        persistentSampleBankCacheSize;     // size of cache on audio pool to store entire sample banks persistently
+    /* 0x1C */ u32 temporarySeqCacheSize;  // size of cache on audio pool to store sequences temporarily
+    /* 0x20 */ u32 temporaryFontCacheSize; // size of cache on audio pool to store soundFonts temporarily
     /* 0x24 */ u32 temporarySampleBankCacheSize; // size of cache on audio pool to store entire sample banks temporarily
     /* 0x28 */ s32
         persistentSampleCacheSize; // size of cache in the audio misc pool to store individual samples persistently
     /* 0x2C */ s32
-        temporarySampleCacheSize;  // size of cache in the audio misc pool to store individual samples temporarily
-} AudioSpec;                       // size = 0x30
+        temporarySampleCacheSize; // size of cache in the audio misc pool to store individual samples temporarily
+} AudioSpec;                      // size = 0x30
 
 /**
  * The audio buffer stores the fully processed digital audio before it is sent to the audio interface (AI), then to the
@@ -703,7 +703,7 @@ typedef struct {
     /* 0x02 */ s8 sampleBankId;
     /* 0x03 */ char unk_03[0x5];
     /* 0x08 */ u8* allocatedAddr;
-    /* 0x0C */ uintptr_t sampleAddr;
+    /* 0x0C */ void* sampleAddr;
     /* 0x10 */ u32 size;
 } SampleCacheEntry; // size = 0x14
 
@@ -844,7 +844,7 @@ typedef struct {
 
 typedef struct SampleDma {
     /* 0x00 */ u8* ramAddr;
-    /* 0x04 */ uintptr_t devAddr;
+    /* 0x04 */ u32 devAddr;
     /* 0x08 */ u16 sizeUnused;
     /* 0x0A */ u16 size;
     /* 0x0C */ u8 unused;
@@ -868,14 +868,14 @@ typedef struct {
 typedef struct {
     /* 0x0 */ s16 unk_00; // set to 0x1C00, unused
     /* 0x2 */ s16 seqTicksPerBeat;
-} TempoData;              // size = 0x4
+} TempoData; // size = 0x4
 
 typedef struct {
     /* 0x00 */ u32 heapSize; // total number of bytes allocated to the audio heap. Must be <= the size of `gAudioHeap`
                              // (ideally about the same size)
     /* 0x04 */ u32 initPoolSize; // The entire audio heap is split into two pools.
     /* 0x08 */ u32 permanentPoolSize;
-} AudioHeapInitSizes;            // size = 0xC
+} AudioHeapInitSizes; // size = 0xC
 
 typedef struct {
     AudioAllocPool pool;
@@ -1040,8 +1040,8 @@ uintptr_t AudioHeap_SearchCaches(s32 tableType, s32 cache, s32 id);
 s32 AudioHeap_ResetStep(void);
 void* AudioHeap_SearchPermanentCache(s32 tableType, s32 id);
 u8* AudioHeap_AllocPermanent(s32 tableType, s32 id, u32 size);
-void* AudioHeap_AllocTemporarySampleCache(s32 size, s32 fontId, uintptr_t sampleAddr, s8 medium);
-void* AudioHeap_AllocPersistentSampleCache(s32 size, s32 fontId, uintptr_t sampleAddr, s8 medium);
+void* AudioHeap_AllocTemporarySampleCache(s32 size, s32 fontId, s32 sampleAddr, s8 medium);
+void* AudioHeap_AllocPersistentSampleCache(s32 size, s32 fontId, s32 sampleAddr, s8 medium);
 
 // audio_load
 void AudioLoad_DecreaseSampleDmaTtls(void);

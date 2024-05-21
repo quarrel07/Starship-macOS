@@ -23,6 +23,7 @@ typedef enum OverlayCalls {
     /* 110 */ OVLCALL_UNKMAP_DRAW,
 } OverlayCalls;
 
+#include "sf64context.h"
 #include "sf64audio_external.h"
 #include "functions.h"
 #include "variables.h"
