@@ -427,10 +427,17 @@ void func_radio_800BAAE8(void) {
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
 
         if (mirror) {
+<<<<<<< HEAD
             Lib_TextureRect_RGBA16_MirX(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
                                      gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
         } else {
             Lib_TextureRect_RGBA16(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
+=======
+            TextureRect_RGBA16_MirX(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
+                                     gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
+        } else {
+            TextureRect_RGBA16(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
+>>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                                 gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
         }
     }

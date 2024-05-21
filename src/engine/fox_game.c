@@ -374,7 +374,11 @@ void Game_Update(void) {
             case GSTATE_SHOW_LOGO:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
+<<<<<<< HEAD
                 Lib_TextureRect_IA8(&gMasterDisp, gNintendoLogo, 128, 74, 100.0f, 86.0f, 1.0f, 1.0f);
+=======
+                TextureRect_IA8(&gMasterDisp, gNintendoLogo, 128, 74, 100.0f, 86.0f, 1.0f, 1.0f);
+>>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                 gGameState++;
                 break;
 
@@ -394,7 +398,11 @@ void Game_Update(void) {
             case GSTATE_LOGO_WAIT:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
+<<<<<<< HEAD
                 Lib_TextureRect_IA8(&gMasterDisp, gNintendoLogo, 128, 74, 100.0f, 86.0f, 1.0f, 1.0f);
+=======
+                TextureRect_IA8(&gMasterDisp, gNintendoLogo, 128, 74, 100.0f, 86.0f, 1.0f, 1.0f);
+>>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                 break;
 
             case GSTATE_START:
