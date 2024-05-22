@@ -1,4 +1,5 @@
 #include "object_ram.h"
+#include "libc/math.h"
 
 static RamEntry oRamEntries[7] = {
     ORAM_ENTRY(Player, 0, unk_20C, s32),  ORAM_ENTRY(Player, 0, unk_19C, s32), ORAM_ENTRY(Player, 0, unk_1A0, s32),
