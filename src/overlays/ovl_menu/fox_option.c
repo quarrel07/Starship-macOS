@@ -2806,13 +2806,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-<<<<<<< HEAD
     Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71, sVsHandicapFrameXpos[arg0],
                      sVsHandicapFrameYpos[arg0], 1.0f, 1.0f);
-=======
-    TextureRect_CI4(&gMasterDisp, D_VS_MENU_70118E0, D_VS_MENU_70123F8, 80, 71, D_menu_801AF148[arg0],
-                     D_menu_801AF158[arg0], 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
     Lib_TextureRect_CI8(&gMasterDisp, sVsCharNameTex[PlayerIdx], sVsCharNameTLUT[PlayerIdx], sCharNameWidth[PlayerIdx],
                         sCharNameHeight[PlayerIdx], sVsHandicapFrameXpos[PlayerIdx] + sCharNameXoffsetPos[PlayerIdx],
@@ -2854,13 +2849,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-<<<<<<< HEAD
     Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[arg0], 44, 44, sVsHandicapFrameXpos[arg0] + sPlayerFaceXoffsetPos,
                         sVsHandicapFrameYpos[arg0] + sPlayerFaceYoffsetPos, 0.7f, 0.7f);
-=======
-    TextureRect_RGBA16(&gMasterDisp, D_menu_801AF20C[arg0], 44, 44, D_menu_801AF148[arg0] + D_menu_801AF1B4,
-                        D_menu_801AF158[arg0] + D_menu_801AF1B8, 0.7f, 0.7f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
     width = 24;
     if (PlayerIdx == 0) {
@@ -2879,11 +2869,7 @@ void Option_VS_N64Console_Draw(void) {
 
     RCP_SetupDL_76();
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-<<<<<<< HEAD
     Lib_TextureRect_RGBA16(&gMasterDisp, aVsN64ConsoleTex, 144, 42, 87.0f, 84, 1.0f, 1.0f);
-=======
-    TextureRect_RGBA16(&gMasterDisp, D_VS_MENU_700E9A0, 144, 42, 87.0f, 84, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void Option_VersusStage_Setup(void) {
