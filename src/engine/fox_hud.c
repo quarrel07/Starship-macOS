@@ -585,11 +585,7 @@ void HUD_VenomTitleCard_Draw(void) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_76);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-<<<<<<< HEAD
         Lib_TextureRect_IA8(&gMasterDisp, D_800D1C9C[i], D_800D1CA4[i], 19, D_800D1CB4[i], D_800D1CBC[i] - 28.0f, 1.0f,
-=======
-        TextureRect_IA8(&gMasterDisp, D_800D1C9C[i], D_800D1CA4[i], 19, D_800D1CB4[i], D_800D1CBC[i] - 28.0f, 1.0f,
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                          1.0f);
     }
 }
@@ -667,11 +663,7 @@ void HUD_TitleCard_Draw(f32 x, f32 y) {
         HUD_VenomTitleCard_Draw();
     }
 
-<<<<<<< HEAD
     Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[j].titleCardTex, sLevelTitleCard[j].titleCardWidth, sLevelTitleCard[j].titleCardHeight, x2, y2, 1.0f,
-=======
-    TextureRect_IA8(&gMasterDisp, D_800D1AEC[j].unk_0C, D_800D1AEC[j].unk_10, D_800D1AEC[j].unk_14, x2, y2, 1.0f,
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                      1.0f);
 
     if ((gSavedObjectLoadIndex == 0) && (gAllRangeCheckpoint == 0) && (gCurrentLevel != LEVEL_VENOM_ANDROSS) &&
@@ -863,7 +855,6 @@ void HUD_DrawLevelClearScreen(void) {
         y = 64.0f;
     }
 
-<<<<<<< HEAD
     switch (levelClearState) {
         case LEVEL_CLEAR_STATE_1:
             if (missionStatus != MISSION_COMPLETE) {
@@ -877,21 +868,6 @@ void HUD_DrawLevelClearScreen(void) {
                 Lib_TextureRect_IA8(&gMasterDisp, aTextACCOM, 120, 23, x - 62.0f, y + 50.0f, 1.0f, 1.0f);
             } else {
                 Lib_TextureRect_IA8(&gMasterDisp, aTextCOMP, 96, 23, x - 22.0f, y + 50.0f, 1.0f, 1.0f);
-=======
-    switch (temp) {
-        case 1:
-            if (boolTemp) {
-                TextureRect_IA8(&gMasterDisp, aTextPLISHED, 136, 23, x + 50.0f, y + 50.0f, 1.0f, 1.0f);
-            } else {
-                TextureRect_IA8(&gMasterDisp, aTextLETE, 80, 21, x + 66.0f, y + 50.0f, 1.0f, 1.0f);
-            }
-
-        case 2:
-            if (boolTemp) {
-                TextureRect_IA8(&gMasterDisp, aTextACCOM, 120, 23, x - 62.0f, y + 50.0f, 1.0f, 1.0f);
-            } else {
-                TextureRect_IA8(&gMasterDisp, aTextCOMP, 96, 23, x - 22.0f, y + 50.0f, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
             }
 
         case LEVEL_CLEAR_STATE_3:
@@ -1022,11 +998,7 @@ void HUD_TeammateStatus_Draw(void) {
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
         }
 
-<<<<<<< HEAD
         Lib_TextureRect_RGBA16(&gMasterDisp, sPortraitTex[j + 1], 44, 44, x[j][0], y[j][0], 1.0f, 1.0f);
-=======
-        TextureRect_RGBA16(&gMasterDisp, D_800D1D18[j + 1], 44, 44, x[j][0], y[j][0], 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
         HUD_TeamShields_Draw(x[j][2], y[j][2], shield);
     }
@@ -1641,11 +1613,7 @@ void HUD_PauseScreen_Update(void) {
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76);
                 gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-<<<<<<< HEAD
                 Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[j].titleCardTex, sLevelTitleCard[j].titleCardWidth, sLevelTitleCard[j].titleCardHeight, x2,
-=======
-                TextureRect_IA8(&gMasterDisp, D_800D1AEC[j].unk_0C, D_800D1AEC[j].unk_10, D_800D1AEC[j].unk_14, x2,
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                                  y2 + i, 1.0f, 1.0f);
 
                 HUD_MsgWindowBg_Draw2(x1 - 10.0f, y0 - 4.0f, 4.7f, 2.8f);
@@ -2658,7 +2626,7 @@ void HUD_Texture_Scroll(u8* texturePtr, s32 xPos, s32 yPos, u8 type) {
 
 void HUD_Texture_Wave(u16* srcTexture, u16* dstTexture) {
     u16 *src, *dst;
-    u16 buffer[1024];
+    u16 buffer[2048];
     f32 rowPhase;
     f32 angle;
     s32 j;
@@ -2731,11 +2699,7 @@ void HUD_VsModePortraitTex_Draw(f32 xPos, f32 yPos, f32 scale, s32 idx) {
     };
     s32 i;
 
-<<<<<<< HEAD
     Lib_TextureRect_RGBA16(&gMasterDisp, sVsModeFaceDL[arg3], 44, 44, xPos, yPos, scale, scale);
-=======
-    TextureRect_RGBA16(&gMasterDisp, D_800D1EE8[arg3], 44, 44, arg0, arg1, arg2, arg2);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
@@ -2886,13 +2850,8 @@ void HUD_VS_ShieldGaugeFrame_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
     s32 i;
 
     // LTodo: [HD-Texture] Is broken
-<<<<<<< HEAD
     u8* texture = (u8*) LOAD_ASSET(aVsShieldGaugeFrameTex);
     Lib_TextureRect_IA8(&gMasterDisp, texture + 2 * ((640 * i) / 2), 80, 8, xPos, (8 * i * yScale) + yPos, xScale, yScale);
-=======
-    u8* texture = (u8*) LOAD_ASSET(D_versus_3000BC0);
-    TextureRect_IA8(&gMasterDisp, texture + 2 * ((640 * i) / 2), 80, 8, arg0, (8 * i * arg3) + arg1, arg2, arg3);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void HUD_VS_ShieldGaugeTex_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale, f32 width) {
