@@ -7,7 +7,8 @@
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
-#define SCREEN_MARGIN 8
+// This should be part of a CVar
+#define SCREEN_MARGIN 0
 
 #define TIME_IN_SECONDS(x) (x * 30);
 
