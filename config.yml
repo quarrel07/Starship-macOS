@@ -8,7 +8,7 @@ f7475fb11e7e6830f82883412638e8390791ab87:
     sort: OFFSET
     # logging: ERROR
     output:
-      binary: starship.otr
+      binary: sf64.otr
       code: src/assets
       headers: include/assets
       modding: src/assets
@@ -27,7 +27,7 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
     gbi: F3DEX
     sort: OFFSET
     output:
-      binary: starship.otr
+      binary: sf64.otr
       code: src/assets
       headers: include/assets
       modding: src/assets

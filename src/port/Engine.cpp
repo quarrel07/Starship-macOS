@@ -21,7 +21,6 @@
 #include <DisplayListFactory.h>
 #include <TextureFactory.h>
 #include <MatrixFactory.h>
-#include <ArrayFactory.h>
 #include <BlobFactory.h>
 #include <VertexFactory.h>
 
@@ -45,7 +44,7 @@ GameEngine::GameEngine() {
     if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.otr"); std::filesystem::exists(cube_path)) {
         OTRFiles.push_back(cube_path);
     }
-    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppBundle("sm64.otr"); std::filesystem::exists(sm64_otr_path)) {
+    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppBundle("sf64.otr"); std::filesystem::exists(sm64_otr_path)) {
         OTRFiles.push_back(sm64_otr_path);
     }
     if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods"); !patches_path.empty() && std::filesystem::exists(patches_path)) {
@@ -80,7 +79,6 @@ GameEngine::GameEngine() {
     loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY, "Vertex", static_cast<uint32_t>(LUS::ResourceType::Vertex), 0);
     loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryDisplayListV0>(), RESOURCE_FORMAT_BINARY, "DisplayList", static_cast<uint32_t>(LUS::ResourceType::DisplayList), 0);
     loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY, "Matrix", static_cast<uint32_t>(LUS::ResourceType::Matrix), 0);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryArrayV0>(), RESOURCE_FORMAT_BINARY, "Array", static_cast<uint32_t>(LUS::ResourceType::Array), 0);
     loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY, "Blob", static_cast<uint32_t>(LUS::ResourceType::Blob), 0);
 }
 
