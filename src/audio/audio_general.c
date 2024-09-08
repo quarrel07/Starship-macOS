@@ -2638,6 +2638,7 @@ void Audio_RestoreVolumeSettings(u8 audioType) {
 }
 
 void Audio_SetVolume(u8 audioType, u8 volume) {
+    return;
     if (volume > 99) {
         volume = 99;
     }

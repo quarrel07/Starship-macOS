@@ -2201,27 +2201,15 @@ void Map_Prologue_Draw(void) {
 
     Lib_TextureRect_RGBA16(&gMasterDisp, sPrologueTextures[sPrologueTexIdx], 96, 52, 109.0f, 24.0f, 1.0f, 1.0f);
 
-<<<<<<< HEAD
     // Next Prologue texture
     if ((sPrologueNextTexAlpha != 0) && ((sPrologueTexIdx + 1) < 7)) {
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, sPrologueNextTexAlpha);
-=======
-    TextureRect_RGBA16(&gMasterDisp, D_menu_801B6954[D_menu_801CD9F0], 96, 52, 109.0f, 24.0f, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
         Lib_TextureRect_RGBA16(&gMasterDisp, sPrologueTextures[sPrologueTexIdx + 1], 96, 52, 109.0f, 24.0f, 1.0f, 1.0f);
 
-<<<<<<< HEAD
         if (sPrologueNextTexAlpha == 255) {
             sPrologueNextTexAlpha = 0;
             sPrologueTexIdx++;
-=======
-        TextureRect_RGBA16(&gMasterDisp, D_menu_801B6954[D_menu_801CD9F0 + 1], 96, 52, 109.0f, 24.0f, 1.0f, 1.0f);
-
-        if (D_menu_801CD9E4 == 255) {
-            D_menu_801CD9E4 = 0;
-            D_menu_801CD9F0++;
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
         }
     }
 }
@@ -2397,11 +2385,7 @@ void Map_LylatCard_Draw(void) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) D_menu_801CEA9C);
 
-<<<<<<< HEAD
     Lib_TextureRect_IA8(&gMasterDisp, D_MAP_600D590, 168, 19, 72.0f, 104.0f, 1.0f, 1.0f);
-=======
-    TextureRect_IA8(&gMasterDisp, D_MAP_600D590, 168, 19, 72.0f, 104.0f, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void Map_ZoomPlanet_Setup(void) {
@@ -5310,13 +5294,8 @@ void Map_TitleCards_Draw(void) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) sMapPlanetCardAlpha);
 
-<<<<<<< HEAD
     Lib_TextureRect_IA8(&gMasterDisp, sPlanetNameCards[var_s0].texture,
         sPlanetNameCards[var_s0].width, sPlanetNameCards[var_s0].height, sPlanetNameCards[var_s0].xPos, 20.0f, 1.0f, 1.0f);
-=======
-    TextureRect_IA8(&gMasterDisp, D_menu_801AF834[var_s0].texture, D_menu_801AF834[var_s0].width,
-                     D_menu_801AF834[var_s0].height, D_menu_801AF834[var_s0].xPos, 20.0f, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
     Math_SmoothStepToF(&sMapPlanetCardAlpha, 255.0f, sMapPlanetCardAlphaScale, 10.0f, 1.0f);
 
@@ -5409,7 +5388,6 @@ void Map_801A9A8C(void) {
         return;
     }
 
-<<<<<<< HEAD
     Lib_TextureRect_IA8(&gMasterDisp, aTextMissionNo, 112, 19, sCardXpos[0], sCardYpos[0], 1.0f, 1.0f);
     Lib_TextureRect_IA8(&gMasterDisp, missionNoTex, 16, 15, sCardXpos[1], sCardYpos[1], 1.0f, 1.0f);
 
@@ -5418,16 +5396,6 @@ void Map_801A9A8C(void) {
 
     Lib_TextureRect_IA8(&gMasterDisp, sPlanetTitleCards[planetIdx].texture, sPlanetTitleCards[planetIdx].width, sPlanetTitleCards[planetIdx].height,
         D_menu_801AF914[planetIdx].xPos, 140.0f, 1.0f, 1.0f);
-=======
-    TextureRect_IA8(&gMasterDisp, aTextMissionNo, 112, 19, D_menu_801B6AC0[0], D_menu_801B6AC8[0], 1.0f, 1.0f);
-    TextureRect_IA8(&gMasterDisp, missionNoTex, 16, 15, D_menu_801B6AC0[1], D_menu_801B6AC8[1], 1.0f, 1.0f);
-
-    TextureRect_IA8(&gMasterDisp, D_menu_801AF834[sp58].texture, D_menu_801AF834[sp58].width,
-                     D_menu_801AF834[sp58].height, D_menu_801AF834[sp58].xPos, 94.0f, 1.0f, 1.0f);
-
-    TextureRect_IA8(&gMasterDisp, D_menu_801AF914[sp58].texture, D_menu_801AF914[sp58].width,
-                     D_menu_801AF914[sp58].height, D_menu_801AF914[sp58].xPos, 140.0f, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void Map_801A9DE8(void) {
@@ -5948,15 +5916,9 @@ void Map_BriefingRadio_Update(void) {
     }
 
     if ((D_menu_801CF018 > 0) && (D_menu_801CF018 != 100)) {
-<<<<<<< HEAD
         Map_BriefingRadio_Draw(gCurrentRadioPortrait);
         Map_BriefingRadio_Draw(D_menu_801AF420[!D_menu_801CD940]);
         if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
-=======
-        Map_801AB978(gCurrentRadioPortrait);
-        Map_801AB978(D_menu_801AF420[!D_menu_801CD940]);
-        if (CVarGetInteger("gLevelSelector", 0) && gCurrentLevel == 6) {
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
             return;
         }
         func_radio_800BB388();
@@ -5985,11 +5947,7 @@ void Map_BriefingRadio_Draw(s32 arg0) {
                 xPos = 205.0f;
                 yPos = 77.0f;
 
-<<<<<<< HEAD
                 Lib_TextureRect_RGBA16(&gMasterDisp, D_MAP_6044820, 92, 51, xPos, yPos, 1.0f, 1.0f);
-=======
-                TextureRect_RGBA16(&gMasterDisp, D_MAP_6044820, 92, 51, xPos, yPos, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
                 if (arg0 == 21) {
                     Lib_TextureRect_RGBA16(&gMasterDisp, D_MAP_6046CD0, 32, 34, xPos + 47.0, yPos, 1.0f, 1.0f);
