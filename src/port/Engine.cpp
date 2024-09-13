@@ -131,6 +131,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     }
 
     gFPS = 30;
+    wnd->EnableSRGBMode();
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
     wnd->SetTargetFps(60 / gVIsPerFrame);
     wnd->SetMaximumFrameLatency(1);
