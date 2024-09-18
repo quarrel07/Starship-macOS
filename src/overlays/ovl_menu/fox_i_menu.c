@@ -49,7 +49,7 @@ void OvlMenu_CallFunction(u32 mode, void* ptr) {
             break;
 
         case 999:
-            Title_8018F77C();
+            Title_64Logo_Draw();
             break;
 
         default:

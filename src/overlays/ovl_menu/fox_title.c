@@ -232,7 +232,7 @@ void Title_Main(void) {
 void Title_UpdateEntry(void) {
     
     // LTODO: Verify this is correct
-    gMainController = Title_80187ABC();
+    gMainController = Title_CheckControllers();
 
     if (sTimer1 > 0) {
         sTimer1--;
@@ -2838,11 +2838,7 @@ void Title_StarfoxLogo_Draw(void) {
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
     // LTodo: Validate this
-<<<<<<< HEAD
     Lib_TextureRect_RGBA16(&gMasterDisp, aTitleStarfoxLogoTex, 236, 60, sTitleStarfoxLogoXpos, sTitleStarfoxLogoYpos, 1.0f, 1.0f);
-=======
-    TextureRect_RGBA16(&gMasterDisp, gTitleStarfoxLogo, 236, 60, D_menu_801B9054, D_menu_801B9058, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void Title_64Logo_Draw(void) {
@@ -2888,36 +2884,21 @@ void Title_PressStart_Draw(void) {
             RCP_SetupDL(&gMasterDisp, SETUPDL_85);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 60, 60, 255, 200);
 
-<<<<<<< HEAD
             Lib_TextureRect_CI8(&gMasterDisp, aNoControllerBgTex, aNoControllerBgTLUT, 32, 32, sNoControllerBgXpos,
                                 sNoControllerBgYpos, sNoControllerBgXscale, sNoControllerBgYscale);
 
             // No Controller
-=======
-            TextureRect_CI8(&gMasterDisp, D_TITLE_601D750, D_TITLE_601DB50, 32, 32, D_menu_801AE464, D_menu_801AE468,
-                             D_menu_801AE46C, D_menu_801AE470);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
             RCP_SetupDL(&gMasterDisp, SETUPDL_83);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, (s32) sTitleTextPrimCol, (s32) sTitleTextPrimCol, 255);
 
-<<<<<<< HEAD
             Lib_TextureRect_IA8(&gMasterDisp, aTitleNoControllerTex, 176, 24, D_menu_801AE474,
                                  D_menu_801AE478, 1.0f, 1.0f);
-=======
-            gDPSetPrimColor(gMasterDisp++, 0, 0, 255, (s32) D_menu_801B7BC8, (s32) D_menu_801B7BC8, 255);
-
-            TextureRect_IA8(&gMasterDisp, gTitleNoController, 176, 24, D_menu_801AE474, D_menu_801AE478, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
         } else {
             // Press Start
             RCP_SetupDL(&gMasterDisp, SETUPDL_83);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, (s32) sTitleTextPrimCol, (s32) sTitleTextPrimCol, 255);
 
-<<<<<<< HEAD
             Lib_TextureRect_IA8(&gMasterDisp, aTitlePressStartTex, 120, 13, 101.0f, yPos, 1.0f, 1.0f);
-=======
-            TextureRect_IA8(&gMasterDisp, gTitlePressStart, 120, 13, 101.0f, temp2, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
         }
     }
 }
@@ -2928,11 +2909,7 @@ void Title_Copyright_Draw(void) {
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-<<<<<<< HEAD
     Lib_TextureRect_IA8(&gMasterDisp, a1997NintendoTex, 120, 12, 102.0f, 209.0f, 1.0f, 1.0f);
-=======
-    TextureRect_IA8(&gMasterDisp, gTitleNintendoCopyright, 120, 12, 102.0f, 209.0f, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void Title_TeamName_Draw(void) {
@@ -2961,19 +2938,11 @@ void Title_TeamName_Draw(void) {
             break;
 
         case 2:
-<<<<<<< HEAD
             Lib_TextureRect_IA8(&gMasterDisp, gTitleFalcoCard, 176, 13, temp_fs2, temp, 1.0f, 1.0f);
             break;
 
         case 3:
             Lib_TextureRect_IA8(&gMasterDisp, gTitleFoxCard, 176, 13, temp_fs2, temp, 1.0f, 1.0f);
-=======
-            TextureRect_IA8(&gMasterDisp, gTitleFalcoCard, 176, 13, temp_fs2, temp, 1.0f, 1.0f);
-            break;
-
-        case 3:
-            TextureRect_IA8(&gMasterDisp, gTitleFoxCard, 176, 13, temp_fs2, temp, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
             break;
     }
 }
@@ -3015,11 +2984,7 @@ void Title_SunGlare_Draw(void) {
             gDPSetColorDither(gMasterDisp++, G_CD_NOISE);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, D_menu_801B7BD0);
 
-<<<<<<< HEAD
             Lib_TextureRect_RGBA16(&gMasterDisp, aTitleSunGlareTex, 32, 32, D_menu_801B9080, D_menu_801B9084, D_menu_801B7BB0,
-=======
-            TextureRect_RGBA16(&gMasterDisp, gTitleSunBeam, 32, 32, D_menu_801B9080, D_menu_801B9084, D_menu_801B7BB0,
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
                                 D_menu_801B7BB4);
             D_menu_801B9080 += 1.66f;
         }
@@ -3142,19 +3107,11 @@ void Title_Logos_Draw(void) {
             Lib_TextureRect_CI4(&gMasterDisp, aIntroInTex, aIntroInTLUT, 32, 13, 150.0f, 110.0f, 1.0f, 1.0f);
             break;
 
-<<<<<<< HEAD
         case TITLE_LOGO_NINTENDO_64:
             RCP_SetupDL(&gMasterDisp, 0x53);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) sStarfoxLogoAlpha);
-            TextureRect_16bRGBA(&gMasterDisp, aTitleN64LogoTex, 128, 88, D_menu_801B9070,
+            Lib_TextureRect_RGBA16(&gMasterDisp, aTitleN64LogoTex, 128, 88, D_menu_801B9070,
                                     D_menu_801B9074, D_menu_801B9078, D_menu_801B907C);
-=======
-        case 1:
-            RCP_SetupDL(&gMasterDisp, SETUPDL_83);
-            gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) D_menu_801B7BDC);
-            TextureRect_RGBA16(&gMasterDisp, gTitleNintendo64Logo, 128, 88, D_menu_801B9070, D_menu_801B9074,
-                                D_menu_801B9078, D_menu_801B907C);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 
         case TITLE_LOGO_NONE:
             break;
@@ -3224,12 +3181,8 @@ void Title_TitleCard_Draw(void) {
             RCP_SetupDL(&gMasterDisp, SETUPDL_83);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-<<<<<<< HEAD
             Lib_TextureRect_IA8(&gMasterDisp, aTitleArwingCardTex, 112, 26, sTitleArwingCardXpos,
                                  sTitleArwingCardYpos, 1.0f, 1.0f);
-=======
-            TextureRect_IA8(&gMasterDisp, gTitleArwingCard, 112, 26, D_menu_801AE564, D_menu_801AE568, 1.0f, 1.0f);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
     }
 }
 

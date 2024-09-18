@@ -67,7 +67,7 @@ void Controller_UpdateInput(void) {
 
     for (i = 0; i < 4; i++) {
         gControllerPlugged[i] = osContGetStatus(i);
-        if ((gControllerPlugged[i] == 1) && (sNextController[i].errno == 0)) {
+        if ((gControllerPlugged[i] == 1) && (sNextController[i].err_no == 0)) {
             sPrevController[i] = gControllerHold[i];
             gControllerHold[i] = sNextController[i];
             gControllerPress[i].button =
@@ -100,11 +100,7 @@ void Controller_ReadData(void) {
 
 void Save_ReadData(void) {
     if ((gStartNMI == 0) && (Save_ReadEeprom(&gSaveIOBuffer) == 0)) {
-<<<<<<< HEAD
-        osSendMesg(&gSaveMesgQueue, (OSMesg) SI_SAVE_SUCCESS, OS_MESG_NOBLOCK);
-=======
         osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
         return;
     }
     osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
@@ -112,11 +108,7 @@ void Save_ReadData(void) {
 
 void Save_WriteData(void) {
     if ((gStartNMI == 0) && (Save_WriteEeprom(&gSaveIOBuffer) == 0)) {
-<<<<<<< HEAD
-        osSendMesg(&gSaveMesgQueue, (OSMesg) SI_SAVE_SUCCESS, OS_MESG_NOBLOCK);
-=======
         osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
         return;
     }
     osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);

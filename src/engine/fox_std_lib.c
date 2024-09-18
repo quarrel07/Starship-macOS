@@ -311,7 +311,7 @@ void Animation_FindBoundingBox(Gfx* dList, s32 len, Vec3f* min, Vec3f* max, s32*
                                           vtxCount, vtxList);
                 break;
             case G_VTX:
-                *vtxList = SEGMENTED_TO_VIRTUAL(*var_s0 & 0xFFFFFFFF);
+                // *vtxList = SEGMENTED_TO_VIRTUAL(*var_s0 & 0xFFFFFFFF);
                 *vtxCount = (*var_s0 >> 0x30) & 0xF;
                 break;
             case G_TRI1:
@@ -1176,28 +1176,9 @@ void Graphics_DisplaySmallText(s32 xPos, s32 yPos, f32 xScale, f32 yScale, char*
                     } else {
                         xPosCurrent += 8.0f * xScale;
                     }
-                    TextureRect_8bIA(&gMasterDisp, sSmallCharTex[var_t0], width, 8, xPosCurrent, yPos, xScale, yScale);
-                    if (1) {}
-                }
-                switch (text[0]) {
-                    case '!':
-                    case ':':
-                    case 'I':
-                        xPosCurrent += 4.0f * xScale;
-                        break;
-                    case '-':
-                        xPosCurrent += 6.0f * xScale;
-                        break;
-                    default:
-                        if (var_t0 > 29) {
-                            xPosCurrent += 9.0f * xScale;
-                        } else {
-                            xPosCurrent += 8.0f * xScale;
-                        }
-                }
             }
-            text++;
         }
+        text++;
     }
 }
 

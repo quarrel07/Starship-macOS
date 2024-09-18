@@ -105,31 +105,6 @@ void Main_Initialize(void) {
 void Audio_ThreadEntry(void* arg0) {
     // SPTask* task;
 
-<<<<<<< HEAD
-    AudioLoad_Init();
-    Audio_InitSounds();
-
-    task = AudioThread_CreateTask();
-    if (task != NULL) {
-        task->mesgQueue = &gAudioTaskMesgQueue;
-        task->msg = OS_MESG_32(TASK_MESG_1);
-        osWritebackDCacheAll();
-        osSendMesg(&gTaskMesgQueue, OS_MESG_PTR(task), OS_MESG_PRI_NORMAL);
-    }
-    while (true) {
-        task = AudioThread_CreateTask();
-        if (task != NULL) {
-            task->msgQueue = &gAudioTaskMsgQueue;
-            task->msg = OS_MESG_32(TASK_MESG_1);
-            osWritebackDCacheAll();
-        }
-        MQ_GET_MESG(&gAudioTaskMesgQueue, NULL);
-        if (task != NULL) {
-            osSendMesg(&gTaskMsgQueue, OS_MESG_PTR(task), OS_MESG_PRI_NORMAL);
-        }
-        MQ_WAIT_FOR_MESG(&gAudioVImesgQueue, NULL);
-    }
-=======
     // AudioLoad_Init();
     // Audio_InitSounds();
     // task = AudioThread_CreateTask();
@@ -152,7 +127,6 @@ void Audio_ThreadEntry(void* arg0) {
     //     }
     //     MQ_WAIT_FOR_MESG(&gAudioVImesgQueue, NULL);
     // }
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 }
 
 void Graphics_SetTask(void) {
@@ -238,15 +212,9 @@ void SerialInterface_ThreadUpdate() {
 void Timer_ThreadEntry(void* arg0) {
     OSMesg sp24;
 
-<<<<<<< HEAD
     while (true) {
         MQ_WAIT_FOR_MESG(&gTimerTaskMesgQueue, &sp24);
         // Timer_CompleteTask(sp24);
-=======
-    while (1) {
-        osRecvMesg(&gTimerTaskMesgQueue, &sp24, OS_MESG_BLOCK);
-        // Timer_CompleteTask(sp24.ptr);
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
     }
 }
 
@@ -387,66 +355,6 @@ void Main_HandleRSP(void) {
     // }
 }
 
-<<<<<<< HEAD
-void Main_GetNewTasks(void) {
-    u8 i;
-    SPTask** audioTask;
-    SPTask** gfxTask;
-    SPTask** newAudioTask;
-    SPTask** newGfxTask;
-    OSMesg spTaskMsg;
-    SPTask* newTask;
-
-    newAudioTask = sNewAudioTasks;
-    newGfxTask = sNewGfxTasks;
-    for (i = 0; i < ARRAY_COUNT(sNewAudioTasks); i += 1) {
-        *(newAudioTask++) = NULL;
-    }
-    for (i = 0; i < ARRAY_COUNT(sNewGfxTasks); i += 1) {
-        *(newGfxTask++) = NULL;
-    }
-
-    newAudioTask = sNewAudioTasks;
-    newGfxTask = sNewGfxTasks;
-    while (MQ_GET_MESG(&gTaskMesgQueue, &spTaskMsg)) {
-        newTask = (SPTask*) spTaskMsg.ptr;
-        newTask->state = SPTASK_STATE_NOT_STARTED;
-
-        switch (newTask->task.t.type) {
-            case M_AUDTASK:
-                *(newAudioTask++) = newTask;
-                break;
-            case M_GFXTASK:
-                *(newGfxTask++) = newTask;
-                break;
-        }
-    }
-    newAudioTask = sNewAudioTasks;
-    newGfxTask = sNewGfxTasks;
-    audioTask = sAudioTasks;
-    gfxTask = sGfxTasks;
-
-    for (i = 0; i < ARRAY_COUNT(sAudioTasks); i += 1, audioTask++) {
-        if (*audioTask == NULL) {
-            break;
-        }
-    }
-    for (i; i < ARRAY_COUNT(sAudioTasks); i += 1) {
-        *(audioTask++) = *(newAudioTask++);
-    }
-
-    for (i = 0; i < ARRAY_COUNT(sGfxTasks); i += 1, gfxTask++) {
-        if (*gfxTask == NULL) {
-            break;
-        }
-    }
-    for (i; i < ARRAY_COUNT(sGfxTasks); i += 1) {
-        *(gfxTask++) = *(newGfxTask++);
-    }
-}
-
-=======
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
 void Main_StartNextTask(void) {
     if (sAudioTasks[0] != NULL) {
         if (gCurrentTask != NULL) {

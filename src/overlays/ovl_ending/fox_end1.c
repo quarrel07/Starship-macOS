@@ -81,10 +81,10 @@ void Ending_80187520(s32 arg0) {
 
     switch (arg0) {
         case 0:
-            TextureRect_RGBA16(&gMasterDisp, gEndingAwardBack, 316, 270, 0.0f, 0.0f, 1.0f, 1.0f);
+            Lib_TextureRect_RGBA16(&gMasterDisp, gEndingAwardBack, 316, 270, 0.0f, 0.0f, 1.0f, 1.0f);
             break;
         case 1:
-            TextureRect_RGBA16(&gMasterDisp, gEndingAwardFront, 316, 240, 0.0f, 0.0f, 1.0f, 1.0f);
+            Lib_TextureRect_RGBA16(&gMasterDisp, gEndingAwardFront, 316, 240, 0.0f, 0.0f, 1.0f, 1.0f);
             break;
     }
 }

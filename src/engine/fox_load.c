@@ -29,18 +29,11 @@ void Load_RomFile(void* vRomAddress, void* dest, ptrdiff_t size) {
 
     Lib_FillScreen(true);
     sFillTimer = 3;
-<<<<<<< HEAD
     gGameStandby = true;
 }
 
 u8 Load_SceneFiles(Scene* scene) {
-=======
-    // D_game_80161A39 = true;
-}
-
-u8 Load_SceneFiles(Scene* scene) {
 #if 1
->>>>>>> edd7dba2 (Fixed all remaining compilation issues)
     sCurrentScene = *scene;
     return true;
 #else

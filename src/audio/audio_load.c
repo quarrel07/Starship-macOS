@@ -158,10 +158,6 @@ void AudioLoad_InitSampleDmaBuffers(s32 numNotes) {
     u8* dma;
 
     gSampleDmaBuffSize = 0x2D0;
-<<<<<<< HEAD
-
-=======
->>>>>>> 6fe91928 (Repo upstreamed)
     for (i = 0; i < (3 * gNumNotes * gAudioBufferParams.count); i++) {
         dma = AudioHeap_Alloc(&gMiscPool, gSampleDmaBuffSize);
         gSampleDmas[gSampleDmaCount].ramAddr = dma;
@@ -1192,7 +1188,7 @@ void AudioLoad_ProcessAsyncLoad(AudioAsyncLoad* asyncLoad, s32 resetStatus) {
     }
 
     if (asyncLoad->bytesRemaining == 0) {
-        msg = asyncLoad->retMsg;
+        msg = asyncLoad->retMsg.data32;
         tableType = (msg >> 0x10) & 0xFF;
         tableIndex = (msg >> 8) & 0xFF;
         loadStatus = msg & 0xFF;

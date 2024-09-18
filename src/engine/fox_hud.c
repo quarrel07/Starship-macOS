@@ -585,7 +585,8 @@ void HUD_VenomTitleCard_Draw(void) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_76);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-        Lib_TextureRect_IA8(&gMasterDisp, D_800D1C9C[i], D_800D1CA4[i], 19, D_800D1CB4[i], D_800D1CBC[i] - 28.0f, 1.0f,
+        Lib_TextureRect_IA8(&gMasterDisp, sVenomTitleCardDLs[i], sVenomTitleCardWidths[i], 19, sVenomTitleCardWidths[i],
+                            sVenomTitleCardxPos[i] - 28.0f, 1.0f,
                          1.0f);
     }
 }
@@ -663,7 +664,8 @@ void HUD_TitleCard_Draw(f32 x, f32 y) {
         HUD_VenomTitleCard_Draw();
     }
 
-    Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[j].titleCardTex, sLevelTitleCard[j].titleCardWidth, sLevelTitleCard[j].titleCardHeight, x2, y2, 1.0f,
+    Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[levelIdx].titleCardTex, sLevelTitleCard[levelIdx].titleCardWidth,
+                        sLevelTitleCard[levelIdx].titleCardHeight, x2, y2, 1.0f,
                      1.0f);
 
     if ((gSavedObjectLoadIndex == 0) && (gAllRangeCheckpoint == 0) && (gCurrentLevel != LEVEL_VENOM_ANDROSS) &&
@@ -2699,7 +2701,7 @@ void HUD_VsModePortraitTex_Draw(f32 xPos, f32 yPos, f32 scale, s32 idx) {
     };
     s32 i;
 
-    Lib_TextureRect_RGBA16(&gMasterDisp, sVsModeFaceDL[arg3], 44, 44, xPos, yPos, scale, scale);
+    Lib_TextureRect_RGBA16(&gMasterDisp, sVsModeFaceDL[idx], 44, 44, xPos, yPos, scale, scale);
 }
 
 void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {

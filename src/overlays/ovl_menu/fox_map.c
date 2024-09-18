@@ -2044,7 +2044,7 @@ void Map_Texture_Sphere(u8* textureDest, u8* textureSrc, f32* offset) {
     s32 j;
     s32 k;
 
-    arg1 = LOAD_ASSET(arg1);
+    textureSrc = LOAD_ASSET(textureSrc);
 
     for (i = 1; i < 48; i++, var_v0++) {
         for (k = 0, j = *var_v0; j < (95 - *var_v0); j++, k++) {
@@ -5294,8 +5294,9 @@ void Map_TitleCards_Draw(void) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) sMapPlanetCardAlpha);
 
-    Lib_TextureRect_IA8(&gMasterDisp, sPlanetNameCards[var_s0].texture,
-        sPlanetNameCards[var_s0].width, sPlanetNameCards[var_s0].height, sPlanetNameCards[var_s0].xPos, 20.0f, 1.0f, 1.0f);
+    Lib_TextureRect_IA8(&gMasterDisp, sPlanetNameCards[planetCardIdx].texture, sPlanetNameCards[planetCardIdx].width,
+                        sPlanetNameCards[planetCardIdx].height, sPlanetNameCards[planetCardIdx].xPos, 20.0f, 1.0f,
+                        1.0f);
 
     Math_SmoothStepToF(&sMapPlanetCardAlpha, 255.0f, sMapPlanetCardAlphaScale, 10.0f, 1.0f);
 
@@ -5394,8 +5395,7 @@ void Map_801A9A8C(void) {
     Lib_TextureRect_IA8(&gMasterDisp, sPlanetNameCards[planetIdx].texture, sPlanetNameCards[planetIdx].width, sPlanetNameCards[planetIdx].height,
         sPlanetNameCards[planetIdx].xPos, 94.0f, 1.0f, 1.0f);
 
-    Lib_TextureRect_IA8(&gMasterDisp, sPlanetTitleCards[planetIdx].texture, sPlanetTitleCards[planetIdx].width, sPlanetTitleCards[planetIdx].height,
-        D_menu_801AF914[planetIdx].xPos, 140.0f, 1.0f, 1.0f);
+    Lib_TextureRect_IA8(&gMasterDisp, sPlanetTitleCards[planetIdx].texture, sPlanetTitleCards[planetIdx].width, sPlanetTitleCards[planetIdx].height, sPlanetTitleCards[planetIdx].xPos, 140.0f, 1.0f, 1.0f);
 }
 
 void Map_801A9DE8(void) {
@@ -5918,7 +5918,7 @@ void Map_BriefingRadio_Update(void) {
     if ((D_menu_801CF018 > 0) && (D_menu_801CF018 != 100)) {
         Map_BriefingRadio_Draw(gCurrentRadioPortrait);
         Map_BriefingRadio_Draw(D_menu_801AF420[!D_menu_801CD940]);
-        if (CVarGetInteger("gLevelSelector", 0) && gCurrentPlanet == 6) {
+        if (CVarGetInteger("gLevelSelector", 0) && (sCurrentPlanetId == 6)) {
             return;
         }
         func_radio_800BB388();
@@ -6709,5 +6709,4 @@ CameraPoint D_menu_801B6C60[] = {
     { { -118.46446f, 1.314066f, 27.860361f }, { -111.59918f, -2.346546f, -49.750645f } },
 };
 
-#if MODS_LEVEL_SELECT == 1
 #include "../../mods/levelselect.c"

@@ -2806,8 +2806,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71, sVsHandicapFrameXpos[arg0],
-                     sVsHandicapFrameYpos[arg0], 1.0f, 1.0f);
+    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71, sVsHandicapFrameXpos[PlayerIdx],
+                     sVsHandicapFrameYpos[PlayerIdx], 1.0f, 1.0f);
 
     Lib_TextureRect_CI8(&gMasterDisp, sVsCharNameTex[PlayerIdx], sVsCharNameTLUT[PlayerIdx], sCharNameWidth[PlayerIdx],
                         sCharNameHeight[PlayerIdx], sVsHandicapFrameXpos[PlayerIdx] + sCharNameXoffsetPos[PlayerIdx],
@@ -2849,8 +2849,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[arg0], 44, 44, sVsHandicapFrameXpos[arg0] + sPlayerFaceXoffsetPos,
-                        sVsHandicapFrameYpos[arg0] + sPlayerFaceYoffsetPos, 0.7f, 0.7f);
+    Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[PlayerIdx], 44, 44, sVsHandicapFrameXpos[PlayerIdx] + sPlayerFaceXoffsetPos,
+                        sVsHandicapFrameYpos[PlayerIdx] + sPlayerFaceYoffsetPos, 0.7f, 0.7f);
 
     width = 24;
     if (PlayerIdx == 0) {

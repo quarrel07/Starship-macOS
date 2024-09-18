@@ -7,11 +7,6 @@
     header:
       - '#include "gfx.h"'
       - '#include "sf64object.h"'
-<<<<<<<< HEAD:assets/yaml/jp/rev0/ast_A_ti.yaml
-
-========
-      
->>>>>>>> 6fe91928 (Repo upstreamed):assets/yaml/us/rev1/ast_A_ti.yaml
 D_TI_A000000:
   {type: GFX, offset: 0xA000000, symbol: D_TI_A000000}
 
