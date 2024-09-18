@@ -1,3 +1,4 @@
+#include "fox_title.h"
 #include "global.h"
 
 void Title_Main(void);
