@@ -100,11 +100,46 @@ f32 sGroundPositions360z[4] = {
     -6000.0f,
 };
 
+// Declare global variables for screen dimensions
+float gCurrentScreenWidth = 320.0f * 3;  // Default width
+float gCurrentScreenHeight = 240.0f * 3; // Default height
+
+// Custom floating-point modulo function (replaces fmodf)
+float FloatMod(float a, float b) {
+    float result = a - ((int) (a / b)) * b;
+    if (result < 0.0f) {
+        result += b;
+    }
+    return result;
+}
+
+// Define a single 1x1 star as two triangles
+static Vtx starVerts[4] = {
+    // Format: VTX(x, y, z, s, t, r, g, b, a)
+    VTX(0, 0, 0, 0, 0, 255, 255, 255, 255), // Bottom-left
+    VTX(0, 1, 0, 0, 0, 255, 255, 255, 255), // Top-left
+    VTX(1, 0, 0, 0, 0, 255, 255, 255, 255), // Bottom-right
+    VTX(1, 1, 0, 0, 0, 255, 255, 255, 255), // Top-right
+};
+
+// Display list to render the two triangles forming the star quad
+static Gfx starDL[] = {
+    gsSPVertex(starVerts, ARRAY_COUNT(starVerts), 0),
+    gsSP2Triangles(0, 1, 2, 0, 1, 2, 3, 0),
+    gsSPEndDisplayList(),
+};
+
+// Display list to render the two triangles forming the partial star quad
+static Gfx starDLPartial[] = {
+    gsSPVertex(starVerts, ARRAY_COUNT(starVerts), 0),
+    gsSP2Triangles(0, 1, 2, 0, 1, 2, 3, 0),
+    gsSPEndDisplayList(),
+};
+
+// @port: Starfield drawn with triangles, re-engineered by @Tharo & @TheBoy181
 void Background_DrawStarfield(void) {
     f32 by;
     f32 bx;
-    s16 vy;
-    s16 vx;
     s32 i;
     s32 starCount;
     f32 zCos;
@@ -114,24 +149,52 @@ void Background_DrawStarfield(void) {
     f32* xStar;
     f32* yStar;
     u32* color;
+    float currentScreenWidth;
+    float currentScreenHeight;
+    float starfieldWidth;
+    float starfieldHeight;
+    float vx;
+    float vy;
+    const float STAR_MARGIN = 10.0f; // Margin to hide seam stars
 
-    gDPPipeSync(gMasterDisp++);
-    gDPSetCycleType(gMasterDisp++, G_CYC_FILL);
-    gDPSetCombineMode(gMasterDisp++, G_CC_SHADE, G_CC_SHADE);
-    gDPSetRenderMode(gMasterDisp++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    // Set projection to orthographic before drawing stars
+    Lib_InitOrtho(&gMasterDisp);
+
+    // Setup render state for stars
+    static Gfx starSetupDL[] = {
+        gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF), // Disable texturing
+        gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_CULL_BACK |
+                              G_SHADING_SMOOTH),
+        gsDPPipeSync(),
+        gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE), // Use primitive color
+        gsDPSetOtherMode(G_AD_NOTPATTERN | G_CD_MAGICSQ | G_CK_NONE | G_TC_FILT | G_TF_BILERP | G_TT_NONE | G_TL_TILE |
+                             G_TD_CLAMP | G_TP_PERSP | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
+                         G_AC_NONE | G_ZS_PIXEL | G_RM_OPA_SURF | G_RM_OPA_SURF2),
+        gsSPEndDisplayList(),
+    };
+    gSPDisplayList(gMasterDisp++, starSetupDL);
+
+    // Get current screen dimensions
+    currentScreenWidth = gCurrentScreenWidth;
+    currentScreenHeight = gCurrentScreenHeight;
+    starfieldWidth = 1.0f * currentScreenWidth;
+    starfieldHeight = 1.0f * currentScreenHeight;
+
     starCount = gStarCount;
+
     if (starCount != 0) {
-        if (gStarfieldX >= 1.5f * SCREEN_WIDTH) {
-            gStarfieldX -= 1.5f * SCREEN_WIDTH;
+        // Wrapping logic for starfield positions
+        if (gStarfieldX >= starfieldWidth) {
+            gStarfieldX -= starfieldWidth;
         }
-        if (gStarfieldY >= 1.5f * SCREEN_HEIGHT) {
-            gStarfieldY -= 1.5f * SCREEN_HEIGHT;
+        if (gStarfieldY >= starfieldHeight) {
+            gStarfieldY -= starfieldHeight;
         }
         if (gStarfieldX < 0.0f) {
-            gStarfieldX += 1.5f * SCREEN_WIDTH;
+            gStarfieldX += starfieldWidth;
         }
         if (gStarfieldY < 0.0f) {
-            gStarfieldY += 1.5f * SCREEN_HEIGHT;
+            gStarfieldY += starfieldHeight;
         }
         xField = gStarfieldX;
         yField = gStarfieldY;
@@ -143,35 +206,86 @@ void Background_DrawStarfield(void) {
         if (gGameState != GSTATE_PLAY) {
             starCount = 1000;
         }
+
+        starCount = starCount * 3; // Adjust multiplier as needed
+
         zCos = __cosf(gStarfieldRoll);
         zSin = __sinf(gStarfieldRoll);
+
         for (i = 0; i < starCount; i++, yStar++, xStar++, color++) {
+            // Adjust star positions with field offsets
             bx = *xStar + xField;
             by = *yStar + yField;
-            if (bx >= 1.25f * SCREEN_WIDTH) {
-                bx -= 1.5f * SCREEN_WIDTH;
-            }
-            bx -= SCREEN_WIDTH / 2.0f;
 
-            if (by >= 1.25f * SCREEN_HEIGHT) {
-                by -= 1.5f * SCREEN_HEIGHT;
+            // Wrapping logic for individual stars along X-axis
+            if (bx >= starfieldWidth) {
+                bx -= starfieldWidth;
             }
-            by -= SCREEN_HEIGHT / 2.0f;
+            if (bx < 0.0f) {
+                bx += starfieldWidth;
+            }
 
-            vx = (zCos * bx) + (zSin * by) + SCREEN_WIDTH / 2.0f;
-            vy = (-zSin * bx) + (zCos * by) + SCREEN_HEIGHT / 2.0f;
-            if ((vx >= 0) && (vx < SCREEN_WIDTH) && (vy > 0) && (vy < SCREEN_HEIGHT)) {
-                gDPPipeSync(gMasterDisp++);
-                gDPSetFillColor(gMasterDisp++, *color);
-                gDPFillRectangle(gMasterDisp++, vx, vy, vx, vy);
+            // Wrapping logic for individual stars along Y-axis
+            if (by >= starfieldHeight) {
+                by -= starfieldHeight;
+            }
+            if (by < 0.0f) {
+                by += starfieldHeight;
+            }
+
+            // Center the positions
+            bx -= starfieldWidth / 2.0f;
+            by -= starfieldHeight / 2.0f;
+
+            // Apply rotation
+            vx = (zCos * bx) + (zSin * by) + currentScreenWidth / 2.0f;
+            vy = (-zSin * bx) + (zCos * by) + currentScreenHeight / 2.0f;
+
+            // Check if the star is within the visible screen area with margin
+            if ((vx >= STAR_MARGIN) && (vx < currentScreenWidth - STAR_MARGIN) && (vy >= STAR_MARGIN) &&
+                (vy < currentScreenHeight - STAR_MARGIN)) {
+                // @recomp Tag the transform.
+                // gEXMatrixGroupDecomposed(gMasterDisp++, TAG_STARFIELD + i, G_EX_PUSH, G_MTX_MODELVIEW,
+                //                          G_EX_COMPONENT_AUTO, G_EX_COMPONENT_AUTO, G_EX_COMPONENT_AUTO,
+                //                          G_EX_COMPONENT_INTERPOLATE, G_EX_COMPONENT_INTERPOLATE, G_EX_COMPONENT_SKIP,
+                //                          G_EX_COMPONENT_INTERPOLATE, G_EX_ORDER_AUTO, G_EX_EDIT_ALLOW);
+
+                // Translate to (vx, vy) in ortho coordinates
+                Matrix_Push(&gGfxMatrix);
+                Matrix_Translate(gGfxMatrix, vx - (currentScreenWidth / 2.0f), -(vy - (currentScreenHeight / 2.0f)),
+                                 0.0f, MTXF_NEW);
+                Matrix_SetGfxMtx(&gMasterDisp);
+                Matrix_Pop(&gGfxMatrix);
+
+                // Convert color from fill color (assuming RGB5A1) to RGBA8
+                u8 r = ((*color >> 11) & 0x1F);
+                r = (r << 3) | (r >> 2); // Convert 5-bit to 8-bit
+                u8 g = ((*color >> 6) & 0x1F);
+                g = (g << 3) | (g >> 2); // Convert 5-bit to 8-bit
+                u8 b = ((*color >> 1) & 0x1F);
+                b = (b << 3) | (b >> 2); // Convert 5-bit to 8-bit
+                u8 a = 255;              // Fully opaque
+
+                gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, a);
+
+                // Draw the star using the predefined display list
+                gSPDisplayList(gMasterDisp++, starDL);
+
+                // Pop the transform id
+                // gEXPopMatrixGroup(gMasterDisp++, G_MTX_MODELVIEW);
             }
         }
     }
+
+    // Restore original perspective after drawing stars
+    Lib_InitPerspective(&gMasterDisp);
+
+    // Finalize rendering state
     gDPPipeSync(gMasterDisp++);
     gDPSetColorDither(gMasterDisp++, G_CD_MAGICSQ);
 }
 
-void Background_DrawPartialStarfield(s32 yMin, s32 yMax) {
+void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in the Epilogue
     f32 by;
     f32 bx;
     s16 vy;
@@ -185,22 +299,30 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) {
     f32* sp60;
     f32* sp5C;
     u32* sp58;
+
+    // Get current screen dimensions
+    float currentScreenWidth = gCurrentScreenWidth;
+    float currentScreenHeight = gCurrentScreenHeight;
+    float starfieldWidth = 1.0f * currentScreenWidth;
+    float starfieldHeight = 1.0f * currentScreenHeight;
+
+    // Graphics pipeline setup
     gDPPipeSync(gMasterDisp++);
     gDPSetCycleType(gMasterDisp++, G_CYC_FILL);
     gDPSetCombineMode(gMasterDisp++, G_CC_SHADE, G_CC_SHADE);
     gDPSetRenderMode(gMasterDisp++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
 
-    if (gStarfieldX >= 1.5f * SCREEN_WIDTH) {
-        gStarfieldX -= 1.5f * SCREEN_WIDTH;
+    if (gStarfieldX >= 1.5f * currentScreenWidth) {
+        gStarfieldX -= 1.5f * currentScreenWidth;
     }
-    if (gStarfieldY >= 1.5f * SCREEN_HEIGHT) {
-        gStarfieldY -= 1.5f * SCREEN_HEIGHT;
+    if (gStarfieldY >= 1.5f * currentScreenHeight) {
+        gStarfieldY -= 1.5f * currentScreenHeight;
     }
     if (gStarfieldX < 0.0f) {
-        gStarfieldX += 1.5f * SCREEN_WIDTH;
+        gStarfieldX += 1.5f * currentScreenWidth;
     }
     if (gStarfieldY < 0.0f) {
-        gStarfieldY += 1.5f * SCREEN_HEIGHT;
+        gStarfieldY += 1.5f * currentScreenHeight;
     }
 
     spf68 = gStarfieldX;
@@ -216,21 +338,50 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) {
     for (i = 0; i < var_s2; i++, sp5C++, sp60++, sp58++) {
         bx = *sp60 + spf68;
         by = *sp5C + spf64;
-        if (bx >= SCREEN_WIDTH * 1.25f) {
-            bx -= 1.5f * SCREEN_WIDTH;
+        if (bx >= starfieldWidth * 1.25f) {
+            bx -= 1.5f * starfieldWidth;
         }
-        bx -= SCREEN_WIDTH / 2.0f;
-        if (by >= SCREEN_HEIGHT * 1.25f) {
-            by -= 1.5f * SCREEN_HEIGHT;
+        bx -= starfieldWidth / 2.0f;
+        if (by >= starfieldHeight * 1.25f) {
+            by -= 1.5f * starfieldHeight;
         }
-        by -= SCREEN_HEIGHT / 2.0f;
+        by -= starfieldHeight / 2.0f;
 
-        vx = (cos * bx) + (sin * by) + SCREEN_WIDTH / 2.0f;
-        vy = (-sin * bx) + (cos * by) + SCREEN_HEIGHT / 2.0f;
-        if ((vx >= 0) && (vx < SCREEN_WIDTH) && (yMin < vy) && (vy < yMax)) {
-            gDPPipeSync(gMasterDisp++);
-            gDPSetFillColor(gMasterDisp++, *sp58);
-            gDPFillRectangle(gMasterDisp++, vx, vy, vx, vy);
+        // Apply rotation
+        vx = (cos * bx) + (sin * by) + currentScreenWidth / 2.0f;
+        vy = (-sin * bx) + (cos * by) + currentScreenHeight / 2.0f;
+
+        // Check if the star is within the visible screen area
+        if ((vx >= 0) && (vx < currentScreenWidth) && (yMin < vy) && (vy < yMax)) {
+            // Tag the transform. Assuming TAG_STARFIELD is a defined base tag value
+            // @recomp Tag the transform.
+            // gEXMatrixGroupDecomposed(gMasterDisp++, TAG_STARFIELD + i, G_EX_PUSH, G_MTX_MODELVIEW, G_EX_COMPONENT_AUTO,
+            //                          G_EX_COMPONENT_AUTO, G_EX_COMPONENT_AUTO, G_EX_COMPONENT_INTERPOLATE,
+            //                          G_EX_COMPONENT_INTERPOLATE, G_EX_COMPONENT_SKIP, G_EX_COMPONENT_INTERPOLATE,
+            //                          G_EX_ORDER_AUTO, G_EX_EDIT_ALLOW);
+            // Translate to (vx, vy) in ortho coordinates
+            Matrix_Push(&gGfxMatrix);
+            Matrix_Translate(gGfxMatrix, vx - (currentScreenWidth / 2.0f), -(vy - (currentScreenHeight / 2.0f)), 0.0f,
+                             MTXF_NEW);
+            Matrix_SetGfxMtx(&gMasterDisp);
+            Matrix_Pop(&gGfxMatrix);
+
+            // Convert color from fill color (assuming RGB5A1) to RGBA8
+            u8 r = ((*sp58 >> 11) & 0x1F);
+            r = (r << 3) | (r >> 2); // Convert 5-bit to 8-bit
+            u8 g = ((*sp58 >> 6) & 0x1F);
+            g = (g << 3) | (g >> 2); // Convert 5-bit to 8-bit
+            u8 b = ((*sp58 >> 1) & 0x1F);
+            b = (b << 3) | (b >> 2); // Convert 5-bit to 8-bit
+            u8 a = 255;              // Fully opaque
+
+            gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, a);
+
+            // Draw the star using the predefined display list
+            gSPDisplayList(gMasterDisp++, starDLPartial);
+
+            // Pop the transform id
+            // gEXPopMatrixGroup(gMasterDisp++, G_MTX_MODELVIEW);
         }
     }
     gDPPipeSync(gMasterDisp++);
