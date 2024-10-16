@@ -1505,8 +1505,8 @@ void Display_ActorMarks(void) {
         RCP_SetupDL_40();
 
         for (i = 0; i < ARRAY_COUNT(gTeamArrowsViewPos); i++) {
-            FrameInterpolation_RecordOpenChild(&gTeamArrowsViewPos[i],  i);
             if (gTeamArrowsViewPos[i].z < 0.0f) {
+                FrameInterpolation_RecordOpenChild(&gTeamArrowsViewPos[i],  i);
                 var_fs0 = (VEC3F_MAG(&gTeamArrowsViewPos[i])) * 0.0015f;
                 if (var_fs0 > 100.0f) {
                     var_fs0 = 100.0f;
@@ -1533,10 +1533,10 @@ void Display_ActorMarks(void) {
                     gSPDisplayList(gMasterDisp++, sTeammateMarkDLs[i]);
                 }
                 Matrix_Pop(&gGfxMatrix);
+                FrameInterpolation_RecordCloseChild();
             }
             gTeamArrowsViewPos[i].x = gTeamArrowsViewPos[i].y = 0;
             gTeamArrowsViewPos[i].z = 100.0f;
-            FrameInterpolation_RecordCloseChild();
         }
         gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
     }
@@ -1551,6 +1551,7 @@ void Display_LockOnIndicator(void) {
         if (gLockOnTargetViewPos[i].z < 0.0f) {
             var_fs0 = VEC3F_MAG(&gLockOnTargetViewPos[i]);
             if (var_fs0 < 20000.0f) {
+                FrameInterpolation_RecordOpenChild("LcckOnIndicator", 0);
                 var_fs0 *= 0.0015f;
                 if (var_fs0 > 100.0f) {
                     var_fs0 = 100.0f;
@@ -1575,6 +1576,7 @@ void Display_LockOnIndicator(void) {
                 gDPSetEnvColor(gMasterDisp++, 255, 0, 0, 255);
                 gSPDisplayList(gMasterDisp++, D_1024F60);
                 Matrix_Pop(&gGfxMatrix);
+                FrameInterpolation_RecordCloseChild();
             }
         }
     }

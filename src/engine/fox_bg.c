@@ -142,7 +142,6 @@ static Gfx starSetupDL[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF), // Disable texturing
     gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_CULL_BACK |
                           G_SHADING_SMOOTH),
-    //gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE), // Use primitive color
     gsDPSetOtherMode(G_AD_NOTPATTERN | G_CD_MAGICSQ | G_CK_NONE | G_TC_FILT | G_TF_BILERP | G_TT_NONE | G_TL_TILE |
                          G_TD_CLAMP | G_TP_PERSP | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
@@ -170,8 +169,6 @@ void Background_DrawStarfield(void) {
     float vx;
     float vy;
     const float STAR_MARGIN = 10.0f; // Margin to hide seam stars
-
-    FrameInterpolation_RecordOpenChild("Starfield", 0);
 
     // Set projection to orthographic before drawing stars
     Lib_InitOrtho(&gMasterDisp);
@@ -216,6 +213,7 @@ void Background_DrawStarfield(void) {
         zCos = __cosf(gStarfieldRoll);
         zSin = __sinf(gStarfieldRoll);
 
+
         for (i = 0; i < starCount; i++, yStar++, xStar++, color++) {
             // Adjust star positions with field offsets
             bx = *xStar + xField;
@@ -248,11 +246,7 @@ void Background_DrawStarfield(void) {
             // Check if the star is within the visible screen area with margin
             if ((vx >= STAR_MARGIN) && (vx < currentScreenWidth - STAR_MARGIN) && (vy >= STAR_MARGIN) &&
                 (vy < currentScreenHeight - STAR_MARGIN)) {
-                // @recomp Tag the transform.
-                // gEXMatrixGroupDecomposed(gMasterDisp++, TAG_STARFIELD + i, G_EX_PUSH, G_MTX_MODELVIEW,
-                //                          G_EX_COMPONENT_AUTO, G_EX_COMPONENT_AUTO, G_EX_COMPONENT_AUTO,
-                //                          G_EX_COMPONENT_INTERPOLATE, G_EX_COMPONENT_INTERPOLATE, G_EX_COMPONENT_SKIP,
-                //                          G_EX_COMPONENT_INTERPOLATE, G_EX_ORDER_AUTO, G_EX_EDIT_ALLOW);
+                FrameInterpolation_RecordOpenChild("Starfield", i);
 
                 // Translate to (vx, vy) in ortho coordinates
                 Matrix_Push(&gGfxMatrix);
@@ -276,7 +270,7 @@ void Background_DrawStarfield(void) {
                 gSPDisplayList(gMasterDisp++, starDL);
 
                 // Pop the transform id
-                // gEXPopMatrixGroup(gMasterDisp++, G_MTX_MODELVIEW);
+                FrameInterpolation_RecordCloseChild();
             }
         }
     }
@@ -287,8 +281,6 @@ void Background_DrawStarfield(void) {
     // Finalize rendering state
     gDPPipeSync(gMasterDisp++);
     gDPSetColorDither(gMasterDisp++, G_CD_MAGICSQ);
-
-    FrameInterpolation_RecordCloseChild();
 }
 
 void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in the Epilogue
@@ -311,8 +303,6 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in 
     float currentScreenHeight = gCurrentScreenHeight;
     float starfieldWidth = 1.0f * currentScreenWidth;
     float starfieldHeight = 1.0f * currentScreenHeight;
-
-    FrameInterpolation_RecordOpenChild("Starfield", 0);
 
     // Graphics pipeline setup
     gDPPipeSync(gMasterDisp++);
@@ -362,11 +352,7 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in 
         // Check if the star is within the visible screen area
         if ((vx >= 0) && (vx < currentScreenWidth) && (yMin < vy) && (vy < yMax)) {
             // Tag the transform. Assuming TAG_STARFIELD is a defined base tag value
-            // @recomp Tag the transform.
-            // gEXMatrixGroupDecomposed(gMasterDisp++, TAG_STARFIELD + i, G_EX_PUSH, G_MTX_MODELVIEW, G_EX_COMPONENT_AUTO,
-            //                          G_EX_COMPONENT_AUTO, G_EX_COMPONENT_AUTO, G_EX_COMPONENT_INTERPOLATE,
-            //                          G_EX_COMPONENT_INTERPOLATE, G_EX_COMPONENT_SKIP, G_EX_COMPONENT_INTERPOLATE,
-            //                          G_EX_ORDER_AUTO, G_EX_EDIT_ALLOW);
+            FrameInterpolation_RecordOpenChild("SmallStarfield", i);
             // Translate to (vx, vy) in ortho coordinates
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, vx - (currentScreenWidth / 2.0f), -(vy - (currentScreenHeight / 2.0f)), 0.0f,
@@ -389,12 +375,11 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in 
             gSPDisplayList(gMasterDisp++, starDLPartial);
 
             // Pop the transform id
-            // gEXPopMatrixGroup(gMasterDisp++, G_MTX_MODELVIEW);
+            FrameInterpolation_RecordCloseChild();
         }
     }
     gDPPipeSync(gMasterDisp++);
     gDPSetColorDither(gMasterDisp++, G_CD_MAGICSQ);
-    FrameInterpolation_RecordCloseChild();
 }
 
 void func_bg_8003E1E0(void) {
