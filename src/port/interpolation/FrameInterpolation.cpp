@@ -402,7 +402,8 @@ unordered_map<Mtx*, MtxF> FrameInterpolation_Interpolate(float step) {
 bool camera_interpolation = true;
 
 void FrameInterpolation_ShouldInterpolateFrame(bool shouldInterpolate) {
-    camera_interpolation = shouldInterpolate;
+    // camera_interpolation = shouldInterpolate;
+    is_recording = shouldInterpolate;
 }
 
 void FrameInterpolation_StartRecord(void) {

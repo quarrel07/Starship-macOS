@@ -468,6 +468,10 @@ void DrawDebugMenu() {
             .tooltip = "Allows you to play sound effects from the game"
         });
 
+        UIWidgets::CVarCheckbox("Disable stars interpolation", "gDisableStarsInterpolation", {
+            .tooltip = "Disable starfield interpolation for performance"
+        });
+
         UIWidgets::Spacer(0);
 
         UIWidgets::WindowButton("Stats", "gStatsEnabled", GameUI::mStatsWindow, {

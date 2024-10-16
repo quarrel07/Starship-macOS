@@ -1,5 +1,6 @@
 #include "fox_title.h"
 #include "global.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 void Title_Main(void);
 void Title_Draw(void);
@@ -30,7 +31,9 @@ void OvlMenu_CallFunction(u32 mode, void* ptr) {
             break;
 
         case OVLCALL_MAP_DRAW:
+            FrameInterpolation_RecordOpenChild("MapDraw", 0);
             Map_Draw();
+            FrameInterpolation_RecordCloseChild();
             break;
 
         case OVLCALL_OPTION_UPDATE:

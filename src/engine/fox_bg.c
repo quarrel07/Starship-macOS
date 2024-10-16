@@ -213,6 +213,9 @@ void Background_DrawStarfield(void) {
         zCos = __cosf(gStarfieldRoll);
         zSin = __sinf(gStarfieldRoll);
 
+        if(CVarGetInteger("gDisableStarsInterpolation", 0) == 1){
+            FrameInterpolation_ShouldInterpolateFrame(false);
+        }
 
         for (i = 0; i < starCount; i++, yStar++, xStar++, color++) {
             // Adjust star positions with field offsets
@@ -272,6 +275,10 @@ void Background_DrawStarfield(void) {
                 // Pop the transform id
                 FrameInterpolation_RecordCloseChild();
             }
+        }
+
+        if(CVarGetInteger("gDisableStarsInterpolation", 0) == 1){
+            FrameInterpolation_ShouldInterpolateFrame(true);
         }
     }
 

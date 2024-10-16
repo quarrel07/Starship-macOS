@@ -827,6 +827,7 @@ void ItemCheckpoint_Draw(ItemCheckpoint* this) {
     s32 i;
 
     if (((gGameFrameCount & 0x18) != 0) && (this->state == 0)) {
+        FrameInterpolation_RecordOpenChild(this, 0);
         Matrix_Push(&gGfxMatrix);
         RCP_SetupDL(&gMasterDisp, SETUPDL_64);
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
@@ -836,7 +837,9 @@ void ItemCheckpoint_Draw(ItemCheckpoint* this) {
         gSPDisplayList(gMasterDisp++, D_1023C80);
         gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
         Matrix_Pop(&gGfxMatrix);
+        FrameInterpolation_RecordCloseChild();
     }
+    FrameInterpolation_RecordOpenChild(this, 1);
     RCP_SetupDL(&gMasterDisp, SETUPDL_29);
     gSPTexture(gMasterDisp++, 2000, 2000, 0, G_TX_RENDERTILE, G_ON);
     gSPSetGeometryMode(gMasterDisp++, G_TEXTURE_GEN);
@@ -852,6 +855,7 @@ void ItemCheckpoint_Draw(ItemCheckpoint* this) {
         Matrix_Pop(&gGfxMatrix);
     }
     gSPClearGeometryMode(gMasterDisp++, G_TEXTURE_GEN);
+    FrameInterpolation_RecordCloseChild();
 }
 
 void ItemSilverRing_Draw(ItemSilverRing* this) {
@@ -1674,8 +1678,8 @@ void Object_DrawAll(s32 arg0) {
         }
 
         for (i = 0, scenery360 = gScenery360; i < 200; i++, scenery360++) {
+            FrameInterpolation_RecordOpenChild(scenery360, i);
             if ((scenery360->obj.status == OBJ_ACTIVE) && (scenery360->obj.id != OBJ_SCENERY_LEVEL_OBJECTS)) {
-                FrameInterpolation_RecordOpenChild(scenery360, i);
                 if (gCurrentLevel == LEVEL_BOLSE) {
                     spAC.x = scenery360->sfxSource[0];
                     spAC.y = scenery360->sfxSource[1];
@@ -1686,8 +1690,8 @@ void Object_DrawAll(s32 arg0) {
                 Matrix_Push(&gGfxMatrix);
                 Scenery360_Draw(scenery360);
                 Matrix_Pop(&gGfxMatrix);
-                FrameInterpolation_RecordCloseChild();
             }
+            FrameInterpolation_RecordCloseChild();
         }
     } else {
         RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);

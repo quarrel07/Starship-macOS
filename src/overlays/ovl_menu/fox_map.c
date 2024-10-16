@@ -15,6 +15,7 @@
 #include "assets/ast_map.h"
 #include "assets/ast_text.h"
 #include "assets/ast_font_3d.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 // BSS STARTS HERE
 u8 gMapVenomCloudTex[96 * 96];
