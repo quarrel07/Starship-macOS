@@ -22,6 +22,9 @@
 #include "assets/ast_area_6.h"
 #include "assets/ast_zoness.h"
 
+extern float gCurrentScreenWidth;
+extern float gCurrentScreenHeight;
+
 UNK_TYPE D_800D2F50 = 0; // unused
 s32 sOverheadCam = 0;
 f32 sOverheadCamDist = 0.0f;
@@ -559,7 +562,7 @@ void Play_InitEnvironment(void) {
     D_ctx_80178544 = 40;
     gFovY = 45.0f;
 }
-
+/*
 void Play_GenerateStarfield(void) {
     u32 i;
 
@@ -574,34 +577,92 @@ void Play_GenerateStarfield(void) {
         gStarFillColors[i] = FILL_COLOR(gStarColors[i % ARRAY_COUNT(gStarColors)]);
     }
 }
+*/
+void Play_GenerateStarfield(void) {
+    u32 i;
+    float currentScreenWidth = gCurrentScreenWidth;
+    float currentScreenHeight = gCurrentScreenHeight;
+    float starfieldWidth = 1.0f * currentScreenWidth;
+    float starfieldHeight = 1.0f * currentScreenHeight;
+
+    MEM_ARRAY_ALLOCATE(gStarOffsetsX, 3000);
+    MEM_ARRAY_ALLOCATE(gStarOffsetsY, 3000);
+    MEM_ARRAY_ALLOCATE(gStarFillColors, 3000);
+
+    Rand_SetSeed(1, 29000, 9876);
+
+    for (i = 0; i < 3000; i++) {
+        gStarOffsetsX[i] = RAND_FLOAT_SEEDED(starfieldWidth);
+        gStarOffsetsY[i] = RAND_FLOAT_SEEDED(starfieldHeight);
+        gStarFillColors[i] = FILL_COLOR(gStarColors[i % ARRAY_COUNT(gStarColors)]);
+    }
+}
 
 void Play_SetupStarfield(void) {
+    // Get current screen dimensions
+    float currentScreenWidth = gCurrentScreenWidth;
+    float currentScreenHeight = gCurrentScreenHeight;
+    float baseAspectRatio = 4.0f / 3.0f; // Original aspect ratio
+    float baseScreenWidth = gCurrentScreenHeight * baseAspectRatio;
+    float baseArea = baseScreenWidth * gCurrentScreenHeight;
+    float currentArea = currentScreenWidth * currentScreenHeight;
+    float areaRatio = currentArea / baseArea;
+
     Play_GenerateStarfield();
     gGroundHeight = -25000.0f;
-    gStarCount = 600;
+
+    // Base star count adjusted for screen area
+    gStarCount = (s32) (600 * areaRatio);
+    if (gStarCount > 1000) {
+        gStarCount = 1000; // Cap the star count to 1000
+    }
+
+    // Adjust star count based on the current level
     if (gCurrentLevel == LEVEL_AREA_6) {
-        gStarCount = 300;
+        gStarCount = (s32) (300 * areaRatio);
+        if (gStarCount > 1000) {
+            gStarCount = 1000;
+        }
     }
     if (gCurrentLevel == LEVEL_UNK_15) {
-        gStarCount = 400;
+        gStarCount = (s32) (400 * areaRatio);
+        if (gStarCount > 1000) {
+            gStarCount = 1000;
+        }
     }
     if (gGameState != GSTATE_PLAY) {
-        gStarCount = 800;
+        gStarCount = (s32) (800 * areaRatio);
+        if (gStarCount > 1000) {
+            gStarCount = 1000;
+        }
     }
     if (gCurrentLevel == LEVEL_FORTUNA) {
-        gStarCount = 500;
+        gStarCount = (s32) (500 * areaRatio);
+        if (gStarCount > 1000) {
+            gStarCount = 1000;
+        }
     }
     if (gVersusMode) {
-        gStarCount = 0;
+        gStarCount = 0; // No stars in versus mode
     }
     if (gCurrentLevel == LEVEL_BOLSE) {
-        gStarCount = 300;
+        gStarCount = (s32) (300 * areaRatio);
+        if (gStarCount > 1000) {
+            gStarCount = 1000;
+        }
         gGroundHeight = -0.0f;
     }
     if (gCurrentLevel == LEVEL_TRAINING) {
-        gStarCount = 800;
+        gStarCount = (s32) (800 * areaRatio);
+        if (gStarCount > 1000) {
+            gStarCount = 1000;
+        }
         gGroundHeight = -0.0f;
     }
+
+    // Initialize starfield position with dynamic screen dimensions
+    gStarfieldX = currentScreenWidth;
+    gStarfieldY = currentScreenHeight;
 }
 
 void Player_PlaySfx(f32* sfxSrc, u32 sfxId, s32 mode) {
@@ -6370,27 +6431,39 @@ void Camera_SetStarfieldPos(f32 xEye, f32 yEye, f32 zEye, f32 xAt, f32 yAt, f32 
     f32 tempf;
     f32 sp20;
 
+    // Get current screen dimensions
+    float currentScreenWidth = gCurrentScreenWidth;
+    float currentScreenHeight = gCurrentScreenHeight;
+    float starfieldWidth = 1.0f * currentScreenWidth;
+    float starfieldHeight = 1.0f * currentScreenHeight;
+
     yaw = -Math_Atan2F(xEye - xAt, zEye - zAt);
     tempf = sqrtf(SQ(zEye - zAt) + SQ(xEye - xAt));
     pitch = -Math_Atan2F(yEye - yAt, tempf);
+
+    // Adjust yaw to stay within the range [-π/2, π/2]
     if (yaw >= M_PI / 2) {
         yaw -= M_PI;
     }
     if (yaw <= -M_PI / 2) {
         yaw += M_PI;
     }
+
     tempf = 0.0f;
     if (gCurrentLevel == LEVEL_UNK_15) {
         tempf = gPlayer[0].cam.eye.y * 0.03f;
     }
 
+    // Calculate new starfield positions
     sp30 = (-pitch * (-8.0f / 3.0f * M_RTOD) * 2.0f) + 3000.0f + gStarfieldScrollY + tempf;
     sp34 = (yaw * (-8.0f / 3.0f * M_RTOD) * 2.0f) + 3000.0f + gStarfieldScrollX;
     sp20 = gStarfieldX;
 
-    gStarfieldX = Math_ModF(sp34, SCREEN_WIDTH * 1.5f);
-    gStarfieldY = Math_ModF(sp30, SCREEN_HEIGHT * 1.5f);
+    // Wrap the starfield positions within the starfield dimensions
+    gStarfieldX = FloatMod(sp34, starfieldWidth);
+    gStarfieldY = FloatMod(sp30, starfieldHeight);
 
+    // Special case handling for specific game state and level
     if ((gGameState == GSTATE_PLAY) && (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO) &&
         (gCurrentLevel == LEVEL_METEO)) {
         if (fabsf(gStarfieldX - sp20) < 50.0f) {

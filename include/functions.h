@@ -209,6 +209,7 @@ void Effect_Update(Effect*);
 void TexturedLine_Update(TexturedLine*);
 void TexturedLine_UpdateAll(void);
 void Object_Update(void);
+float FloatMod(float a, float b);
 
 //fox_enmy2
 void Actor237_Update(Actor*);

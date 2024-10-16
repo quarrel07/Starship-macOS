@@ -1,6 +1,8 @@
 #include "sys.h"
 
-s32 sMemoryBuffer[0x8800];
+// s32 sMemoryBuffer[0x8800];
+// @ port: Increase memory buffer size.
+s32 sMemoryBuffer[1000000];
 s32* sMemoryPtr;
 
 void Memory_FreeAll(void) {
