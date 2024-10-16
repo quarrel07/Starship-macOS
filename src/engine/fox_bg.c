@@ -171,6 +171,8 @@ void Background_DrawStarfield(void) {
     float vy;
     const float STAR_MARGIN = 10.0f; // Margin to hide seam stars
 
+    FrameInterpolation_RecordOpenChild("Starfield", 0);
+
     // Set projection to orthographic before drawing stars
     Lib_InitOrtho(&gMasterDisp);
 
@@ -285,6 +287,8 @@ void Background_DrawStarfield(void) {
     // Finalize rendering state
     gDPPipeSync(gMasterDisp++);
     gDPSetColorDither(gMasterDisp++, G_CD_MAGICSQ);
+
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in the Epilogue
@@ -307,6 +311,8 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in 
     float currentScreenHeight = gCurrentScreenHeight;
     float starfieldWidth = 1.0f * currentScreenWidth;
     float starfieldHeight = 1.0f * currentScreenHeight;
+
+    FrameInterpolation_RecordOpenChild("Starfield", 0);
 
     // Graphics pipeline setup
     gDPPipeSync(gMasterDisp++);
@@ -388,6 +394,7 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in 
     }
     gDPPipeSync(gMasterDisp++);
     gDPSetColorDither(gMasterDisp++, G_CD_MAGICSQ);
+    FrameInterpolation_RecordCloseChild();
 }
 
 void func_bg_8003E1E0(void) {
