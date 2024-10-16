@@ -66,12 +66,12 @@ typedef struct {
 
 typedef struct {
     /* 0x00000 */ SPTask task;
-    /* 0x00050 */ Vp viewports[0x10];
-    /* 0x00150 */ Mtx mtx[0x480];
-    /* 0x12150 */ Gfx unkDL1[0x180];
-    /* 0x12D50 */ Gfx masterDL[0x1380];
-    /* 0x1C950 */ Gfx unkDL2[0xD80];
-    /* 0x23550 */ Lightsn lights[0x100];
+    /* 0x00050 */ Vp viewports[0x10 * 4];
+    /* 0x00150 */ Mtx mtx[0x480 * 4];
+    /* 0x12150 */ Gfx unkDL1[0x180 * 4];
+    /* 0x12D50 */ Gfx masterDL[0x1380 * 4];
+    /* 0x1C950 */ Gfx unkDL2[0xD80 * 4];
+    /* 0x23550 */ Lightsn lights[0x100 * 4];
 } GfxPool; // size = 0x2AD50, 0x8 aligned
 
 void Controller_Init(void);

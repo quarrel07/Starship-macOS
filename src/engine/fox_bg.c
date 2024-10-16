@@ -136,6 +136,19 @@ static Gfx starDLPartial[] = {
     gsSPEndDisplayList(),
 };
 
+// Setup render state for stars
+static Gfx starSetupDL[] = {
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF), // Disable texturing
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_CULL_BACK |
+                          G_SHADING_SMOOTH),
+    //gsDPPipeSync(),
+    gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE), // Use primitive color
+    gsDPSetOtherMode(G_AD_NOTPATTERN | G_CD_MAGICSQ | G_CK_NONE | G_TC_FILT | G_TF_BILERP | G_TT_NONE | G_TL_TILE |
+                         G_TD_CLAMP | G_TP_PERSP | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
+                     G_AC_NONE | G_ZS_PIXEL | G_RM_OPA_SURF | G_RM_OPA_SURF2),
+    gsSPEndDisplayList(),
+};
+
 // @port: Starfield drawn with triangles, re-engineered by @Tharo & @TheBoy181
 void Background_DrawStarfield(void) {
     f32 by;
@@ -160,18 +173,6 @@ void Background_DrawStarfield(void) {
     // Set projection to orthographic before drawing stars
     Lib_InitOrtho(&gMasterDisp);
 
-    // Setup render state for stars
-    static Gfx starSetupDL[] = {
-        gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF), // Disable texturing
-        gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_CULL_BACK |
-                              G_SHADING_SMOOTH),
-        gsDPPipeSync(),
-        gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE), // Use primitive color
-        gsDPSetOtherMode(G_AD_NOTPATTERN | G_CD_MAGICSQ | G_CK_NONE | G_TC_FILT | G_TF_BILERP | G_TT_NONE | G_TL_TILE |
-                             G_TD_CLAMP | G_TP_PERSP | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
-                         G_AC_NONE | G_ZS_PIXEL | G_RM_OPA_SURF | G_RM_OPA_SURF2),
-        gsSPEndDisplayList(),
-    };
     gSPDisplayList(gMasterDisp++, starSetupDL);
 
     // Get current screen dimensions
