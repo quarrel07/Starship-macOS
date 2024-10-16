@@ -16,6 +16,7 @@
 #include "assets/ast_ve1_boss.h"
 #include "assets/ast_enmy_planet.h"
 #include "assets/ast_zoness.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 // rodata
 const char D_800D7230[] = "Enm->wrk3=<%d>\n";
@@ -138,9 +139,11 @@ void BonusText_DrawAll(void) {
 
     for (i = 0, bonus = gBonusText; i < ARRAY_COUNT(gBonusText); i++, bonus++) {
         if (bonus->hits != 0) {
+            FrameInterpolation_RecordOpenChild(bonus, i);
             Matrix_Push(&gGfxMatrix);
             BonusText_Draw(bonus);
             Matrix_Pop(&gGfxMatrix);
+            FrameInterpolation_RecordCloseChild();
         }
     }
 }
