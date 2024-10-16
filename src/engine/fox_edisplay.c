@@ -22,6 +22,7 @@
 #include "assets/ast_enmy_planet.h"
 #include "assets/ast_ve1_boss.h"
 #include "assets/ast_zoness.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 Vec3f D_edisplay_801615D0;
 Vec3f sViewPos;
@@ -1674,6 +1675,7 @@ void Object_DrawAll(s32 arg0) {
 
         for (i = 0, scenery360 = gScenery360; i < 200; i++, scenery360++) {
             if ((scenery360->obj.status == OBJ_ACTIVE) && (scenery360->obj.id != OBJ_SCENERY_LEVEL_OBJECTS)) {
+                FrameInterpolation_RecordOpenChild(scenery360, i);
                 if (gCurrentLevel == LEVEL_BOLSE) {
                     spAC.x = scenery360->sfxSource[0];
                     spAC.y = scenery360->sfxSource[1];
@@ -1684,12 +1686,14 @@ void Object_DrawAll(s32 arg0) {
                 Matrix_Push(&gGfxMatrix);
                 Scenery360_Draw(scenery360);
                 Matrix_Pop(&gGfxMatrix);
+                FrameInterpolation_RecordCloseChild();
             }
         }
     } else {
         RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
         for (i = 0, scenery = gScenery; i < ARRAY_COUNT(gScenery); i++, scenery++) {
             if (scenery->obj.status >= OBJ_ACTIVE) {
+                FrameInterpolation_RecordOpenChild(scenery, i);
                 if (arg0 > 0) {
                     Display_SetSecondLight(&scenery->obj.pos);
                 }
@@ -1697,12 +1701,14 @@ void Object_DrawAll(s32 arg0) {
                 Scenery_Draw(scenery, arg0);
                 Matrix_Pop(&gGfxMatrix);
                 Object_UpdateSfxSource(scenery->sfxSource);
+                FrameInterpolation_RecordCloseChild();
             }
         }
     }
 
     for (i = 0, boss = gBosses; i < ARRAY_COUNT(gBosses); i++, boss++) {
         if ((boss->obj.status >= OBJ_ACTIVE) && (boss->obj.id != OBJ_BOSS_BO_BASE_SHIELD)) {
+            FrameInterpolation_RecordOpenChild(boss, i);
             if ((boss->timer_05C % 2) == 0) {
                 RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
             } else {
@@ -1718,6 +1724,7 @@ void Object_DrawAll(s32 arg0) {
                 Object_DrawShadow(i, &boss->obj);
                 Matrix_Pop(&gGfxMatrix);
             }
+            FrameInterpolation_RecordCloseChild();
         }
     }
 
@@ -1726,6 +1733,7 @@ void Object_DrawAll(s32 arg0) {
 
     for (i = 0, sprite = gSprites; i < ARRAY_COUNT(gSprites); i++, sprite++) {
         if ((sprite->obj.status >= OBJ_ACTIVE) && func_enmy_80060FE4(&sprite->obj.pos, -12000.0f)) {
+            FrameInterpolation_RecordOpenChild(sprite, i);
             Matrix_Push(&gGfxMatrix);
 
             if ((sprite->obj.id == OBJ_SPRITE_CO_RUIN1) || (sprite->obj.id == OBJ_SPRITE_CO_RUIN2)) {
@@ -1736,11 +1744,13 @@ void Object_DrawAll(s32 arg0) {
 
             Sprite_Draw(sprite, arg0);
             Matrix_Pop(&gGfxMatrix);
+            FrameInterpolation_RecordCloseChild();
         }
     }
 
     for (i = 0, actor = &gActors[0]; i < ARRAY_COUNT(gActors); i++, actor++) {
         if (actor->obj.status >= OBJ_ACTIVE) {
+            FrameInterpolation_RecordOpenChild(actor, i);
             if ((actor->timer_0C6 % 2) == 0) {
                 if (gCurrentLevel == LEVEL_UNK_15) {
                     RCP_SetupDL_23();
@@ -1789,6 +1799,7 @@ void Object_DrawAll(s32 arg0) {
                     }
                     break;
             }
+        FrameInterpolation_RecordCloseChild();  
         }
     }
 
@@ -1799,11 +1810,13 @@ void Object_DrawAll(s32 arg0) {
 
     for (i = 0, item = &gItems[0]; i < ARRAY_COUNT(gItems); i++, item++) {
         if (item->obj.status >= OBJ_ACTIVE) {
+            FrameInterpolation_RecordOpenChild(item, i);
             Matrix_Push(&gGfxMatrix);
             RCP_SetupDL(&gMasterDisp, SETUPDL_29);
             Object_SetCullDirection(arg0);
             Item_Draw(item, arg0);
             Matrix_Pop(&gGfxMatrix);
+            FrameInterpolation_RecordCloseChild();
         }
     }
 
@@ -1820,6 +1833,7 @@ void Effect_DrawAll(s32 arg0) {
 
     for (i = 0, effect = &gEffects[0]; i < ARRAY_COUNT(gEffects); i++, effect++) {
         if (effect->obj.status >= OBJ_ACTIVE) {
+            FrameInterpolation_RecordOpenChild(effect, i);
             if (effect->info.unk_14 == 1) {
                 effect->obj.rot.y = RAD_TO_DEG(-gPlayer[gPlayerNum].camYaw);
                 effect->obj.rot.x = RAD_TO_DEG(gPlayer[gPlayerNum].camPitch);
@@ -1840,11 +1854,13 @@ void Effect_DrawAll(s32 arg0) {
                     Matrix_Pop(&gGfxMatrix);
                 }
             }
+            FrameInterpolation_RecordCloseChild();
         }
     }
 
     for (i = 0, boss = &gBosses[0]; i < ARRAY_COUNT(gBosses); i++, boss++) {
         if ((boss->obj.status >= OBJ_ACTIVE) && (boss->obj.id == OBJ_BOSS_BO_BASE_SHIELD)) {
+            FrameInterpolation_RecordOpenChild(boss, i);
             if ((boss->timer_05C % 2) == 0) {
                 RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
             } else {
@@ -1854,6 +1870,7 @@ void Effect_DrawAll(s32 arg0) {
             Matrix_Push(&gGfxMatrix);
             Boss_Draw(boss, arg0);
             Matrix_Pop(&gGfxMatrix);
+            FrameInterpolation_RecordCloseChild();
         }
     }
 }
@@ -1914,6 +1931,7 @@ void TexturedLine_Draw(void) {
 
     for (i = 0; i < ARRAY_COUNT(gTexturedLines); i++) {
         TexturedLine* texLine = &gTexturedLines[i];
+        FrameInterpolation_RecordOpenChild(texLine, i);
 
         if (gTexturedLines[i].mode != 0) {
             Matrix_Push(&gGfxMatrix);
@@ -1953,6 +1971,7 @@ void TexturedLine_Draw(void) {
             }
             Matrix_Pop(&gGfxMatrix);
         }
+        FrameInterpolation_RecordCloseChild();
     }
 }
 

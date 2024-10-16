@@ -3,6 +3,7 @@
 #include "assets/ast_aquas.h"
 #include "assets/ast_great_fox.h"
 #include "assets/ast_versus.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 Vec3f sShotViewPos;
 
@@ -1502,6 +1503,7 @@ void PlayerShot_DrawShot(PlayerShot* shot) {
 }
 
 void PlayerShot_Draw(PlayerShot* shot) {
+    FrameInterpolation_RecordOpenChild(shot, 0);
     switch (shot->obj.status) {
         case SHOT_ACTIVE:
             PlayerShot_DrawShot(shot);
@@ -1510,6 +1512,7 @@ void PlayerShot_Draw(PlayerShot* shot) {
             PlayerShot_DrawHitmark(shot);
             break;
     }
+    FrameInterpolation_RecordCloseChild();
 }
 
 void PlayerShot_UpdateHitmark(PlayerShot* shot) {

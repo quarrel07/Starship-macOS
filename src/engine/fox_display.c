@@ -4,6 +4,7 @@
 #include "assets/ast_landmaster.h"
 #include "assets/ast_versus.h"
 #include "assets/ast_sector_z.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 Vec3f D_display_801613B0[4];
 Vec3f D_display_801613E0[4];
@@ -704,12 +705,13 @@ void Display_Arwing(Player* player, s32 reflectY) {
 void Display_Reticle(Player* player) {
     Vec3f* translate;
     s32 i;
-
+    
     if ((gPlayerNum == player->num) && ((player->form == FORM_ARWING) || (player->form == FORM_LANDMASTER)) &&
         player->draw &&
         (((gGameState == GSTATE_PLAY) && (player->state_1C8 == PLAYERSTATE_1C8_ACTIVE)) ||
          (gGameState == GSTATE_MENU))) {
         for (i = 0; i < 2; i++) {
+            FrameInterpolation_RecordOpenChild("Reticle", i);
             translate = &D_display_801613E0[i];
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, translate->x, translate->y, translate->z, MTXF_APPLY);
@@ -735,6 +737,7 @@ void Display_Reticle(Player* player) {
             Matrix_SetGfxMtx(&gMasterDisp);
             gSPDisplayList(gMasterDisp++, D_1024F60);
             Matrix_Pop(&gGfxMatrix);
+            FrameInterpolation_RecordCloseChild();
         }
     }
 }
@@ -1502,6 +1505,7 @@ void Display_ActorMarks(void) {
         RCP_SetupDL_40();
 
         for (i = 0; i < ARRAY_COUNT(gTeamArrowsViewPos); i++) {
+            FrameInterpolation_RecordOpenChild(&gTeamArrowsViewPos[i],  i);
             if (gTeamArrowsViewPos[i].z < 0.0f) {
                 var_fs0 = (VEC3F_MAG(&gTeamArrowsViewPos[i])) * 0.0015f;
                 if (var_fs0 > 100.0f) {
@@ -1532,6 +1536,7 @@ void Display_ActorMarks(void) {
             }
             gTeamArrowsViewPos[i].x = gTeamArrowsViewPos[i].y = 0;
             gTeamArrowsViewPos[i].z = 100.0f;
+            FrameInterpolation_RecordCloseChild();
         }
         gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
     }
@@ -1742,8 +1747,12 @@ void Display_Update(void) {
         Background_DrawStarfield();
     }
 
+    FrameInterpolation_RecordOpenChild("Backdrop", 0);
     Background_DrawBackdrop();
+    FrameInterpolation_RecordCloseChild();
+    FrameInterpolation_RecordOpenChild("Sun", 0);
     Background_DrawSun();
+    FrameInterpolation_RecordCloseChild();
     Matrix_Push(&gGfxMatrix);
     Matrix_LookAt(gGfxMatrix, gPlayCamEye.x, gPlayCamEye.y, gPlayCamEye.z, gPlayCamAt.x, gPlayCamAt.y, gPlayCamAt.z,
                   playerCamUp.x, playerCamUp.y, playerCamUp.z, MTXF_APPLY);
@@ -1759,7 +1768,9 @@ void Display_Update(void) {
             Matrix_Pop(&gGfxMatrix);
         } else if (gGroundSurface != SURFACE_WATER) {
             D_bg_8015F964 = false;
+            FrameInterpolation_RecordOpenChild("Ground", 0);
             Background_DrawGround();
+            FrameInterpolation_RecordCloseChild();
         }
     }
 
@@ -1823,7 +1834,9 @@ void Display_Update(void) {
     if ((gGroundSurface == SURFACE_WATER) || (gAqDrawMode != 0)) {
         D_bg_8015F964 = true;
         Effect_Draw(1);
+        FrameInterpolation_RecordOpenChild("Ground", 0);
         Background_DrawGround();
+        FrameInterpolation_RecordCloseChild();
     }
 
     if ((gCurrentLevel != LEVEL_AQUAS) &&
@@ -1837,9 +1850,11 @@ void Display_Update(void) {
 
     for (i = 0, player = &gPlayer[0]; i < gCamCount; i++, player++) {
         if (sPlayersVisible[i]) {
+            FrameInterpolation_RecordOpenChild(player, i);
             Display_PlayerShadow_Update(player);
             Display_PlayerFeatures(player);
             Display_ArwingWingTrail_Update(player);
+            FrameInterpolation_RecordCloseChild();
         }
     }
 

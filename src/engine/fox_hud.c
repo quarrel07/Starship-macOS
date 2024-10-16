@@ -1,6 +1,7 @@
 #include "sf64math.h"
 #include "fox_hud.h"
 #include "prevent_bss_reordering.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 Vec3f D_801616A0;
 Vec3f D_801616B0;
@@ -3278,7 +3279,7 @@ void HUD_Hitpoints_Update(f32 xPos, f32 yPos) {
         }
     }
     RCP_SetupDL(&gMasterDisp, SETUPDL_76);
-    gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, 255);
+    gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, 255);    
     HUD_Hitpoints_Draw(xPos, yPos);
 }
 

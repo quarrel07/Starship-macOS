@@ -22,6 +22,7 @@
 #include "assets/ast_zoness.h"
 
 #include "prevent_bss_reordering2.h"
+#include "port/interpolation/FrameInterpolation.h"
 // #include "prevent_bss_reordering3.h"
 
 f32 gWarpZoneBgAlpha;
@@ -251,6 +252,7 @@ void Background_DrawBackdrop(void) {
     s32 i;
     u8 levelType;
     s32 levelId;
+
 
     if (gDrawBackdrop == 0) {
         return;

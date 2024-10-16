@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 s32 Lib_vsPrintf(char* dst, const char* fmt, va_list args) {
     return vsprintf(dst, fmt, args);
@@ -84,21 +85,25 @@ void Lib_QuickSort(u8* first, u32 length, u32 size, CompareFunc cFunc) {
 void Lib_InitPerspective(Gfx** dList) {
     u16 norm;
 
+    FrameInterpolation_RecordOpenChild("perspective", 0);
     guPerspective(gGfxMtx, &norm, gFovY, (f32) SCREEN_WIDTH / SCREEN_HEIGHT, gProjectNear, gProjectFar, 1.0f);
     gSPPerspNormalize((*dList)++, norm);
     gSPMatrix((*dList)++, gGfxMtx++, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
     guLookAt(gGfxMtx, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -12800.0f, 0.0f, 1.0f, 0.0f);
     gSPMatrix((*dList)++, gGfxMtx++, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
     Matrix_Copy(gGfxMatrix, &gIdentityMatrix);
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Lib_InitOrtho(Gfx** dList) {
+    FrameInterpolation_RecordOpenChild("ortho", 0);
     guOrtho(gGfxMtx, -SCREEN_WIDTH / 2, SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT / 2, gProjectNear,
             gProjectFar, 1.0f);
     gSPMatrix((*dList)++, gGfxMtx++, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
     guLookAt(gGfxMtx, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -12800.0f, 0.0f, 1.0f, 0.0f);
     gSPMatrix((*dList)++, gGfxMtx++, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
     Matrix_Copy(gGfxMatrix, &gIdentityMatrix);
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Lib_DmaRead(void* src, void* dst, s32 size) {

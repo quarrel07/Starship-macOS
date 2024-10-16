@@ -17,6 +17,7 @@
 #include "resource/importers/SkeletonFactory.h"
 #include "resource/importers/Vec3fFactory.h"
 #include "resource/importers/Vec3sFactory.h"
+#include "port/interpolation/FrameInterpolation.h"
 #include <Fast3D/Fast3dWindow.h>
 #include <DisplayListFactory.h>
 #include <TextureFactory.h>
@@ -113,9 +114,11 @@ void GameEngine::StartFrame() const{
     this->context->GetWindow()->StartFrame();
 }
 
-void GameEngine::RunCommands(Gfx* Commands) {
-    gfx_run(Commands, {});
-    gfx_end_frame();
+void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
+    for (const auto& m : mtx_replacements) {
+        gfx_run(Commands, m);
+        gfx_end_frame();
+    }
 
     if (ShouldClearTextureCacheAtEndOfFrame) {
         gfx_texture_cache_clear();
@@ -133,10 +136,67 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     gFPS = 30;
     wnd->EnableSRGBMode();
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
-    wnd->SetTargetFps(60 / gVIsPerFrame);
-    wnd->SetMaximumFrameLatency(1);
 
-    RunCommands(commands);
+    std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
+    int target_fps = CVarGetInteger("gInterpolationFPS", 20);
+    static int last_fps;
+    static int last_update_rate;
+    static int time;
+    int fps = target_fps;
+    int original_fps = gFPS = 60 / gVIsPerFrame;
+
+    if (target_fps == 20 || original_fps > target_fps) {
+        fps = original_fps;
+    }
+
+    if (last_fps != fps || last_update_rate != gVIsPerFrame) {
+        time = 0;
+    }
+
+    // time_base = fps * original_fps (one second)
+    int next_original_frame = fps;
+
+    while (time + original_fps <= next_original_frame) {
+        time += original_fps;
+        if (time != next_original_frame) {
+            mtx_replacements.push_back(FrameInterpolation_Interpolate((float)time / next_original_frame));
+        } else {
+            mtx_replacements.emplace_back();
+        }
+    }
+
+    time -= fps;
+
+    int threshold = CVarGetInteger("gExtraLatencyThreshold", 80);
+
+    if (wnd != nullptr) {
+        wnd->SetTargetFps(fps);
+        wnd->SetMaximumFrameLatency(threshold > 0 && target_fps >= threshold ? 2 : 1);
+    }
+
+    // When the gfx debugger is active, only run with the final mtx
+    if (GfxDebuggerIsDebugging()) {
+        mtx_replacements.clear();
+        mtx_replacements.emplace_back();
+    }
+
+    RunCommands(commands, mtx_replacements);
+
+    last_fps = fps;
+    last_update_rate = gVIsPerFrame;
+}
+
+uint32_t GameEngine::GetInterpolationFPS(){
+    if (Ship::Context::GetInstance()->GetWindow()->GetWindowBackend() == Ship::WindowBackend::FAST3D_DXGI_DX11) {
+        return CVarGetInteger("gInterpolationFPS", 20);
+    }
+
+    if (CVarGetInteger("gMatchRefreshRate", 0)) {
+        return Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate();
+    }
+
+    return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
+                              CVarGetInteger("gInterpolationFPS", 20));
 }
 
 extern "C" uint32_t GameEngine_GetSampleRate() {

@@ -55,6 +55,10 @@ typedef union {
     // u64 force_struct_alignment;
 } Matrix; // size = 0x40
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern Mtx gIdentityMtx; // 800C4620
 extern Matrix gIdentityMatrix; //800C4660
 
@@ -92,6 +96,8 @@ void Matrix_Pop(Matrix** mtxStack);
 
 // Copies tf into mtx (MTXF_NEW) or applies it to mtx (MTXF_APPLY)
 void Matrix_Mult(Matrix* mtx, Matrix* tf, u8 mode);
+
+void Matrix_MtxFMtxFMult(MtxF* mfB, MtxF* mfA, MtxF* dest);
 
 // Creates a translation matrix in mtx (MTXF_NEW) or applies one to mtx (MTXF_APPLY)
 void Matrix_Translate(Matrix* mtx, f32 x, f32 y, f32 z, u8 mode);
@@ -154,5 +160,9 @@ f32 Math_FabsF(f32);
 f32 Math_NearbyIntF(f32);
 f32 Math_TruncF(f32);
 f32 Math_RoundF(f32);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

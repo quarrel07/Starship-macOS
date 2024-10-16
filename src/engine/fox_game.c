@@ -3,6 +3,7 @@
 #include "sf64dma.h"
 #include "assets/ast_logo.h"
 #include "mods.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 f32 gNextVsViewScale;
 f32 gVsViewScale;
@@ -267,6 +268,7 @@ void Game_InitViewport(Gfx** dList, u8 camCount, u8 camIndex) {
 }
 
 void Game_Draw(s32 playerNum) {
+    FrameInterpolation_StartRecord();
     switch (gDrawMode) {
         case DRAW_NONE:
             break;
@@ -303,6 +305,7 @@ void Game_Draw(s32 playerNum) {
             Ending_Draw();
             break;
     }
+    FrameInterpolation_StopRecord();
 }
 
 void Game_SetScene(void) {

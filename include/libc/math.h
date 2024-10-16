@@ -48,7 +48,13 @@ typedef union {
 #define __lnearbyintf lnearbyintf
 #define __lnearbyint lnearbyint
 
-extern f32 __sinf(f32);
-extern f32 __cosf(f32);
+#ifdef __cplusplus
+extern "C" {
+#endif
+f32 __sinf(f32);
+f32 __cosf(f32);
+#ifdef __cplusplus
+}
+#endif
 
 #endif
