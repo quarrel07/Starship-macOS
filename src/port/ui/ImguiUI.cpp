@@ -416,15 +416,11 @@ void DrawEnhancementsMenu() {
             UIWidgets::CVarCheckbox("No Level of Detail (LOD)", "gDisableLOD", {
                 .tooltip = "Disable Level of Detail (LOD) to avoid models using lower poly versions at a distance"
             });
-            UIWidgets::CVarCheckbox("Select any star from menu", "gSelectAllStars", {
-                .tooltip = "Let's you select any star from the menu regardless of the courses completion status."
-            });
-            UIWidgets::CVarCheckbox("Collecting Stars Will Not Exit Level", "gStarNoExit", {
-                .tooltip = "Stars act like the 100 coin star and will not take you out of the level"
-            });
-            UIWidgets::CVarCheckbox("Avoid playing peach cutscene", "gDisablePeachCutscene", {
-                .tooltip = "Avoid playing the peach cutscene when starting a new game"
-            });
+
+            UIWidgets::CVarCheckbox("Speed Control", "gDebugSpeedControl", {
+                .tooltip = "Control the Arwing speed"
+            }
+            );
             ImGui::EndMenu();
         }
 
@@ -434,8 +430,9 @@ void DrawEnhancementsMenu() {
 
 void DrawCheatsMenu() {
     if (UIWidgets::BeginMenu("Cheats")) {
-        UIWidgets::CVarCheckbox("Infinite Health", "gInfiniteHealth");
         UIWidgets::CVarCheckbox("Infinite Lives", "gInfiniteLives");
+        UIWidgets::CVarCheckbox("Infinite Bombs", "gInfiniteBombs");
+        UIWidgets::CVarCheckbox("Hyper Laser", "gHyperLaser");
 
         ImGui::EndMenu();
     }
@@ -470,6 +467,22 @@ void DrawDebugMenu() {
 
         UIWidgets::CVarCheckbox("Disable stars interpolation", "gDisableStarsInterpolation", {
             .tooltip = "Disable starfield interpolation for performance"
+        });
+
+        UIWidgets::CVarCheckbox("Jump To Map", "gDebugJumpToMap", {
+            .tooltip = "Press Z + R + C-UP to get back to the map"
+        });
+
+        UIWidgets::CVarCheckbox("L To Warp Zone", "gDebugWarpZone", {
+            .tooltip = "Press L to get into the Warp Zone"
+        });
+
+        UIWidgets::CVarCheckbox("L to Level Complete", "gDebugLevelComplete", {
+            .tooltip = "Press L to Level Complete"
+        });
+
+        UIWidgets::CVarCheckbox("Disable Collision", "gDebugNoCollision", {
+            .tooltip = "Disable vehicle collision"
         });
 
         UIWidgets::Spacer(0);
