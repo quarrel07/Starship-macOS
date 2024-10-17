@@ -705,7 +705,7 @@ void Display_Arwing(Player* player, s32 reflectY) {
 void Display_Reticle(Player* player) {
     Vec3f* translate;
     s32 i;
-    
+
     if ((gPlayerNum == player->num) && ((player->form == FORM_ARWING) || (player->form == FORM_LANDMASTER)) &&
         player->draw &&
         (((gGameState == GSTATE_PLAY) && (player->state_1C8 == PLAYERSTATE_1C8_ACTIVE)) ||
@@ -1506,7 +1506,7 @@ void Display_ActorMarks(void) {
 
         for (i = 0; i < ARRAY_COUNT(gTeamArrowsViewPos); i++) {
             if (gTeamArrowsViewPos[i].z < 0.0f) {
-                FrameInterpolation_RecordOpenChild(&gTeamArrowsViewPos[i],  i);
+                FrameInterpolation_RecordOpenChild(&gTeamArrowsViewPos[i], i);
                 var_fs0 = (VEC3F_MAG(&gTeamArrowsViewPos[i])) * 0.0015f;
                 if (var_fs0 > 100.0f) {
                     var_fs0 = 100.0f;
@@ -1664,7 +1664,9 @@ void Display_CsLevelCompleteHandleCamera(Player* player) {
             break;
     }
 }
-
+#if 1
+f32 gTestVarF = 0.0f;
+#endif
 void Display_Update(void) {
     s32 i;
     Vec3f tempVec;
@@ -1908,8 +1910,7 @@ void Display_Update(void) {
     sPlayersVisible[gPlayerNum] = false;
     Matrix_Pop(&gGfxMatrix);
 
-    #if DEBUG_SPEED_CONTROL == 1 // baseSpeed control
-    {
+    if (CVarGetInteger("gDebugSpeedControl", 0) == 1) {
         Player* player = gPlayer;
         static s32 prevSpeed;
         static bool debugFreeze = false;
@@ -1929,5 +1930,105 @@ void Display_Update(void) {
             debugFreeze = false;
         }
     }
+
+    if (CVarGetInteger("gDebugJumpToMap", 0) == 1) {
+        Player* pl = &gPlayer[0];
+
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+
+        if ((gControllerHold[0].button & Z_TRIG) && (gControllerHold[0].button & R_TRIG) &&
+            (gControllerPress[0].button & U_CBUTTONS)) {
+            gFillScreenAlphaTarget = 255;
+            gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 0;
+            gFillScreenAlphaStep = 8;
+            gShowLevelClearStatusScreen = false;
+            pl->state_1C8 = PLAYERSTATE_1C8_NEXT;
+            pl->csTimer = 0;
+            gFadeoutType = 4;
+        }
+    }
+
+    if (CVarGetInteger("gDebugWarpZone", 0) == 1) {
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+        if (gControllerPress[0].button & L_TRIG) {
+            if (gCurrentLevel == LEVEL_SECTOR_X) {
+                gRingPassCount++;
+                gPlayer[0].state_1C8 = PLAYERSTATE_1C8_ENTER_WARP_ZONE;
+                gPlayer[0].csState = 0;
+                gSceneSetup = 1;
+                AUDIO_PLAY_SFX(NA_SE_WARP_HOLE, gDefaultSfxSource, 0);
+                gMissionStatus = MISSION_WARP;
+                gLeveLClearStatus[gCurrentLevel] = 1;
+            } else {
+                gPlayer[0].state_1C8 = PLAYERSTATE_1C8_ENTER_WARP_ZONE;
+                gPlayer[0].csState = 0;
+                AUDIO_PLAY_SFX(NA_SE_WARP_HOLE, gDefaultSfxSource, 0);
+                gMissionStatus = MISSION_WARP;
+                gLeveLClearStatus[gCurrentLevel] = 1;
+            }
+        }
+    }
+
+    if (CVarGetInteger("gDebugNoCollision", 0) == 1) {
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+        gPlayer->mercyTimer = 1000;
+    }
+    
+    if (CVarGetInteger("gDebugLevelComplete", 0) == 1) {
+        Player* pl = &gPlayer[0];
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+
+        if (gControllerPress[0].button & L_TRIG) {
+            pl->state_1C8 = PLAYERSTATE_1C8_LEVEL_COMPLETE;
+        }
+    }
+
+    // Cheats start here
+
+    if (CVarGetInteger("gInfiniteLives", 0) == 1) {
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+        gLifeCount[0] = 9;
+    }
+
+    if (CVarGetInteger("gInfiniteBombs", 0) == 1) {
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+        gBombCount[0] = 9;
+    }
+
+    if (CVarGetInteger("gHyperLaser", 0) == 1) {
+        if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
+            return;
+        }
+        gLaserStrength[0] = 2;
+    }
+    // background testing
+#if 0
+    RCP_SetupDL(&gMasterDisp, SETUPDL_83);
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
+    if (gTestVarF > 0.0f) {
+        Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TEST:");
+    } else {
+        Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TESTNEG:");
+    }
+    Graphics_DisplaySmallNumber(80, 220, (int) ABS(gTestVarF));
+
+    if (gControllerPress[0].button & Z_TRIG) {
+        gTestVarF -= 10;
+    } else if (gControllerPress[0].button & R_TRIG) {
+        gTestVarF += 10;
+    }
+
 #endif
 }
