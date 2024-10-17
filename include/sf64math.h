@@ -66,6 +66,8 @@ extern Matrix* gGfxMatrix;
 extern Matrix sGfxMatrixStack[];
 extern Matrix* gCalcMatrix;
 extern Matrix sCalcMatrixStack[];
+extern Matrix* gInterpolationMatrix;
+extern Matrix sInterpolationMatrixStack[];
 
 f32 Math_ModF(f32 value, f32 mod);
 void Rand_Init(void);

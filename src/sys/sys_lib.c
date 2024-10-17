@@ -86,6 +86,7 @@ void Lib_InitPerspective(Gfx** dList) {
     u16 norm;
 
     FrameInterpolation_RecordOpenChild("perspective", 0);
+    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
     guPerspective(gGfxMtx, &norm, gFovY, (f32) SCREEN_WIDTH / SCREEN_HEIGHT, gProjectNear, gProjectFar, 1.0f);
     gSPPerspNormalize((*dList)++, norm);
     gSPMatrix((*dList)++, gGfxMtx++, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
@@ -97,6 +98,7 @@ void Lib_InitPerspective(Gfx** dList) {
 
 void Lib_InitOrtho(Gfx** dList) {
     FrameInterpolation_RecordOpenChild("ortho", 0);
+    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
     guOrtho(gGfxMtx, -SCREEN_WIDTH / 2, SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT / 2, gProjectNear,
             gProjectFar, 1.0f);
     gSPMatrix((*dList)++, gGfxMtx++, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);

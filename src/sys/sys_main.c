@@ -168,6 +168,7 @@ void Graphics_InitializeTask(u32 frameCount) {
 
     gGfxMatrix = &sGfxMatrixStack[0];
     gCalcMatrix = &sCalcMatrixStack[0];
+    gInterpolationMatrix = &sInterpolationMatrixStack[0];
 
     D_80178710 = &D_80178580[0];
 }

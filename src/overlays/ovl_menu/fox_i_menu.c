@@ -32,6 +32,7 @@ void OvlMenu_CallFunction(u32 mode, void* ptr) {
 
         case OVLCALL_MAP_DRAW:
             FrameInterpolation_RecordOpenChild("MapDraw", 0);
+            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
             Map_Draw();
             FrameInterpolation_RecordCloseChild();
             break;

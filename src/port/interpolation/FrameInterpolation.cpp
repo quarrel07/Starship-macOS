@@ -47,6 +47,7 @@ using namespace std;
 namespace {
 
 enum class Op {
+    Marker,
     OpenChild,
     CloseChild,
 
@@ -72,41 +73,53 @@ union Data {
     }
 
     struct {
-        MtxF src;
-    } matrix_put;
+        Matrix** matrix;
+    } matrix_ptr;
 
     struct {
+        const char* file;
+        int line;
+    } marker;
+
+    struct {
+        Matrix* matrix;
         MtxF mf;
         u8 mode;
     } matrix_mult;
 
     struct {
+        Matrix* matrix;
         f32 x, y, z;
         u8 mode;
     } matrix_translate, matrix_scale;
 
     struct {
+        Matrix* matrix;
         u32 coord;
         f32 value;
         u8 mode;
     } matrix_rotate_1_coord;
 
     struct {
+        Matrix* matrix;
         Vec3f src;
         Vec3f dest;
     } matrix_vec_translate;
 
     struct {
+        Matrix* matrix;
         Vec3f src;
         Vec3f dest;
     } matrix_vec_no_translate;
 
     struct {
+        Matrix* matrix;
         Vec3f translation;
         Vec3s rotation;
     } matrix_translate_rotate_zyx;
 
     struct {
+        Matrix* matrix;
         f32 translateX, translateY, translateZ;
         Vec3s rot;
         // MtxF mtx;
@@ -169,7 +182,7 @@ Data& append(Op op) {
 }
 
 MtxF* Matrix_GetCurrent(){
-    return (MtxF*) gGfxMatrix;
+    return (MtxF*) gInterpolationMatrix;
 }
 
 struct InterpolateCtx {
@@ -290,16 +303,16 @@ struct InterpolateCtx {
                     Data& old_op = it->second[item.second];
                     switch (item.first) {
                         case Op::OpenChild:
-                            break;
                         case Op::CloseChild:
+                        case Op::Marker:
                             break;
 
                         case Op::MatrixPush:
-                            Matrix_Push(&gGfxMatrix);
+                            Matrix_Push(&gInterpolationMatrix);
                             break;
 
                         case Op::MatrixPop:
-                            Matrix_Pop(&gGfxMatrix);
+                            Matrix_Pop(&gInterpolationMatrix);
                             break;
 
                      // Unused on SF64
@@ -310,18 +323,18 @@ struct InterpolateCtx {
 
                         case Op::MatrixMult:
                             interpolate_mtxf(&tmp_mtxf, &old_op.matrix_mult.mf, &new_op.matrix_mult.mf);
-                            Matrix_Mult(gGfxMatrix, (Matrix*) &tmp_mtxf, new_op.matrix_mult.mode);
+                            Matrix_Mult(gInterpolationMatrix, (Matrix*) &tmp_mtxf, new_op.matrix_mult.mode);
                             break;
 
                         case Op::MatrixTranslate:
-                            Matrix_Translate(gGfxMatrix, lerp(old_op.matrix_translate.x, new_op.matrix_translate.x),
+                            Matrix_Translate(gInterpolationMatrix, lerp(old_op.matrix_translate.x, new_op.matrix_translate.x),
                                              lerp(old_op.matrix_translate.y, new_op.matrix_translate.y),
                                              lerp(old_op.matrix_translate.z, new_op.matrix_translate.z),
                                              new_op.matrix_translate.mode);
                             break;
 
                         case Op::MatrixScale:
-                            Matrix_Scale(gGfxMatrix, lerp(old_op.matrix_scale.x, new_op.matrix_scale.x),
+                            Matrix_Scale(gInterpolationMatrix, lerp(old_op.matrix_scale.x, new_op.matrix_scale.x),
                                          lerp(old_op.matrix_scale.y, new_op.matrix_scale.y),
                                          lerp(old_op.matrix_scale.z, new_op.matrix_scale.z), new_op.matrix_scale.mode);
                             break;
@@ -332,15 +345,15 @@ struct InterpolateCtx {
                             u8 mode = new_op.matrix_rotate_1_coord.mode;
                             switch (new_op.matrix_rotate_1_coord.coord) {
                                 case 0:
-                                    Matrix_RotateX(gGfxMatrix, v, mode);
+                                    Matrix_RotateX(gInterpolationMatrix, v, mode);
                                     break;
 
                                 case 1:
-                                    Matrix_RotateY(gGfxMatrix, v, mode);
+                                    Matrix_RotateY(gInterpolationMatrix, v, mode);
                                     break;
 
                                 case 2:
-                                    Matrix_RotateZ(gGfxMatrix, v, mode);
+                                    Matrix_RotateZ(gInterpolationMatrix, v, mode);
                                     break;
                             }
                             break;
@@ -348,13 +361,13 @@ struct InterpolateCtx {
                         case Op::MatrixMultVec3fNoTranslate: {
                             interpolate_vecs(&tmp_vec3f, &old_op.matrix_vec_no_translate.src, &new_op.matrix_vec_no_translate.src);
                             interpolate_vecs(&tmp_vec3f2, &old_op.matrix_vec_no_translate.dest, &new_op.matrix_vec_no_translate.dest);
-                            Matrix_MultVec3fNoTranslate(gCalcMatrix, &tmp_vec3f, &tmp_vec3f2);
+                            Matrix_MultVec3fNoTranslate(gInterpolationMatrix, &tmp_vec3f, &tmp_vec3f2);
                             break;
                         }
                         case Op::MatrixMultVec3f: {
-                            interpolate_vecs(&tmp_vec3f, &old_op.matrix_vec_no_translate.src, &new_op.matrix_vec_no_translate.src);
-                            interpolate_vecs(&tmp_vec3f2, &old_op.matrix_vec_no_translate.dest, &new_op.matrix_vec_no_translate.dest);
-                            Matrix_MultVec3f(gCalcMatrix, &tmp_vec3f, &tmp_vec3f2);
+                            interpolate_vecs(&tmp_vec3f, &old_op.matrix_vec_translate.src, &new_op.matrix_vec_translate.src);
+                            interpolate_vecs(&tmp_vec3f2, &old_op.matrix_vec_translate.dest, &new_op.matrix_vec_translate.dest);
+                            Matrix_MultVec3f(gInterpolationMatrix, &tmp_vec3f, &tmp_vec3f2);
                             break;
                         }
 
@@ -460,58 +473,66 @@ void FrameInterpolation_RecordActorPosRotMatrix(void) {
     next_is_actor_pos_rot_matrix = true;
 }
 
-void FrameInterpolation_RecordMatrixPush(void) {
+void FrameInterpolation_RecordMatrixPush(Matrix** matrix) {
     if (!is_recording)
         return;
-    append(Op::MatrixPush);
+
+    append(Op::MatrixPush).matrix_ptr = { matrix };
 }
 
-void FrameInterpolation_RecordMatrixPop(void) {
+void FrameInterpolation_RecordMarker(const char* file, int line) {
     if (!is_recording)
         return;
-    append(Op::MatrixPop);
+
+    append(Op::Marker).marker = { file, line };
+}
+
+void FrameInterpolation_RecordMatrixPop(Matrix** matrix) {
+    if (!is_recording)
+        return;
+    append(Op::MatrixPop).matrix_ptr = { matrix };
 }
 
 void FrameInterpolation_RecordMatrixPut(MtxF* src) {
     if (!is_recording)
         return;
-    append(Op::MatrixPut).matrix_put = { *src };
+//    append(Op::MatrixPut).matrix_put = { matrix, *src };
 }
 
-void FrameInterpolation_RecordMatrixMult(MtxF* mf, u8 mode) {
+void FrameInterpolation_RecordMatrixMult(Matrix* matrix, MtxF* mf, u8 mode) {
     if (!is_recording)
         return;
-    append(Op::MatrixMult).matrix_mult = { *mf, mode };
+    append(Op::MatrixMult).matrix_mult = { matrix, *mf, mode };
 }
 
-void FrameInterpolation_RecordMatrixTranslate(f32 x, f32 y, f32 z, u8 mode) {
+void FrameInterpolation_RecordMatrixTranslate(Matrix* matrix, f32 x, f32 y, f32 z, u8 mode) {
     if (!is_recording)
         return;
-    append(Op::MatrixTranslate).matrix_translate = { x, y, z, mode };
+    append(Op::MatrixTranslate).matrix_translate = { matrix, x, y, z, mode };
 }
 
-void FrameInterpolation_RecordMatrixScale(f32 x, f32 y, f32 z, u8 mode) {
+void FrameInterpolation_RecordMatrixScale(Matrix* matrix, f32 x, f32 y, f32 z, u8 mode) {
     if (!is_recording)
         return;
-    append(Op::MatrixScale).matrix_scale = { x, y, z, mode };
+    append(Op::MatrixScale).matrix_scale = { matrix, x, y, z, mode };
 }
 
-void FrameInterpolation_RecordMatrixMultVec3fNoTranslate(Vec3f src, Vec3f dest){
+void FrameInterpolation_RecordMatrixMultVec3fNoTranslate(Matrix* matrix, Vec3f src, Vec3f dest){
     if (!is_recording)
         return;
-    append(Op::MatrixMultVec3fNoTranslate).matrix_vec_no_translate = { src, dest };
+    append(Op::MatrixMultVec3fNoTranslate).matrix_vec_no_translate = { matrix, src, dest };
 }
 
-void FrameInterpolation_RecordMatrixMultVec3f(Vec3f src, Vec3f dest){
+void FrameInterpolation_RecordMatrixMultVec3f(Matrix* matrix, Vec3f src, Vec3f dest){
     if (!is_recording)
         return;
-    append(Op::MatrixMultVec3f).matrix_vec_translate = { src, dest };
+    append(Op::MatrixMultVec3f).matrix_vec_translate = { matrix, src, dest };
 }
 
-void FrameInterpolation_RecordMatrixRotate1Coord(u32 coord, f32 value, u8 mode) {
+void FrameInterpolation_RecordMatrixRotate1Coord(Matrix* matrix, u32 coord, f32 value, u8 mode) {
     if (!is_recording)
         return;
-    append(Op::MatrixRotate1Coord).matrix_rotate_1_coord = { coord, value, mode };
+    append(Op::MatrixRotate1Coord).matrix_rotate_1_coord = { matrix, coord, value, mode };
 }
 
 void FrameInterpolation_RecordMatrixMtxFToMtx(MtxF* src, Mtx* dest) {

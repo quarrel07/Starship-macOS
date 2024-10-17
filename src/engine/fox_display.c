@@ -712,6 +712,7 @@ void Display_Reticle(Player* player) {
          (gGameState == GSTATE_MENU))) {
         for (i = 0; i < 2; i++) {
             FrameInterpolation_RecordOpenChild("Reticle", i);
+            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
             translate = &D_display_801613E0[i];
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, translate->x, translate->y, translate->z, MTXF_APPLY);
@@ -1507,6 +1508,7 @@ void Display_ActorMarks(void) {
         for (i = 0; i < ARRAY_COUNT(gTeamArrowsViewPos); i++) {
             if (gTeamArrowsViewPos[i].z < 0.0f) {
                 FrameInterpolation_RecordOpenChild(&gTeamArrowsViewPos[i], i);
+                FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                 var_fs0 = (VEC3F_MAG(&gTeamArrowsViewPos[i])) * 0.0015f;
                 if (var_fs0 > 100.0f) {
                     var_fs0 = 100.0f;
@@ -1552,6 +1554,7 @@ void Display_LockOnIndicator(void) {
             var_fs0 = VEC3F_MAG(&gLockOnTargetViewPos[i]);
             if (var_fs0 < 20000.0f) {
                 FrameInterpolation_RecordOpenChild("LcckOnIndicator", 0);
+                FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                 var_fs0 *= 0.0015f;
                 if (var_fs0 > 100.0f) {
                     var_fs0 = 100.0f;
@@ -1751,10 +1754,9 @@ void Display_Update(void) {
         Background_DrawStarfield();
     }
 
-    FrameInterpolation_RecordOpenChild("Backdrop", 0);
     Background_DrawBackdrop();
-    FrameInterpolation_RecordCloseChild();
     FrameInterpolation_RecordOpenChild("Sun", 0);
+    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
     Background_DrawSun();
     FrameInterpolation_RecordCloseChild();
     Matrix_Push(&gGfxMatrix);
@@ -1773,6 +1775,7 @@ void Display_Update(void) {
         } else if (gGroundSurface != SURFACE_WATER) {
             D_bg_8015F964 = false;
             FrameInterpolation_RecordOpenChild("Ground", 0);
+            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
             Background_DrawGround();
             FrameInterpolation_RecordCloseChild();
         }
@@ -1839,6 +1842,7 @@ void Display_Update(void) {
         D_bg_8015F964 = true;
         Effect_Draw(1);
         FrameInterpolation_RecordOpenChild("Ground", 0);
+        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
         Background_DrawGround();
         FrameInterpolation_RecordCloseChild();
     }
@@ -1855,6 +1859,7 @@ void Display_Update(void) {
     for (i = 0, player = &gPlayer[0]; i < gCamCount; i++, player++) {
         if (sPlayersVisible[i]) {
             FrameInterpolation_RecordOpenChild(player, i);
+            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
             Display_PlayerShadow_Update(player);
             Display_PlayerFeatures(player);
             Display_ArwingWingTrail_Update(player);

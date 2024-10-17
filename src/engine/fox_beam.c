@@ -1504,6 +1504,7 @@ void PlayerShot_DrawShot(PlayerShot* shot) {
 
 void PlayerShot_Draw(PlayerShot* shot) {
     FrameInterpolation_RecordOpenChild(shot, 0);
+    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
     switch (shot->obj.status) {
         case SHOT_ACTIVE:
             PlayerShot_DrawShot(shot);

@@ -258,6 +258,7 @@ void Background_DrawStarfield(void) {
             if ((vx >= STAR_MARGIN) && (vx < currentScreenWidth - STAR_MARGIN) && (vy >= STAR_MARGIN) &&
                 (vy < currentScreenHeight - STAR_MARGIN)) {
                 FrameInterpolation_RecordOpenChild("Starfield", i);
+                FrameInterpolation_RecordMarker(__FILE__, __LINE__);
 
                 // Translate to (vx, vy) in ortho coordinates
                 Matrix_Push(&gGfxMatrix);
@@ -368,6 +369,7 @@ void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in 
         if ((vx >= 0) && (vx < currentScreenWidth) && (yMin < vy) && (vy < yMax)) {
             // Tag the transform. Assuming TAG_STARFIELD is a defined base tag value
             FrameInterpolation_RecordOpenChild("SmallStarfield", i);
+            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
             // Translate to (vx, vy) in ortho coordinates
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, vx - (currentScreenWidth / 2.0f), -(vy - (currentScreenHeight / 2.0f)), 0.0f,
@@ -460,6 +462,7 @@ void Background_DrawBackdrop(void) {
                     // Render the textures across the screen (left to right)
                     for (int i = 0; i < 6; i++) {
                         FrameInterpolation_RecordOpenChild("Backdrop", i);
+                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
 
                         switch (gCurrentLevel) {
                             case LEVEL_VERSUS:
@@ -510,6 +513,7 @@ void Background_DrawBackdrop(void) {
                     // Render the textures across a wider range to cover the screen
                     for (int i = 0; i < 10; i++) {
                         FrameInterpolation_RecordOpenChild("Backdrop", i);
+                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
 
                         switch ((s32) gCurrentLevel) {
                             case LEVEL_CORNERIA:
@@ -533,6 +537,7 @@ void Background_DrawBackdrop(void) {
                 case LEVEL_VENOM_ANDROSS: // WIP
                     if (gDrawBackdrop != 6) {
                         FrameInterpolation_RecordOpenChild("Backdrop", 0);
+                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                         if ((gDrawBackdrop == 2) || (gDrawBackdrop == 7)) {
                             Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
                             Matrix_Translate(gGfxMatrix, 0.0f, -4000.0f, -7000.0f, MTXF_APPLY);
@@ -630,6 +635,7 @@ void Background_DrawBackdrop(void) {
                         // Render the textures across the screen (left to right)
                         for (int i = 0; i < 5; i++) {
                             FrameInterpolation_RecordOpenChild("Backdrop", i);
+                            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                             if (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO) {
                                 gSPDisplayList(gMasterDisp++, D_AQ_601AFF0);
                             } else {

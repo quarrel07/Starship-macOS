@@ -29,9 +29,11 @@ Matrix gIdentityMatrix = { {
 } };
 
 Matrix* gGfxMatrix;
-Matrix sGfxMatrixStack[0x20];
+Matrix sGfxMatrixStack[0x1000];
 Matrix* gCalcMatrix;
-Matrix sCalcMatrixStack[0x20];
+Matrix sCalcMatrixStack[0x1000];
+Matrix* gInterpolationMatrix;
+Matrix sInterpolationMatrixStack[0x1000];
 
 // Copies src Matrix into dst
 void Matrix_Copy(Matrix* dst, Matrix* src) {
@@ -47,14 +49,19 @@ void Matrix_Copy(Matrix* dst, Matrix* src) {
 
 // Makes a copy of the stack's current matrix and puts it on the top of the stack
 void Matrix_Push(Matrix** mtxStack) {
-    FrameInterpolation_RecordMatrixPush();
+    FrameInterpolation_RecordMatrixPush(mtxStack);
+
+    if(mtxStack == NULL || *mtxStack == NULL){
+        int bp = 0;
+    }
+
     Matrix_Copy(*mtxStack + 1, *mtxStack);
     (*mtxStack)++;
 }
 
 // Removes the top matrix of the stack
 void Matrix_Pop(Matrix** mtxStack) {
-    FrameInterpolation_RecordMatrixPop();
+    FrameInterpolation_RecordMatrixPop(mtxStack);
     (*mtxStack)--;
 }
 
@@ -192,7 +199,7 @@ void Matrix_MtxFMtxFMult(MtxF* mfB, MtxF* mfA, MtxF* dest) {
 
 // Copies tf into mtx (MTXF_NEW) or applies it to mtx (MTXF_APPLY)
 void Matrix_Mult(Matrix* mtx, Matrix* tf, u8 mode) {
-    FrameInterpolation_RecordMatrixMult(tf, mode);
+    FrameInterpolation_RecordMatrixMult(mtx, tf, mode);
     f32 rx;
     f32 ry;
     f32 rz;
@@ -245,7 +252,7 @@ void Matrix_Mult(Matrix* mtx, Matrix* tf, u8 mode) {
 
 // Creates a translation matrix in mtx (MTXF_NEW) or applies one to mtx (MTXF_APPLY)
 void Matrix_Translate(Matrix* mtx, f32 x, f32 y, f32 z, u8 mode) {
-    FrameInterpolation_RecordMatrixTranslate(x, y, z, mode);
+    FrameInterpolation_RecordMatrixTranslate(mtx, x, y, z, mode);
     f32 rx;
     f32 ry;
     s32 i;
@@ -269,7 +276,7 @@ void Matrix_Translate(Matrix* mtx, f32 x, f32 y, f32 z, u8 mode) {
 
 // Creates a scale matrix in mtx (MTXF_NEW) or applies one to mtx (MTXF_APPLY)
 void Matrix_Scale(Matrix* mtx, f32 xScale, f32 yScale, f32 zScale, u8 mode) {
-    FrameInterpolation_RecordMatrixScale(xScale, yScale, zScale, mode);
+    FrameInterpolation_RecordMatrixScale(mtx, xScale, yScale, zScale, mode);
     f32 rx;
     f32 ry;
     s32 i;
@@ -295,7 +302,7 @@ void Matrix_Scale(Matrix* mtx, f32 xScale, f32 yScale, f32 zScale, u8 mode) {
 
 // Creates rotation matrix about the X axis in mtx (MTXF_NEW) or applies one to mtx (MTXF_APPLY)
 void Matrix_RotateX(Matrix* mtx, f32 angle, u8 mode) {
-    FrameInterpolation_RecordMatrixRotate1Coord(0, angle, mode);
+    FrameInterpolation_RecordMatrixRotate1Coord(mtx, 0, angle, mode);
     f32 cs;
     f32 sn;
     f32 ry;
@@ -324,7 +331,7 @@ void Matrix_RotateX(Matrix* mtx, f32 angle, u8 mode) {
 
 // Creates rotation matrix about the Y axis in mtx (MTXF_NEW) or applies one to mtx (MTXF_APPLY)
 void Matrix_RotateY(Matrix* mtx, f32 angle, u8 mode) {
-    FrameInterpolation_RecordMatrixRotate1Coord(1, angle, mode);
+    FrameInterpolation_RecordMatrixRotate1Coord(mtx, 1, angle, mode);
     f32 cs;
     f32 sn;
     f32 rx;
@@ -353,7 +360,7 @@ void Matrix_RotateY(Matrix* mtx, f32 angle, u8 mode) {
 
 // Creates rotation matrix about the Z axis in mtx (MTXF_NEW) or applies one to mtx (MTXF_APPLY)
 void Matrix_RotateZ(Matrix* mtx, f32 angle, u8 mode) {
-    FrameInterpolation_RecordMatrixRotate1Coord(2, angle, mode);
+    FrameInterpolation_RecordMatrixRotate1Coord(mtx, 2, angle, mode);
     f32 cs;
     f32 sn;
     f32 rx;
@@ -491,7 +498,7 @@ void Matrix_FromMtx(Mtx* src, Matrix* dest) {
 
 // Applies the transform matrix mtx to the vector src, putting the result in dest
 void Matrix_MultVec3f(Matrix* mtx, Vec3f* src, Vec3f* dest) {
-    FrameInterpolation_RecordMatrixMultVec3f(*src, *dest);
+    FrameInterpolation_RecordMatrixMultVec3f(mtx, *src, *dest);
     dest->x = (mtx->m[0][0] * src->x) + (mtx->m[1][0] * src->y) + (mtx->m[2][0] * src->z) + mtx->m[3][0];
     dest->y = (mtx->m[0][1] * src->x) + (mtx->m[1][1] * src->y) + (mtx->m[2][1] * src->z) + mtx->m[3][1];
     dest->z = (mtx->m[0][2] * src->x) + (mtx->m[1][2] * src->y) + (mtx->m[2][2] * src->z) + mtx->m[3][2];
@@ -500,7 +507,7 @@ void Matrix_MultVec3f(Matrix* mtx, Vec3f* src, Vec3f* dest) {
 // Applies the linear part of the transformation matrix mtx to the vector src, ignoring any translation that mtx might
 // have. Puts the result in dest.
 void Matrix_MultVec3fNoTranslate(Matrix* mtx, Vec3f* src, Vec3f* dest) {
-    FrameInterpolation_RecordMatrixMultVec3fNoTranslate(*src, *dest);
+    FrameInterpolation_RecordMatrixMultVec3fNoTranslate(mtx, *src, *dest);
     dest->x = (mtx->m[0][0] * src->x) + (mtx->m[1][0] * src->y) + (mtx->m[2][0] * src->z);
     dest->y = (mtx->m[0][1] * src->x) + (mtx->m[1][1] * src->y) + (mtx->m[2][1] * src->z);
     dest->z = (mtx->m[0][2] * src->x) + (mtx->m[1][2] * src->y) + (mtx->m[2][2] * src->z);
