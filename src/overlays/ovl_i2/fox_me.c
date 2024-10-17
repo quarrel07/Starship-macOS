@@ -51,6 +51,117 @@ void Meteo_ReflectDamage(Actor* this) {
     }
 }
 
+PosRot sMeteorGroup1[10] = {
+    {
+        // Meteor Number: 10000005
+        // Pos:
+        { -751.610779, 895.229431, -14118.559570 },
+        // Rot:
+        { 246.692810, 252.189011, 0.0f },
+    },
+    {
+        // Meteor Number: 10000006
+        // Pos:
+        { -1496.616821, -237.345093, -13889.714844 },
+        // Rot:
+        { 240.222717, 204.470245, 0.0f },
+    },
+    {
+        // Meteor Number: 10000007
+        // Pos:
+        { -2340.733887, 671.444031, -13942.265625 },
+        // Rot:
+        { 224.260315, 213.531525, 0.0f },
+    },
+    {
+        // Meteor Number: 10000008
+        // Pos:
+        { -872.569824, 515.999390, -13978.042969 },
+        // Rot:
+        { 353.063599, 196.916153, 0.0f },
+    },
+    {
+        // Meteor Number: 10000009
+        // Pos:
+        { -1244.159180, -568.048401, -13831.064453 },
+        // Rot:
+        { 197.289780, 116.560478, 0.0f },
+    },
+    {
+        // Meteor Number: 1000000a
+        // Pos:
+        { -1766.432739, 71.170959, -13912.819336 },
+        // Rot:
+        { 276.255524, 353.187103, 0.0f },
+    },
+    {
+        // Meteor Number: 1000000b
+        // Pos:
+        { -1174.724609, -202.646606, -14182.970703 },
+        // Rot:
+        { 92.375626, 72.047653, 0.0f },
+    },
+    {
+        // Meteor Number: 1000000c
+        // Pos:
+        { -2022.511963, -378.516357, -14139.068359 },
+        // Rot:
+        { 224.973175, 315.608368, 0.0f },
+    },
+    {
+        // Meteor Number: 1000000d
+        // Pos:
+        { -1707.861450, 1120.328125, -13761.345703 },
+        // Rot:
+        { 298.162506, 235.397705, 0.0f },
+    },
+    {
+        // Meteor Number: 1000000e
+        // Pos:
+        { -1883.771973, -502.502319, -14215.611328 },
+        // Rot:
+        { 178.305359, 92.261642, 0.0f },
+    },
+};
+
+PosRot sMeteorGroup2[5] = {
+    {
+        // Meteor Number: 20000004
+        // Pos:
+        { 182.362061, 170.138458, -7205.532715 },
+        // Rot:
+        { 231.369064, 257.044342, 0.0f },
+    },
+    {
+        // Meteor Number: 20000005
+        // Pos:
+        { 335.380554, -309.073853, -7308.596680 },
+        // Rot:
+        { 324.552704, 51.662823, 0.0f },
+    },
+    {
+        // Meteor Number: 20000006
+        // Pos:
+        { -1299.856689, 1078.993408, -7368.679688 },
+        // Rot:
+        { 130.723480, 213.801590, 0.0f },
+    },
+    {
+        // Meteor Number: 20000007
+        // Pos:
+        { 196.442139, 312.897308, -7504.875000 },
+        // Rot:
+        { 68.665321, 15.956697, 0.0f },
+    },
+    {
+        // Meteor Number: 20000008
+        // Pos:
+        { -1016.868591, 662.603943, -7195.014648 },
+        // Rot:
+        { 152.309296, 240.838593, 0.0f },
+    },
+};
+
 void Meteo_MeMeteor1_Update(MeMeteor1* this) {
     Vec3f vec;
 
@@ -1887,6 +1998,70 @@ void Meteo_Effect346_Spawn(ActorEvent* this) {
     }
 }
 
+void Meteo_SpawnMeteorsGroup1(MeMeteor2* this, ActorCutscene* actorCs, s32 index) {
+    Actor_Initialize(this);
+    this->obj.status = OBJ_INIT;
+    this->obj.id = OBJ_ACTOR_ME_METEOR_2;
+
+    this->obj.pos.x = sMeteorGroup1[index - 5].pos.x;
+    this->obj.pos.y = sMeteorGroup1[index - 5].pos.y;
+    this->obj.pos.z = sMeteorGroup1[index - 5].pos.z;
+
+    this->obj.rot.y = sMeteorGroup1[index - 5].rot.y;
+    this->obj.rot.x = sMeteorGroup1[index - 5].rot.x;
+
+#if 0
+    printf("{ // Meteor Number: %x \n", index);
+    printf(" // Pos: \n");
+    printf("    { %f, ", this->obj.pos.x);
+    printf(" %f, ", this->obj.pos.y);
+    printf(" %f }, \n", this->obj.pos.z);
+    printf(" // Rot: \n");
+    printf("    {");
+    printf(" %f, ", this->obj.rot.x);
+    printf(" %f, ", this->obj.rot.y);
+    printf(" 0.0f ");
+    printf("},\n");
+    printf("}, \n");
+#endif
+
+    this->timer_0C2 = 10000;
+    this->vel.z = 30.0f;
+    Object_SetInfo(&this->info, this->obj.id);
+}
+
+void Meteo_SpawnMeteorsGroup2(MeMeteor2* this, ActorCutscene* actorCs, s32 index) {
+    Actor_Initialize(this);
+    this->obj.status = OBJ_INIT;
+    this->obj.id = OBJ_ACTOR_ME_METEOR_2;
+
+    this->obj.pos.x = sMeteorGroup2[index - 4].pos.x;
+    this->obj.pos.y = sMeteorGroup2[index - 4].pos.y;
+    this->obj.pos.z = sMeteorGroup2[index - 4].pos.z;
+
+    this->obj.rot.y = sMeteorGroup2[index - 4].rot.y;
+    this->obj.rot.x = sMeteorGroup2[index - 4].rot.x;
+
+#if 0
+    printf("{ // Meteor Number: %x \n", index);
+    printf(" // Pos: \n");
+    printf("    { %f, ", this->obj.pos.x);
+    printf(" %f, ", this->obj.pos.y);
+    printf(" %f }, \n", this->obj.pos.z);
+    printf(" // Rot: \n");
+    printf("    {");
+    printf(" %f, ", this->obj.rot.x);
+    printf(" %f, ", this->obj.rot.y);
+    printf(" 0.0f ");
+    printf("},\n");
+    printf("}, \n");
+#endif
+
+    this->timer_0C2 = 10000;
+    this->vel.z = 30.0f;
+    Object_SetInfo(&this->info, this->obj.id);
+}
+
 void Meteo_LevelStart(Player* player) {
     u8 sp8F;
     s32 i;
@@ -1924,7 +2099,7 @@ void Meteo_LevelStart(Player* player) {
             Meteo_8018CAD8();
 
             for (i = 5; i < 15; i++) {
-                Meteo_8018C8F4(&gActors[i], greatFox);
+                Meteo_SpawnMeteorsGroup1(&gActors[i], greatFox, i);
             }
 
             D_ctx_80177A48[1] = -13000.0f;
@@ -2009,7 +2184,7 @@ void Meteo_LevelStart(Player* player) {
                 greatFox->obj.pos.z += 4000.0f;
 
                 for (i = 4; i < 9; i++) {
-                    Meteo_8018C8F4(&gActors[i], greatFox);
+                    Meteo_SpawnMeteorsGroup2(&gActors[i], greatFox, i);
                 }
 
                 greatFox->obj.pos.x -= 1000.0f;
