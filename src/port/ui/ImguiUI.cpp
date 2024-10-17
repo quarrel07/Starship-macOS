@@ -417,10 +417,6 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Disable Level of Detail (LOD) to avoid models using lower poly versions at a distance"
             });
 
-            UIWidgets::CVarCheckbox("Speed Control", "gDebugSpeedControl", {
-                .tooltip = "Control the Arwing speed"
-            }
-            );
             ImGui::EndMenu();
         }
 
@@ -483,6 +479,10 @@ void DrawDebugMenu() {
 
         UIWidgets::CVarCheckbox("Disable Collision", "gDebugNoCollision", {
             .tooltip = "Disable vehicle collision"
+        });
+        
+        UIWidgets::CVarCheckbox("Speed Control", "gDebugSpeedControl", {
+            .tooltip = "Control the Arwing speed"
         });
 
         UIWidgets::Spacer(0);
