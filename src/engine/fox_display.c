@@ -1907,4 +1907,27 @@ void Display_Update(void) {
     Display_DrawHelpAlert();
     sPlayersVisible[gPlayerNum] = false;
     Matrix_Pop(&gGfxMatrix);
+
+    #if DEBUG_SPEED_CONTROL == 1 // baseSpeed control
+    {
+        Player* player = gPlayer;
+        static s32 prevSpeed;
+        static bool debugFreeze = false;
+
+        if (gControllerPress[0].button & L_JPAD) {
+            player->baseSpeed -= 50;
+        } else if (gControllerPress[0].button & R_JPAD) {
+            player->baseSpeed += 50;
+        }
+
+        if ((!debugFreeze) && (gControllerPress[0].button & D_JPAD)) {
+            prevSpeed = player->baseSpeed;
+            player->baseSpeed = 0;
+            debugFreeze = true;
+        } else if ((debugFreeze) && (gControllerPress[0].button & D_JPAD)) {
+            player->baseSpeed = prevSpeed;
+            debugFreeze = false;
+        }
+    }
+#endif
 }

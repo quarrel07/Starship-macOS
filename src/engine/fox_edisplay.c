@@ -186,7 +186,7 @@ void CoBuilding9_Draw(CoBuilding9* this) {
 }
 
 void CoBuilding10_Draw(CoBuilding10* this) {
-    gSPDisplayList(gMasterDisp++, aCoBuilding10DL);
+    gSPDisplayList(gMasterDisp++, aCoBuilding9DL);
 }
 
 // repurposed into OBJ_SCENERY_CO_BUILDING_6
@@ -943,6 +943,22 @@ void ItemMeteoWarp_Draw(ItemMeteoWarp* this) {
 }
 
 void func_edisplay_8005D008(Object* obj, s32 drawType) {
+    bool isBanned = (obj->id >= OBJ_SCENERY_CO_BUILDING_5 && 
+        obj->id <= OBJ_SCENERY_CO_BUILDING_8 || obj->id == OBJ_SCENERY_CO_BUILDING_10);
+    bool skipRot = false;
+
+    if(isBanned){
+        f32 prevRot = obj->rot.y;
+        if (gPlayer[0].cam.eye.x < obj->pos.x) {
+            obj->rot.y = 271.0f;
+        } else {
+            obj->rot.y = 0.0f;
+        }
+
+        skipRot = prevRot != obj->rot.y;
+    }
+
+
     if (drawType == 2) {
         Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, gPathProgress, MTXF_APPLY);
         Matrix_Translate(gCalcMatrix, obj->pos.x, obj->pos.y, obj->pos.z, MTXF_NEW);
@@ -950,16 +966,26 @@ void func_edisplay_8005D008(Object* obj, s32 drawType) {
         Matrix_Mult(gGfxMatrix, gCalcMatrix, MTXF_APPLY);
         Matrix_Copy(&D_edisplay_801615F0, gGfxMatrix);
         Matrix_Pop(&gGfxMatrix);
+        if(isBanned && skipRot){
+            FrameInterpolation_ShouldInterpolateFrame(false);
+        }
         Matrix_RotateY(gCalcMatrix, obj->rot.y * M_DTOR, MTXF_APPLY);
         Matrix_RotateX(gCalcMatrix, obj->rot.x * M_DTOR, MTXF_APPLY);
         Matrix_RotateZ(gCalcMatrix, obj->rot.z * M_DTOR, MTXF_APPLY);
     } else {
         Matrix_Translate(gGfxMatrix, obj->pos.x, obj->pos.y, obj->pos.z + gPathProgress, MTXF_APPLY);
         Matrix_Copy(&D_edisplay_801615F0, gGfxMatrix);
+        if(isBanned && skipRot){
+            FrameInterpolation_ShouldInterpolateFrame(false);
+        }
         Matrix_RotateY(gGfxMatrix, obj->rot.y * M_DTOR, MTXF_APPLY);
         Matrix_RotateX(gGfxMatrix, obj->rot.x * M_DTOR, MTXF_APPLY);
         Matrix_RotateZ(gGfxMatrix, obj->rot.z * M_DTOR, MTXF_APPLY);
         Matrix_SetGfxMtx(&gMasterDisp);
+    }
+
+   if(isBanned && skipRot){
+        FrameInterpolation_ShouldInterpolateFrame(true);
     }
 }
 
@@ -1697,15 +1723,15 @@ void Object_DrawAll(s32 arg0) {
         RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
         for (i = 0, scenery = gScenery; i < ARRAY_COUNT(gScenery); i++, scenery++) {
             if (scenery->obj.status >= OBJ_ACTIVE) {
-                FrameInterpolation_RecordOpenChild(scenery, i);
                 if (arg0 > 0) {
                     Display_SetSecondLight(&scenery->obj.pos);
                 }
                 Matrix_Push(&gGfxMatrix);
+                FrameInterpolation_RecordOpenChild(scenery, i);
                 Scenery_Draw(scenery, arg0);
+                FrameInterpolation_RecordCloseChild();
                 Matrix_Pop(&gGfxMatrix);
                 Object_UpdateSfxSource(scenery->sfxSource);
-                FrameInterpolation_RecordCloseChild();
             }
         }
     }

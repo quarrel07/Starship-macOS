@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include "sys.h"
+#include "debug.h"
 
 typedef enum OverlayCalls {
     /*  90 */ OVLCALL_FO_CS_COMPLETE = 90,
