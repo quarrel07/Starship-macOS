@@ -31,7 +31,7 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
     u16 tempPxl;
     s32 u;
     s32 v;
-    return;
+    // return;
     // LTodo: [HD-Textures] This is broken
 
     switch (mode) {

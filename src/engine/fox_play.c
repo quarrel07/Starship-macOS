@@ -24,6 +24,8 @@
 
 extern float gCurrentScreenWidth;
 extern float gCurrentScreenHeight;
+extern Vtx D_SO_6001C50_copy[];
+extern Vtx D_SO_6004500_copy[];
 
 UNK_TYPE D_800D2F50 = 0; // unused
 s32 sOverheadCam = 0;
@@ -89,12 +91,13 @@ void Play_UpdateDynaFloor(void) {
     f32 sp84;
 
     gDynaFloorTimer++;
+
     switch (gCurrentLevel) {
         case LEVEL_SOLAR:
             if ((gGameFrameCount % 2) != 0) {
                 spB4 = SEGMENTED_TO_VIRTUAL(D_SO_6001C50);
             } else {
-                spB4 = LOAD_ASSET(D_SO_6004500);
+                spB4 = SEGMENTED_TO_VIRTUAL(D_SO_6004500);
             }
             spB0 = SEGMENTED_TO_VIRTUAL(D_SO_6022760);
             spA8 = 16 - 1;
@@ -108,7 +111,7 @@ void Play_UpdateDynaFloor(void) {
             if ((gGameFrameCount % 2) != 0) {
                 spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_6009ED0);
             } else {
-                spB4 = LOAD_ASSET(D_ZO_600C780);
+                spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_600C780);
             }
             spB0 = SEGMENTED_TO_VIRTUAL(D_ZO_602AC50);
             spA8 = 8 - 1;
@@ -128,6 +131,7 @@ void Play_UpdateDynaFloor(void) {
     for (i = 0; i < 17 * 17; i++, var_s3++, var_s5++, var_s4++, var_s0++, var_s1++, spB0++) {
         Math_SmoothStepToF(var_s3, *var_s5, sp8C, *var_s4, 0.0f);
         Math_SmoothStepToF(var_s4, 100.0f, 1.0f, sp84, 0.0f);
+
         if ((gDynaFloorTimer & spA8) == (i & spA8)) {
             *var_s5 = RAND_FLOAT(sp90);
             *var_s4 = 0.0f;
@@ -149,9 +153,55 @@ void Play_UpdateDynaFloor(void) {
 
         Matrix_MultVec3fNoTranslate(gCalcMatrix, &spC4, &spB8);
 
-        spB4[*spB0].n.n[0] = spB8.x;
+        if (gCurrentLevel == LEVEL_SOLAR) {
+            spB4[*spB0].n.n[0] = spB8.x;
+        }
         spB4[*spB0].n.n[1] = spB8.y;
         spB4[*spB0].n.n[2] = spB8.z;
+    }
+
+    Vtx* spB4_copy;
+
+    switch (gCurrentLevel) {
+        case LEVEL_SOLAR:
+            if ((gGameFrameCount % 2) != 0) {
+                spB4 = SEGMENTED_TO_VIRTUAL(D_SO_6001C50);
+                spB4_copy = D_SO_6001C50_copy;
+            } else {
+                spB4 = SEGMENTED_TO_VIRTUAL(D_SO_6004500);
+                spB4_copy = D_SO_6004500_copy;
+            }
+            spB0 = SEGMENTED_TO_VIRTUAL(D_SO_6022760);
+
+            memcpy(spB4_copy, spB4, 17 * 17 * sizeof(Vtx));
+
+            for (i = 0; (i < 17 * 17); i++, spB0++) {
+                spB4_copy[*spB0].n.n[0] *= -1.0f;
+                // spB4_copy[*spB0].n.n[1] *= -1.0f;
+                // spB4_copy[*spB0].n.n[2] *= -1.0f;
+            }
+            break;
+            /*
+            case LEVEL_ZONESS:
+                if ((gGameFrameCount % 2) != 0) {
+                    spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_6009ED0);
+                    spB4_copy = D_ZO_6009ED0_copy;
+                } else {
+                    spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_600C780);
+                    spB4_copy = D_ZO_600C780_copy;
+                }
+                spB0 = SEGMENTED_TO_VIRTUAL(D_ZO_602AC50);
+
+                memcpy2(spB4_copy, spB4, 17 * 17 * sizeof(Vtx));
+
+                for (i = 0; (i < 17 * 17); i++, spB0++) {
+                    // spB4_copy[*spB0] = spB4[*spB0];
+                    spB4_copy[*spB0].n.n[0] *= -1.0f; // Disable to fix mirror
+                    // spB4_copy[*spB0].n.n[1] *= -1.0f;
+                    // spB4_copy[*spB0].n.n[2] *= -1.0f;
+                }
+                break;
+                */
     }
 }
 
@@ -2558,6 +2608,11 @@ void Player_Initialize(Player* player) {
     }
 }
 
+extern Gfx* dynaFloor1;
+extern Gfx* dynaFloor2;
+extern Vtx* dynaFloor1Vtx;
+extern Vtx* dynaFloor2Vtx;
+
 void Play_InitLevel(void) {
     Vtx* mesh;
     u8* ptr;
@@ -2636,6 +2691,13 @@ void Play_InitLevel(void) {
             gZoDodoraWaypointCount = 0;
             /* fallthrough */
         case LEVEL_SOLAR:
+            /*
+                memcpy(dynaFloor1, LOAD_ASSET(D_SO_6002E60), 724 * sizeof(Gfx));
+                memcpy(dynaFloor2, LOAD_ASSET(D_SO_60005B0), 724 * sizeof(Gfx));
+                memcpy(dynaFloor1Vtx, LOAD_ASSET(D_SO_6001C50), 17 * 17 * sizeof(Vtx));
+                memcpy(dynaFloor2Vtx, LOAD_ASSET(D_SO_6004500), 17 * 17 * sizeof(Vtx));
+              */
+
             gUseDynaFloor = true;
             gGroundHeight = -20000.0f;
             fptr = MEM_ARRAY_ALLOCATE(D_ctx_801782CC, 17 * 17);
@@ -2667,16 +2729,27 @@ void Play_InitLevel(void) {
                     mesh = LOAD_ASSET(D_ZO_6009ED0);
                     break;
             }
-
+            /*
+            for (i = 0; i < 724; i++) {
+                    if (dynaFloor1[i].dma.cmd == G_VTX) {
+                        dynaFloor1[i].dma.addr =
+                            (uintptr_t) dynaFloor1[i].dma.addr - (uintptr_t) D_SO_6001C50 + (uintptr_t) dynaFloor1Vtx;
+                    }
+                    if (dynaFloor2[i].dma.cmd == G_VTX) {
+                        dynaFloor2[i].dma.addr =
+                            (uintptr_t) dynaFloor2[i].dma.addr - (uintptr_t) D_SO_6004500 + (uintptr_t) dynaFloor2Vtx;
+                    }
+                }
+            */
             for (i = 0; i < 17 * 17; i++, mesh++) {
-                if (mesh->v.ob[0] == 800) {
-                    mesh->v.ob[0] = 1400;
+                if (mesh->v.ob[0] == 800 * 2) {
+                    mesh->v.ob[0] = 1400 * 2;
                 }
-                if (mesh->v.ob[0] == -800) {
-                    mesh->v.ob[0] = -1400;
+                if (mesh->v.ob[0] == -800 * 2) {
+                    mesh->v.ob[0] = -1400 * 2;
                 }
-                if (mesh->v.ob[2] == -800) {
-                    mesh->v.ob[2] = -1400;
+                if (mesh->v.ob[2] == -800 * 2) {
+                    mesh->v.ob[2] = -1400 * 2;
                 }
             }
 
@@ -2690,14 +2763,14 @@ void Play_InitLevel(void) {
             }
 
             for (i = 0; i < 17 * 17; i++, mesh++) {
-                if (mesh->v.ob[0] == 800) {
-                    mesh->v.ob[0] = 1400;
+                if (mesh->v.ob[0] == 800 * 2) {
+                    mesh->v.ob[0] = 1400 * 2;
                 }
-                if (mesh->v.ob[0] == -800) {
-                    mesh->v.ob[0] = -1400;
+                if (mesh->v.ob[0] == -800 * 2) {
+                    mesh->v.ob[0] = -1400 * 2;
                 }
-                if (mesh->v.ob[2] == -800) {
-                    mesh->v.ob[2] = -1400;
+                if (mesh->v.ob[2] == -800 * 2) {
+                    mesh->v.ob[2] = -1400 * 2;
                 }
             }
             break;
