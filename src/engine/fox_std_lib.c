@@ -733,7 +733,7 @@ void Graphics_FillRectangle(Gfx** gfxPtr, s32 ulx, s32 uly, s32 lrx, s32 lry, u8
         gDPSetCycleType((*gfxPtr)++, G_CYC_1CYCLE);
         gDPSetCombineMode((*gfxPtr)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
         gDPSetRenderMode((*gfxPtr)++, G_RM_CLD_SURF, G_RM_CLD_SURF2);
-        gDPFillRectangle((*gfxPtr)++, ulx, uly, lrx, lry);
+        gDPFillWideRectangle((*gfxPtr)++, ulx, uly, lrx, lry);
     }
 }
 
