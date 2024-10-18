@@ -190,7 +190,7 @@ void Option_VsMenuCard_Draw(void);
 void Option_DrawMenuLabel(void);
 void Option_DrawMenuCard(OptionCardFrame arg0);
 void Option_DrawMenuArwing(ArwingCursorPos arwing);
-void Option_DrawArwing(f32, f32, f32, f32, f32, f32);
+void Option_DrawArwing(f32, f32, f32, f32, f32, f32, s32);
 void Option_Menu_Push(void);
 void Option_SetMenuLightPos(f32, f32, f32, f32*, f32*, f32*);
 void Option_CardLightning_Update(void);

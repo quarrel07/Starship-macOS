@@ -2806,8 +2806,8 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71, sVsHandicapFrameXpos[PlayerIdx],
-                     sVsHandicapFrameYpos[PlayerIdx], 1.0f, 1.0f);
+    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71,
+                        sVsHandicapFrameXpos[PlayerIdx], sVsHandicapFrameYpos[PlayerIdx], 1.0f, 1.0f);
 
     Lib_TextureRect_CI8(&gMasterDisp, sVsCharNameTex[PlayerIdx], sVsCharNameTLUT[PlayerIdx], sCharNameWidth[PlayerIdx],
                         sCharNameHeight[PlayerIdx], sVsHandicapFrameXpos[PlayerIdx] + sCharNameXoffsetPos[PlayerIdx],
@@ -2849,8 +2849,9 @@ void Option_VS_HandicapSet_Draw(s32 PlayerIdx) {
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[PlayerIdx], 44, 44, sVsHandicapFrameXpos[PlayerIdx] + sPlayerFaceXoffsetPos,
-                        sVsHandicapFrameYpos[PlayerIdx] + sPlayerFaceYoffsetPos, 0.7f, 0.7f);
+    Lib_TextureRect_RGBA16(&gMasterDisp, sVsPlayerFaceTex[PlayerIdx], 44, 44,
+                           sVsHandicapFrameXpos[PlayerIdx] + sPlayerFaceXoffsetPos,
+                           sVsHandicapFrameYpos[PlayerIdx] + sPlayerFaceYoffsetPos, 0.7f, 0.7f);
 
     width = 24;
     if (PlayerIdx == 0) {
@@ -3494,16 +3495,30 @@ void Option_DrawMenuCard(OptionCardFrame arg0) {
 
 void Option_DrawMenuArwing(ArwingCursorPos arwing) {
     if (sDrawCursor) {
-        Option_DrawArwing(arwing.x, arwing.y, D_menu_801B91F4, sLeftArwingCursorYrot, 90.0f, D_menu_801B91F8);
+        Option_DrawArwing(arwing.x, arwing.y, D_menu_801B91F4, sLeftArwingCursorYrot, 90.0f, D_menu_801B91F8, 0);
         Option_DrawArwing(arwing.x + arwing.range, arwing.y, D_menu_801B91F4, sRightArwingCursorYrot, -90.0f,
-                          D_menu_801B91F8);
+                          D_menu_801B91F8, 1);
     }
 }
 
-void Option_DrawArwing(f32 x, f32 y, f32 z, f32 yRot, f32 zRot, f32 scale) {
+void Option_DrawArwing(f32 x, f32 y, f32 z, f32 yRot, f32 zRot, f32 scale, s32 index) {
     f32 dirX;
     f32 dirY;
     f32 dirZ;
+    static int arwingCursorPrevPos = 0;
+    bool interpolationEnabled;
+
+    if (arwingCursorPrevPos != sMainMenuCursor) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(false);
+        interpolationEnabled = false;
+    } else {
+        // @port renable interpolation
+        FrameInterpolation_ShouldInterpolateFrame(true);
+        interpolationEnabled = true;
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Option_DrawArwing", index);
+    }
 
     Option_SetMenuLightPos(sArwingLightXrot, sArwingLightYrot, 100.0f, &dirX, &dirY, &dirZ);
 
@@ -3525,6 +3540,16 @@ void Option_DrawArwing(f32 x, f32 y, f32 z, f32 yRot, f32 zRot, f32 scale) {
     gSPDisplayList(gMasterDisp++, aMapArwingDL);
 
     Matrix_Pop(&gGfxMatrix);
+
+    if (interpolationEnabled) {
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+    } else {
+        // @port renable interpolation
+        FrameInterpolation_ShouldInterpolateFrame(true);
+    }
+
+    arwingCursorPrevPos = sMainMenuCursor;
 }
 
 void Option_Menu_Push(void) {
@@ -3633,8 +3658,8 @@ void Option_DrawCardLabel(OptionCardTexture tex) {
 }
 
 // Input for vertical movement of the cursor
-bool Option_Input_MoveCursor_Y(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
-                               s32 controllerNum, StickInput* stickY) {
+bool Option_Input_MoveCursor_Y(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7,
+                               StickInput* stick) {
     s32 axis;
     s32 x;
     s32 y;
@@ -3647,8 +3672,8 @@ bool Option_Input_MoveCursor_Y(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg
 
     temp = *arg0;
 
-    x = +gControllerPress[controllerNum].stick_x;
-    y = -gControllerPress[controllerNum].stick_y;
+    x = gControllerPress[arg7].stick_x;
+    y = -gControllerPress[arg7].stick_y;
 
     if (arg2 == true) {
         axis = y;
@@ -3666,7 +3691,7 @@ bool Option_Input_MoveCursor_Y(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg
         axis = 0;
     }
 
-    if (!(stickY->unk_4)) {
+    if (!(stick->unk_4)) {
         if (axis != 0) {
             if (axis > 0) {
                 (*arg0)++;
@@ -3690,18 +3715,74 @@ bool Option_Input_MoveCursor_Y(s32* arg0, s32 arg1, bool arg2, s32 arg3, s32 arg
                 }
             }
 
-            stickY->unk_4 = arg5 + stickY->unk_0;
-            if (stickY->unk_0 > 0) {
-                stickY->unk_0 -= arg6;
+            stick->unk_4 = arg5 + stick->unk_0;
+            if (stick->unk_0 > 0) {
+                stick->unk_0 -= arg6;
             }
         } else {
-            stickY->unk_4 = 0;
-            stickY->unk_0 = arg6;
+            stick->unk_4 = 0;
+            stick->unk_0 = arg6;
         }
     }
 
-    if (stickY->unk_4 > 0) {
-        stickY->unk_4--;
+    if (((gControllerPress[0].button & D_JPAD) || (gControllerPress[0].button & U_JPAD)) && (arg2 == true)) {
+        if (gControllerPress[0].button & D_JPAD) {
+            (*arg0)++;
+            if (*arg0 > arg1) {
+                if (arg3 == 0) {
+                    *arg0 = 0;
+                } else {
+                    *arg0 = arg1;
+                }
+            }
+        }
+
+        if (gControllerPress[0].button & U_JPAD) {
+            (*arg0)--;
+            if (*arg0 < 0) {
+                if (arg3 == 0) {
+                    *arg0 = arg1;
+                } else {
+                    *arg0 = 0;
+                }
+            }
+        }
+
+        stick->unk_4 = arg5 + stick->unk_0;
+        if (stick->unk_0 > 0) {
+            stick->unk_0 -= arg6;
+        }
+    } else if (((gControllerPress[0].button & L_JPAD) || (gControllerPress[0].button & R_JPAD)) && (arg2 == false)) {
+        if (gControllerPress[0].button & L_JPAD) {
+            (*arg0)++;
+            if (*arg0 > arg1) {
+                if (arg3 == 0) {
+                    *arg0 = 0;
+                } else {
+                    *arg0 = arg1;
+                }
+            }
+        }
+
+        if (gControllerPress[0].button & R_JPAD) {
+            (*arg0)--;
+            if (*arg0 < 0) {
+                if (arg3 == 0) {
+                    *arg0 = arg1;
+                } else {
+                    *arg0 = 0;
+                }
+            }
+        }
+
+        stick->unk_4 = arg5 + stick->unk_0;
+        if (stick->unk_0 > 0) {
+            stick->unk_0 -= arg6;
+        }
+    }
+
+    if (stick->unk_4 > 0) {
+        stick->unk_4--;
     }
 
     if (temp != *arg0) {
@@ -3727,6 +3808,17 @@ s32 Option_Input_DataSelect_X(s32* arg0) {
     }
 
     if (D_menu_801B91A0 == 0) {
+        // @port: D_PAD control
+        if (gControllerPress[0].button & R_JPAD) {
+            *arg0 = 0;
+            ret = 1;
+            D_menu_801B91A0 = 6;
+        } else if (gControllerPress[0].button & L_JPAD) {
+            *arg0 = 1;
+            ret = -1;
+            D_menu_801B91A0 = 6;
+        }
+
         if (x != 0) {
             if (x > 0) {
                 *arg0 = 0;
@@ -3736,7 +3828,7 @@ s32 Option_Input_DataSelect_X(s32* arg0) {
                 *arg0 = 1;
                 ret = -1;
             }
-            D_menu_801B91A0 = ARRAY_COUNT(sOptionCardList);
+            D_menu_801B91A0 = 6;
         }
     }
 
@@ -3757,24 +3849,31 @@ bool Option_Input_Sound_X(f32* arg0, f32 arg1, f32 arg2, StickInput* arg3) {
     f32 temp2;
     bool var_a2 = false;
     f32 temp = *arg0;
-    s32 x = +gControllerPress[gMainController].stick_x;
-    s32 y = -gControllerPress[gMainController].stick_y;
+    s32 stickX = +gControllerPress[gMainController].stick_x;
+    s32 stickY = -gControllerPress[gMainController].stick_y;
+    static int holdTimer = 0;
 
-    if ((y > 10) || (y < -10)) {
+    if (gControllerHold[gMainController].button & (L_JPAD | R_JPAD)) {
+        holdTimer++;
+    } else {
+        holdTimer = 0;
+    }
+
+    if ((stickY > 10) || (stickY < -10)) {
         return 0;
     }
 
-    if ((x < 10) && (x > -10)) {
-        x = 0;
-    } else if (x < 0) {
-        x += 10;
+    if ((stickX < 10) && (stickX > -10)) {
+        stickX = 0;
+    } else if (stickX < 0) {
+        stickX += 10;
     } else {
-        x -= 10;
+        stickX -= 10;
     }
 
     if (arg3->unk_4 == 0) {
-        if (x != 0) {
-            var_fv1 = x / 20.0f;
+        if (stickX != 0) {
+            var_fv1 = stickX / 20.0f;
             arg3->unk_4 = arg3->unk_0;
 
             if (arg3->unk_0 != 0) {
@@ -3782,7 +3881,7 @@ bool Option_Input_Sound_X(f32* arg0, f32 arg1, f32 arg2, StickInput* arg3) {
             }
 
             if (arg3->unk_4 != 0) {
-                if (x > 0) {
+                if (stickX > 0) {
                     var_fv1 = 1.0f;
                 } else {
                     var_fv1 = -1.0f;
@@ -3800,6 +3899,48 @@ bool Option_Input_Sound_X(f32* arg0, f32 arg1, f32 arg2, StickInput* arg3) {
         } else {
             arg3->unk_4 = 0;
             arg3->unk_0 = 7;
+        }
+    }
+
+    if (gControllerPress[gMainController].button & R_JPAD) {
+        stickX += 10;
+    } else if (gControllerPress[gMainController].button & L_JPAD) {
+        stickX -= 10;
+    }
+
+    if (holdTimer > 15) {
+        if (gControllerHold[gMainController].button & L_JPAD) {
+            var_fv1 = -1.0f;
+        } else if (gControllerHold[gMainController].button & R_JPAD) {
+            var_fv1 = 1.0f;
+        }
+        *arg0 += var_fv1;
+
+        if (arg2 < *arg0) {
+            *arg0 = arg2;
+        }
+        if (*arg0 < arg1) {
+            *arg0 = arg1;
+        }
+    }
+
+    if (gControllerPress[gMainController].button & L_JPAD) {
+        var_fv1 = -1.0f;
+        *arg0 += var_fv1;
+        if (arg2 < *arg0) {
+            *arg0 = arg2;
+        }
+        if (*arg0 < arg1) {
+            *arg0 = arg1;
+        }
+    } else if (gControllerPress[gMainController].button & R_JPAD) {
+        var_fv1 = 1.0f;
+        *arg0 += var_fv1;
+        if (arg2 < *arg0) {
+            *arg0 = arg2;
+        }
+        if (*arg0 < arg1) {
+            *arg0 = arg1;
         }
     }
 

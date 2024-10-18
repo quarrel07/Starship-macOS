@@ -1293,33 +1293,45 @@ void HUD_DrawStatusScreens(void) {
 }
 
 s32 HUD_PauseScreenInput(void) {
-    s32 ret = 0;
-    f32 stickY = gInputPress->stick_y;
+    s32 var_v1 = 0;
+    f32 y = gInputPress->stick_y;
 
-    if ((stickY != 0.0f) && (sPauseScreenIwork[4] != 0)) {
+    if ((y != 0.0f) && (sPauseScreenIwork[4] != 0)) {
         return 0;
     }
 
     sPauseScreenIwork[4] = 0;
 
-    if (fabsf(stickY) < 30.0f) {
-        stickY = 0.0f;
+    if (fabsf(y) < 30.0f) {
+        y = 0.0f;
     }
 
-    if (stickY != 0.0f) {
+    if (y != 0.0f) {
         if (sPauseScreenIwork[2] == 0) {
-            if (stickY > 0) {
-                ret = 1;
+            if (y > 0) {
+                var_v1 = 1;
             } else {
-                ret = -1;
+                var_v1 = -1;
             }
             sPauseScreenIwork[2] = 1;
+        } else {
+            sPauseScreenIwork[2] = 0;
         }
     } else {
-        sPauseScreenIwork[2] = 0;
+        if ((gControllerPress[0].button & D_JPAD) || (gControllerPress[0].button & U_JPAD)) {
+            if (sPauseScreenIwork[2] == 0) {
+                if (gControllerPress[0].button & U_JPAD) {
+                    var_v1 = 1;
+                } else {
+                    var_v1 = -1;
+                }
+                sPauseScreenIwork[2] = 1;
+            }
+        } else {
+            sPauseScreenIwork[2] = 0;
+        }
     }
-
-    return ret;
+    return var_v1;
 }
 
 void HUD_LoseLifeExplosion_Draw(s32 animFrames) {
