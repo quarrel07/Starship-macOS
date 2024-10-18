@@ -96,4 +96,20 @@ void RamMod_Update(void);
 void Spawner(void);
 #endif
 
+/*
+
+// @port: Tag the transform.
+FrameInterpolation_RecordOpenChild(shot, 0);
+
+// @port Pop the transform id.
+FrameInterpolation_RecordCloseChild();
+
+// @port Skip interpolation
+FrameInterpolation_ShouldInterpolateFrame(false);
+
+// @port renable interpolation
+FrameInterpolation_ShouldInterpolateFrame(true);
+
+*/
+
 #endif
