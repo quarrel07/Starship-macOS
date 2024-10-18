@@ -1960,6 +1960,9 @@ void Display_Update(void) {
             return;
         }
         if (gControllerPress[0].button & L_TRIG) {
+            if ((gCurrentLevel != LEVEL_SECTOR_X) && (gCurrentLevel != LEVEL_METEO)) {
+                return;
+            }
             if (gCurrentLevel == LEVEL_SECTOR_X) {
                 gRingPassCount++;
                 gPlayer[0].state_1C8 = PLAYERSTATE_1C8_ENTER_WARP_ZONE;
@@ -1984,7 +1987,7 @@ void Display_Update(void) {
         }
         gPlayer->mercyTimer = 1000;
     }
-    
+
     if (CVarGetInteger("gDebugLevelComplete", 0) == 1) {
         Player* pl = &gPlayer[0];
         if ((gGameState != GSTATE_PLAY) || (gPlayState <= PLAY_INIT)) {
@@ -1993,6 +1996,14 @@ void Display_Update(void) {
 
         if (gControllerPress[0].button & L_TRIG) {
             pl->state_1C8 = PLAYERSTATE_1C8_LEVEL_COMPLETE;
+        }
+    }
+
+    if (CVarGetInteger("gDebugJumpToAllRange", 0) == 1) {
+        Player* pl2 = &gPlayer[0];
+
+        if (gControllerPress[0].button & L_TRIG) {
+            pl2->state_1C8 = PLAYERSTATE_1C8_START_360;
         }
     }
 

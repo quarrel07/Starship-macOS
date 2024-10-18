@@ -477,6 +477,10 @@ void DrawDebugMenu() {
             .tooltip = "Press L to Level Complete"
         });
 
+        UIWidgets::CVarCheckbox("L to All-Range mode", "gDebugJumpToAllRange", {
+            .tooltip = "Press L to switch to All-Range mode"
+        });
+
         UIWidgets::CVarCheckbox("Disable Collision", "gDebugNoCollision", {
             .tooltip = "Disable vehicle collision"
         });
