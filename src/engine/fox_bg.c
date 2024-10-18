@@ -265,7 +265,6 @@ void Background_DrawStarfield(void) {
                 Matrix_Translate(gGfxMatrix, vx - (currentScreenWidth / 2.0f), -(vy - (currentScreenHeight / 2.0f)),
                                  0.0f, MTXF_NEW);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                Matrix_Pop(&gGfxMatrix);
 
                 // Convert color from fill color (assuming RGB5A1) to RGBA8
                 u8 r = ((*color >> 11) & 0x1F);
@@ -280,7 +279,7 @@ void Background_DrawStarfield(void) {
 
                 // Draw the star using the predefined display list
                 gSPDisplayList(gMasterDisp++, starDL);
-
+                Matrix_Pop(&gGfxMatrix);
                 // Pop the transform id
                 FrameInterpolation_RecordCloseChild();
             }
@@ -488,7 +487,8 @@ void Background_DrawBackdrop(void) {
                         // Translate to the next position (move right by 7280.0f each time)
                         Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
-                                                
+
+                        // @port Pop the transform id.
                         FrameInterpolation_RecordCloseChild();
                     }
                     break;
@@ -504,6 +504,8 @@ void Background_DrawBackdrop(void) {
                     if (corneriaCamYawDeg < 180.0f) {
                         sp13C = -(7280.0f - sp13C);
                     }
+
+                    // gTestVarF = sp13C;
 
                     // Apply camera roll and translate matrix to the starting position (far left)
                     Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
@@ -528,7 +530,7 @@ void Background_DrawBackdrop(void) {
                         Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
 
-                                                
+                        // @port Pop the transform id.
                         FrameInterpolation_RecordCloseChild();
                     }
                     break;
@@ -536,8 +538,10 @@ void Background_DrawBackdrop(void) {
 
                 case LEVEL_VENOM_ANDROSS: // WIP
                     if (gDrawBackdrop != 6) {
+                        // @port: Tag the transform.
                         FrameInterpolation_RecordOpenChild("Backdrop", 0);
                         FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+
                         if ((gDrawBackdrop == 2) || (gDrawBackdrop == 7)) {
                             Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
                             Matrix_Translate(gGfxMatrix, 0.0f, -4000.0f, -7000.0f, MTXF_APPLY);
@@ -614,7 +618,7 @@ void Background_DrawBackdrop(void) {
                                 Matrix_Pop(&gGfxMatrix);
                             }
                         }
-                                                
+                        // @port Pop the transform id.
                         FrameInterpolation_RecordCloseChild();
                     }
                     break;
@@ -646,7 +650,6 @@ void Background_DrawBackdrop(void) {
                             Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
                             Matrix_SetGfxMtx(&gMasterDisp);
 
-                                                        
                             FrameInterpolation_RecordCloseChild();
                         }
                         Matrix_Pop(&gGfxMatrix);
@@ -709,7 +712,6 @@ void Background_DrawBackdrop(void) {
                         // Move the matrix to the right by 7280.0f each time to draw the next texture
                         Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
 
-                                                
                         Matrix_SetGfxMtx(&gMasterDisp);
                     }
                     break;
@@ -1217,8 +1219,6 @@ void Background_DrawGround(void) {
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, D_CO_601B640);
 
-                                
-
                 Matrix_Pop(&gGfxMatrix);
             } else {
                 gGroundSurface = SURFACE_GRASS;
@@ -1232,8 +1232,6 @@ void Background_DrawGround(void) {
                     gSPDisplayList(gMasterDisp++, D_CO_601EAA0);
                     Matrix_Pop(&gGfxMatrix);
                 }
-
-                                
             }
             break;
 
@@ -1312,8 +1310,6 @@ void Background_DrawGround(void) {
             Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             gSPDisplayList(gMasterDisp++, sp1C0);
-
-                        
 
             Matrix_Pop(&gGfxMatrix);
             break;
@@ -1404,8 +1400,6 @@ void Background_DrawGround(void) {
                 gSPDisplayList(gMasterDisp++, sp1C0);
                 Matrix_Pop(&gGfxMatrix);
 
-                                
-
             } else {
                 for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
                     Matrix_Push(&gGfxMatrix);
@@ -1416,8 +1410,6 @@ void Background_DrawGround(void) {
                     gSPDisplayList(gMasterDisp++, D_TR_6005880);
                     Matrix_Pop(&gGfxMatrix);
                 }
-
-                                
             }
             break;
 
@@ -1682,8 +1674,6 @@ void Background_DrawGround(void) {
 
                 // Render the display list based on the current frame
                 gSPDisplayList(gMasterDisp++, (gGameFrameCount % 2) ? D_SO_60005B0_copy : D_SO_6002E60_copy);
-
-                                
 
                 // Re-enable backface culling
                 gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
