@@ -144,6 +144,7 @@ f32 D_menu_801B9078;
 f32 D_menu_801B907C;
 f32 D_menu_801B9080;
 f32 D_menu_801B9084;
+s32 segataSanshiroTimer = 0;
 
 TitleAnimation sTeamAnim[4] = {
     { &aFoxRunningAnim, &aFoxAnim, aFoxSkel },
@@ -230,7 +231,7 @@ void Title_Main(void) {
 }
 
 void Title_UpdateEntry(void) {
-    
+
     // LTODO: Verify this is correct
     gMainController = Title_CheckControllers();
 
@@ -1669,6 +1670,7 @@ void Title_CsTakeOff_Update(void) {
         case 0:
             D_menu_801B7BEC = 0;
 
+            segataSanshiroTimer = 0;
             Title_CsTakeOff_Setup();
             Audio_SetEnvSfxReverb(104);
 
@@ -1708,7 +1710,7 @@ void Title_CsTakeOff_Update(void) {
             }
 
             if (sTimer3 == 60) {
-                sTitleCardState = TITLE_CARD_ARWING;
+                sTitleCardState = 2; // TITLE_CARD_ARWING
             }
 
             for (i = ARRAY_COUNT(sTitleArwing) - 1; i >= 0; i--) {
@@ -1731,12 +1733,12 @@ void Title_CsTakeOff_Update(void) {
                 }
             }
 
-            if (sTimer3 == 70) {
+            if (sTimer3 == 226) {
                 D_menu_801B7BE4 = 0;
                 sTitleArwing[TEAM_FOX].draw = false;
             }
 
-            if (sTimer3 == 80) {
+            if (sTimer3 == 226) {
                 sTitleArwing[TEAM_FALCO].draw = false;
 
                 for (i = 0; i < 4; i++) {
@@ -1744,13 +1746,13 @@ void Title_CsTakeOff_Update(void) {
                 }
             }
 
-            if (sTimer3 == 115) {
+            if (sTimer3 == 226) {
                 sTitleArwing[TEAM_FOX].draw = true;
                 sTitleArwing[TEAM_FALCO].draw = true;
             }
 
             if (sTimer3 == 226) {
-                sTitleCardState = TITLE_CARD_NONE;
+                sTitleCardState = 0; // TITLE_CARD_NONE
 
                 AUDIO_PLAY_SFX(NA_SE_ENGINE_START, sTitleArwing[TEAM_SLIPPY].sfxSource, 0);
 
@@ -1790,6 +1792,7 @@ void Title_CsTakeOff_Update(void) {
             break;
 
         case 2:
+            gStarCount = 800;
             if (sTimer3 == 30) {
                 sTitleArwing[TEAM_SLIPPY].unk_40 = 1;
             }
@@ -1826,21 +1829,22 @@ void Title_CsTakeOff_Update(void) {
                 sSceneState++;
             }
 
-            if (sTimer3 == 50) {
+            if (sTimer3 == 50 * 4) {
                 sTitleArwing[TEAM_FOX].draw = false;
             }
 
-            if (sTimer3 == 60) {
+            if (sTimer3 == 60 * 4) {
                 sTitleArwing[TEAM_FALCO].draw = false;
             }
 
             Math_SmoothStepToF(&D_menu_801B86B4, 16.0f, 0.01f, 100.0f, 0.01f);
             Math_SmoothStepToF(&D_menu_801B86AC, 138.0f, 0.01f, 100.0f, 0.01f);
 
-            Title_SetCamUp2(D_menu_801B86BC, D_menu_801B86C0, D_menu_801B86C4, &gCsCamEyeX, &gCsCamEyeY, &gCsCamEyeZ,
-                            D_menu_801B86B4, &gCsCamAtX, &gCsCamAtY, &gCsCamAtZ, D_menu_801B86B8, D_menu_801B86A8,
-                            D_menu_801B86AC);
+            Title_SetCamUp2(D_menu_801B86BC + 9, D_menu_801B86C0, D_menu_801B86C4, &gCsCamEyeX, &gCsCamEyeY,
+                            &gCsCamEyeZ, D_menu_801B86B4, &gCsCamAtX, &gCsCamAtY, &gCsCamAtZ, D_menu_801B86B8,
+                            D_menu_801B86A8, D_menu_801B86AC);
             sTimer3++;
+            gStarCount = 800;
             break;
 
         case 3:
@@ -1882,7 +1886,7 @@ void Title_CsTakeOff_Update(void) {
                 if (sTimer3 > 8) {
                     Audio_SetEnvSfxReverb(0);
                     sSceneState = 0;
-                    sCutsceneState = TITLE_TAKE_OFF_SPACE;
+                    sCutsceneState = 5; // TITLE_TAKE_OFF_SPACE
                 }
                 sTimer3++;
             }
@@ -2331,6 +2335,10 @@ void Title_Arwing_DrawEngineGlow(TitleTeam teamIdx) {
     }
 
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Title_Arwing_DrawEngineGlow", teamIdx);
+
     Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, var_fa0, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, engineGlowScale, engineGlowScale * 0.7f, engineGlowScale, MTXF_APPLY);
 
@@ -2351,6 +2359,9 @@ void Title_Arwing_DrawEngineGlow(TitleTeam teamIdx) {
     gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
 
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Title_EngineGlowParticles_Draw(TitleTeam teamIdx) {
@@ -2410,6 +2421,9 @@ void Title_EngineGlowParticles_Draw(TitleTeam teamIdx) {
 
         Matrix_Push(&gGfxMatrix);
 
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Title_EngineGlowParticles_Draw", i);
+
         Matrix_Translate(gGfxMatrix, D_menu_801B7D40[i], D_menu_801B7DE0[i], D_menu_801B7E80[i], MTXF_APPLY);
         Matrix_Scale(gGfxMatrix, D_menu_801B7FC0[i], D_menu_801B7FC0[i], D_menu_801B7FC0[i], MTXF_APPLY);
 
@@ -2425,13 +2439,20 @@ void Title_EngineGlowParticles_Draw(TitleTeam teamIdx) {
         gSPDisplayList(gMasterDisp++, aTitleArwingEngineGlowDL);
 
         Matrix_Pop(&gGfxMatrix);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 }
 
-void Title_ArwingShadow_Draw(s32 arg0) {
+void Title_ArwingShadow_Draw(s32 teamIdx) {
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Title_ArwingShadow_Draw", teamIdx);
+
     Matrix_Translate(gGfxMatrix, 0.0f,
-                     (D_menu_801B9050 - sTitleArwing[arg0].pos.y * 2.05f) + (D_menu_801B9048 - 84.0f) * 1.99f, 0.0f,
+                     (D_menu_801B9050 - sTitleArwing[teamIdx].pos.y * 2.05f) + (D_menu_801B9048 - 84.0f) * 1.99f, 0.0f,
                      MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
     Matrix_RotateY(gGfxMatrix, M_PI, MTXF_APPLY);
@@ -2443,6 +2464,9 @@ void Title_ArwingShadow_Draw(s32 arg0) {
     gSPDisplayList(gMasterDisp++, aTitleArwingShadowDL);
 
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Title_Corneria_Draw(f32 zPos) {
@@ -2464,7 +2488,9 @@ void Title_Corneria_Draw(f32 zPos) {
     Matrix_SetGfxMtx(&gMasterDisp);
 
     gSPDisplayList(gMasterDisp++, aPlanetCorneriaDL);
+
     Title_CorneriaExplosions_Draw();
+
     Matrix_Pop(&gGfxMatrix);
 }
 
@@ -2552,6 +2578,9 @@ void Title_CorneriaExplosions_Draw(void) {
 
         Matrix_Push(&gGfxMatrix);
 
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(false);
+
         Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 5.0f, MTXF_APPLY);
         Matrix_RotateZ(gGfxMatrix, D_menu_801B7C20[i] * M_DTOR, MTXF_APPLY);
         Matrix_Translate(gGfxMatrix, 0.0f, D_menu_801B7BF8[i], 0.0f, MTXF_APPLY);
@@ -2561,6 +2590,9 @@ void Title_CorneriaExplosions_Draw(void) {
         gSPDisplayList(gMasterDisp++, aTitleArwingEngineGlowDL);
 
         Matrix_Pop(&gGfxMatrix);
+
+        // @port renable interpolation
+        FrameInterpolation_ShouldInterpolateFrame(true);
     }
 }
 
@@ -2599,7 +2631,11 @@ void Title_TeamRunning_Draw(TitleTeam teamIdx) {
     }
 
     Matrix_Pop(&gGfxMatrix);
+
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Title_TeamRunning_Draw", teamIdx);
 
     Matrix_Translate(gGfxMatrix, sTitleTeam[teamIdx].pos.x - 5.0f, 5.0f,
                      sTitleTeam[teamIdx].pos.z + 10.0f + D_menu_801B84D0, MTXF_APPLY);
@@ -2616,6 +2652,9 @@ void Title_TeamRunning_Draw(TitleTeam teamIdx) {
 
     Matrix_Pop(&gGfxMatrix);
 
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
+
     temp_fv1 = SIN_DEG(frame * 12.0f) * 15.0f;
 
     if (temp_fv1 >= 0) {
@@ -2631,7 +2670,7 @@ void Title_TeamRunning_Draw(TitleTeam teamIdx) {
 void Title_Team_Draw(TitleTeam teamIdx) {
     Vec3f frameTable[50];
     s32 frame;
-    // return; // DEBUG
+
     frame = sTitleTeam[teamIdx].frameCount % Animation_GetFrameCount(sTeamAnim[teamIdx].title);
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_23);
@@ -2640,6 +2679,9 @@ void Title_Team_Draw(TitleTeam teamIdx) {
                        gAmbientR, gAmbientG, gAmbientB);
 
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Title_Team_Draw", teamIdx);
 
     Matrix_RotateX(gGfxMatrix, sTitleTeam[teamIdx].unk_48 * M_DTOR, MTXF_APPLY);
     Matrix_RotateY(gGfxMatrix, sTitleTeam[teamIdx].unk_4C * M_DTOR, MTXF_APPLY);
@@ -2658,6 +2700,9 @@ void Title_Team_Draw(TitleTeam teamIdx) {
                            &teamIdx, &gIdentityMatrix);
 
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 bool Title_Team_OverrideLimbDraw(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* thisx) {
@@ -2838,7 +2883,8 @@ void Title_StarfoxLogo_Draw(void) {
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
     // LTodo: Validate this
-    Lib_TextureRect_RGBA16(&gMasterDisp, aTitleStarfoxLogoTex, 236, 60, sTitleStarfoxLogoXpos, sTitleStarfoxLogoYpos, 1.0f, 1.0f);
+    Lib_TextureRect_RGBA16(&gMasterDisp, aTitleStarfoxLogoTex, 236, 60, sTitleStarfoxLogoXpos, sTitleStarfoxLogoYpos,
+                           1.0f, 1.0f);
 }
 
 void Title_64Logo_Draw(void) {
@@ -2891,8 +2937,8 @@ void Title_PressStart_Draw(void) {
             RCP_SetupDL(&gMasterDisp, SETUPDL_83);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, (s32) sTitleTextPrimCol, (s32) sTitleTextPrimCol, 255);
 
-            Lib_TextureRect_IA8(&gMasterDisp, aTitleNoControllerTex, 176, 24, D_menu_801AE474,
-                                 D_menu_801AE478, 1.0f, 1.0f);
+            Lib_TextureRect_IA8(&gMasterDisp, aTitleNoControllerTex, 176, 24, D_menu_801AE474, D_menu_801AE478, 1.0f,
+                                1.0f);
         } else {
             // Press Start
             RCP_SetupDL(&gMasterDisp, SETUPDL_83);
@@ -2984,8 +3030,8 @@ void Title_SunGlare_Draw(void) {
             gDPSetColorDither(gMasterDisp++, G_CD_NOISE);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, D_menu_801B7BD0);
 
-            Lib_TextureRect_RGBA16(&gMasterDisp, aTitleSunGlareTex, 32, 32, D_menu_801B9080, D_menu_801B9084, D_menu_801B7BB0,
-                                D_menu_801B7BB4);
+            Lib_TextureRect_RGBA16(&gMasterDisp, aTitleSunGlareTex, 32, 32, D_menu_801B9080, D_menu_801B9084,
+                                   D_menu_801B7BB0, D_menu_801B7BB4);
             D_menu_801B9080 += 1.66f;
         }
 
@@ -3110,8 +3156,8 @@ void Title_Logos_Draw(void) {
         case TITLE_LOGO_NINTENDO_64:
             RCP_SetupDL(&gMasterDisp, 0x53);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, (s32) sStarfoxLogoAlpha);
-            Lib_TextureRect_RGBA16(&gMasterDisp, aTitleN64LogoTex, 128, 88, D_menu_801B9070,
-                                    D_menu_801B9074, D_menu_801B9078, D_menu_801B907C);
+            Lib_TextureRect_RGBA16(&gMasterDisp, aTitleN64LogoTex, 128, 88, D_menu_801B9070, D_menu_801B9074,
+                                   D_menu_801B9078, D_menu_801B907C);
 
         case TITLE_LOGO_NONE:
             break;
@@ -3119,26 +3165,91 @@ void Title_Logos_Draw(void) {
 }
 
 void Title_GreatFoxDeck_Draw(void) {
+    segataSanshiroTimer++;
+
+    // Set up lights and display list
     Lights_SetOneLight(&gMasterDisp, D_menu_801B82E0, D_menu_801B82E4, D_menu_801B82E8, 0, 0, 0, gAmbientR, gAmbientG,
                        gAmbientB);
     RCP_SetupDL(&gMasterDisp, SETUPDL_23);
 
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("TAG_GREATFOXDECK", 0);
+
     Matrix_Translate(gGfxMatrix, 0.0f, D_menu_801B9048, D_menu_801B904C, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 0.4f, 0.4f, 0.4f, MTXF_APPLY);
+
     Matrix_SetGfxMtx(&gMasterDisp);
 
+    // Draw the original display list
     gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckDL);
 
-    if (D_menu_801B7BE4 != 0) {
-        Title_GreatFoxDeckPlatform_Draw();
-    }
+    // Apply scaling for mirroring
+    Matrix_Push(&gGfxMatrix);                                // Push current matrix state
+    Matrix_Scale(gGfxMatrix, -1.0f, 1.0f, 1.0f, MTXF_APPLY); // Mirror the display list horizontally
+    Matrix_Translate(gGfxMatrix, -800.0f, 0.0f, 0.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
 
-    Matrix_Pop(&gGfxMatrix);
+    // Invert the culling mode for the mirrored geometry
+    gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK); // Clear normal backface culling
+    gSPSetGeometryMode(gMasterDisp++, G_CULL_FRONT);  // Enable front-face culling (inverted culling)
+
+    if (segataSanshiroTimer > 50) {
+        // Draw the mirrored display list
+        gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckDL);
+    }
+    // Restore culling mode
+    gSPClearGeometryMode(gMasterDisp++, G_CULL_FRONT); // Clear front-face culling (inverted)
+    gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);    // Re-enable normal backface culling
+
+    Matrix_Pop(&gGfxMatrix); // Restore original matrix state
+
+    Title_GreatFoxDeckPlatform_Draw();
+
+    Matrix_Pop(&gGfxMatrix); // Restore original transformation
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Title_GreatFoxDeckPlatform_Draw(void) {
-    Matrix_Translate(gGfxMatrix, 401.0f, -249.0f, -22.0f, MTXF_APPLY);
+    gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
+    Matrix_Translate(gGfxMatrix, 400.0f, -250.0f, 0.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+    Matrix_Translate(gGfxMatrix, 400.0f - 400.0f, -250.0f + 250.0f, 500.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+    Matrix_Translate(gGfxMatrix, 400.0f - 400.0f, -250.0f + 250.0f, -1000.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+    Matrix_Translate(gGfxMatrix, 400.0f - 400.0f, -250.0f + 250.0f, -500.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+
+    // reuse same DLs to complete the other side of the platform
+
+    Matrix_Translate(gGfxMatrix, -100.0f, -110.0f, 0.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, -1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+
+    Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 500.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+
+    Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 500.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
+
+    Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 500.0f, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
     gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckPlatformDL);
@@ -3150,6 +3261,10 @@ void Title_GreatFoxDeckLauncher_Draw(TitleTeam teamidx) {
     RCP_SetupDL(&gMasterDisp, SETUPDL_23);
 
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Title_GreatFoxDeckLauncher_Draw", teamidx);
+
     Matrix_Translate(gGfxMatrix, sTitleArwing[teamidx].pos.x, -12.8f, sTitleDeckLauncherZpos, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 0.8f, 0.8f, 0.8f, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
@@ -3157,6 +3272,9 @@ void Title_GreatFoxDeckLauncher_Draw(TitleTeam teamidx) {
     gSPDisplayList(gMasterDisp++, aTitleGreatFoxDeckLauncherDL);
 
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Title_TitleCard_Draw(void) {
@@ -3181,8 +3299,8 @@ void Title_TitleCard_Draw(void) {
             RCP_SetupDL(&gMasterDisp, SETUPDL_83);
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-            Lib_TextureRect_IA8(&gMasterDisp, aTitleArwingCardTex, 112, 26, sTitleArwingCardXpos,
-                                 sTitleArwingCardYpos, 1.0f, 1.0f);
+            Lib_TextureRect_IA8(&gMasterDisp, aTitleArwingCardTex, 112, 26, sTitleArwingCardXpos, sTitleArwingCardYpos,
+                                1.0f, 1.0f);
     }
 }
 
