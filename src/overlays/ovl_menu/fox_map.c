@@ -4549,10 +4549,10 @@ void Map_PlanetAnim2(PlanetId planetId) {
 
     Matrix_Copy(&D_menu_801CDE20[planetId], gGfxMatrix);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 
     D_menu_801AFFF4 += 0.1f;
     D_menu_801AFFFC -= 0.09f;
@@ -4606,10 +4606,10 @@ void Map_PlanetAnim(PlanetId planetId) {
 
     gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_SolarRays_Draw(PlanetId planetId) {
@@ -4638,10 +4638,10 @@ void Map_SolarRays_Draw(PlanetId planetId) {
 
     gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 
     D_menu_801B6A74 -= 0.2f;
 }
@@ -4671,10 +4671,10 @@ void Map_VenomCloud2_Draw(PlanetId planetId) {
 
     gSPDisplayList(gMasterDisp++, gMapVenomCloudDL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_PlanetShadow_Draw(PlanetId planetId) {
@@ -4700,10 +4700,10 @@ void Map_PlanetShadow_Draw(PlanetId planetId) {
 
     gSPDisplayList(gMasterDisp++, D_MAP_605C230);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_Titania_DrawRings1(PlanetId planetId) {
@@ -4728,10 +4728,10 @@ void Map_Titania_DrawRings1(PlanetId planetId) {
 
     gSPDisplayList(gMasterDisp++, aMapTitaniaRings1DL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_Titania_DrawRings2(PlanetId planetId) {
@@ -4754,10 +4754,10 @@ void Map_Titania_DrawRings2(PlanetId planetId) {
 
     gSPDisplayList(gMasterDisp++, aMapTitaniaRings2DL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_VenomCloud_Draw(f32* zAngle, f32 next, f32 scale) {
@@ -4785,10 +4785,10 @@ void Map_VenomCloud_Draw(f32* zAngle, f32 next, f32 scale) {
 
     gSPDisplayList(gMasterDisp++, aMapVenomCloudDL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 
     *zAngle += next;
 }
@@ -4827,10 +4827,10 @@ void Map_PlanetCleared2_Draw(PlanetId planetId) {
 
     Matrix_Copy(&D_menu_801CE1E0[planetId], gGfxMatrix);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_PlanetCleared_Draw(PlanetId planetId) {
@@ -4859,10 +4859,10 @@ void Map_PlanetCleared_Draw(PlanetId planetId) {
 
         gSPDisplayList(gMasterDisp++, D_MAP_604D680);
 
+        Matrix_Pop(&gGfxMatrix);
+
         // @port Pop the transform id.
         FrameInterpolation_RecordCloseChild();
-
-        Matrix_Pop(&gGfxMatrix);
 
         D_menu_801CEAB8[planetId] += 45.0f;
         if (D_menu_801CD980 == false) {
@@ -4897,17 +4897,21 @@ void Map_PlanetMedal_Draw(PlanetId planetId) {
                 gDPSetEnvColor(gMasterDisp++, 80, 80, 0, 0);
 
                 Matrix_Push(&gGfxMatrix);
+
                 // @port: Tag the transform.
                 FrameInterpolation_RecordOpenChild("TAG_MEDAL", planetId);
+                
                 Matrix_Copy(gGfxMatrix, &D_menu_801CE1E0[planetId]);
                 Matrix_Translate(gGfxMatrix, 0.0f, -30.0f, 0.0f, MTXF_APPLY);
 
                 Matrix_SetGfxMtx(&gMasterDisp);
 
                 gSPDisplayList(gMasterDisp++, D_MAP_604D680);
+                
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-                Matrix_Pop(&gGfxMatrix);
 
                 D_menu_801CEAB8[planetId] += 45.0f;
                 if (alpha == 255) {
@@ -4944,10 +4948,10 @@ void Map_PlanetMedal_Draw(PlanetId planetId) {
 
                     gSPDisplayList(gMasterDisp++, D_MAP_604D680);
 
+                    Matrix_Pop(&gGfxMatrix);
+
                     // @port Pop the transform id.
                     FrameInterpolation_RecordCloseChild();
-
-                    Matrix_Pop(&gGfxMatrix);
                 }
 
                 D_menu_801B6A78 += 45.0f;
@@ -4975,10 +4979,10 @@ void Map_PlanetMedal_Draw(PlanetId planetId) {
 
                 gSPDisplayList(gMasterDisp++, aMapMedalDL);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
 
                 D_menu_801CEAF8[planetId] = -90.0f;
 
@@ -5019,10 +5023,10 @@ void Map_PlanetMedal_Draw(PlanetId planetId) {
 
         gSPDisplayList(gMasterDisp++, aMapMedalDL);
 
+        Matrix_Pop(&gGfxMatrix);
+
         // @port Pop the transform id.
         FrameInterpolation_RecordCloseChild();
-
-        Matrix_Pop(&gGfxMatrix);
 
         D_menu_801CEAF8[planetId] = -90.0f;
     }
@@ -5083,10 +5087,10 @@ void Map_CorneriaExplosion_Draw(void) {
 
         gSPDisplayList(gMasterDisp++, aMapPlanetExplosionDL);
 
+        Matrix_Pop(&gGfxMatrix);
+
         // @port Pop the transform id.
         FrameInterpolation_RecordCloseChild();
-
-        Matrix_Pop(&gGfxMatrix);
     }
 }
 
@@ -5293,10 +5297,10 @@ void Map_MeteoMeteors_Draw(void) {
 
                 gSPDisplayList(gMasterDisp++, sMapPlanets[PLANET_METEO]);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
         }
     }
@@ -5375,10 +5379,10 @@ void Map_Area6Ships_Draw(void) {
 
             gSPDisplayList(gMasterDisp++, aMapArea6ShipDL);
 
+            Matrix_Pop(&gGfxMatrix);
+
             // @port Pop the transform id.
             FrameInterpolation_RecordCloseChild();
-
-            Matrix_Pop(&gGfxMatrix);
         }
     }
 }
@@ -5717,10 +5721,10 @@ void Map_PathPlanet_Draw(s32 missionIdx, f32 x, f32 y, PlanetId planetId) {
 
                 gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
             break;
 
@@ -5749,10 +5753,10 @@ void Map_PathPlanet_Draw(s32 missionIdx, f32 x, f32 y, PlanetId planetId) {
 
                 gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
             break;
 
@@ -5777,10 +5781,10 @@ void Map_PathPlanet_Draw(s32 missionIdx, f32 x, f32 y, PlanetId planetId) {
 
                 gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
             break;
 
@@ -5805,10 +5809,10 @@ void Map_PathPlanet_Draw(s32 missionIdx, f32 x, f32 y, PlanetId planetId) {
 
                 gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
             break;
 
@@ -5833,10 +5837,10 @@ void Map_PathPlanet_Draw(s32 missionIdx, f32 x, f32 y, PlanetId planetId) {
 
                 gSPDisplayList(gMasterDisp++, sMapPlanets[sPlanets[planetId].id]);
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
             break;
 
@@ -5874,10 +5878,10 @@ void Map_PathPlanet_Draw(s32 missionIdx, f32 x, f32 y, PlanetId planetId) {
                     gSPDisplayList(gMasterDisp++, D_MAP_605C230);
                 }
 
+                Matrix_Pop(&gGfxMatrix);
+
                 // @port Pop the transform id.
                 FrameInterpolation_RecordCloseChild();
-
-                Matrix_Pop(&gGfxMatrix);
             }
             break;
     }
@@ -5906,10 +5910,10 @@ void Map_PathPlanetMedal_Draw(f32 x, f32 y, f32 z) {
 
     gSPDisplayList(gMasterDisp++, aMapMedalDL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 }
 
 void Map_BriefingRadio_Setup(void) {
@@ -6174,10 +6178,10 @@ void Map_TeamDownWrench_Draw(s32 teamIdx, s32 alpha) {
 
     gSPDisplayList(gMasterDisp++, aDownWrenchDL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 
     Matrix_Push(&gGfxMatrix);
 
@@ -6192,10 +6196,11 @@ void Map_TeamDownWrench_Draw(s32 teamIdx, s32 alpha) {
 
     gSPDisplayList(gMasterDisp++, aDownWrenchDL);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
 
-    Matrix_Pop(&gGfxMatrix);
     Matrix_Pop(&gGfxMatrix);
 }
 
@@ -6252,10 +6257,10 @@ void Map_GralPepperFace_Draw(void) {
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
         }
 
+        Matrix_Pop(&gGfxMatrix);
+
         // @port Pop the transform id.
         FrameInterpolation_RecordCloseChild();
-
-        Matrix_Pop(&gGfxMatrix);
     }
     Matrix_Pop(&gGfxMatrix);
 }
@@ -6454,10 +6459,10 @@ void Map_PathLine_Draw(PathType pathType) {
 
     gSPDisplayList(gMasterDisp++, D_MAP_604D680);
 
+    Matrix_Pop(&gGfxMatrix);
+
     // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
-
-    Matrix_Pop(&gGfxMatrix);
 
     D_menu_801B6B30 -= 45.0f;
 }
