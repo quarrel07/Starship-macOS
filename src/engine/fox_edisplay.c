@@ -1154,6 +1154,7 @@ void Actor_DrawAllRange(Actor* this) {
     f32 var_fv1;
 
     sDrewActor = false;
+
     if (this->info.drawType == 2) {
         Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, gPathProgress, MTXF_APPLY);
         Matrix_Translate(gCalcMatrix, this->obj.pos.x, this->obj.pos.y, this->obj.pos.z, MTXF_NEW);
@@ -1168,9 +1169,14 @@ void Actor_DrawAllRange(Actor* this) {
             var_fv0 = 1000.0f;
             var_fv1 = -25000.0f;
         }
+
+        // @port draw no matter what
+        goto render;
+
         if ((var_fv0 > sViewPos.z) && (sViewPos.z > var_fv1)) {
             if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * 0.5f) + 500.0f)) {
                 if (fabsf(sViewPos.y) < (fabsf(sViewPos.z * 0.5f) + 500.0f)) {
+                render:
                     Matrix_RotateY(gCalcMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                     Matrix_RotateX(gCalcMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
                     Matrix_RotateZ(gCalcMatrix, this->obj.rot.z * M_DTOR, MTXF_APPLY);
@@ -1200,9 +1206,14 @@ void Actor_DrawAllRange(Actor* this) {
             var_fv1 = -20000.0f;
             var_fa1 = 0.5f;
         }
+
+        // @port draw no matter what
+        goto render2;
+
         if ((var_fv0 > sViewPos.z) && (sViewPos.z > var_fv1)) {
             if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * var_fa1) + var_ft5)) {
                 if (fabsf(sViewPos.y) < (fabsf(sViewPos.z * var_fa1) + var_ft5)) {
+                render2:
                     if (this->info.draw != NULL) {
                         Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                         Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
@@ -1239,6 +1250,7 @@ void Actor_DrawAllRange(Actor* this) {
             }
         }
     }
+
     Object_SetSfxSourceToView(this->sfxSource, &sViewPos);
     this->iwork[24] = sDrewActor;
 }
@@ -1267,6 +1279,7 @@ void Boss_Draw(Boss* this, s32 arg1) {
         var_fv0 = 6000.0f;
         var_ft5 = 0.9f;
         var_fv1 = -20000.0f;
+
     } else if (this->obj.id == OBJ_BOSS_SZ_GREAT_FOX) {
         var_fv1 = -25000.0f;
         var_ft5 = 0.7f;
@@ -1280,9 +1293,16 @@ void Boss_Draw(Boss* this, s32 arg1) {
     }
 
     sp3C = -1.0f;
+
+    // @port draw no matter what
+    if ((gCurrentLevel != LEVEL_KATINA) && (gCurrentLevel != LEVEL_SECTOR_Y)) { // Excepting Katina because of KaSaucerer's bug
+        goto render;
+    }
+
     if ((D_edisplay_801615D0.z < var_fv0) && (var_fv1 < D_edisplay_801615D0.z)) {
         if (fabsf(D_edisplay_801615D0.x) < (fabsf(D_edisplay_801615D0.z * var_ft5) + var_fa1)) {
             if (fabsf(D_edisplay_801615D0.y) < (fabsf(D_edisplay_801615D0.z * var_ft5) + var_fa1)) {
+            render:
                 sp3C = 1.0f;
                 if (this->obj.id != OBJ_BOSS_BO_BASE) {
                     if (this->obj.id != OBJ_BOSS_KA_SAUCERER) {
@@ -1382,9 +1402,13 @@ void Item_Draw(Item* this, s32 arg1) {
 
     drawn = false;
 
+    // @port draw no matter what
+    goto render;
+
     if ((dest.z < 0.0f) && (dest.z > -12000.0f)) {
         if (fabsf(dest.x) < (fabsf(dest.z * 0.5f) + 500.0f)) {
             if (fabsf(dest.y) < (fabsf(dest.z * 0.5f) + 500.0f)) {
+            render:
                 if (this->info.draw != NULL) {
                     Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                     Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
@@ -1555,25 +1579,26 @@ void Object_SetSfxSourceToView(f32* sfxSrc, Vec3f* viewPos) {
 }
 
 void Scenery360_Draw(Scenery360* this) {
-    Vec3f sp54 = { 0.0f, 0.0f, 0.0f };
-    Vec3f sp48;
-    f32 sp44 = 1000.0f;
-    f32 sp40 = -12000.0f;
-    f32 sp3C = 2000.0f;
-    f32 sp38 = 0.5f;
+    Vec3f src = { 0.0f, 0.0f, 0.0f };
+    Vec3f dest;
+
+    f32 behindZdist = 1000.0f;
+    f32 frontZdist = -12000.0f;
+    f32 xyOffsetBounds = 2000.0f + 1000.0f;
+    f32 xyObjDistBoundMod = 0.5f;
 
     if (this->obj.id == OBJ_SCENERY_SY_SHOGUN_SHIP) {
-        sp44 = 4000.0f;
-        sp40 = -13000.0f;
-        sp3C = 4500.0f;
+        behindZdist = 4000.0f;
+        frontZdist = -13000.0f;
+        xyOffsetBounds = 4500.0f;
     } else if (gCurrentLevel == LEVEL_VENOM_ANDROSS) {
-        sp40 = -20000.0f;
-        sp38 = 0.4f;
+        frontZdist = -20000.0f;
+        xyObjDistBoundMod = 0.4f;
     } else if (this->obj.id == OBJ_SCENERY_VS_KA_FLBASE) {
-        sp44 = 6000.0f;
-        sp40 = -20000.0f;
-        sp3C = 6000.0f;
-        sp38 = 0.9f;
+        behindZdist = 6000.0f;
+        frontZdist = -20000.0f;
+        xyOffsetBounds = 6000.0f;
+        xyObjDistBoundMod = 0.9f;
     }
 
     if ((gLevelType == LEVELTYPE_PLANET) || (gCurrentLevel == LEVEL_BOLSE)) {
@@ -1582,11 +1607,25 @@ void Scenery360_Draw(Scenery360* this) {
         Matrix_Translate(gGfxMatrix, this->obj.pos.x, this->obj.pos.y, this->obj.pos.z, MTXF_APPLY);
     }
 
-    Matrix_MultVec3f(gGfxMatrix, &sp54, &sp48);
+    Matrix_MultVec3f(gGfxMatrix, &src, &dest);
 
-    if ((sp48.z < sp44) && (sp40 < sp48.z)) {
-        if (fabsf(sp48.y) < (fabsf(sp48.z * sp38) + sp3C)) {
-            if (fabsf(sp48.x) < (fabsf(sp48.z * sp38) + sp3C)) {
+    if (gCurrentLevel == LEVEL_SECTOR_Z) {
+        behindZdist = 6000.0f;
+        frontZdist = -20000.0f * 2;
+        xyOffsetBounds = 6000.0f * 2;
+        xyObjDistBoundMod = 0.9f;
+        goto check;
+    }
+
+    if ((gCurrentLevel != LEVEL_SECTOR_Y) && (gCurrentLevel != LEVEL_VENOM_ANDROSS)) {
+        goto render;
+    }
+
+check:
+    if ((dest.z < behindZdist) && (frontZdist < dest.z)) {
+        if (fabsf(dest.y) < (fabsf(dest.z * xyObjDistBoundMod) + xyOffsetBounds)) {
+            if (fabsf(dest.x) < (fabsf(dest.z * xyObjDistBoundMod) + xyOffsetBounds)) {
+            render:
                 Display_SetSecondLight(&this->obj.pos);
                 if (this->obj.id == OBJ_SCENERY_AND_PASSAGE) {
                     Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
@@ -1601,6 +1640,7 @@ void Scenery360_Draw(Scenery360* this) {
                     Matrix_SetGfxMtx(&gMasterDisp);
                     gSPDisplayList(gMasterDisp++, this->info.dList);
                 }
+
             }
         }
     }

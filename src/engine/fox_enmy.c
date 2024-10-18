@@ -2700,7 +2700,7 @@ void Boss_Move(Boss* this) {
 void Scenery_Move(Scenery* this) {
     if (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO) {
         this->obj.pos.z += this->effectVel.z;
-        if (this->info.cullDistance < this->obj.pos.z) {
+        if ((this->info.cullDistance * 1.5f) < this->obj.pos.z) {
             Object_Kill(&this->obj, this->sfxSource);
         }
     } else if ((gLevelMode == LEVELMODE_ON_RAILS) && (gBossActive != 2)) {
@@ -2715,7 +2715,15 @@ void Scenery_Move(Scenery* this) {
             temp_fv0 = 0.0f;
         }
         temp_fv0 -= gPlayer[0].cam.eye.z;
-        if ((this->info.cullDistance - temp_fv0) < (this->obj.pos.z + gPathProgress)) {
+
+        // @port: increase cullDistance by 50%.
+        f32 portCulldistance = 1.5f;
+
+        if (gCurrentLevel == LEVEL_TITANIA) {
+            portCulldistance = 1.0f;
+        }
+
+        if (((this->info.cullDistance * portCulldistance) - temp_fv0) < (this->obj.pos.z + gPathProgress)) {
             Object_Kill(&this->obj, this->sfxSource);
         }
     }
