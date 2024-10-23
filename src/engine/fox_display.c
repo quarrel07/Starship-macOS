@@ -1,4 +1,5 @@
 #include "global.h"
+#include "mods/hit64.c"
 #include "assets/ast_arwing.h"
 #include "assets/ast_allies.h"
 #include "assets/ast_landmaster.h"
@@ -88,16 +89,27 @@ void Display_DrawHelpAlert(void) {
                     sp74 = -M_PI / 2;
                 }
                 Matrix_Push(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", sp7C);
+
                 Matrix_Translate(gGfxMatrix, sp78, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, sp74, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 0.03f, 0.03f, 0.03f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, D_1023700);
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
                 break;
 
             case true:
                 Matrix_Push(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", sp7C);
+
                 Matrix_Translate(gGfxMatrix, 20.0f, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, -M_PI / 2, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 0.03f, 0.03f, 0.03f, MTXF_APPLY);
@@ -112,6 +124,9 @@ void Display_DrawHelpAlert(void) {
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, D_1023700);
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
                 break;
         }
 
@@ -243,6 +258,10 @@ void Display_OnFootFalco_PostLimbDraw(s32 limbIndex, Vec3f* rot, void* data) {
 
 void Display_OnFootMuzzleFlash(Player* player) {
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Display_OnFootMuzzleFlash", player->num);
+
     Matrix_Copy(gGfxMatrix, &gIdentityMatrix);
     if ((player->state_1C8 == PLAYERSTATE_1C8_ACTIVE) && (player->csTimer != 0)) {
         Matrix_Translate(gGfxMatrix, D_display_801613B0[player->num].x, D_display_801613B0[player->num].y,
@@ -255,6 +274,9 @@ void Display_OnFootMuzzleFlash(Player* player) {
         gSPDisplayList(gMasterDisp++, D_versus_302D240);
     }
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Display_OnFootCharacter(Player* player) {
@@ -290,6 +312,9 @@ void Display_Landmaster(Player* player) {
     Vec3f sp40 = { 0.0f, 40.0f, -70.0f };
 
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Display_Landmaster", player->num);
 
     if (!gVersusMode) {
         gSPDisplayList(gMasterDisp++, aLandmasterModelDL);
@@ -328,6 +353,9 @@ void Display_Landmaster(Player* player) {
 
     Matrix_MultVec3f(gGfxMatrix, &sp4C, &D_display_80161548[player->num]);
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 Gfx* sFaceDL[] = { aAwFoxHeadDL, aAwFalcoHeadDL, aAwSlippyHeadDL, aAwPeppyHeadDL };
@@ -340,6 +368,10 @@ f32 sPlayerShadowing = 0.0f;
 
 void Display_LandmasterMuzzleFlash(Player* player) {
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Display_LandmasterMuzzleFlash", player->num);
+
     if ((player->state_1C8 == PLAYERSTATE_1C8_ACTIVE) && (player->unk_1A0 != 0)) {
         Matrix_Translate(gGfxMatrix, D_display_80161548[player->num].x, D_display_80161548[player->num].y,
                          D_display_80161548[player->num].z, MTXF_APPLY);
@@ -361,6 +393,9 @@ void Display_LandmasterMuzzleFlash(Player* player) {
         }
     }
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Display_LandmasterThrusters(Player* player) {
@@ -587,6 +622,10 @@ void Display_ArwingWings(ArwingInfo* arwing) {
 
     if (drawFace != 0) {
         Matrix_Push(&gGfxMatrix);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("ArwingCharFace", arwing->drawFace);
+
         Matrix_Translate(gGfxMatrix, 0.0f, 6.4f, -16.5f, MTXF_APPLY);
         Matrix_RotateY(gGfxMatrix, arwing->teamFaceYrot * M_DTOR, MTXF_APPLY);
         Matrix_RotateX(gGfxMatrix, arwing->teamFaceXrot * M_DTOR, MTXF_APPLY);
@@ -604,6 +643,9 @@ void Display_ArwingWings(ArwingInfo* arwing) {
             gSPDisplayList(gMasterDisp++, sFaceDL[drawFace - 1]);
         }
         Matrix_Pop(&gGfxMatrix);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 
     Matrix_Translate(gGfxMatrix, 0.0f, 17.2f, -25.8f, MTXF_APPLY);
@@ -636,6 +678,10 @@ void Display_Unused(f32 arg0, f32 arg1, UNK_TYPE arg2, UNK_TYPE arg3) {
 
 void Display_CockpitGlass(void) {
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Display_CockpitGlass", 0);
+
     Matrix_Copy(gGfxMatrix, &D_display_80161418[0]);
     Matrix_Translate(gGfxMatrix, 0.0f, D_display_800CA290, D_display_800CA294, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, D_display_800CA28C, D_display_800CA28C, D_display_800CA28C, MTXF_APPLY);
@@ -646,6 +692,9 @@ void Display_CockpitGlass(void) {
     gSPDisplayList(gMasterDisp++, D_arwing_30194E0);
     gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Display_Arwing(Player* player, s32 reflectY) {
@@ -711,7 +760,7 @@ void Display_Reticle(Player* player) {
         (((gGameState == GSTATE_PLAY) && (player->state_1C8 == PLAYERSTATE_1C8_ACTIVE)) ||
          (gGameState == GSTATE_MENU))) {
         for (i = 0; i < 2; i++) {
-            FrameInterpolation_RecordOpenChild("Reticle", i);
+            FrameInterpolation_RecordOpenChild("Reticle", (player->num << 16) + i);
             FrameInterpolation_RecordMarker(__FILE__, __LINE__);
             translate = &D_display_801613E0[i];
             Matrix_Push(&gGfxMatrix);
@@ -890,6 +939,10 @@ void Display_BarrelRollShield(Player* player) {
         }
 
         Matrix_Push(&gGfxMatrix);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("BarrelRollShield", 0);
+
         Matrix_Translate(gGfxMatrix, player->pos.x + dest.x, player->pos.y + dest.y,
                          player->trueZpos + player->zPath + dest.z, MTXF_APPLY);
         Matrix_RotateY(gGfxMatrix, -gPlayer[gPlayerNum].camYaw, MTXF_APPLY);
@@ -910,13 +963,21 @@ void Display_BarrelRollShield(Player* player) {
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, player->barrelRollAlpha);
         gDPSetEnvColor(gMasterDisp++, 0, 0, 160, player->barrelRollAlpha);
         gSPDisplayList(gMasterDisp++, aBarrelRollTex);
+
         Matrix_Pop(&gGfxMatrix);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 }
 
 void Display_UnusedShield(Player* player) {
     if (gShieldAlpha[player->num] > 1.0f) {
         Matrix_Push(&gGfxMatrix);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Display_UnusedShield", 0);
+
         Matrix_Copy(gGfxMatrix, &D_display_80161418[player->num]);
         Matrix_Translate(gGfxMatrix, 0.0f, -5.0f, 10.0f, MTXF_APPLY);
         Matrix_Scale(gGfxMatrix, 2.5f, 1.6f, 2.5f, MTXF_APPLY);
@@ -926,6 +987,9 @@ void Display_UnusedShield(Player* player) {
         gDPSetEnvColor(gMasterDisp++, 255, 0, 255, (s32) gShieldAlpha[player->num]);
         gSPDisplayList(gMasterDisp++, aUnusedShieldDL);
         Matrix_Pop(&gGfxMatrix);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
         Lib_Texture_Scroll(aUnusedShieldTex, 32, 32, 3);
         Lib_Texture_Scroll(aUnusedShieldTex, 32, 32, 3);
     }
@@ -2029,6 +2093,7 @@ void Display_Update(void) {
         }
         gLaserStrength[0] = 2;
     }
+    Hit64_Main();
     // background testing
 #if 0
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);

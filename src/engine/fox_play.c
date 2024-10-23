@@ -2923,6 +2923,16 @@ void Play_Init(void) {
         gTeamShields[i] = gSavedTeamShields[i];
     }
 
+    if (CVarGetInteger("gHit64FalcoDead", 0) == 1) {
+        gTeamShields[1] = 0;
+    }
+    if (CVarGetInteger("gHit64SlippyDead", 0) == 1) {
+        gTeamShields[2] = 0;
+    }
+    if (CVarGetInteger("gHit64PeppyDead", 0) == 1) {
+        gTeamShields[3] = 0;
+    }
+
     MEM_ARRAY_ALLOCATE(gPlayer, gCamCount);
     Player_InitializeAll();
     for (i = 0; i < gCamCount; i++) {

@@ -434,6 +434,27 @@ void DrawCheatsMenu() {
     }
 }
 
+void DrawHit64Menu() {
+    if (UIWidgets::BeginMenu("Hit+64")) {
+        UIWidgets::CVarCheckbox("Self destruct button", "gHit64SelfDestruct", {
+                .tooltip = "Press Down on the D-PAD to instantly self destruct."
+            });
+        UIWidgets::CVarCheckbox("Start with Falco dead", "gHit64FalcoDead", {
+                .tooltip = "Start the level with with Falco dead."
+            });
+        UIWidgets::CVarCheckbox("Start with Slippy dead", "gHit64SlippyDead", {
+                .tooltip = "Start the level with with Slippy dead."
+            });
+        UIWidgets::CVarCheckbox("Start with Peppy dead", "gHit64PeppyDead", {
+                .tooltip = "Start the level with with Peppy dead."
+            });
+        // UIWidgets::CVarCheckbox("Infinite Bombs", "gInfiniteBombs");
+        // UIWidgets::CVarCheckbox("Hyper Laser", "gHyperLaser");
+
+        ImGui::EndMenu();
+    }
+}
+
 const char* debugInfoPages[6] = {
         "Object",
         "Check Surface",
@@ -519,6 +540,10 @@ void GameMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawCheatsMenu();
+
+        ImGui::SetCursorPosY(0.0f);
+
+        DrawHit64Menu();
 
         ImGui::SetCursorPosY(0.0f);
 
