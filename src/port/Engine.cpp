@@ -350,3 +350,20 @@ extern "C" int16_t OTRGetRectDimensionFromLeftEdge(float v) {
 extern "C" int16_t OTRGetRectDimensionFromRightEdge(float v) {
     return ((int)ceilf(OTRGetDimensionFromRightEdge(v)));
 }
+
+extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
+    float gameAspectRatio = gfx_current_dimensions.aspect_ratio;
+    int32_t gameHeight = gfx_current_dimensions.height;
+    int32_t gameWidth = gfx_current_dimensions.width;
+    float hudAspectRatio = 4.0f / 3.0f;
+    int32_t hudHeight = gameHeight;
+    int32_t hudWidth = hudHeight * hudAspectRatio;
+    float hudScreenRatio = (hudWidth / 320.0f);
+    float hudCoord = v * hudScreenRatio;
+    float gameOffset = (gameWidth - hudWidth) / 2;
+    float gameCoord = hudCoord + gameOffset;
+    float gameScreenRatio = (320.0f / gameWidth);
+    float screenScaledCoord = gameCoord * gameScreenRatio;
+    int32_t screenScaledCoordInt = screenScaledCoord;
+    return screenScaledCoordInt;
+}
