@@ -46,3 +46,5 @@ imgui.ini
 starship.cfg.json
 Starship.log
 *.sav
+*.lib
+*.pdb
