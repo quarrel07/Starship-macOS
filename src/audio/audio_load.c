@@ -1,6 +1,8 @@
 #include "sys.h"
 #include "sf64dma.h"
 #include "sf64audio_provisional.h"
+#include "assets/ast_audio.h"
+#include "port/Engine.h"
 
 s32 D_80146D80;
 s32 PAD_80146D88[2];
@@ -14,23 +16,23 @@ void* AudioLoad_SyncLoad(u32 tableType, u32 id, s32* didAllocate);
 s32 AudioLoad_GetLoadTableIndex(s32 tableType, u32 entryId);
 void* AudioLoad_SearchCaches(s32 tableType, s32 id);
 AudioTable* AudioLoad_GetLoadTable(s32 tableType);
-void AudioLoad_SyncDma(u32 devAddr, u8* ramAddr, u32 size, s32 medium);
-void AudioLoad_SyncDmaUnkMedium(u32 devAddr, u8* ramAddr, u32 size, s32 unkMediumParam);
-s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, u32 devAddr, void* ramAddr, u32 size,
+void AudioLoad_SyncDma(uintptr_t devAddr, u8* ramAddr, u32 size, s32 medium);
+void AudioLoad_SyncDmaUnkMedium(uintptr_t devAddr, u8* ramAddr, u32 size, s32 unkMediumParam);
+s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, uintptr_t devAddr, void* ramAddr, u32 size,
                   OSMesgQueue* retQueue, s32 medium, const char* dmaType);
 s32 func_8000FC7C(u32 unkMediumParam, u32* addrPtr);
-void func_8000FC8C(s32 unkParam2, u32 addr, u8* ramAddr, u32 size);
+void func_8000FC8C(s32 unkParam2, uintptr_t addr, u8* ramAddr, u32 size);
 void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, OSMesgQueue* retQueue);
 Sample* AudioLoad_GetFontSample(s32 fontId, s32 instId);
 void AudioLoad_ProcessSlowLoads(s32 resetStatus);
 void AudioLoad_DmaSlowCopy(AudioSlowLoad* slowLoad, s32 size);
-void AudioLoad_DmaSlowCopyUnkMedium(u32 devAddr, u8* ramAddr, u32 size, s32 unkMediumParam);
-AudioAsyncLoad* AudioLoad_StartAsyncLoad(u32 devAddr, u8* ramAddr, u32 size, s32 medium, s32 nChunks,
+void AudioLoad_DmaSlowCopyUnkMedium(uintptr_t devAddr, u8* ramAddr, u32 size, s32 unkMediumParam);
+AudioAsyncLoad* AudioLoad_StartAsyncLoad(uintptr_t devAddr, u8* ramAddr, u32 size, s32 medium, s32 nChunks,
                                          OSMesgQueue* retQueue, u32 retMesg);
 void AudioLoad_ProcessAsyncLoads(s32 resetStatus);
 void AudioLoad_ProcessAsyncLoad(AudioAsyncLoad* asyncLoad, s32 resetStatus);
 void AudioLoad_AsyncDma(AudioAsyncLoad* asyncLoad, u32 size);
-void AudioLoad_AsyncDmaUnkMedium(u32 devAddr, u8* ramAddr, u32 size, s32 unkMediumParam);
+void AudioLoad_AsyncDmaUnkMedium(uintptr_t devAddr, u8* ramAddr, u32 size, s32 unkMediumParam);
 void AudioLoad_RelocateSample(TunedSample* tSample, u32 fontDataAddr, SampleBankRelocInfo* relocInfo);
 s32 AudioLoad_RelocateFontAndPreloadSamples(s32 fontId, u32 fontDataAddr, SampleBankRelocInfo* relocData, s32 isAsync);
 s32 AudioLoad_ProcessSamplePreloads(s32 resetStatus);
@@ -67,12 +69,12 @@ void AudioLoad_DecreaseSampleDmaTtls(void) {
 
 static const char devstr00[] = "CAUTION:WAVE CACHE FULL %d";
 
-void* AudioLoad_DmaSampleData(u32 devAddr, u32 size, u32 arg2, u8* dmaIndexRef, s32 medium) {
+void* AudioLoad_DmaSampleData(uintptr_t devAddr, u32 size, u32 arg2, u8* dmaIndexRef, s32 medium) {
     u32 i;
     SampleDma* dma;
     bool hasDma = false;
     s32 bufferPos;
-    u32 dmaDevAddr;
+    uintptr_t dmaDevAddr;
     s32 sp38;
 
     if ((arg2 != 0) || (*dmaIndexRef >= gSampleDmaListSize1)) {
@@ -676,7 +678,7 @@ void AudioLoad_RelocateFont(s32 fontId, u32 fontBaseAddr, void* relocData) {
     gSoundFontList[fontId].instruments = (u32) &fontDataPtrs[1];
 }
 
-void AudioLoad_SyncDma(u32 devAddr, u8* ramAddr, u32 size, s32 medium) {
+void AudioLoad_SyncDma(uintptr_t devAddr, u8* ramAddr, u32 size, s32 medium) {
     size = ALIGN16(size);
 
     osInvalDCache(ramAddr, size);
@@ -698,8 +700,8 @@ void AudioLoad_SyncDma(u32 devAddr, u8* ramAddr, u32 size, s32 medium) {
     }
 }
 
-void AudioLoad_SyncDmaUnkMedium(u32 devAddr, u8* ramAddr, u32 size, s32 unkMediumParam) {
-    s32 addr = devAddr;
+void AudioLoad_SyncDmaUnkMedium(uintptr_t devAddr, u8* ramAddr, u32 size, s32 unkMediumParam) {
+    uintptr_t addr = devAddr;
 
     osInvalDCache(ramAddr, size);
     func_8000FC8C(func_8000FC7C(unkMediumParam, &addr), addr, ramAddr, size);
@@ -711,20 +713,20 @@ static const char devstr24[] = "Load Bank BG, Type %d , ID %d\n";
 static const char devstr25[] = "get auto\n";
 static const char devstr26[] = "get s-auto %x\n";
 
-s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, u32 devAddr, void* ramAddr, u32 size,
+s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, uintptr_t devAddr, void* ramAddr, u32 size,
                   OSMesgQueue* retQueue, s32 medium, const char* dmaType) {
     OSPiHandle* handle;
 
-    switch (medium) {
-        case MEDIUM_CART:
-            handle = osCartRomInit();
-            break;
-        case MEDIUM_DISK_DRIVE:
-            // handle = osDriveRomInit();
-            break;
-        default:
-            return 0;
-    }
+    // switch (medium) {
+    //     case MEDIUM_CART:
+    //         handle = osCartRomInit();
+    //         break;
+    //     case MEDIUM_DISK_DRIVE:
+    //         // handle = osDriveRomInit();
+    //         break;
+    //     default:
+    //         return 0;
+    // }
 
     if (size % 16) {
         size = ALIGN16(size);
@@ -737,7 +739,8 @@ s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, u32 devAddr, void
     mesg->size = size;
 
     handle->transferInfo.cmdType = 2;
-    osEPiStartDma(handle, mesg, direction);
+    // osEPiStartDma(handle, mesg, direction);
+    memcpy(ramAddr, (void*) devAddr, size);
 
     return 0;
 }
@@ -746,7 +749,7 @@ s32 func_8000FC7C(u32 unkMediumParam, u32* addrPtr) {
     return 0;
 }
 
-void func_8000FC8C(s32 unkParam2, u32 addr, u8* ramAddr, u32 size) {
+void func_8000FC8C(s32 unkParam2, uintptr_t addr, u8* ramAddr, u32 size) {
 }
 
 void AudioLoad_SyncLoadSimple(u32 tableType, u32 id) {
@@ -890,7 +893,7 @@ void AudioLoad_Init(void) {
     }
 
     clearContext = gAudioContextStart;
-    dwordsLeft = ((u32) gAudioContextEnd - (u32) gAudioContextStart) / 8;
+    dwordsLeft = ((uintptr_t) gAudioContextEnd - (uintptr_t) gAudioContextStart) / 8;
     for (; dwordsLeft >= 0; dwordsLeft--) {
         *clearContext++ = 0;
     }
@@ -938,9 +941,9 @@ void AudioLoad_Init(void) {
     gSeqFontTable = gSeqFontTableInit;
     gNumSequences = gSequenceTable->base.numEntries;
 
-    AudioLoad_InitTable(gSequenceTable, SEGMENT_ROM_START(audio_seq), gSequenceMedium);
-    AudioLoad_InitTable(gSoundFontTable, SEGMENT_ROM_START(audio_bank), gSoundFontMedium);
-    AudioLoad_InitTable(gSampleBankTable, SEGMENT_ROM_START(audio_table), gSampleBankMedium);
+    AudioLoad_InitTable(gSequenceTable, LOAD_ASSET(gAudioSeq), gSequenceMedium);
+    AudioLoad_InitTable(gSoundFontTable, LOAD_ASSET(gAudioBank), gSoundFontMedium);
+    AudioLoad_InitTable(gSampleBankTable, LOAD_ASSET(gAudioTable), gSampleBankMedium);
 
     numFonts = gSoundFontTable->base.numEntries;
 
@@ -1104,14 +1107,14 @@ static const char devstr45[] = "===Block BG end\n";
 static const char devstr46[] = "Retcode %x\n";
 static const char devstr47[] = "Other Type: Not Write ID.\n";
 
-void AudioLoad_DmaSlowCopyUnkMedium(u32 devAddr, u8* ramAddr, u32 size, s32 unkMediumParam) {
-    s32 addr = devAddr;
+void AudioLoad_DmaSlowCopyUnkMedium(uintptr_t devAddr, u8* ramAddr, u32 size, s32 unkMediumParam) {
+    uintptr_t addr = devAddr;
 
     osInvalDCache(ramAddr, size);
     func_8000FC8C(func_8000FC7C(unkMediumParam, &addr), addr, ramAddr, size);
 }
 
-AudioAsyncLoad* AudioLoad_StartAsyncLoad(u32 devAddr, u8* ramAddr, u32 size, s32 medium, s32 nChunks,
+AudioAsyncLoad* AudioLoad_StartAsyncLoad(uintptr_t devAddr, u8* ramAddr, u32 size, s32 medium, s32 nChunks,
                                          OSMesgQueue* retQueue, u32 retMesg) {
     AudioAsyncLoad* asyncLoad;
     s32 i;
@@ -1264,8 +1267,8 @@ void AudioLoad_AsyncDma(AudioAsyncLoad* asyncLoad, u32 size) {
                   asyncLoad->medium, "BGCOPY");
 }
 
-void AudioLoad_AsyncDmaUnkMedium(u32 devAddr, u8* ramAddr, u32 size, s32 unkMediumParam) {
-    s32 addr = devAddr;
+void AudioLoad_AsyncDmaUnkMedium(uintptr_t devAddr, u8* ramAddr, u32 size, s32 unkMediumParam) {
+    uintptr_t addr = devAddr;
 
     osInvalDCache(ramAddr, size);
     func_8000FC8C(func_8000FC7C(unkMediumParam, &addr), addr, ramAddr, size);

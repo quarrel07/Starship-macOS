@@ -13,6 +13,7 @@
 #include "assets/ast_option.h"
 #include "assets/ast_vs_menu.h"
 #include "assets/ast_map.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 extern s32 gRankingTeamAlive[][3];
 extern Gfx gMapVenomCloudDL[];

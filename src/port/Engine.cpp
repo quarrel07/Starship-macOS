@@ -24,6 +24,7 @@
 #include <MatrixFactory.h>
 #include <BlobFactory.h>
 #include <VertexFactory.h>
+#include "audio/GameAudio.h"
 
 #include <Fast3D/gfx_pc.h>
 #include <Fast3D/gfx_rendering_api.h>
@@ -36,6 +37,7 @@ extern uint16_t gFPS;
 float gInterpolationStep = 0.0f;
 #include <sf64thread.h>
 #include <macros.h>
+void AudioThread_CreateNextAudioBuffer(int16_t *samples, uint32_t num_samples);
 }
 
 GameEngine* GameEngine::Instance;
@@ -85,6 +87,7 @@ GameEngine::GameEngine() {
 
 void GameEngine::Create(){
     const auto instance = Instance = new GameEngine();
+    instance->AudioInit();
     GameUI::SetupGuiElements();
 #if defined(__SWITCH__) || defined(__WIIU__)
     CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
@@ -112,6 +115,64 @@ void GameEngine::StartFrame() const{
         default: break;
     }
     this->context->GetWindow()->StartFrame();
+}
+
+void GameEngine::HandleAudioThread(){
+    while (audio.running) {
+        {
+            std::unique_lock<std::mutex> Lock(audio.mutex);
+            while (!audio.processing && audio.running) {
+                audio.cv_to_thread.wait(Lock);
+            }
+            if (!audio.running) {
+                break;
+            }
+        }
+        std::unique_lock<std::mutex> Lock(audio.mutex);
+        int samples_left = AudioPlayerBuffered();
+        u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
+        s16 audio_buffer[SAMPLES_PER_FRAME];
+        for (int i = 0; i < NUM_AUDIO_CHANNELS; i++) {
+            AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * 2), num_audio_samples);
+        }
+        AudioPlayerPlayFrame((u8 *) audio_buffer, 2 * num_audio_samples * 4);
+        audio.processing = false;
+        audio.cv_from_thread.notify_one();
+    }
+}
+
+void GameEngine::StartAudioFrame(){
+    {
+        std::unique_lock<std::mutex> Lock(audio.mutex);
+        audio.processing = true;
+    }
+    audio.cv_to_thread.notify_one();
+}
+
+void GameEngine::EndAudioFrame(){
+    {
+        std::unique_lock<std::mutex> Lock(audio.mutex);
+        while (audio.processing) {
+            audio.cv_from_thread.wait(Lock);
+        }
+    }
+}
+
+void GameEngine::AudioInit() {
+    if (!audio.running) {
+        audio.running = true;
+        audio.thread = std::thread(HandleAudioThread);
+    }
+}
+
+void GameEngine::AudioExit() {
+    {
+        std::unique_lock lock(audio.mutex);
+        audio.running = false;
+    }
+    audio.cv_to_thread.notify_all();
+    // Wait until the audio thread quit
+    audio.thread.join();
 }
 
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {

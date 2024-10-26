@@ -105,8 +105,9 @@ void Main_Initialize(void) {
 void Audio_ThreadEntry(void* arg0) {
     // SPTask* task;
 
-    // AudioLoad_Init();
-    // Audio_InitSounds();
+    AudioLoad_Init();
+    Audio_InitSounds();
+
     // task = AudioThread_CreateTask();
     // if (task != NULL) {
     //     task->msgQueue = &gAudioTaskMsgQueue;
@@ -383,7 +384,7 @@ void Main_ThreadEntry(void* arg0) {
     u32 mesg;
 
     // LTODO: Implement audio
-    // Audio_ThreadEntry(NULL);
+    Audio_ThreadEntry(NULL);
     Graphics_ThreadEntry(NULL);
     Controller_Init();
 

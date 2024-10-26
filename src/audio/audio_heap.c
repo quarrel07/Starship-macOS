@@ -147,8 +147,8 @@ void* AudioHeap_Alloc(AudioAllocPool* pool, u32 size) {
 }
 
 void AudioHeap_InitPool(AudioAllocPool* pool, void* ramAddr, u32 size) {
-    pool->curRamAddr = pool->startRamAddr = (u8*) ALIGN16((u32) ramAddr);
-    pool->size = size - ((u32) ramAddr & 0xF);
+    pool->curRamAddr = pool->startRamAddr = (u8*) ramAddr;
+    pool->size = size - ((uintptr_t) ramAddr & 0xF);
     pool->numEntries = 0;
 }
 

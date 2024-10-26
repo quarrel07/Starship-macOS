@@ -1,0 +1,8 @@
+audio_seq:
+  { type: BLOB, offset: 0xDEA20, size: 0x3ACF0, symbol: gAudioSeq }
+  
+audio_bank:
+  { type: BLOB, offset: 0x119710, size: 0x1E020, symbol: gAudioBank }
+
+audio_table:
+  { type: BLOB, offset: 0x137730, size: 0x73C580, symbol: gAudioTable }

@@ -10,6 +10,7 @@ extern "C" {
     void Main_ThreadEntry(void* arg);
     void Lib_FillScreen(u8 setFill);
     void Graphics_ThreadUpdate();
+    void AudioThread_CreateTask();
 }
 
 extern "C"
@@ -20,12 +21,12 @@ void Graphics_PushFrame(Gfx* data) {
 extern "C" void Timer_Update();
 
 void push_frame() {
-    // GameEngine::StartAudioFrame();
+    GameEngine::StartAudioFrame();
     GameEngine::Instance->StartFrame();
     Graphics_ThreadUpdate();
     Timer_Update();
     // thread5_iteration();
-    // GameEngine::EndAudioFrame();
+    GameEngine::EndAudioFrame();
 }
 
 #ifdef _WIN32

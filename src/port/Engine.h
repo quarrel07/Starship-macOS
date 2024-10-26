@@ -23,6 +23,11 @@ class GameEngine {
     GameEngine();
     static void Create();
     void StartFrame() const;
+    static void HandleAudioThread();
+    static void StartAudioFrame();
+    static void EndAudioFrame();
+    static void AudioInit();
+    static void AudioExit();
     static void RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements);
     void ProcessFrame(void (*run_one_game_iter)()) const;
     static void Destroy();

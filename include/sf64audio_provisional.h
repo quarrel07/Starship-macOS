@@ -788,7 +788,7 @@ typedef struct {
     /* 0x01 */ s8 delay;
     /* 0x02 */ s8 medium;
     /* 0x04 */ u8* ramAddr;
-    /* 0x08 */ u32 curDevAddr;
+    /* 0x08 */ uintptr_t curDevAddr;
     /* 0x0C */ u8* curRamAddr;
     /* 0x10 */ u32 bytesRemaining;
     /* 0x14 */ u32 chunkSize;
@@ -803,7 +803,7 @@ typedef struct {
     /* 0x00 */ u8 medium;
     /* 0x01 */ u8 seqOrFontId;
     /* 0x02 */ u8 instId;
-    /* 0x04 */ u32 curDevAddr;
+    /* 0x04 */ uintptr_t curDevAddr;
     /* 0x08 */ u8* curRamAddr;
     /* 0x0C */ u8* ramAddr;
     /* 0x10 */ s32 state;
@@ -844,7 +844,7 @@ typedef struct {
 
 typedef struct SampleDma {
     /* 0x00 */ u8* ramAddr;
-    /* 0x04 */ u32 devAddr;
+    /* 0x04 */ uintptr_t devAddr;
     /* 0x08 */ u16 sizeUnused;
     /* 0x0A */ u16 size;
     /* 0x0C */ u8 unused;
@@ -885,8 +885,8 @@ typedef struct {
 typedef struct {
     /* 0x00 */ s32 sampleBankId1;
     /* 0x04 */ s32 sampleBankId2;
-    /* 0x08 */ s32 baseAddr1;
-    /* 0x0C */ s32 baseAddr2;
+    /* 0x08 */ uintptr_t baseAddr1;
+    /* 0x0C */ uintptr_t baseAddr2;
     /* 0x10 */ u32 medium1;
     /* 0x14 */ u32 medium2;
 } SampleBankRelocInfo; // size = 0x18
@@ -1047,7 +1047,7 @@ void* AudioHeap_AllocPersistentSampleCache(s32 size, s32 fontId, uintptr_t sampl
 void AudioLoad_DecreaseSampleDmaTtls(void);
 void AudioLoad_ProcessLoads(s32 resetStatus);
 void AudioLoad_SyncInitSeqPlayer(s32 playerIdx, s32 seqId, s32 arg2);
-void* AudioLoad_DmaSampleData(u32 devAddr, u32 size, u32 arg2, u8* dmaIndexRef, s32 medium);
+void* AudioLoad_DmaSampleData(uintptr_t devAddr, u32 size, u32 arg2, u8* dmaIndexRef, s32 medium);
 void AudioLoad_InitSampleDmaBuffers(s32 numNotes);
 void AudioLoad_SyncLoadSeqParts(s32 seqId, s32 flags);
 s32 AudioLoad_SyncLoadInstrument(s32 fontId, s32 instId, s32 drumId);

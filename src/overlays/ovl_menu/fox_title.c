@@ -10,6 +10,7 @@
 #include "fox_title.h"
 #include "assets/ast_title.h"
 #include "assets/ast_text.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 f32 D_menu_801B7BB0;
 f32 D_menu_801B7BB4;

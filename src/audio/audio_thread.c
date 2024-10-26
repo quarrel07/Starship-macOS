@@ -39,7 +39,74 @@ static const char devstr12[] = "Undefined Port Command %d\n";
 static const char devstr13[] = "specchg conjunction error (Msg:%d Cur:%d)\n";
 static const char devstr14[] = "Error : Queue is not empty ( %x ) \n";
 
-SPTask* AudioThread_CreateTask(void) {
+void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
+    static s32 gMaxAbiCmdCnt = 128;
+    static SPTask* gWaitingAudioTask = NULL;
+    u32 sp54;
+    s32 sp50;
+    s32 sp4C;
+    s32 pad48;
+    OSTask_t* task;
+    u16* sp40;
+    s32 pad3C;
+    OSMesg sp38;
+    OSMesg sp34;
+    s32 pad30;
+    gAudioTaskCountQ++;
+    if ((gAudioTaskCountQ % gAudioBufferParams.count) != 0) {
+        return;
+    }
+    osSendMesg(gAudioTaskStartQueue, OS_MESG_32(gAudioTaskCountQ), 0);
+    gAudioTaskIndexQ ^= 1;
+    gCurAiBuffIndex++;
+    gCurAiBuffIndex %= 3;
+    sp4C = (gCurAiBuffIndex + 1) % 3;
+    sp54 = osAiGetLength() >> 2;
+    if ((gAudioResetTimer < 16) && (gAiBuffLengths[sp4C] != 0)) {
+        osAiSetNextBuffer(gAiBuffers[sp4C], gAiBuffLengths[sp4C] * 4);
+    }
+    if (gCurAudioFrameDmaCount && gCurAudioFrameDmaCount) {}
+    gCurAudioFrameDmaCount = 0;
+    AudioLoad_DecreaseSampleDmaTtls();
+    AudioLoad_ProcessLoads(gAudioResetStep);
+    if (osRecvMesg(&gAudioTaskMesgQueue, &sp38, 0) != -1) {
+        if (gAudioResetStep == 0) {
+            gAudioResetStep = 5;
+        }
+        gAudioSpecId = sp38.data32;
+    }
+    if ((gAudioResetStep != 0) && (AudioHeap_ResetStep() == 0)) {
+        if (gAudioResetStep == 0) {
+            osSendMesg(gAudioResetQueue, OS_MESG_32((s32) gAudioSpecId), 0);
+        }
+        gWaitingAudioTask = NULL;
+        return;
+    }
+    if (gAudioResetTimer > 16) {
+        return;
+    }
+    if (gAudioResetTimer != 0) {
+        gAudioResetTimer++;
+    }
+    gAudioCurTask = &gAudioRspTasks[gAudioTaskIndexQ];
+    gCurAbiCmdBuffer = gAbiCmdBuffs[gAudioTaskIndexQ];
+    sp4C = gCurAiBuffIndex;
+    sp40 = gAiBuffers[sp4C];
+    gAiBuffLengths[sp4C] = num_samples;
+    if (gAiBuffLengths[sp4C] < gAudioBufferParams.minAiBufferLength) {
+        gAiBuffLengths[sp4C] = gAudioBufferParams.minAiBufferLength;
+    }
+    if (gAiBuffLengths[sp4C] > gAudioBufferParams.maxAiBufferLength) {
+        gAiBuffLengths[sp4C] = gAudioBufferParams.maxAiBufferLength;
+    }
+    while (osRecvMesg(gThreadCmdProcQueue, &sp34, 0) != -1) {
+        AudioThread_ProcessCmds(sp34.data32);
+    }
+    gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &sp50, samples, num_samples);
+    gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
+}
+
+SPTask* AudioThread_CreateTask() {
     static s32 gMaxAbiCmdCnt = 128;
     static SPTask* gWaitingAudioTask = NULL;
     u32 aiSamplesLeft;
