@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "endianness.h"
 #include "sf64audio_provisional.h"
 
 f32 gBendPitchOneOctaveFrequencies[] = {
@@ -197,6 +198,7 @@ u8 gDefaultShortNoteVelocityTable[] = {
 u8 gDefaultShortNoteGateTimeTable[] = {
     229, 203, 177, 151, 139, 126, 113, 100, 87, 74, 61, 48, 36, 23, 10, 0,
 };
+
 EnvelopePoint gDefaultEnvelope[] = {
     { 4, 32000 },
     { 1000, 32000 },

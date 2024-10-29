@@ -103,31 +103,10 @@ void Main_Initialize(void) {
 }
 
 void Audio_ThreadEntry(void* arg0) {
-    // SPTask* task;
+    SPTask* task;
 
     AudioLoad_Init();
     Audio_InitSounds();
-
-    // task = AudioThread_CreateTask();
-    // if (task != NULL) {
-    //     task->msgQueue = &gAudioTaskMsgQueue;
-    //     task->msg = OS_MESG_32(TASK_MESG_1);
-    //     osWritebackDCacheAll();
-    //     osSendMesg(&gTaskMsgQueue, OS_MESG_PTR(task), OS_MESG_PRI_NORMAL);
-    // }
-    // while (true) {
-    //     task = AudioThread_CreateTask();
-    //     if (task != NULL) {
-    //         task->msgQueue = &gAudioTaskMsgQueue;
-    //         task->msg = OS_MESG_32(TASK_MESG_1);
-    //         osWritebackDCacheAll();
-    //     }
-    //     MQ_GET_MESG(&gAudioTaskMesgQueue, NULL);
-    //     if (task != NULL) {
-    //         osSendMesg(&gTaskMsgQueue, OS_MESG_PTR(task), OS_MESG_PRI_NORMAL);
-    //     }
-    //     MQ_WAIT_FOR_MESG(&gAudioVImesgQueue, NULL);
-    // }
 }
 
 void Graphics_SetTask(void) {
@@ -299,7 +278,8 @@ void Graphics_ThreadUpdate() {
     // }
 
     // LTODO: There is no audio for now :P
-    // Audio_Update();
+    osSendMesg(&gTaskMesgQueue, OS_MESG_PTR(NULL), OS_MESG_NOBLOCK);
+    Audio_Update();
 }
 
 void Main_InitMesgQueues(void) {
@@ -387,6 +367,8 @@ void Main_ThreadEntry(void* arg0) {
     Audio_ThreadEntry(NULL);
     Graphics_ThreadEntry(NULL);
     Controller_Init();
+
+    Main_InitMesgQueues();
 
     // LTODO: Implement timers
     // Timer_ThreadEntry(NULL);

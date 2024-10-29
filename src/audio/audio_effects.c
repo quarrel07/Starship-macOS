@@ -1,5 +1,6 @@
 #include "sys.h"
 #include "sf64audio_provisional.h"
+#include "endianness.h"
 
 static const char devstr[] = "Audio:Envp: overflow  %f\n";
 
@@ -199,7 +200,7 @@ f32 func_80013B90(AdsrState* adsr) {
             adsr->state = ADSR_STATE_LOOP;
         case_ADSR_STATE_LOOP:
         case ADSR_STATE_LOOP:
-            adsr->delay = adsr->envelope[adsr->envIndex].delay;
+            adsr->delay = BSWAP16(adsr->envelope[adsr->envIndex].delay);
             switch (adsr->delay) {
                 case ADSR_DISABLE:
                     adsr->state = ADSR_STATE_DISABLED;
@@ -208,7 +209,7 @@ f32 func_80013B90(AdsrState* adsr) {
                     adsr->state = ADSR_STATE_HANG;
                     break;
                 case ADSR_GOTO:
-                    adsr->envIndex = adsr->envelope[adsr->envIndex].arg;
+                    adsr->envIndex = BSWAP16(adsr->envelope[adsr->envIndex].arg);
                     goto case_ADSR_STATE_LOOP;
                 case ADSR_RESTART:
                     adsr->state = ADSR_STATE_INITIAL;
@@ -221,7 +222,7 @@ f32 func_80013B90(AdsrState* adsr) {
                         adsr->delay = 1;
                     }
 
-                    adsr->target = adsr->envelope[adsr->envIndex].arg / 32767.0f;
+                    adsr->target = (s16)BE16SWAP(adsr->envelope[adsr->envIndex].arg) / 32767.0f;
                     adsr->target = SQ(adsr->target);
                     adsr->velocity = (adsr->target - adsr->current) / adsr->delay;
                     adsr->state = ADSR_STATE_FADE;

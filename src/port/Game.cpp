@@ -21,9 +21,9 @@ void Graphics_PushFrame(Gfx* data) {
 extern "C" void Timer_Update();
 
 void push_frame() {
+    Graphics_ThreadUpdate();
     GameEngine::StartAudioFrame();
     GameEngine::Instance->StartFrame();
-    Graphics_ThreadUpdate();
     Timer_Update();
     // thread5_iteration();
     GameEngine::EndAudioFrame();

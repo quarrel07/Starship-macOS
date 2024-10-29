@@ -1,6 +1,7 @@
 #include "sys.h"
 #include "sf64audio_provisional.h"
 #include "audio/mixer.h"
+#include "endianness.h"
 
 s32 D_80145D40; // unused
 
@@ -745,8 +746,8 @@ Acmd* func_8000A25C(s16* aiBuf, s32 aiBufLen, Acmd* aList, s32 updateIndex) {
     u8 sp84[0x3C];
     NoteSubEu* temp_v0;
     s16 var_s2;
-    s16 i;
-    s32 j;
+    s16 i = 0;
+    s32 j = 0;
 
     var_s2 = 0;
     if (gNumSynthReverbs == 0) {
@@ -832,7 +833,7 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
     s32 padD8;
     s32 padD4;
     s32 padD0;
-    u32 sampleAddr; // spCC
+    uintptr_t sampleAddr; // spCC
     s32 padC8;
     s32 samplesLenAdjusted;     // spC4
     s32 nAdpcmSamplesProcessed; // spC0
@@ -1011,7 +1012,7 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
                                                              flags, &synthState->sampleDmaIndex, bookSample->medium);
                     }
                     // if (1){}
-                    sampleDataStartPad = (u32) sampleData & 0xF;
+                    sampleDataStartPad = (uintptr_t) sampleData & 0xF;
                     aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(sampleData - sampleDataStartPad), addr, aligned);
                 } else {
                     nSamplesToDecode = 0;

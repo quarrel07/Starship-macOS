@@ -29,7 +29,7 @@ typedef void (*AudioCustomUpdateFunction)(void);
 // Also known as "Pulses Per Quarter Note" or "Tatums Per Beat"
 #define SEQTICKS_PER_BEAT 48
 
-#define IS_SEQUENCE_CHANNEL_VALID(ptr) ((u32) (ptr) != (u32) &gSeqChannelNone)
+#define IS_SEQUENCE_CHANNEL_VALID(ptr) ((uintptr_t) (ptr) != (uintptr_t) &gSeqChannelNone)
 #define SEQ_NUM_CHANNELS 16
 #define SEQ_IO_VAL_NONE -1
 
@@ -215,18 +215,20 @@ typedef struct {
     /* 0x00 */ u32 start;
     /* 0x04 */ u32 end;
     /* 0x08 */ u32 count;
-    /* 0x10 */ u64 predictorState[4]; // only exists if count != 0. 8-byte aligned
+    /* 0x10 */ s16 predictorState[16]; // only exists if count != 0. 8-byte aligned
 } AdpcmLoop;                          // size = 0x30 or 0x10, 0x8 aligned
 
 typedef struct {
     /* 0x00 */ s32 order;
     /* 0x04 */ s32 numPredictors;
-#ifdef AVOID_UB
-    /* 0x08 */ u64 book[]; // size 8 * order * numPredictors.
-#else
-    /* 0x08 */ u64 book[1]; // size 8 * order * numPredictors.
-#endif
+    /* 0x08 */ s16* book; // size 8 * order * numPredictors.
 } AdpcmBook; // size >= 8, 0x8 aligned
+
+typedef struct {
+    /* 0x00 */ s32 order;
+    /* 0x04 */ s32 numPredictors;
+    /* 0x08 */ u32 book; // size 8 * order * numPredictors.
+} AdpcmBook32Bit; // size >= 8, 0x8 aligned
 
 typedef struct {
     /* 0x00 */ u32 codec : 4;  // The state of compression or decompression
@@ -243,9 +245,26 @@ typedef struct {
 } Sample;     // size = 0x10
 
 typedef struct {
+    /* 0x00 */ u32 codec : 4;  // The state of compression or decompression
+    /* 0x00 */ u32 medium : 2; // Medium where sample is currently stored
+    /* 0x00 */ u32 unk_bit26 : 1;
+    /* 0x00 */ u32 isRelocated : 1; // Has the sample header been relocated (offsets to pointers)
+    /* 0x01 */ u32 size : 24;       // Size of the sample
+    /* 0x04 */ u32 sampleAddr;      // Raw sample data. Offset from the start of the sample bank or absolute address to
+                                    // either rom or ram
+    /* 0x08 */ u32 loop; // Adpcm loop parameters used by the sample. Offset from the start of the sound font / pointer to ram
+    /* 0x0C */ u32 book; // Adpcm book parameters used by the sample. Offset from the start of the sound font / pointer to ram
+} Sample32Bit;     // size = 0x10
+
+typedef struct {
     /* 0x00 */ Sample* sample;
     /* 0x04 */ f32 tuning; // frequency modulation factor
-} TunedSample;             // size = 0x8
+} TunedSample;// size = 0x8
+
+typedef struct {
+    /* 0x00 */ u32 sample;
+    /* 0x04 */ f32 tuning; // frequency modulation factor
+} TunedSample32Bit;
 
 typedef struct {
     /* 0x00 */ u8 isRelocated; // have the envelope and all samples been relocated (offsets to pointers)
@@ -259,12 +278,31 @@ typedef struct {
 } Instrument; // size = 0x20
 
 typedef struct {
+    /* 0x00 */ u8 isRelocated; // have the envelope and all samples been relocated (offsets to pointers)
+    /* 0x01 */ u8 normalRangeLo;
+    /* 0x02 */ u8 normalRangeHi;
+    /* 0x03 */ u8 adsrDecayIndex; // index used to obtain adsr decay rate from adsrDecayTable
+    /* 0x04 */ u32 envelope;
+    /* 0x08 */ TunedSample32Bit lowPitchTunedSample;
+    /* 0x10 */ TunedSample32Bit normalPitchTunedSample;
+    /* 0x18 */ TunedSample32Bit highPitchTunedSample;
+} Instrument32Bit; // size = 0x20
+
+typedef struct {
     /* 0x00 */ u8 adsrDecayIndex; // index used to obtain adsr decay rate from adsrDecayTable
     /* 0x01 */ u8 pan;
     /* 0x02 */ u8 isRelocated; // have tunedSample.sample and envelope been relocated (offsets to pointers)
     /* 0x04 */ TunedSample tunedSample;
     /* 0x0C */ EnvelopePoint* envelope;
 } Drum; // size = 0x10
+
+typedef struct {
+    /* 0x00 */ u8 adsrDecayIndex; // index used to obtain adsr decay rate from adsrDecayTable
+    /* 0x01 */ u8 pan;
+    /* 0x02 */ u8 isRelocated; // have tunedSample.sample and envelope been relocated (offsets to pointers)
+    /* 0x04 */ TunedSample tunedSample;
+    /* 0x0C */ EnvelopePoint* envelope;
+} Drum32Bit; // size = 0x10
 
 typedef struct {
     /* 0x00 */ TunedSample tunedSample;
@@ -766,13 +804,13 @@ typedef struct {
     /* 0x0 */ union {
         u32 opArgs;
         struct {
-            u8 op;
-            u8 arg0;
-            u8 arg1;
             u8 arg2;
+            u8 arg1;
+            u8 arg0;
+            u8 op;
         };
     };
-    /* 0x4 */ union {
+    union {
         void* data;
         f32 asFloat;
         s32 asInt;

@@ -3,6 +3,13 @@
 #define LOAD_ASSET(path) (path == NULL ? NULL : (GameEngine_OTRSigCheck((const char*) path) ? ResourceGetDataByName((const char*) path) : path))
 #define LOAD_ASSET_RAW(path) ResourceGetDataByName((const char*) path)
 
+struct GamePool {
+    unsigned long chunk;
+    unsigned long cursor;
+    unsigned long length;
+    void* memory;
+};
+
 #ifdef __cplusplus
 #include <vector>
 #include <Fast3D/gfx_pc.h>
@@ -34,7 +41,16 @@ class GameEngine {
     static void ProcessGfxCommands(Gfx* commands);
     static uint32_t GetInterpolationFPS();
 };
+
+extern "C" void* GameEngine_Malloc(size_t size);
+
+
+#define memallocn(type, n) (type*) GameEngine_Malloc(sizeof(type) * n)
+#define memalloc(type) memallocn(type, 1)
+
 #else
+#include <stdint.h>
+
 void GameEngine_ProcessGfxCommands(Gfx* commands);
 float GameEngine_GetAspectRatio();
 uint8_t GameEngine_OTRSigCheck(char* imgData);
@@ -48,4 +64,6 @@ int16_t OTRGetRectDimensionFromLeftEdge(float v);
 int16_t OTRGetRectDimensionFromRightEdge(float v);
 uint32_t OTRGetGameRenderWidth();
 uint32_t OTRGetGameRenderHeight();
+void* GameEngine_Malloc(size_t size);
+#define memalloc(size) GameEngine_Malloc(size)
 #endif

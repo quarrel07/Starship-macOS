@@ -41,13 +41,19 @@ void AudioThread_CreateNextAudioBuffer(int16_t *samples, uint32_t num_samples);
 }
 
 GameEngine* GameEngine::Instance;
+static GamePool MemoryPool = {
+    .chunk = 2048,
+    .cursor = 0,
+    .length = 0,
+    .memory = nullptr
+};
 
 GameEngine::GameEngine() {
     std::vector<std::string> OTRFiles;
     if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.otr"); std::filesystem::exists(cube_path)) {
         OTRFiles.push_back(cube_path);
     }
-    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppBundle("sf64.otr"); std::filesystem::exists(sm64_otr_path)) {
+    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.otr"); std::filesystem::exists(sm64_otr_path)) {
         OTRFiles.push_back(sm64_otr_path);
     }
     if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods"); !patches_path.empty() && std::filesystem::exists(patches_path)) {
@@ -60,7 +66,7 @@ GameEngine::GameEngine() {
         }
     }
 
-    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3);
+    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 1024, 2480 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY, "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
@@ -95,7 +101,7 @@ void GameEngine::Create(){
 }
 
 void GameEngine::Destroy(){
-
+    free(MemoryPool.memory);
 }
 
 bool ShouldClearTextureCacheAtEndOfFrame = false;
@@ -133,7 +139,7 @@ void GameEngine::HandleAudioThread(){
         u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
         s16 audio_buffer[SAMPLES_PER_FRAME];
         for (int i = 0; i < NUM_AUDIO_CHANNELS; i++) {
-            AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * 2), num_audio_samples);
+            AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * 2), num_audio_samples * 2);
         }
         AudioPlayerPlayFrame((u8 *) audio_buffer, 2 * num_audio_samples * 4);
         audio.processing = false;
@@ -427,4 +433,28 @@ extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
     float screenScaledCoord = gameCoord * gameScreenRatio;
     int32_t screenScaledCoordInt = screenScaledCoord;
     return screenScaledCoordInt;
+}
+
+extern "C" void* GameEngine_Malloc(size_t size) {
+    // This is really wrong
+    return malloc(size);
+
+    const auto chunk = MemoryPool.chunk;
+
+    if(size == 0) {
+        return nullptr;
+    }
+
+    if(MemoryPool.cursor + size < MemoryPool.length) {
+        const auto res = static_cast<uint8_t*>(MemoryPool.memory) + MemoryPool.cursor;
+        MemoryPool.cursor += size;
+        SPDLOG_INFO("Allocating {} into memory pool", size);
+        return res;
+    }
+
+    MemoryPool.length += chunk;
+    MemoryPool.memory = MemoryPool.memory == nullptr ? malloc(MemoryPool.length) : realloc(MemoryPool.memory, MemoryPool.length);
+    memset(static_cast<uint8_t*>(MemoryPool.memory) + MemoryPool.length, 0, MemoryPool.length - chunk);
+    SPDLOG_INFO("Memory pool resized from {} to {}", MemoryPool.length - chunk, MemoryPool.length);
+    return GameEngine_Malloc(size);
 }

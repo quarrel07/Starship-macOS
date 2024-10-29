@@ -637,7 +637,7 @@ void Audio_ResetSfxChannelState(void) {
 }
 
 void Audio_StartSequence(u8 seqPlayId, u8 seqId, u8 seqArgs, u16 fadeInTime) {
-    u8 i;
+    u8 i = 0;
     s32 pad;
 
     if (!sStartSeqDisabled || (seqPlayId == SEQ_PLAYER_SFX)) {
@@ -2644,8 +2644,7 @@ void Audio_RestoreVolumeSettings(u8 audioType) {
     }
 }
 
-void Audio_SetVolume(u8 audioType, u8 volume) {
-    return;
+void Audio_SetVolume(u8 audioType, u8 volume) {    
     if (volume > 99) {
         volume = 99;
     }

@@ -42,68 +42,58 @@ static const char devstr14[] = "Error : Queue is not empty ( %x ) \n";
 void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
     static s32 gMaxAbiCmdCnt = 128;
     static SPTask* gWaitingAudioTask = NULL;
-    u32 sp54;
-    s32 sp50;
-    s32 sp4C;
-    s32 pad48;
-    OSTask_t* task;
-    u16* sp40;
-    s32 pad3C;
-    OSMesg sp38;
-    OSMesg sp34;
-    s32 pad30;
+    s32 abiCmdCount;
+    u32 specId;
+    OSMesg msg;
+
     gAudioTaskCountQ++;
     if ((gAudioTaskCountQ % gAudioBufferParams.count) != 0) {
-        return;
+        return gWaitingAudioTask;
     }
-    osSendMesg(gAudioTaskStartQueue, OS_MESG_32(gAudioTaskCountQ), 0);
+    osSendMesg(gAudioTaskStartQueue, OS_MESG_32(gAudioTaskCountQ), OS_MESG_NOBLOCK);
     gAudioTaskIndexQ ^= 1;
-    gCurAiBuffIndex++;
-    gCurAiBuffIndex %= 3;
-    sp4C = (gCurAiBuffIndex + 1) % 3;
-    sp54 = osAiGetLength() >> 2;
-    if ((gAudioResetTimer < 16) && (gAiBuffLengths[sp4C] != 0)) {
-        osAiSetNextBuffer(gAiBuffers[sp4C], gAiBuffLengths[sp4C] * 4);
-    }
-    if (gCurAudioFrameDmaCount && gCurAudioFrameDmaCount) {}
+
     gCurAudioFrameDmaCount = 0;
     AudioLoad_DecreaseSampleDmaTtls();
-    AudioLoad_ProcessLoads(gAudioResetStep);
-    if (osRecvMesg(&gAudioTaskMesgQueue, &sp38, 0) != -1) {
+    // AudioLoad_ProcessLoads(gAudioResetStep);
+
+    if (MQ_GET_MESG(gAudioSpecQueue, &specId)) {
         if (gAudioResetStep == 0) {
             gAudioResetStep = 5;
         }
-        gAudioSpecId = sp38.data32;
+        gAudioSpecId = specId;
     }
+
     if ((gAudioResetStep != 0) && (AudioHeap_ResetStep() == 0)) {
         if (gAudioResetStep == 0) {
-            osSendMesg(gAudioResetQueue, OS_MESG_32((s32) gAudioSpecId), 0);
+            osSendMesg(gAudioResetQueue, OS_MESG_32((s32) gAudioSpecId), OS_MESG_NOBLOCK);
         }
         gWaitingAudioTask = NULL;
-        return;
+        return NULL;
     }
+
     if (gAudioResetTimer > 16) {
-        return;
+        return NULL;
     }
     if (gAudioResetTimer != 0) {
         gAudioResetTimer++;
     }
+
     gAudioCurTask = &gAudioRspTasks[gAudioTaskIndexQ];
     gCurAbiCmdBuffer = gAbiCmdBuffs[gAudioTaskIndexQ];
-    sp4C = gCurAiBuffIndex;
-    sp40 = gAiBuffers[sp4C];
-    gAiBuffLengths[sp4C] = num_samples;
-    if (gAiBuffLengths[sp4C] < gAudioBufferParams.minAiBufferLength) {
-        gAiBuffLengths[sp4C] = gAudioBufferParams.minAiBufferLength;
+
+    while (MQ_GET_MESG(gThreadCmdProcQueue, &msg)) {
+        AudioThread_ProcessCmds(msg.data32);
     }
-    if (gAiBuffLengths[sp4C] > gAudioBufferParams.maxAiBufferLength) {
-        gAiBuffLengths[sp4C] = gAudioBufferParams.maxAiBufferLength;
-    }
-    while (osRecvMesg(gThreadCmdProcQueue, &sp34, 0) != -1) {
-        AudioThread_ProcessCmds(sp34.data32);
-    }
-    gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &sp50, samples, num_samples);
+
+    gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &abiCmdCount, samples, num_samples);
     gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
+
+    gAudioCurTask->msg = OS_MESG_PTR(NULL);
+
+    if (gMaxAbiCmdCnt < abiCmdCount) {
+        gMaxAbiCmdCnt = abiCmdCount;
+    }
 }
 
 SPTask* AudioThread_CreateTask() {
@@ -233,7 +223,7 @@ void AudioThread_ProcessGlobalCmd(AudioCmd* cmd) {
         case AUDIOCMD_OP_GLOBAL_INIT_SEQPLAYER:
         case AUDIOCMD_OP_GLOBAL_INIT_SEQPLAYER_ALT:
             AudioLoad_SyncInitSeqPlayer(cmd->arg0, cmd->arg1, cmd->arg2);
-            AudioThread_SetFadeInTimer(cmd->arg0, (s32) cmd->data);
+            AudioThread_SetFadeInTimer(cmd->arg0, (uintptr_t) cmd->data);
             break;
         case AUDIOCMD_OP_GLOBAL_DISABLE_SEQPLAYER:
             if (gSeqPlayers[cmd->arg0].enabled) {
@@ -355,7 +345,7 @@ void AudioThread_ScheduleProcessCmds(void) {
         D_800C7C70 = (u8) (gThreadCmdWritePos - gThreadCmdReadPos + 0x100);
     }
     msg = (((gThreadCmdReadPos & 0xFF) << 8) | (gThreadCmdWritePos & 0xFF));
-    osSendMesg(gThreadCmdProcQueue, OS_MESG_32(msg), OS_MESG_NOBLOCK);
+    osSendMesg32(gThreadCmdProcQueue, msg, OS_MESG_NOBLOCK);
     gThreadCmdReadPos = gThreadCmdWritePos;
 }
 
