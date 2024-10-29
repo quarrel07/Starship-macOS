@@ -238,13 +238,14 @@ void* AudioLoad_SyncLoadSeqFonts(s32 seqId, u32* outFontId) {
     s32 fontId = 0xFF;
     s32 numFonts = gSeqFontTable[index++];
     void* soundFontData;
-
+    
     for (numFonts; numFonts > 0; numFonts--) {
         fontId = gSeqFontTable[index++];
         soundFontData = AudioLoad_SyncLoadFont(fontId);
     }
 
     *outFontId = fontId;
+    gSeqLoadStatus[seqId] = 2;
 
     return soundFontData;
 }
@@ -260,6 +261,8 @@ void AudioLoad_SyncLoadSeqParts(s32 seqId, s32 flags) {
     if (flags & 1) {
         AudioLoad_SyncLoadSeq(seqId);
     }
+
+    gSeqLoadStatus[seqId] = 2;
 }
 
 s32 AudioLoad_SyncLoadSample(Sample* sample, s32 fontId) {
@@ -414,6 +417,7 @@ void AudioLoad_SyncInitSeqPlayerInternal(s32 playerIdx, s32 seqId, s32 arg2) {
 
 void* AudioLoad_SyncLoadSeq(s32 seqId) {
     AudioTable* table = AudioLoad_GetLoadTable(SEQUENCE_TABLE);
+    gSeqLoadStatus[seqId] = 2;
     return Audio_LoadBlob(gAudioTable, table->entries[seqId].romAddr);
 }
 
