@@ -47,10 +47,10 @@ extern "C" SoundFont Audio_LoadFont(AudioTableEntry entry) {
     auto reader = Audio_MakeReader(gAudioBank, entry.romAddr);
 
     SoundFont font = {
-        .numInstruments = (entry.shortData2 >> 8) & 0xFF,
-        .numDrums = entry.shortData2 & 0xFF,
-        .sampleBankId1 = (entry.shortData1 >> 8) & 0xFF,
-        .sampleBankId2 = entry.shortData1 & 0xFF,
+        .numInstruments = (uint32_t)((entry.shortData2 >> 8) & 0xFF),
+        .numDrums = (uint32_t)(entry.shortData2 & 0xFF),
+        .sampleBankId1 = (uint32_t)((entry.shortData1 >> 8) & 0xFF),
+        .sampleBankId2 = (uint32_t)(entry.shortData1 & 0xFF),
     };
     
     font.instruments = memallocn(Instrument*, font.numInstruments);
