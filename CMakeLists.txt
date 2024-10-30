@@ -18,23 +18,15 @@ set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
 
 # Add a custom module path to locate additional CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-include(FindFontconfig)
 
 if (WIN32)
 include(cmake/automate-vcpkg.cmake)
-# Forced to use MSVC
-set(MSVC ON)
-
-if(MSVC)
 set(VCPKG_TRIPLET x64-windows-static)
 set(VCPKG_TARGET_TRIPLET x64-windows-static)
-else()
-set(VCPKG_TRIPLET x64-mingw-static)
-set(VCPKG_TARGET_TRIPLET x64-mingw-static)
-endif()
-
 vcpkg_bootstrap()
-vcpkg_install_packages(fontconfig sdl2 zlib bzip2 libzip libpng getopt dirent libusb pthread glew glfw3 nlohmann-json tinyxml2 spdlog)
+vcpkg_install_packages(zlib bzip2 libzip libpng sdl2 glew glfw3 nlohmann-json tinyxml2 spdlog)
+else()
+include(FindFontconfig)
 endif()
 
 if (MSVC)
