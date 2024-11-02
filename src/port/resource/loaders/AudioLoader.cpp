@@ -43,37 +43,36 @@ EnvelopePoint* Audio_LoadEnvelope(uint32_t addr) {
     return envelopes;
 }
 
-extern "C" SoundFont Audio_LoadFont(AudioTableEntry entry) {
+extern "C" SoundFont* Audio_LoadFont(AudioTableEntry entry) {
     auto reader = Audio_MakeReader(gAudioBank, entry.romAddr);
 
-    SoundFont font = {
-        .numInstruments = (uint32_t)((entry.shortData2 >> 8) & 0xFF),
-        .numDrums = (uint32_t)(entry.shortData2 & 0xFF),
-        .sampleBankId1 = (uint32_t)((entry.shortData1 >> 8) & 0xFF),
-        .sampleBankId2 = (uint32_t)(entry.shortData1 & 0xFF),
-    };
-    
-    font.instruments = memallocn(Instrument*, font.numInstruments);
-    font.drums = memallocn(Drum*, font.numDrums);
+    SoundFont* font = memalloc(SoundFont);
+
+    font->numInstruments = (entry.shortData2 >> 8) & 0xFFu;
+    font->numDrums = entry.shortData2 & 0xFFu;
+    font->sampleBankId1 = (entry.shortData1 >> 8) & 0xFFu;
+    font->sampleBankId2 = entry.shortData1 & 0xFFu;
+    font->instruments = memallocn(Instrument*, font->numInstruments);
+    font->drums = memallocn(Drum*, font->numDrums);
 
     uint32_t drumBaseAddr = entry.romAddr + reader.ReadUInt32();
     uint32_t instBaseAddr = 4;
 
-    if(font.drums != nullptr && drumBaseAddr != 0){
+    if(font->drums != nullptr && drumBaseAddr != 0){
         reader.Seek(drumBaseAddr, Ship::SeekOffsetType::Start);
-        for(size_t i = 0; i < font.numDrums; i++){
-            font.drums[i] = Audio_LoadDrum(entry.romAddr + reader.ReadUInt32(), entry.romAddr, font.sampleBankId1);
+        for(size_t i = 0; i < font->numDrums; i++){
+            font->drums[i] = Audio_LoadDrum(entry.romAddr + reader.ReadUInt32(), entry.romAddr, font->sampleBankId1);
         }
     }
 
-    if(font.instruments != nullptr){
+    if(font->instruments != nullptr){
         reader.Seek(instBaseAddr, Ship::SeekOffsetType::Start);
-        for(size_t i = 1; i < font.numInstruments; i++){
-            font.instruments[i] = Audio_LoadInstrument(reader.ReadUInt32(), font.sampleBankId1);
+        for(size_t i = 1; i < font->numInstruments; i++){
+            font->instruments[i] = Audio_LoadInstrument(reader.ReadUInt32(), font->sampleBankId1);
         }
     }
 
-    gSampleFontLoadStatus[font.sampleBankId1] = 2;
+    gSampleFontLoadStatus[font->sampleBankId1] = 2;
 
     return font;
 }
@@ -105,7 +104,7 @@ extern "C" AdpcmBook* Audio_LoadBook(uint32_t addr) {
     size_t length = 8 * book->order * book->numPredictors;
     book->book = memallocn(int16_t, length);
 
-    if(length > 16){
+    if(length > 0x40){
         return nullptr;
     }
 
@@ -128,6 +127,7 @@ Sample* Audio_LoadSample(uint32_t sampleAddr, uint32_t baseAddr = 0, uint32_t sa
     sample->isRelocated = 1;
     sample->sampleAddr = (uint8_t*) Audio_LoadBlob(gAudioTable, gSeqTableInit.entries[sampleBankID].romAddr) + addr;
 
+    gUsedSamples[gNumUsedSamples++] = sample;
     return sample;
 }
 

@@ -42,7 +42,7 @@ void AudioThread_CreateNextAudioBuffer(int16_t *samples, uint32_t num_samples);
 
 GameEngine* GameEngine::Instance;
 static GamePool MemoryPool = {
-    .chunk = 1024 * 20,
+    .chunk = 1024 * 512,
     .cursor = 0,
     .length = 0,
     .memory = nullptr
@@ -437,7 +437,7 @@ extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
 
 extern "C" void* GameEngine_Malloc(size_t size) {
     // This is really wrong
-    // return malloc(size);
+    return malloc(size);
     // TODO: Kenix please take a look at this, i think it works but you are better at this
 
     const auto chunk = MemoryPool.chunk;
@@ -449,7 +449,7 @@ extern "C" void* GameEngine_Malloc(size_t size) {
     if(MemoryPool.cursor + size < MemoryPool.length) {
         const auto res = static_cast<uint8_t*>(MemoryPool.memory) + MemoryPool.cursor;
         MemoryPool.cursor += size;
-        SPDLOG_INFO("Allocating {} into memory pool", size);
+        //SPDLOG_INFO("Allocating {} into memory pool", size);
         return res;
     }
 
