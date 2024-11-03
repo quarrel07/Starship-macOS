@@ -134,7 +134,7 @@ extern OSMesg sSerialEventBuff[1];
 extern OSMesgQueue gMainThreadMesgQueue;
 extern OSMesg sMainThreadMsgBuff[32];
 extern OSMesgQueue gTaskMesgQueue;
-extern OSMesg sTaskMsgBuff[128];
+extern OSMesg sTaskMsgBuff[16];
 extern OSMesgQueue gAudioVImesgQueue;
 extern OSMesg sAudioVImsgBuff[1];
 extern OSMesgQueue gAudioTaskMesgQueue;

@@ -10,11 +10,11 @@ OSMesgQueue sAudioTaskStartQueue;
 OSMesgQueue sThreadCmdProcQueue;
 OSMesgQueue sAudioSpecQueue;
 OSMesgQueue sAudioResetQueue;
-AudioCmd gThreadCmdBuffer[1024];
-OSMesg sAudioTaskStartMsg[200];
-OSMesg sThreadCmdProcMsg[200];
-OSMesg sAudioSpecMsg[200];
-OSMesg sAudioResetMsg[200];
+AudioCmd gThreadCmdBuffer[256];
+OSMesg sAudioTaskStartMsg[1];
+OSMesg sThreadCmdProcMsg[4];
+OSMesg sAudioSpecMsg[1];
+OSMesg sAudioResetMsg[1];
 
 u8 gThreadCmdWritePos = 0;
 u8 gThreadCmdReadPos = 0;

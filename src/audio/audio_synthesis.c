@@ -644,7 +644,7 @@ Acmd* func_80009B64(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLen) {
     }
 
     aiBufPtr = (s32*) aiBufStart;
-    for (i = gAudioBufferParams.ticksPerUpdate - 1; i > 0; i--) {
+    for (i = gAudioBufferParams.ticksPerUpdate; i > 0; i--) {
         if (i == 1) {
             chunkLen = aiBufLen;
         } else if ((aiBufLen / i) >= gAudioBufferParams.samplesPerTickMax) {

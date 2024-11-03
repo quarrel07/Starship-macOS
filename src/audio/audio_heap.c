@@ -148,7 +148,6 @@ void* AudioHeap_Alloc(AudioAllocPool* pool, u32 size) {
 
 void AudioHeap_InitPool(AudioAllocPool* pool, void* ramAddr, u32 size) {
     pool->curRamAddr = pool->startRamAddr = (u8*) ramAddr;
-    size *= 4;
     pool->size = size - ((uintptr_t) ramAddr & 0xF);
     pool->numEntries = 0;
 }
@@ -657,9 +656,9 @@ void AudioHeap_Init(void) {
     gAudioBufferParams.minAiBufferLength = gAudioBufferParams.samplesPerFrameTarget - 0x10;
     gAudioBufferParams.maxAiBufferLength = gAudioBufferParams.samplesPerFrameTarget + 0x10;
 
-    gAudioBufferParams.ticksPerUpdate = ((gAudioBufferParams.samplesPerFrameTarget + 0x10) / 0xD0) + 1;
+    gAudioBufferParams.ticksPerUpdate = ((gAudioBufferParams.samplesPerFrameTarget + 0x10) / 192);
     gAudioBufferParams.samplesPerTick =
-        (gAudioBufferParams.samplesPerFrameTarget / gAudioBufferParams.ticksPerUpdate) & ~7;
+        (gAudioBufferParams.samplesPerFrameTarget / (gAudioBufferParams.ticksPerUpdate + 1)) & ~7;
     gAudioBufferParams.samplesPerTickMax = gAudioBufferParams.samplesPerTick + 8;
     gAudioBufferParams.samplesPerTickMin = gAudioBufferParams.samplesPerTick - 8;
     gAudioBufferParams.resampleRate = 32000.0f / (s32) gAudioBufferParams.samplingFrequency;
@@ -673,9 +672,9 @@ void AudioHeap_Init(void) {
     gAudioBufferParams.maxAiBufferLength *= gAudioBufferParams.count;
     gAudioBufferParams.minAiBufferLength *= gAudioBufferParams.count;
     gAudioBufferParams.ticksPerUpdate *= gAudioBufferParams.count;
-//    if (gAudioBufferParams.count >= 2) {
-//        gAudioBufferParams.maxAiBufferLength -= 0x10;
-//    }
+   if (gAudioBufferParams.count >= 2) {
+       gAudioBufferParams.maxAiBufferLength -= 0x10;
+   }
     gMaxAudioCmds = (gNumNotes * 20 * gAudioBufferParams.ticksPerUpdate) + (spec->numReverbs * 32) + 480;
     persistentSize = spec->persistentSeqCacheSize + spec->persistentFontCacheSize +
                      spec->persistentSampleBankCacheSize + spec->persistentSampleCacheSize + 0x10;

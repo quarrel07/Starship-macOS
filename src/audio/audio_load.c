@@ -238,7 +238,7 @@ void* AudioLoad_SyncLoadSeqFonts(s32 seqId, u32* outFontId) {
     s32 fontId = 0xFF;
     s32 numFonts = gSeqFontTable[index++];
     void* soundFontData;
-    
+
     for (numFonts; numFonts > 0; numFonts--) {
         fontId = gSeqFontTable[index++];
         soundFontData = AudioLoad_SyncLoadFont(fontId);
@@ -489,7 +489,7 @@ void* AudioLoad_SyncLoadFont(s32 fontId) {
     }
 
     if (didAllocate == 1) {
-         AudioLoad_RelocateFontAndPreloadSamples(fontId, fontData, &relocInfo, AUDIOLOAD_SYNC);
+        AudioLoad_RelocateFontAndPreloadSamples(fontId, fontData, &relocInfo, AUDIOLOAD_SYNC);
     }
 
     return fontData;
@@ -608,8 +608,7 @@ void AudioLoad_RelocateFont(s32 fontId, uintptr_t fontBaseAddr, SampleBankRelocI
     printf("fontId: %d\n", fontId);
     SoundFont* font = Audio_LoadFont(table->entries[fontId]);
 
-    gSoundFontList[fontId].drums = font->drums;
-    gSoundFontList[fontId].instruments = font->instruments;
+    gSoundFontList[fontId] = *font;
 }
 
 void AudioLoad_SyncDma(uintptr_t devAddr, u8* ramAddr, u32 size, s32 medium) {
@@ -1262,7 +1261,6 @@ s32 AudioLoad_RelocateFontAndPreloadSamples(s32 fontId, uintptr_t fontDataAddr, 
     s32 inProgress;
     isAsync = 0;
 
-//    printf("Relocating font %d\n", fontId);
     inProgress = false;
     if (gPreloadSampleStackTop != 0) {
         inProgress = true;
@@ -1276,9 +1274,9 @@ s32 AudioLoad_RelocateFontAndPreloadSamples(s32 fontId, uintptr_t fontDataAddr, 
 
     size = 0;
 
-//    for (i = 0; i < gNumUsedSamples; i++) {
-//        size += ALIGN16(gUsedSamples[i]->size);
-//    }
+   for (i = 0; i < gNumUsedSamples; i++) {
+       size += ALIGN16(gUsedSamples[i]->size);
+   }
 
     for (i = 0; i < gNumUsedSamples; i++) {
         if (gPreloadSampleStackTop == 120) {
