@@ -200,10 +200,10 @@ u8 gDefaultShortNoteGateTimeTable[] = {
 };
 
 EnvelopePoint gDefaultEnvelope[] = {
-    { 4, 32000 },
-    { 1000, 32000 },
-    { ADSR_HANG, 0 },
-    { ADSR_DISABLE, 0 },
+    { BE16SWAP_CONST(4), BE16SWAP_CONST(32000) },
+    { BE16SWAP_CONST(1000), BE16SWAP_CONST(32000) },
+    { BE16SWAP_CONST(ADSR_HANG), 0 },
+    { BE16SWAP_CONST(ADSR_DISABLE), 0 },
 };
 
 NoteSubEu gZeroNoteSub = { 0 };

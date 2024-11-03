@@ -6,10 +6,11 @@
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include "test.c"
 
 namespace fs = std::filesystem;
 
-Ship::BinaryReader Audio_MakeReader(const char* resource, u32 offset = 0){
+Ship::BinaryReader Audio_MakeReader(const char* resource, u32 offset){
     auto data = (char*)ResourceGetDataByName(resource);
     auto size = ResourceGetSizeByName(resource);
 
@@ -59,20 +60,21 @@ extern "C" SoundFont* Audio_LoadFont(AudioTableEntry entry) {
     font->instruments = memallocn(Instrument*, font->numInstruments);
     font->drums = memallocn(Drum*, font->numDrums);
 
-    uint32_t drumBaseAddr = entry.romAddr + reader.ReadUInt32();
+    uint32_t drumBaseAddr = reader.ReadUInt32();
     uint32_t instBaseAddr = 4;
 
     if(font->drums != nullptr && drumBaseAddr != 0){
-        reader.Seek(drumBaseAddr, Ship::SeekOffsetType::Start);
+        reader.Seek(entry.romAddr + drumBaseAddr, Ship::SeekOffsetType::Start);
         for(size_t i = 0; i < font->numDrums; i++){
-            font->drums[i] = Audio_LoadDrum(entry.romAddr + reader.ReadUInt32(), entry.romAddr, font->sampleBankId1);
+            font->drums[i] = Audio_LoadDrum(reader.ReadUInt32(), entry, font->sampleBankId1);
         }
     }
 
     if(font->instruments != nullptr){
-        reader.Seek(instBaseAddr, Ship::SeekOffsetType::Start);
-        for(size_t i = 1; i < font->numInstruments; i++){
-            font->instruments[i] = Audio_LoadInstrument(reader.ReadUInt32(), font->sampleBankId1);
+        reader.Seek(entry.romAddr + instBaseAddr, Ship::SeekOffsetType::Start);
+        for(size_t i = 0; i < font->numInstruments; i++){
+            u32 instAddr = reader.ReadUInt32();
+            font->instruments[i] = Audio_LoadInstrument(instAddr, entry, font->sampleBankId1);
         }
     }
 
@@ -119,19 +121,22 @@ extern "C" AdpcmBook* Audio_LoadBook(uint32_t addr) {
     return book;
 }
 
-Sample* Audio_LoadSample(uint32_t sampleAddr, uint32_t baseAddr = 0, uint32_t sampleBankID = 0) {
-    auto reader = Audio_MakeReader(gAudioBank, sampleAddr);
+Sample* Audio_LoadSample(uint32_t sampleAddr, AudioTableEntry entry, uint32_t sampleBankID) {
+    auto reader = Audio_MakeReader(gAudioBank, entry.romAddr + sampleAddr);
 
     Sample* sample = memalloc(Sample);
-    sample->size = reader.ReadUInt32();
+    uint32_t flags = reader.ReadUInt32();
+    sample->codec = (flags >> 28) & 0x0F;
+    sample->medium = MEDIUM_RAM; // (flags >> 24) & 0x03;
+    sample->unk_bit26 = (flags >> 22) & 0x01;
+    sample->size = flags;
     uint32_t addr = reader.ReadUInt32();
-    sample->loop = Audio_LoadLoop(baseAddr + reader.ReadUInt32());
-    sample->book = Audio_LoadBook(baseAddr + reader.ReadUInt32());
-
+    sample->loop = Audio_LoadLoop(entry.romAddr + reader.ReadUInt32());
+    sample->book = Audio_LoadBook(entry.romAddr + reader.ReadUInt32());
     sample->isRelocated = 1;
     sample->sampleAddr = (uint8_t*) Audio_LoadBlob(gAudioTable, gSampleBankTable->entries[sampleBankID].romAddr + addr);
 
-    std::filesystem::path path{ "dumps/" + std::to_string(sampleAddr) + ".raw" };
+    std::filesystem::path path{ "dumps/" + std::to_string(addr) + ".raw" };
     std::ofstream ofs(path);
     ofs.write(reinterpret_cast<const char*>(sample->sampleAddr), sample->size);
     ofs.close();
@@ -140,8 +145,8 @@ Sample* Audio_LoadSample(uint32_t sampleAddr, uint32_t baseAddr = 0, uint32_t sa
     return sample;
 }
 
-TunedSample Audio_LoadTunedSample(uint32_t addr, uint32_t baseAddr = 0, uint32_t sampleBankID = 0) {
-    auto reader = Audio_MakeReader(gAudioBank, addr);
+TunedSample Audio_LoadTunedSample(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID) {
+    auto reader = Audio_MakeReader(gAudioBank, entry.romAddr + addr);
     auto sampleAddr = reader.ReadUInt32();
     auto tuning = reader.ReadFloat();
 
@@ -151,39 +156,34 @@ TunedSample Audio_LoadTunedSample(uint32_t addr, uint32_t baseAddr = 0, uint32_t
     }
 
     return {
-        .sample = Audio_LoadSample(baseAddr + sampleAddr, baseAddr, sampleBankID),
+        .sample = Audio_LoadSample(sampleAddr, entry, sampleBankID),
         .tuning = tuning
     };
 }
 
-extern "C" Instrument* Audio_LoadInstrument(uint32_t addr, uint32_t sampleBankID) {
+extern "C" Instrument* Audio_LoadInstrument(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID) {
     if (addr == 0) {
         return nullptr;
     }
 
-    auto reader = Audio_MakeReader(gAudioBank, addr);
+    auto reader = Audio_MakeReader(gAudioBank, entry.romAddr + addr);
 
     Instrument* instrument = memalloc(Instrument);
     instrument->isRelocated = reader.ReadUByte();
     instrument->normalRangeLo = reader.ReadUByte();
     instrument->normalRangeHi = reader.ReadUByte();
     instrument->adsrDecayIndex = reader.ReadUByte();
-    instrument->envelope = Audio_LoadEnvelope(reader.ReadUInt32());
-    instrument->lowPitchTunedSample = Audio_LoadTunedSample(addr + 8, 0, sampleBankID);
-    instrument->normalPitchTunedSample = Audio_LoadTunedSample(addr + 16, 0, sampleBankID);
-    instrument->highPitchTunedSample = Audio_LoadTunedSample(addr + 24, 0, sampleBankID);
+    instrument->envelope = Audio_LoadEnvelope(entry.romAddr + reader.ReadUInt32());
+    instrument->lowPitchTunedSample = Audio_LoadTunedSample(addr + 8, entry, sampleBankID);
+    instrument->normalPitchTunedSample = Audio_LoadTunedSample(addr + 16, entry, sampleBankID);
+    instrument->highPitchTunedSample = Audio_LoadTunedSample(addr + 24, entry, sampleBankID);
     instrument->isRelocated = 1;
 
     return instrument;
 }
 
-extern "C" Drum* Audio_LoadDrum(uint32_t addr, uint32_t baseAddr, uint32_t sampleBankID) {
-
-    if(baseAddr != 0 && addr >= baseAddr){
-        return nullptr;
-    }
-
-    auto reader = Audio_MakeReader(gAudioBank, addr);
+extern "C" Drum* Audio_LoadDrum(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID) {
+    auto reader = Audio_MakeReader(gAudioBank, entry.romAddr + addr);
     Drum* drum = memalloc(Drum);
 
     drum->adsrDecayIndex = reader.ReadInt8();
@@ -192,10 +192,9 @@ extern "C" Drum* Audio_LoadDrum(uint32_t addr, uint32_t baseAddr, uint32_t sampl
     reader.ReadUByte();
     drum->isRelocated = 1;
 
-
-    drum->tunedSample = Audio_LoadTunedSample(addr + 4, baseAddr, sampleBankID);
+    drum->tunedSample = Audio_LoadTunedSample(addr + 4, entry, sampleBankID);
     reader.Seek(0x8, Ship::SeekOffsetType::Current);
-    drum->envelope = Audio_LoadEnvelope(reader.ReadUInt32());
+    drum->envelope = Audio_LoadEnvelope(entry.romAddr + reader.ReadUInt32());
 
     return drum;
 }

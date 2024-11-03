@@ -648,8 +648,11 @@ void AudioHeap_Init(void) {
 
     gSampleDmaCount = 0;
     gAudioBufferParams.samplingFrequency = spec->samplingFrequency;
-    gAudioBufferParams.aiSamplingFrequency = osAiSetFrequency(gAudioBufferParams.samplingFrequency);
+    gAudioBufferParams.aiSamplingFrequency = 32000;
     gAudioBufferParams.samplesPerFrameTarget = ALIGN16(gAudioBufferParams.samplingFrequency / gRefreshRate);
+
+    printf("aiSamplingFrequency %d\n", gAudioBufferParams.aiSamplingFrequency);
+    printf("samplesPerFrameTarget %d\n", gAudioBufferParams.samplesPerFrameTarget);
 
     gAudioBufferParams.minAiBufferLength = gAudioBufferParams.samplesPerFrameTarget - 0x10;
     gAudioBufferParams.maxAiBufferLength = gAudioBufferParams.samplesPerFrameTarget + 0x10;

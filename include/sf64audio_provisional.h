@@ -1196,7 +1196,7 @@ extern SequenceLayer gSeqLayers[64];
 extern SequenceChannel gSeqChannelNone;
 extern AudioListItem gLayerFreeList;
 extern NotePool gNoteFreeLists;
-extern Sample* gUsedSamples[128];
+extern Sample* gUsedSamples[2048];
 extern AudioPreloadReq gPreloadSampleStack[128];
 extern s32 gNumUsedSamples;
 extern s32 gPreloadSampleStackTop;

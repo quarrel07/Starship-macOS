@@ -10,9 +10,9 @@ extern "C" {
 char* Audio_LoadBlob(const char* resource, u32 offset);
 AdpcmBook* Audio_LoadBook(uint32_t addr);
 AdpcmLoop* Audio_LoadLoop(uint32_t addr);
-Instrument* Audio_LoadInstrument(uint32_t addr, uint32_t sampleBankID);
-Drum* Audio_LoadDrum(uint32_t addr, uint32_t baseAddr, uint32_t sampleBankID);
-Sample* Audio_LoadSample(uint32_t addr, uint32_t sampleBankID);
+Instrument* Audio_LoadInstrument(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID);
+Drum* Audio_LoadDrum(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID);
+Sample* Audio_LoadSample(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID);
 SoundFont* Audio_LoadFont(AudioTableEntry entry);
 
 #ifdef __cplusplus

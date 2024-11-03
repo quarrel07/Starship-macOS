@@ -520,6 +520,7 @@ void* AudioLoad_SyncLoad(u32 tableType, u32 id, s32* didAllocate) {
                 return Audio_LoadBlob(gAudioSeq, table->entries[id].romAddr);
             case FONT_TABLE:
                 gFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
+                printf("fontId: %d\n", id);
                 return Audio_LoadFont(table->entries[id]);
             case SAMPLE_TABLE:
                 loadStatus = 0;
@@ -604,6 +605,7 @@ void AudioLoad_RelocateFont(s32 fontId, uintptr_t fontBaseAddr, SampleBankRelocI
 //        }
 //    }
     AudioTable* table = AudioLoad_GetLoadTable(FONT_TABLE);
+    printf("fontId: %d\n", fontId);
     SoundFont* font = Audio_LoadFont(table->entries[fontId]);
 
     gSoundFontList[fontId].drums = font->drums;
@@ -707,6 +709,7 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
             return Audio_LoadBlob(gAudioSeq, table->entries[id].romAddr);
         case FONT_TABLE:
             gFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
+            printf("fontId: %d\n", id);
             return Audio_LoadFont(table->entries[id]);
         case SAMPLE_TABLE:
             gSampleFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
@@ -1259,7 +1262,7 @@ s32 AudioLoad_RelocateFontAndPreloadSamples(s32 fontId, uintptr_t fontDataAddr, 
     s32 inProgress;
     isAsync = 0;
 
-    printf("Relocating font %d\n", fontId);
+//    printf("Relocating font %d\n", fontId);
     inProgress = false;
     if (gPreloadSampleStackTop != 0) {
         inProgress = true;

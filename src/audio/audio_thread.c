@@ -47,8 +47,8 @@ void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
     OSMesg msg;
 
     gCurAudioFrameDmaCount = 0;
-    // AudioLoad_DecreaseSampleDmaTtls();
-    // AudioLoad_ProcessLoads(gAudioResetStep);
+    AudioLoad_DecreaseSampleDmaTtls();
+    AudioLoad_ProcessLoads(gAudioResetStep);
 
     if (MQ_GET_MESG(gAudioSpecQueue, &specId)) {
         if (gAudioResetStep == 0) {

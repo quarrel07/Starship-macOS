@@ -1,5 +1,6 @@
 #include "sys.h"
 #include "sf64audio_provisional.h"
+#include "port/resource/loaders/AudioLoader.h"
 
 static const char devstr00[] = "Audio: setvol: volume minus %f\n";
 static const char devstr01[] = "Audio: setvol: volume overflow %f\n";
@@ -168,6 +169,11 @@ TunedSample* func_80011D10(Instrument* instrument, s32 arg1) {
 Instrument* Audio_GetInstrument(s32 fontId, s32 instId) {
     Instrument* instrument;
 
+    // LTODO: Remove this
+    if(gSoundFontList[fontId].instruments == NULL){
+        gSoundFontList[fontId] = *Audio_LoadFont(gSoundFontTable->entries[fontId]);
+    }
+
     if ((gFontLoadStatus[fontId] < 2) != 0) {
         D_80155D88 = fontId + 0x10000000;
         return NULL;
@@ -187,6 +193,11 @@ Instrument* Audio_GetInstrument(s32 fontId, s32 instId) {
 Drum* Audio_GetDrum(s32 fontId, s32 drumId) {
     Drum* drum;
 
+    // LTODO: Remove this
+    if(gSoundFontList[fontId].drums == NULL){
+        gSoundFontList[fontId] = *Audio_LoadFont(gSoundFontTable->entries[fontId]);
+    }
+
     if ((gFontLoadStatus[fontId] < 2) != 0) {
         D_80155D88 = fontId + 0x10000000;
         return NULL;
@@ -195,9 +206,9 @@ Drum* Audio_GetDrum(s32 fontId, s32 drumId) {
         D_80155D88 = (fontId << 8) + drumId + 0x04000000;
         return NULL;
     }
-    if ((u32) gSoundFontList[fontId].drums < AUDIO_RELOCATED_ADDRESS_START) {
-        return NULL;
-    }
+//    if ((u32) gSoundFontList[fontId].drums < AUDIO_RELOCATED_ADDRESS_START) {
+//        return NULL;
+//    }
     drum = gSoundFontList[fontId].drums[drumId];
     if (gSoundFontList[fontId].drums[drumId] == NULL) {
         D_80155D88 = (fontId << 8) + drumId + 0x05000000;

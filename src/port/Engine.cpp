@@ -66,7 +66,7 @@ GameEngine::GameEngine() {
         }
     }
 
-    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 44100, 1024, 2480 });
+    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 512, 1100 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY, "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);

@@ -222,7 +222,7 @@ f32 func_80013B90(AdsrState* adsr) {
                         adsr->delay = 1;
                     }
 
-                    adsr->target = (s16)BE16SWAP(adsr->envelope[adsr->envIndex].arg) / 32767.0f;
+                    adsr->target = (s16)BSWAP16(adsr->envelope[adsr->envIndex].arg) / 32767.0f;
                     adsr->target = SQ(adsr->target);
                     adsr->velocity = (adsr->target - adsr->current) / adsr->delay;
                     adsr->state = ADSR_STATE_FADE;
