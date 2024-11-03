@@ -1209,41 +1209,41 @@ static const char devstr50[] = "Error: Already wavetable is touched %x.\n";
 static const char devstr51[] = "Touch Warning: Length zero %x\n";
 
 void AudioLoad_RelocateSample(TunedSample* tSample, u32 fontDataAddr, SampleBankRelocInfo* relocInfo) {
-    Sample32Bit* baseSample = fontDataAddr + BSWAP32(tSample->sample);
-
-    // "Touch Warning: Length zero %x\n";
-    if ((baseSample->size != 0) && (baseSample->isRelocated != 1)) {
-        Sample* output = memalloc(sizeof(Sample));
-
-        output->loop = Audio_LoadLoop(fontDataAddr + BSWAP32(baseSample->loop));
-        output->book = Audio_LoadBook(fontDataAddr + BSWAP32(baseSample->book));
-        output->codec       = baseSample->codec;
-        output->medium      = baseSample->medium;
-        output->unk_bit26   = baseSample->unk_bit26;
-        output->isRelocated = baseSample->isRelocated;
-        output->size        = baseSample->size;
-
-        output->isRelocated = 1;
-        switch (baseSample->medium) {
-            case MEDIUM_RAM:
-//                baseSample->sampleAddr = Audio_LoadCopy(relocInfo->baseAddr1 + BSWAP32(baseSample->sampleAddr), BSWAP32(baseSample->size));
-                baseSample->medium = relocInfo->medium1;
-                break;
-            case MEDIUM_UNK:
-//                baseSample->sampleAddr = Audio_LoadCopy(relocInfo->baseAddr2 + BSWAP32(baseSample->sampleAddr), BSWAP32(baseSample->size));
-                baseSample->medium = relocInfo->medium2;
-                break;
-            case MEDIUM_CART:
-            case MEDIUM_DISK_DRIVE:
-                output->sampleAddr = fontDataAddr + BSWAP32(baseSample->sampleAddr);
-                break;
-        }
-
-        baseSample->isRelocated = true;
-        if (baseSample->unk_bit26 && (baseSample->medium != 0)) {
-            gUsedSamples[gNumUsedSamples++] = output;
-        }
-    }
+//    Sample32Bit* baseSample = fontDataAddr + BSWAP32(tSample->sample);
+//
+//    // "Touch Warning: Length zero %x\n";
+//    if ((baseSample->size != 0) && (baseSample->isRelocated != 1)) {
+//        Sample* output = memalloc(sizeof(Sample));
+//
+//        output->loop = Audio_LoadLoop(fontDataAddr + BSWAP32(baseSample->loop));
+//        output->book = Audio_LoadBook(fontDataAddr + BSWAP32(baseSample->book));
+//        output->codec       = baseSample->codec;
+//        output->medium      = baseSample->medium;
+//        output->unk_bit26   = baseSample->unk_bit26;
+//        output->isRelocated = baseSample->isRelocated;
+//        output->size        = baseSample->size;
+//
+//        output->isRelocated = 1;
+//        switch (baseSample->medium) {
+//            case MEDIUM_RAM:
+////                baseSample->sampleAddr = Audio_LoadCopy(relocInfo->baseAddr1 + BSWAP32(baseSample->sampleAddr), BSWAP32(baseSample->size));
+//                baseSample->medium = relocInfo->medium1;
+//                break;
+//            case MEDIUM_UNK:
+////                baseSample->sampleAddr = Audio_LoadCopy(relocInfo->baseAddr2 + BSWAP32(baseSample->sampleAddr), BSWAP32(baseSample->size));
+//                baseSample->medium = relocInfo->medium2;
+//                break;
+//            case MEDIUM_CART:
+//            case MEDIUM_DISK_DRIVE:
+//                output->sampleAddr = fontDataAddr + BSWAP32(baseSample->sampleAddr);
+//                break;
+//        }
+//
+//        baseSample->isRelocated = true;
+//        if (baseSample->unk_bit26 && (baseSample->medium != 0)) {
+//            gUsedSamples[gNumUsedSamples++] = output;
+//        }
+//    }
 }
 
 static const char devstr52[] = "It's busy now!!!!! %d\n";

@@ -126,15 +126,18 @@ Sample* Audio_LoadSample(uint32_t sampleAddr, AudioTableEntry entry, uint32_t sa
 
     Sample* sample = memalloc(Sample);
     uint32_t flags = reader.ReadUInt32();
+    uint32_t addr = reader.ReadUInt32();
+
     sample->codec = (flags >> 28) & 0x0F;
-    sample->medium = MEDIUM_RAM; // (flags >> 24) & 0x03;
+    sample->medium = (flags >> 24) & 0x03;
     sample->unk_bit26 = (flags >> 22) & 0x01;
     sample->size = flags;
-    uint32_t addr = reader.ReadUInt32();
     sample->loop = Audio_LoadLoop(entry.romAddr + reader.ReadUInt32());
     sample->book = Audio_LoadBook(entry.romAddr + reader.ReadUInt32());
-    sample->isRelocated = 1;
     sample->sampleAddr = (uint8_t*) Audio_LoadBlob(gAudioTable, gSampleBankTable->entries[sampleBankID].romAddr + addr);
+
+    sample->isRelocated = 1;
+    sample->medium = MEDIUM_RAM;
 
     std::filesystem::path path{ "dumps/" + std::to_string(addr) + ".raw" };
     std::ofstream ofs(path);
