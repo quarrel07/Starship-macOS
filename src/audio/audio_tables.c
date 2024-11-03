@@ -94,7 +94,7 @@ AudioTable gSoundFontTableInit = {
     },
 };
 
-#define AS_BYTES(x) (((x) >> 8) & 0xFF), ((x) &0xFF)
+#define AS_BYTES(x) ((x) &0xFF), (((x) >> 8) & 0xFF)
 
 // clang-format off
 

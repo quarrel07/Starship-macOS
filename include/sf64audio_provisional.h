@@ -814,9 +814,18 @@ typedef struct {
         void* data;
         f32 asFloat;
         s32 asInt;
-        u16 asUShort;
-        s8 asSbyte;
-        u8 asUbyte;
+        struct {
+            u8 pad2[2];
+            u16 asUShort;
+        };
+        struct {
+            u8 pad1[3];
+            s8 asSbyte;
+        };
+        struct {
+            u8 pad0[3];
+            u8 asUbyte;
+        };
         u32 asUInt;
     };
 } AudioCmd; // size = 0x8

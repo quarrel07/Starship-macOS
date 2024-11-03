@@ -4,6 +4,10 @@
 #include "BitConverter.h"
 #include "port/Engine.h"
 #include <vector>
+#include <fstream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 Ship::BinaryReader Audio_MakeReader(const char* resource, u32 offset = 0){
     auto data = (char*)ResourceGetDataByName(resource);
@@ -27,12 +31,12 @@ EnvelopePoint* Audio_LoadEnvelope(uint32_t addr) {
 
     std::vector<EnvelopePoint> temp;
     while(true) {
-        int16_t delay = reader.ReadInt16();
-        int16_t arg   = reader.ReadInt16();
+        int16_t delay = BSWAP16(reader.ReadInt16());
+        int16_t arg   = BSWAP16(reader.ReadInt16());
 
         temp.push_back({delay, arg});
 
-        if (delay < 0){
+        if (1 <= (-delay) % (1 << 16) && (-delay) % (1 << 16) <= 3){
             break;
         }
     }
@@ -125,7 +129,12 @@ Sample* Audio_LoadSample(uint32_t sampleAddr, uint32_t baseAddr = 0, uint32_t sa
     sample->book = Audio_LoadBook(baseAddr + reader.ReadUInt32());
 
     sample->isRelocated = 1;
-    sample->sampleAddr = (uint8_t*) Audio_LoadBlob(gAudioTable, gSeqTableInit.entries[sampleBankID].romAddr) + addr;
+    sample->sampleAddr = (uint8_t*) Audio_LoadBlob(gAudioTable, gSampleBankTable->entries[sampleBankID].romAddr + addr);
+
+    std::filesystem::path path{ "dumps/" + std::to_string(sampleAddr) + ".raw" };
+    std::ofstream ofs(path);
+    ofs.write(reinterpret_cast<const char*>(sample->sampleAddr), sample->size);
+    ofs.close();
 
     gUsedSamples[gNumUsedSamples++] = sample;
     return sample;

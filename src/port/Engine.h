@@ -15,8 +15,8 @@ struct GamePool {
 #include <Fast3D/gfx_pc.h>
 #include "libultraship/src/Context.h"
 
-#define SAMPLES_HIGH 544
-#define SAMPLES_LOW 528
+#define SAMPLES_HIGH 752
+#define SAMPLES_LOW 720
 #define AUDIO_FRAMES_PER_UPDATE 2
 #define NUM_AUDIO_CHANNELS 2
 #define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)

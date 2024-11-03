@@ -10,11 +10,11 @@ OSMesgQueue sAudioTaskStartQueue;
 OSMesgQueue sThreadCmdProcQueue;
 OSMesgQueue sAudioSpecQueue;
 OSMesgQueue sAudioResetQueue;
-AudioCmd gThreadCmdBuffer[256];
-OSMesg sAudioTaskStartMsg[1];
-OSMesg sThreadCmdProcMsg[4];
-OSMesg sAudioSpecMsg[1];
-OSMesg sAudioResetMsg[1];
+AudioCmd gThreadCmdBuffer[1024];
+OSMesg sAudioTaskStartMsg[200];
+OSMesg sThreadCmdProcMsg[200];
+OSMesg sAudioSpecMsg[200];
+OSMesg sAudioResetMsg[200];
 
 u8 gThreadCmdWritePos = 0;
 u8 gThreadCmdReadPos = 0;
@@ -46,16 +46,9 @@ void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
     u32 specId;
     OSMesg msg;
 
-    gAudioTaskCountQ++;
-    if ((gAudioTaskCountQ % gAudioBufferParams.count) != 0) {
-        return gWaitingAudioTask;
-    }
-    osSendMesg(gAudioTaskStartQueue, OS_MESG_32(gAudioTaskCountQ), OS_MESG_NOBLOCK);
-    gAudioTaskIndexQ ^= 1;
-
     gCurAudioFrameDmaCount = 0;
-    AudioLoad_DecreaseSampleDmaTtls();
-    AudioLoad_ProcessLoads(gAudioResetStep);
+    // AudioLoad_DecreaseSampleDmaTtls();
+    // AudioLoad_ProcessLoads(gAudioResetStep);
 
     if (MQ_GET_MESG(gAudioSpecQueue, &specId)) {
         if (gAudioResetStep == 0) {
@@ -311,11 +304,10 @@ void AudioThread_InitQueues(void) {
     osCreateMesgQueue(gAudioResetQueue, sAudioResetMsg, 1);
 }
 
-void AudioThread_QueueCmd(u32 opArgs, void** data) {
+void AudioThread_QueueCmd(AudioCmd cmd) {
     AudioCmd* audioCmd = &gThreadCmdBuffer[gThreadCmdWritePos & 0xFF];
 
-    audioCmd->opArgs = opArgs;
-    audioCmd->data = *data;
+    *audioCmd = cmd;
 
     gThreadCmdWritePos++;
     if (gThreadCmdWritePos == gThreadCmdReadPos) {
@@ -324,17 +316,27 @@ void AudioThread_QueueCmd(u32 opArgs, void** data) {
 }
 
 void AudioThread_QueueCmdF32(u32 opArgs, f32 val) {
-    AudioThread_QueueCmd(opArgs, (void**) &val);
+    AudioCmd cmd = {
+        .opArgs = opArgs,
+        .asFloat = val
+    };
+    AudioThread_QueueCmd(cmd);
 }
 
 void AudioThread_QueueCmdS32(u32 opArgs, u32 val) {
-    AudioThread_QueueCmd(opArgs, (void**) &val);
+    AudioCmd cmd = {
+        .opArgs = opArgs,
+        .asInt = val
+    };
+    AudioThread_QueueCmd(cmd);
 }
 
 void AudioThread_QueueCmdS8(u32 opArgs, s8 val) {
-    s32 data = val << 0x18;
-
-    AudioThread_QueueCmd(opArgs, (void**) &data);
+    AudioCmd cmd = {
+        .opArgs = opArgs,
+        .asSbyte = val
+    };
+    AudioThread_QueueCmd(cmd);
 }
 
 void AudioThread_ScheduleProcessCmds(void) {

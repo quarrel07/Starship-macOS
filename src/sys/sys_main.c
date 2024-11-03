@@ -22,7 +22,7 @@ OSMesg sSerialEventBuff[1];
 OSMesgQueue gMainThreadMesgQueue;
 OSMesg sMainThreadMsgBuff[32];
 OSMesgQueue gTaskMesgQueue;
-OSMesg sTaskMsgBuff[16];
+OSMesg sTaskMsgBuff[128];
 OSMesgQueue gAudioVImesgQueue;
 OSMesg sAudioVImsgBuff[1];
 OSMesgQueue gAudioTaskMesgQueue;

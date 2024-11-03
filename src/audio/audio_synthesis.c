@@ -649,7 +649,7 @@ Acmd* func_80009B64(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLen) {
             chunkLen = aiBufLen;
         } else if ((aiBufLen / i) >= gAudioBufferParams.samplesPerTickMax) {
             chunkLen = gAudioBufferParams.samplesPerTickMax;
-        } else if (gAudioBufferParams.samplesPerTickMin >= (aiBufLen / i)) {
+        } else if ((aiBufLen / i) <= gAudioBufferParams.samplesPerTickMin) {
             chunkLen = gAudioBufferParams.samplesPerTickMin;
         } else {
             chunkLen = gAudioBufferParams.samplesPerTick;
@@ -1005,8 +1005,10 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
                 if (nFramesToDecode != 0) {
                     frameIndex = (synthState->samplePosInt + skipInitialSamples - nFirstFrameSamplesToIgnore) / 16;
                     sampleDataOffset = frameIndex * frameSize;
+                    // LTODO: Validate this
+                    bookSample->medium = 0;
                     if (bookSample->medium == 0) {
-                        sampleData = sampleDmaStart + sampleDataOffset + sampleAddr;
+                        sampleData = sampleAddr + sampleDataOffset; //sampleDmaStart + sampleAddr;
                     } else {
                         sampleData = AudioLoad_DmaSampleData(sampleDmaStart + sampleDataOffset + sampleAddr, aligned,
                                                              flags, &synthState->sampleDmaIndex, bookSample->medium);
