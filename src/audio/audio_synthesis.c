@@ -690,7 +690,7 @@ Acmd* func_80009D78(Acmd* aList, s32 aiBufLen, s16 reverbIndex, s16 updateIndex)
         if (sp64->lengthB != 0) {
             aList = func_800098DC(aList, sp64->lengthA + 0xC90, 0, sp64->lengthB, reverbIndex);
         }
-        aAddMixer(aList++, 0x300, 0xC90, 0x990, 0x7FFF);
+        aAddMixer(aList++, 0x300, 0xC90, 0x990);
         aMix(aList++, 0x30, gSynthReverbs[reverbIndex].decayRatio + 0x8000, 0xC90, 0xC90);
     } else {
         sp62 = (sp64->startPos & 7) * 2;
@@ -705,7 +705,7 @@ Acmd* func_80009D78(Acmd* aList, s32 aiBufLen, s16 reverbIndex, s16 updateIndex)
         aSetBuffer(aList++, 0, sp62 + 0x5F0, 0xE10, aiBufLen * 2);
         aResample(aList++, gSynthReverbs[reverbIndex].resampleFlags, gSynthReverbs[reverbIndex].unk_0A,
                   OS_K0_TO_PHYSICAL(gSynthReverbs[reverbIndex].unk_34));
-        aAddMixer(aList++, 0x300, 0xC90, 0x990, 0x7FFF);
+        aAddMixer(aList++, 0x300, 0xC90, 0x990);
         aMix(aList++, 0x30, gSynthReverbs[reverbIndex].decayRatio + 0x8000, 0xC90, 0xC90);
     }
 
@@ -837,7 +837,7 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
     s32 padC8;
     s32 samplesLenAdjusted;     // spC4
     s32 nAdpcmSamplesProcessed; // spC0
-    u32 endPos;                 // spBC
+    uintptr_t endPos;                 // spBC
     s32 nSamplesToProcess;      // spB8
     s32 padB4;
     s32 padB0;
@@ -856,12 +856,12 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
     s32 nParts;  // sp7C
     s32 curPart; // sp78
     s32 nSamplesInThisIteration;
-    s32 sampleDataStartPad;
+    uintptr_t sampleDataStartPad;
     s32 resampledTempLen;                    // sp6C
     u16 noteSamplesDmemAddrBeforeResampling; // sp6A
     s32 samplesRemaining;
     s32 frameIndex;
-    s32 sampleDataOffset;
+    uintptr_t sampleDataOffset;
     Note* note; // sp58
     u16 sp56;   // sp56
 
@@ -878,7 +878,7 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
     u32 nEntries;
     s32 aligned;
     s32 align2;
-    u16 addr;
+    uintptr_t addr;
 
     currentBook = NULL;
     note = &gNotes[noteIndex];
@@ -1000,19 +1000,18 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
                         skipBytes = 0;
                         goto skip;
                 }
-                aligned = ALIGN16(nFramesToDecode * frameSize + 0x10);
+                aligned = ALIGN16(nFramesToDecode * frameSize + SAMPLES_PER_FRAME);
                 addr = 0x990 - aligned;
                 if (nFramesToDecode != 0) {
                     // LTODO: Validate this
                     // bookSample->medium = 0;
 
-                    frameIndex = (synthState->samplePosInt + skipInitialSamples - nFirstFrameSamplesToIgnore) / 16;
+                    frameIndex = (synthState->samplePosInt + skipInitialSamples - nFirstFrameSamplesToIgnore) / SAMPLES_PER_FRAME;
                     sampleDataOffset = frameIndex * frameSize;
                     if (bookSample->medium == 0) {
-                        sampleData = sampleDmaStart + sampleDataOffset + sampleAddr;
+                        sampleData = sampleDataOffset + sampleAddr;
                     } else {
-                        sampleData = AudioLoad_DmaSampleData(sampleDmaStart + sampleDataOffset + sampleAddr, aligned,
-                                                             flags, &synthState->sampleDmaIndex, bookSample->medium);
+                        sampleData = sampleDataOffset + sampleAddr;
                     }
                     // if (1){}
                     sampleDataStartPad = (uintptr_t) sampleData & 0xF;
@@ -1318,7 +1317,7 @@ Acmd* func_8000B98C(Acmd* aList, NoteSubEu* noteSub, NoteSynthesisState* synthSt
                     ALIGN16(var_a1));
     }
 
-    aAddMixer(aList++, ALIGN64(size), 0x650, var_t0, 0x7FFF);
+    aAddMixer(aList++, ALIGN64(size), 0x650, var_t0);
 
     return aList;
 }

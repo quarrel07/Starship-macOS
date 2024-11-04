@@ -77,7 +77,7 @@ void aUnkCmd19Impl(uint8_t f, uint16_t count, uint16_t out_addr, uint16_t in_add
     aEnvMixerImpl(inBuf, nSamples, swapReverb, negLeft, negRight, dryLeft, dryRight, wetLeft, wetRight)
 #define aMix(pkt, c, g, i, o) aMixImpl(c, g, i, o)
 #define aS8Dec(pkt, f, s) aS8DecImpl(f, s)
-#define aAddMixer(pkt, s, d, c, x) aAddMixerImpl(s, d, c)
+#define aAddMixer(pkt, s, d, c) aAddMixerImpl(s, d, c)
 #define aDuplicate(pkt, s, d, c) aDuplicateImpl(s, d, c)
 #define aDMEMMove2(pkt, t, i, o, c) aDMEMMove2Impl(t, i, o, c)
 #define aResampleZoh(pkt, pitch, startFract) aResampleZohImpl(pitch, startFract)

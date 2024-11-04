@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "mixer.h"
 
@@ -14,9 +15,10 @@
 #define ROUND_UP_8(v) (((v) + 7) & ~7)
 #define ROUND_DOWN_16(v) ((v) & ~0xf)
 
-#define DMEM_BUF_SIZE (0x1000 - 0x3C0 - 0x40)
-#define BUF_U8(a) (rspa.buf.as_u8 + ((a) - 0x3C0))
-#define BUF_S16(a) (rspa.buf.as_s16 + ((a) - 0x3C0) / sizeof(int16_t))
+//#define DMEM_BUF_SIZE (0x1000 - 0x0330 - 0x10 - 0x40)
+#define DMEM_BUF_SIZE 0xC80
+#define BUF_U8(a) (rspa.buf.as_u8 + ((a)-0x0330))
+#define BUF_S16(a) (rspa.buf.as_s16 + ((a)-0x0330) / sizeof(int16_t))
 
 static struct {
     uint16_t in;
@@ -100,7 +102,13 @@ void aClearBufferImpl(uint16_t addr, int nbytes) {
 }
 
 void aLoadBufferImpl(const void *source_addr, uint16_t dest_addr, uint16_t nbytes) {
+#if __SANITIZE_ADDRESS__
+    for (size_t i = 0; i < ROUND_DOWN_16(nbytes); i++) {
+        BUF_U8(dest_addr)[i] = ((const unsigned char*)source_addr)[i];
+    }
+#else
     memcpy(BUF_U8(dest_addr), source_addr, ROUND_DOWN_16(nbytes));
+#endif
 }
 
 void aSaveBufferImpl(uint16_t source_addr, int16_t *dest_addr, uint16_t nbytes) {

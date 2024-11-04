@@ -31,9 +31,9 @@ AudioCommonPoolSplit gPersistentCommonPoolSplit;
 // 0x4
 AudioCommonPoolSplit gTemporaryCommonPoolSplit;
 // 0x4
-u8 gSampleFontLoadStatus[64];
-u8 gFontLoadStatus[64];
-u8 gSeqLoadStatus[256];
+u8 gSampleFontLoadStatus[2048];
+u8 gFontLoadStatus[2048];
+u8 gSeqLoadStatus[2048];
 volatile u8 gAudioResetStep;
 u8 gAudioSpecId;
 s32 gResetFadeoutFramesLeft;

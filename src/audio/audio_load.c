@@ -791,8 +791,8 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
 
 void AudioLoad_ProcessLoads(s32 resetStatus) {
     AudioLoad_ProcessSlowLoads(resetStatus);
-    AudioLoad_ProcessSamplePreloads(resetStatus);
-    AudioLoad_ProcessAsyncLoads(resetStatus);
+    // AudioLoad_ProcessSamplePreloads(resetStatus);
+    // AudioLoad_ProcessAsyncLoads(resetStatus);
 }
 
 static const char devstr27[] = "Clear Workarea %x -%x size %x \n";
