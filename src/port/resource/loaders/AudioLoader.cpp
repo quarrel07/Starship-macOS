@@ -10,6 +10,14 @@
 
 namespace fs = std::filesystem;
 
+std::unordered_map<uint32_t, void*> gAudioCache;
+
+void* StoreOnCache(uint32_t addr){
+    if(gAudioCache.contains(addr)){
+        return gAudioCache[addr];
+    }
+}
+
 Ship::BinaryReader Audio_MakeReader(const char* resource, u32 offset){
     auto data = (char*)ResourceGetDataByName(resource);
     auto size = ResourceGetSizeByName(resource);
@@ -51,6 +59,10 @@ EnvelopePoint* Audio_LoadEnvelope(uint32_t addr) {
 extern "C" SoundFont* Audio_LoadFont(AudioTableEntry entry) {
     auto reader = Audio_MakeReader(gAudioBank, entry.romAddr);
 
+    if(gAudioCache.contains(entry.romAddr)){
+        return (SoundFont*) gAudioCache[entry.romAddr];
+    }
+
     SoundFont* font = memalloc(SoundFont);
 
     font->numInstruments = (entry.shortData2 >> 8) & 0xFFu;
@@ -80,6 +92,7 @@ extern "C" SoundFont* Audio_LoadFont(AudioTableEntry entry) {
 
     gSampleFontLoadStatus[font->sampleBankId1] = 2;
 
+    gAudioCache[entry.romAddr] = font;
     return font;
 }
 
@@ -181,6 +194,10 @@ extern "C" Instrument* Audio_LoadInstrument(uint32_t addr, AudioTableEntry entry
 }
 
 extern "C" Drum* Audio_LoadDrum(uint32_t addr, AudioTableEntry entry, uint32_t sampleBankID) {
+    if(addr == 0){
+        return nullptr;
+    }
+
     auto reader = Audio_MakeReader(gAudioBank, entry.romAddr + addr);
     Drum* drum = memalloc(Drum);
 

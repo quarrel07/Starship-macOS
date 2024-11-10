@@ -811,79 +811,89 @@ Acmd* func_8000A25C(s16* aiBuf, s32 aiBufLen, Acmd* aList, s32 updateIndex) {
 
 // https://decomp.me/scratch/RgX4r
 #ifdef NON_MATCHING
-Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synthState, s16* aiBuf, s32 aiBufLen,
-                    Acmd* aList, s32 updateIndex) {
+Acmd* func_8000A700(
+    s32 noteIndex,
+    NoteSubEu* noteSub,
+    NoteSynthesisState* synthState,
+    s16* aiBuf,
+    s32 aiBufLen,
+    Acmd* aList,
+    s32 updateIndex
+) {
     s32 pad11C;
     s32 pad118;
     s32 pad114;
-    Sample* bookSample;  // sp110
-    AdpcmLoop* loopInfo; // sp10C
-    void* currentBook;   // sp108
+    Sample* bookSample;
+    AdpcmLoop* loopInfo;
+    void* currentBook;
     s32 pad104;
     s32 pad100;
-    s32 noteFinished;           // spFC
-    u32 restart;                // spF8
-    s32 flags;                  // spF4
-    u16 resampleRateFixedPoint; // spF2
-    s32 nSamplesToLoad;         // spEC
+    s32 sampleFinished;
+    u32 loopToPoint;
+    s32 flags;
+    u16 resampleRateFixedPoint;
+    s32 numSamplesToLoad;
     s32 padE8;
     s32 padE4;
     s32 padE0;
-    s32 skipBytes; // spDC
+    s32 skipBytes;
     s32 padD8;
     s32 padD4;
     s32 padD0;
-    uintptr_t sampleAddr; // spCC
+    uintptr_t sampleAddr;
     s32 padC8;
-    s32 samplesLenAdjusted;     // spC4
-    s32 nAdpcmSamplesProcessed; // spC0
-    uintptr_t endPos;                 // spBC
-    s32 nSamplesToProcess;      // spB8
+    s32 numSamplesToLoadAdj;
+    s32 numSamplesProcessed;
+    u32 endPos;
+    s32 nSamplesToProcess;
     s32 padB4;
     s32 padB0;
     s32 padAC;
-    s32 padA8;
     s32 padA4;
-    s32 nTrailingSamplesToIgnore; // spA0
+    s32 padA8;
+    s32 numTrailingSamplesToIgnore;
     s32 pad9C;
     s32 pad98;
     s32 pad94;
-    s32 frameSize; // sp90
+    s32 frameSize;
     s32 pad8C;
-    s32 skipInitialSamples; // sp88
-    s32 sampleDmaStart;     // sp84
+    s32 skipInitialSamples;
+    s32 sampleDmaStart;
     s32 pad80;
-    s32 nParts;  // sp7C
-    s32 curPart; // sp78
-    s32 nSamplesInThisIteration;
-    uintptr_t sampleDataStartPad;
-    s32 resampledTempLen;                    // sp6C
-    u16 noteSamplesDmemAddrBeforeResampling; // sp6A
-    s32 samplesRemaining;
+    s32 numParts;
+    s32 curPart;
+    s32 numSamplesInThisIteration;
+    uintptr_t sampleDataChunkAlignPad;
+    s32 resampledTempLen;
+    u16 noteSamplesDmemAddrBeforeResampling;
+    s32 pasdasd;
     s32 frameIndex;
     uintptr_t sampleDataOffset;
-    Note* note; // sp58
-    u16 sp56;   // sp56
-
-    s32 nSamplesInFirstFrame;
+    Note* note;
+    u16 sp56;
+    s32 numSamplesInFirstFrame;
     s32 delaySide;
-    s32 nSamplesToDecode;
+    s32 padasdsa;
     s32 nFramesToDecode;
     s32 nFirstFrameSamplesToIgnore;
-    s32 s5;
+    s32 dmemUncompressedAddrOffset1;
     u32 sampleslenFixedPoint;
-    u8* sampleData;
+    u8* samplesToLoadAddr;
     s32 temp;
     s32 temp2;
+    unsigned int new_var2;
     u32 nEntries;
     s32 aligned;
     s32 align2;
     uintptr_t addr;
-
+    u8* new_var;
+    s32 samplesRemaining;
+    s32 numSamplesToDecode;
+    s32 sega;
     currentBook = NULL;
     note = &gNotes[noteIndex];
     flags = 0;
-    if (noteSub->bitField0.needsInit == 1) {
+    if (new_var2 = noteSub->bitField0.needsInit == 1) {
         flags = 1;
         synthState->restart = 0;
         synthState->samplePosInt = 0;
@@ -896,88 +906,90 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
         note->noteSubEu.bitField0.finished = 0;
     }
     resampleRateFixedPoint = noteSub->resampleRate;
-    nParts = noteSub->bitField1.hasTwoParts + 1;
-    sampleslenFixedPoint = (resampleRateFixedPoint * aiBufLen * 2) + synthState->samplePosFrac;
-    nSamplesToLoad = (sampleslenFixedPoint) >> 0x10;
+    numParts = noteSub->bitField1.hasTwoParts + 1;
+    sampleslenFixedPoint = ((resampleRateFixedPoint * aiBufLen) * 2) + synthState->samplePosFrac;
+    numSamplesToLoad = sampleslenFixedPoint >> 0x10;
     synthState->samplePosFrac = sampleslenFixedPoint & 0xFFFF;
-    if ((synthState->numParts == 1) && (nParts == 2)) {
-        nSamplesToLoad += 2;
+    if ((synthState->numParts == 1) && (numParts == 2)) {
+        numSamplesToLoad += 2;
         sp56 = 2;
-    } else if ((synthState->numParts == 2) && (nParts == 1)) {
-        nSamplesToLoad -= 4;
+    } else if ((synthState->numParts == 2) && (numParts == 1)) {
+        numSamplesToLoad -= 4;
         sp56 = 4;
     } else {
         sp56 = 0;
     }
-    synthState->numParts = nParts;
+    synthState->numParts = numParts;
     if (noteSub->bitField1.isSyntheticWave) {
-        aList = func_8000B3F0(aList, noteSub, synthState, nSamplesToLoad);
-        noteSamplesDmemAddrBeforeResampling = (synthState->samplePosInt * 2) + 0x5F0;
-        synthState->samplePosInt += nSamplesToLoad;
+        aList = func_8000B3F0(aList, noteSub, synthState, numSamplesToLoad);
+        noteSamplesDmemAddrBeforeResampling = (synthState->samplePosInt * ((char)2)) + 0x5F0;
+        synthState->samplePosInt += numSamplesToLoad;
     } else {
-        bookSample = *(Sample**) noteSub->waveSampleAddr;
+        bookSample = *((Sample**)noteSub->waveSampleAddr);
         loopInfo = bookSample->loop;
+
         endPos = loopInfo->end;
         sampleAddr = bookSample->sampleAddr;
         resampledTempLen = 0;
 
-        for (curPart = 0; curPart < nParts; curPart++) {
-            nAdpcmSamplesProcessed = 0;
-            s5 = 0;
-            if (nParts == 1) {
-                samplesLenAdjusted = nSamplesToLoad;
-            } else if (nSamplesToLoad & 1) {
-                samplesLenAdjusted = (nSamplesToLoad & ~1) + (curPart * 2);
+        for (curPart = 0; curPart < numParts; curPart++) {
+            numSamplesProcessed = 0;
+            dmemUncompressedAddrOffset1 = 0;
+            if (numParts == 1) {
+                numSamplesToLoadAdj = numSamplesToLoad;
+            } else if (numSamplesToLoad & 1) {
+                numSamplesToLoadAdj = (numSamplesToLoad & (~1)) + (curPart * 2);
             } else {
-                samplesLenAdjusted = nSamplesToLoad;
+                numSamplesToLoadAdj = numSamplesToLoad;
             }
+
             if ((bookSample->codec == 0) && (currentBook != bookSample->book->book)) {
                 switch (noteSub->bitField1.bookOffset) {
                     case 1:
                         currentBook = &gD_800DD200[1];
                         break;
+
                     case 2:
                         currentBook = &gD_800DD200[2];
                         break;
+
                     default:
+
                     case 3:
                         currentBook = bookSample->book->book;
                         break;
                 }
 
-                nEntries = 16 * bookSample->book->order * bookSample->book->numPredictors;
+                nEntries = (16 * bookSample->book->order) * bookSample->book->numPredictors;
                 aLoadADPCM(aList++, nEntries, OS_K0_TO_PHYSICAL(currentBook));
             }
-            while (nAdpcmSamplesProcessed != samplesLenAdjusted) {
-                restart = 0;
-                noteFinished = 0;
+
+            while (numSamplesProcessed != numSamplesToLoadAdj) {
+                sampleFinished = 0;
+                loopToPoint = 0;
                 samplesRemaining = endPos - synthState->samplePosInt;
-                nSamplesToProcess = samplesLenAdjusted - nAdpcmSamplesProcessed;
-
+                nSamplesToProcess = numSamplesToLoadAdj - numSamplesProcessed;
                 nFirstFrameSamplesToIgnore = synthState->samplePosInt & 0xF;
-
-                if ((nFirstFrameSamplesToIgnore == 0) && !synthState->restart) {
+                if ((nFirstFrameSamplesToIgnore == 0) && (!synthState->restart)) {
                     nFirstFrameSamplesToIgnore = 0x10;
                 }
-
-                nSamplesInFirstFrame = 0x10 - nFirstFrameSamplesToIgnore;
+                numSamplesInFirstFrame = 0x10 - nFirstFrameSamplesToIgnore;
                 if (nSamplesToProcess < samplesRemaining) {
-                    nFramesToDecode = (nSamplesToProcess - nSamplesInFirstFrame + 0xF) / 16;
-                    nSamplesToDecode = nFramesToDecode * 0x10;
-                    // if(1) {}
-                    nTrailingSamplesToIgnore = (nSamplesInFirstFrame + nSamplesToDecode) - nSamplesToProcess;
+                    nFramesToDecode = ((nSamplesToProcess - numSamplesInFirstFrame) + 0xF) / 16;
+                    numSamplesToDecode = nFramesToDecode * 0x10;
+                    numTrailingSamplesToIgnore = (numSamplesInFirstFrame + numSamplesToDecode) - nSamplesToProcess;
                 } else {
-                    nSamplesToDecode = samplesRemaining - nSamplesInFirstFrame;
-                    nTrailingSamplesToIgnore = 0;
-                    if (nSamplesToDecode <= 0) {
-                        nSamplesToDecode = 0;
-                        nSamplesInFirstFrame = samplesRemaining;
+                    numSamplesToDecode = samplesRemaining - numSamplesInFirstFrame;
+                    numTrailingSamplesToIgnore = 0;
+                    if (numSamplesToDecode <= 0) {
+                        numSamplesToDecode = 0;
+                        numSamplesInFirstFrame = samplesRemaining;
                     }
-                    nFramesToDecode = (nSamplesToDecode + 0xF) / 16;
+                    nFramesToDecode = (numSamplesToDecode + 0xF) / 16;
                     if (loopInfo->count != 0) {
-                        restart = 1;
+                        loopToPoint = 1;
                     } else {
-                        noteFinished = 1;
+                        sampleFinished = 1;
                     }
                 }
                 switch (bookSample->codec) {
@@ -986,132 +998,163 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
                         skipInitialSamples = 0x10;
                         sampleDmaStart = 0;
                         break;
+
                     case 1:
                         frameSize = 0x10;
                         skipInitialSamples = 0x10;
                         sampleDmaStart = 0;
                         break;
+
                     case 2:
-                        temp =
-                            func_800097A8(bookSample, samplesLenAdjusted, flags, &synthState->synthesisBuffers->unk_40);
-                        aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(temp), 0x5F0, (samplesLenAdjusted + 0x10) * 2);
-                        s5 = samplesLenAdjusted;
-                        nAdpcmSamplesProcessed = samplesLenAdjusted;
+                        temp = func_800097A8(
+                            bookSample, numSamplesToLoadAdj, flags, &synthState->synthesisBuffers->unk_40
+                        );
+                        if (0) {
+                        }
+                        aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(temp), 0x5F0, (numSamplesToLoadAdj + 0x10) * 2);
+                        flags = 0;
                         skipBytes = 0;
+                        numSamplesProcessed = numSamplesToLoadAdj;
+                        dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
                         goto skip;
                 }
-                aligned = ALIGN16(nFramesToDecode * frameSize + 0x10);
+
+                aligned = ALIGN16((nFramesToDecode * frameSize) + 0x10);
                 addr = 0x990 - aligned;
                 if (nFramesToDecode != 0) {
-                    // LTODO: Validate this
-                    // bookSample->medium = 0;
-
+                    if (1) {
+                    }
                     frameIndex = (synthState->samplePosInt + skipInitialSamples - nFirstFrameSamplesToIgnore) / 16;
                     sampleDataOffset = frameIndex * frameSize;
                     if (bookSample->medium == 0) {
-                        sampleData = sampleDmaStart + sampleDataOffset + sampleAddr;
+                        samplesToLoadAddr = (u8*)(sampleDmaStart + sampleDataOffset + sampleAddr);
                     } else {
-                        sampleData = sampleDmaStart + sampleDataOffset + sampleAddr;
+                        samplesToLoadAddr = (u8*)(sampleDmaStart + sampleDataOffset + sampleAddr);
                     }
-                    // if (1){}
-                    sampleDataStartPad = (uintptr_t) sampleData & 0xF;
-                    aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(sampleData - sampleDataStartPad), addr, aligned);
+                    sampleDataChunkAlignPad = ((uintptr_t)samplesToLoadAddr) % 16;
+
+                    aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(samplesToLoadAddr - sampleDataChunkAlignPad), addr, aligned);
                 } else {
-                    nSamplesToDecode = 0;
-                    sampleDataStartPad = 0;
+                    numSamplesToDecode = 0;
+                    sampleDataChunkAlignPad = 0;
                 }
+
                 if (synthState->restart) {
                     aSetLoop(aList++, OS_K0_TO_PHYSICAL(bookSample->loop->predictorState));
                     flags = 2;
                     synthState->restart = 0;
                 }
-                nSamplesInThisIteration = nSamplesToDecode + nSamplesInFirstFrame - nTrailingSamplesToIgnore;
 
-                if (nAdpcmSamplesProcessed == 0) {
+                numSamplesInThisIteration = (numSamplesToDecode + numSamplesInFirstFrame) - numTrailingSamplesToIgnore;
+
+                if (numSamplesProcessed == 0) {
+
                     switch (bookSample->codec) {
                         case 0:
-                            aSetBuffer(aList++, 0, addr + sampleDataStartPad, 0x5F0, nSamplesToDecode * 2);
+
+                            aSetBuffer(aList++, 0, addr + sampleDataChunkAlignPad, 0x5F0, numSamplesToDecode * 2);
+
                             aADPCMdec(aList++, flags, OS_K0_TO_PHYSICAL(synthState->synthesisBuffers));
                             break;
+
                         case 1:
-                            aSetBuffer(aList++, 0, addr + sampleDataStartPad, 0x5F0, nSamplesToDecode * 2);
+                            aSetBuffer(aList++, 0, addr + sampleDataChunkAlignPad, 0x5F0, numSamplesToDecode * 2);
                             aS8Dec(aList++, flags, OS_K0_TO_PHYSICAL(synthState->synthesisBuffers));
                             break;
                     }
 
                     skipBytes = nFirstFrameSamplesToIgnore * 2;
                 } else {
-                    // if (1) {}
-                    align2 = ALIGN16(s5 + 0x10);
+                    align2 = ALIGN16(dmemUncompressedAddrOffset1 + 0x10);
                     switch (bookSample->codec) {
                         case 0:
-                            aSetBuffer(aList++, 0, addr + sampleDataStartPad, align2 + 0x5F0, nSamplesToDecode * 2);
+                            aSetBuffer(
+                                aList++, 0, addr + sampleDataChunkAlignPad, align2 + 0x5F0, numSamplesToDecode * 2
+                            );
                             aADPCMdec(aList++, flags, OS_K0_TO_PHYSICAL(synthState->synthesisBuffers));
                             break;
+
                         case 1:
-                            aSetBuffer(aList++, 0, addr + sampleDataStartPad, align2 + 0x5F0, nSamplesToDecode * 2);
+                            aSetBuffer(
+                                aList++, 0, addr + sampleDataChunkAlignPad, align2 + 0x5F0, numSamplesToDecode * 2
+                            );
                             aS8Dec(aList++, flags, OS_K0_TO_PHYSICAL(synthState->synthesisBuffers));
                             break;
                     }
-                    aDMEMMove(aList++, (align2 + (nFirstFrameSamplesToIgnore * 2) + 0x5F0), s5 + 0x5F0,
-                              nSamplesInThisIteration * 2);
+
+                    aDMEMMove(
+                        aList++, 0x5F0 + align2 + (nFirstFrameSamplesToIgnore * 2), 0x5F0 + dmemUncompressedAddrOffset1,
+                        numSamplesInThisIteration * 2
+                    );
                 }
-                nAdpcmSamplesProcessed += nSamplesInThisIteration;
+
+                numSamplesProcessed += numSamplesInThisIteration;
+
                 switch (flags) {
                     case 1:
                         skipBytes = 0x20;
-                        s5 = (nSamplesToDecode + 0x10) * 2;
+                        dmemUncompressedAddrOffset1 = (numSamplesToDecode + 0x10) * 2;
                         break;
+
                     case 2:
-                        // if(1) {}
-                        s5 = nSamplesInThisIteration * 2 + s5;
+                        dmemUncompressedAddrOffset1 = (numSamplesInThisIteration * 2) + dmemUncompressedAddrOffset1;
                         break;
+
                     default:
-                        if (s5 != 0) {
-                            s5 = nSamplesInThisIteration * 2 + s5;
+                        if (dmemUncompressedAddrOffset1 != 0) {
+                            dmemUncompressedAddrOffset1 = (numSamplesInThisIteration * 2) + dmemUncompressedAddrOffset1;
                         } else {
-                            // if (1) { }
-                            s5 = (nFirstFrameSamplesToIgnore + nSamplesInThisIteration) * 2;
+                            dmemUncompressedAddrOffset1 = (nFirstFrameSamplesToIgnore + numSamplesInThisIteration) * 2;
                         }
                         break;
                 }
+
             skip:
                 flags = 0;
-                // goto dummy_label_147574; dummy_label_147574: ;
-                if (noteFinished) {
-                    aClearBuffer(aList++, s5 + 0x5F0, (samplesLenAdjusted - nAdpcmSamplesProcessed) * 2);
+
+                if (sampleFinished) {
+                    aClearBuffer(
+                        aList++, dmemUncompressedAddrOffset1 + 0x5F0, (numSamplesToLoadAdj - numSamplesProcessed) * 2
+                    );
                     noteSub->bitField0.finished = 1;
                     note->noteSubEu.bitField0.finished = 1;
                     func_80009A2C(updateIndex, noteIndex);
                     break;
                 }
-                if (restart) {
+                if (loopToPoint != 0) {
                     synthState->restart = 1;
                     synthState->samplePosInt = loopInfo->start;
                 } else {
                     synthState->samplePosInt += nSamplesToProcess;
                 }
             }
-            switch (nParts) {
+
+            switch (numParts) {
                 case 1:
                     noteSamplesDmemAddrBeforeResampling = skipBytes + 0x5F0;
                     break;
+
                 case 2:
                     switch (curPart) {
                         case 0:
-                            aInterl(aList++, skipBytes + 0x5F0, 0x470, ALIGN8(samplesLenAdjusted / 2));
-                            resampledTempLen = samplesLenAdjusted;
+                            aInterl(aList++, skipBytes + 0x5F0, 0x470, ALIGN8(numSamplesToLoadAdj / 2));
+                            resampledTempLen = numSamplesToLoadAdj;
                             noteSamplesDmemAddrBeforeResampling = 0x470;
                             if (noteSub->bitField0.finished) {
-                                aClearBuffer(aList++, resampledTempLen + noteSamplesDmemAddrBeforeResampling,
-                                             samplesLenAdjusted + 0x10);
+                                aClearBuffer(
+                                    aList++, resampledTempLen + noteSamplesDmemAddrBeforeResampling,
+                                    numSamplesToLoadAdj + 0x10
+                                );
                             }
                             break;
+
                         case 1:
-                            aInterl(aList++, skipBytes + 0x5F0, resampledTempLen + 0x470,
-                                    ALIGN8(samplesLenAdjusted / 2));
+                            aInterl(
+                                aList++, skipBytes + 0x5F0, resampledTempLen + 0x470, ALIGN8(numSamplesToLoadAdj / 2)
+                            );
                             break;
                     }
+
                     break;
             }
 
@@ -1120,22 +1163,21 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
             }
         }
     }
-
     flags = 0;
     if (noteSub->bitField0.needsInit == 1) {
         flags = 1;
         noteSub->bitField0.needsInit = 0;
     }
     flags = sp56 | flags;
-    aList = func_8000B480(aList, synthState, aiBufLen * 2, resampleRateFixedPoint, noteSamplesDmemAddrBeforeResampling,
-                          flags);
+    aList = func_8000B480(
+        aList, synthState, aiBufLen * 2, resampleRateFixedPoint, noteSamplesDmemAddrBeforeResampling, flags
+    );
     if (flags & 1) {
         flags = 1;
     }
     if (noteSub->bitField1.bookOffset == 3) {
         aUnkCmd19(aList++, 0, aiBufLen * 2, 0x450, 0x450);
     }
-
     temp2 = noteSub->gain;
     if (temp2 != 0) {
         if (temp2 < 0x10) {
@@ -1150,16 +1192,13 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
     } else {
         delaySide = 0;
     }
-
     aList = func_8000B51C(aList, noteSub, synthState, aiBufLen, 0x450, delaySide, flags);
-    // if(restart) {}
     if (noteSub->bitField0.usesHeadsetPanEffects) {
         if (!(flags & 1)) {
             flags = 0;
         }
         aList = func_8000B98C(aList, noteSub, synthState, aiBufLen * 2, flags, delaySide);
     }
-
     return aList;
 }
 #else

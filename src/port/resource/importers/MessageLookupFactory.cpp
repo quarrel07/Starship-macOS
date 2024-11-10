@@ -17,9 +17,11 @@ std::shared_ptr<Ship::IResource> ResourceFactoryBinaryMessageLookupV0::ReadResou
     for (uint32_t i = 0; i < count - 1; i++) {
         SPDLOG_INFO("Reading message lookup table entry {}", i);
         auto id = reader->ReadInt32();
+        auto crc = reader->ReadUInt64();
 
-        uint16_t* ptr = LoadChild<uint16_t*>(reader->ReadUInt64());
-        table->mLookupTable.push_back({ id, ptr });
+        uint16_t* ptr = LoadChild<uint16_t*>(crc);
+        const char* name = ResourceGetNameByCrc(crc);
+        table->mLookupTable.push_back({ id, ptr, strdup(name) });
     }
 
     return table;

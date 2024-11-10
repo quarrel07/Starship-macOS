@@ -7,7 +7,7 @@ u16* Message_PtrFromId(u16 msgId) {
 
     while (lookup->msgId != -1) {
         if (lookup->msgId == msgId) {
-            return lookup->msgPtr;
+            return lookup->path;
         }
         lookup++;
     }
@@ -19,8 +19,14 @@ u16 Message_IdFromPtr(u16* msgPtr) {
     MsgLookup* lookup = (MsgLookup*) LOAD_ASSET(gMsgLookup);
 
     while (lookup->msgPtr != NULL) {
-        if (lookup->msgPtr == msgPtr) {
-            return lookup->msgId;
+        if(GameEngine_OTRSigCheck(msgPtr)){
+            if(strcmp(((char*) msgPtr) + 7, lookup->path) == 0){
+                return lookup->msgId;
+            }
+        } else {
+            if (lookup->msgPtr == msgPtr) {
+                return lookup->msgId;
+            }
         }
         lookup++;
     }

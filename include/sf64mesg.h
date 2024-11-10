@@ -7,6 +7,7 @@
 typedef struct {
     s32 msgId;
     u16* msgPtr;
+    const char* path;
 } MsgLookup;
 
 u16* Message_PtrFromId(u16 msgId);

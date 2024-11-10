@@ -8,6 +8,7 @@ namespace SF64 {
 typedef struct {
     s32 msgId;
     u16* msgPtr;
+    const char* path;
 } MsgLookup;
 
 class Message : public Ship::Resource<void> {

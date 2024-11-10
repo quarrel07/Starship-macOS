@@ -57,9 +57,9 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
     TeamId teamId;
     s32 pad;
     s32 priority;
-    msg = LOAD_ASSET(msg);
+    u16* lmsg = LOAD_ASSET(msg);
 
-    switch (msg[0]) {
+    switch (lmsg[0]) {
         default:
         case MSGCHAR_PRI0:
             priority = 0;

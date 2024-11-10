@@ -401,7 +401,7 @@ void AudioThread_ProcessCmds(u32 msg) {
                     case AUDIOCMD_OP_SEQPLAYER_SET_TRANSPOSITION:
                         player->transposition = cmd->asSbyte;
                         break;
-                    case 0x46: // AUDIOCMD_OP_SEQPLAYER_SET_IO?
+                    case AUDIOCMD_OP_SEQPLAYER_SET_IO:
                         player->unk_07[cmd->arg2] = cmd->asSbyte;
                         break;
                 }

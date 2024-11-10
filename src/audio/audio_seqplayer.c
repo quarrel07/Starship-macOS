@@ -1131,11 +1131,11 @@ void func_80015FD4(SequencePlayer* seqPlayer) {
         return;
     }
     seqPlayer->tempoAcc += seqPlayer->tempo;
-    seqPlayer->tempoAcc = seqPlayer->tempoAcc + (s16) seqPlayer->tempoChange;
+    seqPlayer->tempoAcc += seqPlayer->tempoChange;
     if (seqPlayer->tempoAcc < gMaxTempo) {
         return;
     }
-    seqPlayer->tempoAcc = (seqPlayer->tempoAcc - gMaxTempo) & 0xFFFF; // fake?
+    seqPlayer->tempoAcc -= (u16) gMaxTempo;
     if (seqPlayer->delay > 1) {
         seqPlayer->delay--;
     } else {
@@ -1214,6 +1214,7 @@ void func_80015FD4(SequencePlayer* seqPlayer) {
                         seqPlayer->transposition += (s8) func_800146C0(temp_s0);
                         break;
                     case 0xDD:
+                        // LTODO: The original tempo is 0x30 but you can change it to 0x19
                         seqPlayer->tempo = func_800146C0(temp_s0) * 0x30;
                         if (seqPlayer->tempo > gMaxTempo) {
                             seqPlayer->tempo = gMaxTempo;
