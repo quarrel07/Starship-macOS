@@ -644,7 +644,7 @@ Acmd* func_80009B64(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLen) {
     }
 
     aiBufPtr = (s32*) aiBufStart;
-    for (i = gAudioBufferParams.ticksPerUpdate; i > 0; i--) {
+    for (i = gAudioBufferParams.ticksPerUpdate - 1; i > 0; i--) {
         if (i == 1) {
             chunkLen = aiBufLen;
         } else if ((aiBufLen / i) >= gAudioBufferParams.samplesPerTickMax) {
@@ -1000,18 +1000,18 @@ Acmd* func_8000A700(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisState* synth
                         skipBytes = 0;
                         goto skip;
                 }
-                aligned = ALIGN16(nFramesToDecode * frameSize + SAMPLES_PER_FRAME);
+                aligned = ALIGN16(nFramesToDecode * frameSize + 0x10);
                 addr = 0x990 - aligned;
                 if (nFramesToDecode != 0) {
                     // LTODO: Validate this
                     // bookSample->medium = 0;
 
-                    frameIndex = (synthState->samplePosInt + skipInitialSamples - nFirstFrameSamplesToIgnore) / SAMPLES_PER_FRAME;
+                    frameIndex = (synthState->samplePosInt + skipInitialSamples - nFirstFrameSamplesToIgnore) / 16;
                     sampleDataOffset = frameIndex * frameSize;
                     if (bookSample->medium == 0) {
-                        sampleData = sampleDataOffset + sampleAddr;
+                        sampleData = sampleDmaStart + sampleDataOffset + sampleAddr;
                     } else {
-                        sampleData = sampleDataOffset + sampleAddr;
+                        sampleData = sampleDmaStart + sampleDataOffset + sampleAddr;
                     }
                     // if (1){}
                     sampleDataStartPad = (uintptr_t) sampleData & 0xF;

@@ -139,11 +139,6 @@ Sample* Audio_LoadSample(uint32_t sampleAddr, AudioTableEntry entry, uint32_t sa
     sample->isRelocated = 1;
     sample->medium = MEDIUM_RAM;
 
-    std::filesystem::path path{ "dumps/" + std::to_string(addr) + ".raw" };
-    std::ofstream ofs(path);
-    ofs.write(reinterpret_cast<const char*>(sample->sampleAddr), sample->size);
-    ofs.close();
-
     gUsedSamples[gNumUsedSamples++] = sample;
     return sample;
 }

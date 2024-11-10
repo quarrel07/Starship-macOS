@@ -48,7 +48,7 @@ void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
 
     gCurAudioFrameDmaCount = 0;
     AudioLoad_DecreaseSampleDmaTtls();
-    // AudioLoad_ProcessLoads(gAudioResetStep);
+    AudioLoad_ProcessLoads(gAudioResetStep);
 
     if (MQ_GET_MESG(gAudioSpecQueue, &specId)) {
         if (gAudioResetStep == 0) {
@@ -80,6 +80,7 @@ void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
     }
 
     gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &abiCmdCount, samples, num_samples);
+    memcpy(gAiBuffers[gCurAiBuffIndex], samples, num_samples);
     gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
 
     gAudioCurTask->msg = OS_MESG_PTR(NULL);
@@ -347,7 +348,7 @@ void AudioThread_ScheduleProcessCmds(void) {
         D_800C7C70 = (u8) (gThreadCmdWritePos - gThreadCmdReadPos + 0x100);
     }
     msg = (((gThreadCmdReadPos & 0xFF) << 8) | (gThreadCmdWritePos & 0xFF));
-    osSendMesg32(gThreadCmdProcQueue, msg, OS_MESG_NOBLOCK);
+    osSendMesg(gThreadCmdProcQueue, OS_MESG_32(msg), OS_MESG_NOBLOCK);
     gThreadCmdReadPos = gThreadCmdWritePos;
 }
 
@@ -364,11 +365,10 @@ void AudioThread_ProcessCmds(u32 msg) {
     u8 writePos;
 
     if (!gThreadCmdQueueFinished) {
-        gCurCmdReadPos = msg >> 8;
+        gCurCmdReadPos = (msg >> 8) & 0xFF;
     }
-
+    writePos = msg & 0xFF;
     while (true) {
-        writePos = msg & 0xFF;
 
         if (gCurCmdReadPos == writePos) {
             gThreadCmdQueueFinished = 0;

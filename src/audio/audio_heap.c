@@ -647,7 +647,7 @@ void AudioHeap_Init(void) {
 
     gSampleDmaCount = 0;
     gAudioBufferParams.samplingFrequency = spec->samplingFrequency;
-    gAudioBufferParams.aiSamplingFrequency = 32000;
+    gAudioBufferParams.aiSamplingFrequency = osAiSetFrequency(gAudioBufferParams.samplingFrequency);
     gAudioBufferParams.samplesPerFrameTarget = ALIGN16(gAudioBufferParams.samplingFrequency / gRefreshRate);
 
     printf("aiSamplingFrequency %d\n", gAudioBufferParams.aiSamplingFrequency);
@@ -672,9 +672,9 @@ void AudioHeap_Init(void) {
     gAudioBufferParams.maxAiBufferLength *= gAudioBufferParams.count;
     gAudioBufferParams.minAiBufferLength *= gAudioBufferParams.count;
     gAudioBufferParams.ticksPerUpdate *= gAudioBufferParams.count;
-   if (gAudioBufferParams.count >= 2) {
-       gAudioBufferParams.maxAiBufferLength -= 0x10;
-   }
+    if (gAudioBufferParams.count >= 2) {
+        gAudioBufferParams.maxAiBufferLength -= 0x10;
+    }
     gMaxAudioCmds = (gNumNotes * 20 * gAudioBufferParams.ticksPerUpdate) + (spec->numReverbs * 32) + 480;
     persistentSize = spec->persistentSeqCacheSize + spec->persistentFontCacheSize +
                      spec->persistentSampleBankCacheSize + spec->persistentSampleCacheSize + 0x10;

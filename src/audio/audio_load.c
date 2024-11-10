@@ -311,10 +311,8 @@ s32 AudioLoad_SyncLoadInstrument(s32 fontId, s32 instId, s32 drumId) {
 }
 
 void AudioLoad_AsyncLoadSampleBank(s32 sampleBankId, s32 nChunks, s32 retData, OSMesgQueue* retQueue) {
-    if (AudioLoad_AsyncLoadInner(SAMPLE_TABLE, AudioLoad_GetLoadTableIndex(SAMPLE_TABLE, sampleBankId), nChunks,
-                                 retData, retQueue) == NULL) {
-        osSendMesg(retQueue, OS_MESG_PTR(NULL), OS_MESG_NOBLOCK);
-    }
+    AudioLoad_AsyncLoadInner(SAMPLE_TABLE, AudioLoad_GetLoadTableIndex(SAMPLE_TABLE, sampleBankId), nChunks, retData, retQueue);
+    osSendMesg(retQueue, OS_MESG_PTR(NULL), OS_MESG_NOBLOCK);
 }
 
 void AudioLoad_AsyncLoadSeq(s32 seqId, s32 nChunks, s32 retData, OSMesgQueue* retQueue) {
@@ -430,6 +428,10 @@ void* AudioLoad_SyncLoadSampleBank(u32 sampleBankId, s32* outMedium) {
     s32 noLoad;
 
     sampleBankId = AudioLoad_GetLoadTableIndex(SAMPLE_TABLE, sampleBankId);
+    gSampleFontLoadStatus[sampleBankId] = 2;
+
+    return Audio_LoadBlob(gAudioTable, sampleBankTable->entries[sampleBankId].romAddr);
+
     ramAddr = AudioLoad_SearchCaches(2, sampleBankId);
     if (ramAddr != NULL) {
         if (gSampleFontLoadStatus[sampleBankId] != 5) {
@@ -520,7 +522,6 @@ void* AudioLoad_SyncLoad(u32 tableType, u32 id, s32* didAllocate) {
                 return Audio_LoadBlob(gAudioSeq, table->entries[id].romAddr);
             case FONT_TABLE:
                 gFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
-                printf("fontId: %d\n", id);
                 return Audio_LoadFont(table->entries[id]);
             case SAMPLE_TABLE:
                 loadStatus = 0;
@@ -705,10 +706,12 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
     switch (tableType) {
         case SEQUENCE_TABLE:
             gFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
+            osSendMesg(retQueue, OS_MESG_32(retData << 0x18), OS_MESG_NOBLOCK);
             return Audio_LoadBlob(gAudioSeq, table->entries[id].romAddr);
         case FONT_TABLE:
             gFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
             printf("fontId: %d\n", id);
+            osSendMesg(retQueue, OS_MESG_32(retData << 0x18), OS_MESG_NOBLOCK);
             return Audio_LoadFont(table->entries[id]);
         case SAMPLE_TABLE:
             gSampleFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
@@ -790,7 +793,7 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
 }
 
 void AudioLoad_ProcessLoads(s32 resetStatus) {
-    AudioLoad_ProcessSlowLoads(resetStatus);
+    // AudioLoad_ProcessSlowLoads(resetStatus);
     // AudioLoad_ProcessSamplePreloads(resetStatus);
     // AudioLoad_ProcessAsyncLoads(resetStatus);
 }
@@ -903,6 +906,8 @@ s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
     AudioSlowLoad* slowLoad;
 
     sample = AudioLoad_GetFontSample(fontId, instId);
+    return 0;
+
     if (sample == NULL) {
         *status = SLOW_LOAD_STATUS_0;
         return -1;
