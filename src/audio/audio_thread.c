@@ -375,8 +375,8 @@ void AudioThread_ProcessCmds(u32 msg) {
             break;
         }
 
-        cmd = &gThreadCmdBuffer[gCurCmdReadPos++ & 0xFF];
-
+        cmd = &gThreadCmdBuffer[gCurCmdReadPos & 0xFF];
+        gCurCmdReadPos++;
         if (cmd->op == AUDIOCMD_OP_GLOBAL_STOP_AUDIOCMDS) {
             gThreadCmdQueueFinished = true;
             break;
@@ -455,12 +455,7 @@ void AudioThread_ProcessCmds(u32 msg) {
 }
 
 u32 AudioThread_GetAsyncLoadStatus(u32* outData) {
-    u32 loadStatus;
-
-    if (!MQ_GET_MESG(&gExternalLoadQueue, &loadStatus)) {
-        *outData = 0;
-        return 0;
-    }
+    u32 loadStatus = 2;
     *outData = loadStatus & 0xFFFFFF;
     return loadStatus >> 0x18;
 }
