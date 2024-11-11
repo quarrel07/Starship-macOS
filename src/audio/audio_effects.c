@@ -43,7 +43,7 @@ void func_80013400(SequenceChannel* channel, s32 updateVolume) {
     channel->changes.asByte = 0;
 }
 
-void func_800135A8(SequencePlayer* seqplayer) {
+void Audio_SequencePlayerProcessSound(SequencePlayer* seqplayer) {
     s32 i;
 
     if (seqplayer->fadeTimer != 0) {
@@ -57,7 +57,7 @@ void func_800135A8(SequencePlayer* seqplayer) {
         }
         seqplayer->fadeTimer--;
         if ((seqplayer->fadeTimer == 0) && (seqplayer->state == 2)) {
-            func_800144E4(seqplayer);
+            AudioSeq_SequencePlayerDisable(seqplayer);
             return;
         }
     }
@@ -146,7 +146,7 @@ void func_80013A18(Note* note) {
     }
 }
 
-void func_80013A84(Note* note) {
+void Audio_NoteVibratoInit(Note* note) {
     NotePlaybackState* noteState = &note->playbackState;
     VibratoState* vibrato = &noteState->vibratoState;
 

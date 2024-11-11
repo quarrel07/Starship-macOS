@@ -101,7 +101,7 @@ void AudioHeap_DiscardFont(s32 fontId) {
             }
             func_80011F4C(note);
             func_80012C40(note);
-            func_800145BC(&gNoteFreeLists.disabled, &note->listItem);
+            AudioSeq_AudioListPushBack(&gNoteFreeLists.disabled, &note->listItem);
         }
     }
 }
@@ -111,7 +111,7 @@ void AudioHeap_DiscardSequence(s32 seqId) {
 
     for (i = 0; i < ARRAY_COUNT(gSeqPlayers); i++) {
         if (gSeqPlayers[i].enabled && gSeqPlayers[i].seqId == seqId) {
-            func_800144E4(&gSeqPlayers[i]);
+            AudioSeq_SequencePlayerDisable(&gSeqPlayers[i]);
         }
     }
 }
@@ -571,7 +571,7 @@ s32 AudioHeap_ResetStep(void) {
     switch (gAudioResetStep) {
         case 5:
             for (i = 0; i < ARRAY_COUNT(gSeqPlayers); i++) {
-                func_800144E4(&gSeqPlayers[i]);
+                AudioSeq_SequencePlayerDisable(&gSeqPlayers[i]);
             }
             gResetFadeoutFramesLeft = 4 / sp24;
             gAudioResetStep--;

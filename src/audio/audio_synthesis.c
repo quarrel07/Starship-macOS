@@ -639,7 +639,7 @@ Acmd* func_80009B64(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLen) {
 
     aCmdPtr = aList;
     for (i = gAudioBufferParams.ticksPerUpdate; i > 0; i--) {
-        func_8001678C(i - 1);
+        AudioSeq_ProcessSequences(i - 1);
         func_80009AAC(gAudioBufferParams.ticksPerUpdate - i);
     }
 

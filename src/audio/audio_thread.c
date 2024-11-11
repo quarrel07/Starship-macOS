@@ -222,7 +222,7 @@ void AudioThread_ProcessGlobalCmd(AudioCmd* cmd) {
         case AUDIOCMD_OP_GLOBAL_DISABLE_SEQPLAYER:
             if (gSeqPlayers[cmd->arg0].enabled) {
                 if (cmd->asInt == 0) {
-                    func_800144E4(&gSeqPlayers[cmd->arg0]);
+                    AudioSeq_SequencePlayerDisable(&gSeqPlayers[cmd->arg0]);
                 } else {
                     AudioThread_SetFadeOutTimer(cmd->arg0, cmd->asInt);
                 }

@@ -153,7 +153,7 @@ void func_80011C58(Note* note, f32 arg1) {
     note->noteSubEu.resampleRate = (s32) (var_fv0 * 32768.0f);
 }
 
-TunedSample* func_80011D10(Instrument* instrument, s32 arg1) {
+TunedSample* Audio_GetInstrumentTunedSample(Instrument* instrument, s32 arg1) {
     TunedSample* sample;
 
     if (arg1 < instrument->normalRangeLo) {
@@ -242,7 +242,7 @@ void func_80011F4C(Note* note) {
     note->playbackState.adsr.current = 0.0f;
 }
 
-void func_80011FA8(void) {
+void Audio_ProcessNotes(void) {
     s32 pad2;
     s32 pad;
     Note* note;
@@ -269,7 +269,7 @@ void func_80011FA8(void) {
                 if ((playbackState->parentLayer->enabled) || (playbackState->unk_04 != 0) ||
                     (playbackState->priority <= 0)) {
                     if (playbackState->parentLayer->channel->seqPlayer == NULL) {
-                        func_8001415C(playbackState->parentLayer->channel);
+                        AudioSeq_SequenceChannelDisable(playbackState->parentLayer->channel);
                         playbackState->priority = 1;
                         playbackState->unk_04 = 1;
                         continue;
@@ -298,28 +298,28 @@ void func_80011FA8(void) {
                         func_80011F4C(note);
                         if (playbackState->wantedParentLayer->channel != NULL) {
                             func_80012CEC(note, playbackState->wantedParentLayer);
-                            func_80013A84(note);
+                            Audio_NoteVibratoInit(note);
                             func_80012C40(note);
-                            func_800145BC(&note->listItem.pool->active, &note->listItem);
+                            AudioSeq_AudioListPushBack(&note->listItem.pool->active, &note->listItem);
                             playbackState->wantedParentLayer = NO_LAYER;
                         } else {
                             func_80011F4C(note);
                             func_80012C40(note);
-                            func_800145BC(&note->listItem.pool->disabled, &note->listItem);
+                            AudioSeq_AudioListPushBack(&note->listItem.pool->disabled, &note->listItem);
                             playbackState->wantedParentLayer = NO_LAYER;
                             goto next;
                         }
                     } else {
                         func_80011F4C(note);
                         func_80012C40(note);
-                        func_800145BC(&note->listItem.pool->disabled, &note->listItem);
+                        AudioSeq_AudioListPushBack(&note->listItem.pool->disabled, &note->listItem);
                         goto next;
                     }
                 }
             } else if (playbackState->adsr.state == 0) {
                 func_80011F4C(note);
                 func_80012C40(note);
-                func_800145BC(&note->listItem.pool->disabled, &note->listItem);
+                AudioSeq_AudioListPushBack(&note->listItem.pool->disabled, &note->listItem);
                 goto next;
             }
 
@@ -425,7 +425,7 @@ void func_80012438(SequenceLayer* layer, s32 arg1) {
     }
 }
 
-void func_8001266C(SequenceLayer* layer) {
+void Audio_SeqLayerNoteDecay(SequenceLayer* layer) {
     func_80012438(layer, 6);
 }
 
@@ -464,7 +464,7 @@ s32 func_800126AC(Note* note, SequenceLayer* layer, s32 waveId) {
     return harmonicIndex;
 }
 
-void func_800127B0(Note* note, SequenceLayer* layer) {
+void Audio_InitSyntheticWave(Note* note, SequenceLayer* layer) {
     s32 harmonicIndex;
     s32 waveId;
 
@@ -484,7 +484,7 @@ void func_80012854(AudioListItem* item) {
     item->u.value = NULL;
 }
 
-void func_80012864(NotePool* pool) {
+void Audio_InitNoteLists(NotePool* pool) {
     func_80012854(&pool->disabled);
     func_80012854(&pool->decaying);
     func_80012854(&pool->releasing);
@@ -498,15 +498,15 @@ void func_80012864(NotePool* pool) {
 void func_800128B4(void) {
     s32 i;
 
-    func_80012864(&gNoteFreeLists);
+    Audio_InitNoteLists(&gNoteFreeLists);
     for (i = 0; i < gNumNotes; i++) {
         gNotes[i].listItem.u.value = &gNotes[i];
         gNotes[i].listItem.prev = NULL;
-        func_800145BC(&gNoteFreeLists.disabled, &gNotes[i].listItem);
+        AudioSeq_AudioListPushBack(&gNoteFreeLists.disabled, &gNotes[i].listItem);
     }
 }
 
-void func_80012964(NotePool* pool) {
+void Audio_NotePoolClear(NotePool* pool) {
     s32 poolType;
     AudioListItem* poolItem;
     AudioListItem* nextPoolItem;
@@ -538,19 +538,19 @@ void func_80012964(NotePool* pool) {
                 break;
             }
             func_80012C40((Note*) nextPoolItem);
-            func_800145BC(freeList, nextPoolItem);
+            AudioSeq_AudioListPushBack(freeList, nextPoolItem);
         }
     }
 }
 
-void func_80012AC4(NotePool* pool, s32 arg1) {
+void Audio_NotePoolFill(NotePool* pool, s32 arg1) {
     s32 var_s0;
     s32 poolType;
     AudioListItem* note;
     AudioListItem* freeList;
     AudioListItem* poolList;
 
-    func_80012964(pool);
+    Audio_NotePoolClear(pool);
     poolType = 0;
     var_s0 = 0;
     while (var_s0 < arg1) {
@@ -576,11 +576,11 @@ void func_80012AC4(NotePool* pool, s32 arg1) {
                 break;
         }
         while (var_s0 < arg1) {
-            note = func_800145FC(freeList);
+            note = AudioSeq_AudioListPopBack(freeList);
             if (note == NULL) {
                 break;
             }
-            func_800145BC(poolList, note);
+            AudioSeq_AudioListPushBack(poolList, note);
             var_s0++;
         }
         poolType++;
@@ -678,7 +678,7 @@ void func_80012E5C(Note* note, SequenceLayer* layer) {
 }
 
 Note* func_80012E88(NotePool* pool, SequenceLayer* layer) {
-    Note* note = func_800145FC(&pool->disabled);
+    Note* note = AudioSeq_AudioListPopBack(&pool->disabled);
 
     if (note != NULL) {
         func_80012CEC(note, layer);
@@ -688,11 +688,11 @@ Note* func_80012E88(NotePool* pool, SequenceLayer* layer) {
 }
 
 Note* func_80012ED4(NotePool* pool, SequenceLayer* layer) {
-    Note* note = func_800145FC(&pool->decaying);
+    Note* note = AudioSeq_AudioListPopBack(&pool->decaying);
 
     if (note != NULL) {
         func_80012E5C(note, layer);
-        func_800145BC(&pool->releasing, &note->listItem);
+        AudioSeq_AudioListPushBack(&pool->releasing, &note->listItem);
     }
     return note;
 }
@@ -718,7 +718,7 @@ Note* func_80012F24(NotePool* pool, SequenceLayer* layer) {
     if (sp28 < sp2C) {
         func_80012C40(sp30);
         func_80012E28(sp30, layer);
-        func_800145BC(&pool->releasing, &sp30->listItem);
+        AudioSeq_AudioListPushBack(&pool->releasing, &sp30->listItem);
         sp30->playbackState.priority = layer->channel->notePriority;
         return sp30;
     } else {
@@ -728,7 +728,7 @@ Note* func_80012F24(NotePool* pool, SequenceLayer* layer) {
     }
 }
 
-Note* func_8001301C(SequenceLayer* layer) {
+Note* Audio_AllocNote(SequenceLayer* layer) {
     Note* sp24;
 
     if (layer->channel->noteAllocPolicy & 1) {
@@ -738,7 +738,7 @@ Note* func_8001301C(SequenceLayer* layer) {
 
             func_80012E5C(sp24, layer);
             func_80012C40(sp24);
-            func_800145BC(&sp24->listItem.pool->releasing, &sp24->listItem);
+            AudioSeq_AudioListPushBack(&sp24->listItem.pool->releasing, &sp24->listItem);
             return sp24;
         }
     }
