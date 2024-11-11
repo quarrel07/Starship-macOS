@@ -1029,8 +1029,8 @@ typedef struct {
 #define SEQ_BYTE2(seqId) (((seqId) & (0xFF << 16)) >> 13 & 0xFFFF)
 
 // audio_synthesis
-void func_80008780(f32*, s32, f32*);
-Acmd* func_80009B64(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLen);
+void AudioSynth_HartleyTransform(f32*, s32, f32*);
+Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLen);
 
 // audio_effects
 void Audio_SequencePlayerProcessSound(SequencePlayer* seqplayer);

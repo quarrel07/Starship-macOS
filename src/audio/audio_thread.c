@@ -39,7 +39,7 @@ static const char devstr12[] = "Undefined Port Command %d\n";
 static const char devstr13[] = "specchg conjunction error (Msg:%d Cur:%d)\n";
 static const char devstr14[] = "Error : Queue is not empty ( %x ) \n";
 
-void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
+void AudioThread_CreateNextAudioBuffer(s16* samples, u32 num_samples) {
     static s32 gMaxAbiCmdCnt = 128;
     static SPTask* gWaitingAudioTask = NULL;
     s32 abiCmdCount;
@@ -79,7 +79,7 @@ void AudioThread_CreateNextAudioBuffer(s16 *samples, u32 num_samples) {
         AudioThread_ProcessCmds(msg.data32);
     }
 
-    gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &abiCmdCount, samples, num_samples);
+    AudioSynth_Update(gCurAbiCmdBuffer, &abiCmdCount, samples, num_samples);
     memcpy(gAiBuffers[gCurAiBuffIndex], samples, num_samples);
     gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
 
@@ -163,7 +163,7 @@ SPTask* AudioThread_CreateTask() {
     while (MQ_GET_MESG(gThreadCmdProcQueue, &msg)) {
         AudioThread_ProcessCmds(msg);
     }
-    gCurAbiCmdBuffer = func_80009B64(gCurAbiCmdBuffer, &abiCmdCount, aiBuffer, gAiBuffLengths[aiBuffIndex]);
+    gCurAbiCmdBuffer = AudioSynth_Update(gCurAbiCmdBuffer, &abiCmdCount, aiBuffer, gAiBuffLengths[aiBuffIndex]);
     gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
     gAudioRandom = gAiBuffers[aiBuffIndex][gAudioTaskCountQ & 0xFF] + gAudioRandom;
 
@@ -317,26 +317,17 @@ void AudioThread_QueueCmd(AudioCmd cmd) {
 }
 
 void AudioThread_QueueCmdF32(u32 opArgs, f32 val) {
-    AudioCmd cmd = {
-        .opArgs = opArgs,
-        .asFloat = val
-    };
+    AudioCmd cmd = { .opArgs = opArgs, .asFloat = val };
     AudioThread_QueueCmd(cmd);
 }
 
 void AudioThread_QueueCmdS32(u32 opArgs, u32 val) {
-    AudioCmd cmd = {
-        .opArgs = opArgs,
-        .asInt = val
-    };
+    AudioCmd cmd = { .opArgs = opArgs, .asInt = val };
     AudioThread_QueueCmd(cmd);
 }
 
 void AudioThread_QueueCmdS8(u32 opArgs, s8 val) {
-    AudioCmd cmd = {
-        .opArgs = opArgs,
-        .asSbyte = val
-    };
+    AudioCmd cmd = { .opArgs = opArgs, .asSbyte = val };
     AudioThread_QueueCmd(cmd);
 }
 
