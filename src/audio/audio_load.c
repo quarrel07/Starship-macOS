@@ -821,9 +821,9 @@ void AudioLoad_Init(void) {
 
     gAudioResetTimer = 0;
 
-    for (i = 0; i < gAudioHeapSize / 8; i++) {
-        *((u64*) gAudioHeap + i) = 0;
-    }
+    // for (i = 0; i < gAudioHeapSize / 8; i++) {
+    //     *((u64*) gAudioHeap + i) = 0;
+    // }
 
     clearContext = gAudioContextStart;
     dwordsLeft = ((uintptr_t) gAudioContextEnd - (uintptr_t) gAudioContextStart) / 8;
