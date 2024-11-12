@@ -165,7 +165,7 @@ void AudioLoad_InitSampleDmaBuffers(s32 numNotes) {
     u8* dma;
 
     gSampleDmaBuffSize = 0x2D0;
-    for (i = 0; i < (3 * gNumNotes * gAudioBufferParams.count); i++) {
+    for (i = 0; i < (3 * gNumNotes * gAudioBufferParams.numBuffers); i++) {
         dma = AudioHeap_Alloc(&gMiscPool, gSampleDmaBuffSize);
         gSampleDmas[gSampleDmaCount].ramAddr = dma;
         if (dma == NULL) {

@@ -27,6 +27,7 @@ class GameEngine {
     static void Create();
     void StartFrame() const;
     static void HandleAudioThread();
+    static void ProcessAudioTask(s16* audio_buffer);
     static void StartAudioFrame();
     static void EndAudioFrame();
     static void AudioInit();

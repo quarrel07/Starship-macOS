@@ -674,9 +674,7 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
     aiBufPtr = aiBufStart;
     // @port: i = gAudioBufferParams.ticksPerUpdate - 1 // this change is necessary to avoid a crash, sounds like a
     // problem
-    s32 temp = gGameState == GSTATE_MENU ? gAudioBufferParams.ticksPerUpdate-1 : gAudioBufferParams.ticksPerUpdate-1;
-
-    for (i = temp; i > 0; i--) {
+    for (i = gAudioBufferParams.ticksPerUpdate; i > 0; i--) {
         if (i == 1) {
             printf("func_80009B64 i == 1\n");
             chunkLen = aiBufLen;
@@ -701,6 +699,7 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
         aCmdPtr =
             AudioSynth_DoOneAudioUpdate((s16*) aiBufPtr, chunkLen, aCmdPtr, gAudioBufferParams.ticksPerUpdate - i);
         aiBufLen -= chunkLen;
+        // if (aiBufLen < 0) aiBufLen = 0;
         aiBufPtr += chunkLen*2;
     }
 

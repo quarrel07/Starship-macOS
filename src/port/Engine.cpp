@@ -66,7 +66,7 @@ GameEngine::GameEngine() {
         }
     }
 
-    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 44100, 1024, 2480 });
+    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 1024, 2480 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY, "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
@@ -128,7 +128,14 @@ void GameEngine::StartFrame() const{
 #define NUM_AUDIO_CHANNELS 2
 #define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
 
-void GameEngine::HandleAudioThread(){
+s16 audio_buffer[SAMPLES_PER_FRAME*2] = {0};
+
+extern "C" s32 audBuffer = 0;
+#include <sf64audio_provisional.h>
+
+extern "C" volatile s32 gAudioTaskCountQ;
+
+void GameEngine::HandleAudioThread() {
     while (audio.running) {
         {
             std::unique_lock<std::mutex> Lock(audio.mutex);
@@ -144,10 +151,9 @@ void GameEngine::HandleAudioThread(){
 
         std::unique_lock<std::mutex> Lock(audio.mutex);
         int samples_left = AudioPlayerBuffered();
-        u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-        s16 audio_buffer[SAMPLES_PER_FRAME] = {0};
-
-        for (int i = 0; i < AUDIO_FRAMES_PER_UPDATE; i++) {
+        u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? 560 : 528;
+        
+        for (int i = 0; i < 2; i++) {
             AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS), num_audio_samples);
         }
         
