@@ -123,6 +123,11 @@ void GameEngine::StartFrame() const{
     this->context->GetWindow()->StartFrame();
 }
 
+#define SAMPLES_HIGH 752
+#define SAMPLES_LOW 720
+#define NUM_AUDIO_CHANNELS 2
+#define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
+
 void GameEngine::HandleAudioThread(){
     while (audio.running) {
         {
@@ -140,10 +145,12 @@ void GameEngine::HandleAudioThread(){
         std::unique_lock<std::mutex> Lock(audio.mutex);
         int samples_left = AudioPlayerBuffered();
         u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-        s16 audio_buffer[SAMPLES_PER_FRAME];
+        s16 audio_buffer[SAMPLES_PER_FRAME] = {0};
+
         for (int i = 0; i < AUDIO_FRAMES_PER_UPDATE; i++) {
             AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS), num_audio_samples);
         }
+        
         AudioPlayerPlayFrame((u8 *) audio_buffer, num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
         audio.processing = false;
         audio.cv_from_thread.notify_one();

@@ -16,9 +16,10 @@
 #define ROUND_DOWN_16(v) ((v) & ~0xf)
 
 //#define DMEM_BUF_SIZE (0x1000 - 0x0330 - 0x10 - 0x40)
-#define DMEM_BUF_SIZE 0xC80
-#define BUF_U8(a) (rspa.buf.as_u8 + ((a)-0x0330))
-#define BUF_S16(a) (rspa.buf.as_s16 + ((a)-0x0330) / sizeof(int16_t))
+#define DMEM_BUF_SIZE (0x1000 - 0x450 - 0x40)
+// #define DMEM_BUF_SIZE 0xC90
+#define BUF_U8(a) (rspa.buf.as_u8 + ((a)-0x450))
+#define BUF_S16(a) (rspa.buf.as_s16 + ((a)-0x450) / sizeof(int16_t))
 
 static struct {
     uint16_t in;
@@ -112,6 +113,8 @@ void aLoadBufferImpl(const void *source_addr, uint16_t dest_addr, uint16_t nbyte
 }
 
 void aSaveBufferImpl(uint16_t source_addr, int16_t *dest_addr, uint16_t nbytes) {
+    //printf("source_addr: %x\n dest_addr; %x\n nbytes: %d\n", source_addr, dest_addr, nbytes);
+    //if (nbytes > 704) {nbytes = 704;}
     memcpy(dest_addr, BUF_S16(source_addr), ROUND_DOWN_16(nbytes));
 }
 

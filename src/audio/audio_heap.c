@@ -664,17 +664,21 @@ void AudioHeap_Init(void) {
     gAudioBufferParams.resampleRate = 32000.0f / (s32) gAudioBufferParams.samplingFrequency;
     gAudioBufferParams.ticksPerUpdateInvScaled = (3.0f / 2560.0f) / gAudioBufferParams.ticksPerUpdate;
     gAudioBufferParams.ticksPerUpdateInv = 1.0f / gAudioBufferParams.ticksPerUpdate;
+    
     gNumNotes = spec->numNotes;
     D_8014C1B0 = spec->unk_14;
     gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
+
     gAudioBufferParams.count = spec->numBuffers;
     gAudioBufferParams.samplesPerFrameTarget *= gAudioBufferParams.count;
     gAudioBufferParams.maxAiBufferLength *= gAudioBufferParams.count;
     gAudioBufferParams.minAiBufferLength *= gAudioBufferParams.count;
     gAudioBufferParams.ticksPerUpdate *= gAudioBufferParams.count;
+
     if (gAudioBufferParams.count >= 2) {
         gAudioBufferParams.maxAiBufferLength -= 0x10;
     }
+
     gMaxAudioCmds = (gNumNotes * 20 * gAudioBufferParams.ticksPerUpdate) + (spec->numReverbs * 32) + 480;
     persistentSize = spec->persistentSeqCacheSize + spec->persistentFontCacheSize +
                      spec->persistentSampleBankCacheSize + spec->persistentSampleCacheSize + 0x10;
@@ -684,30 +688,42 @@ void AudioHeap_Init(void) {
     miscPoolSize = gSessionPool.size - cachePoolSize - 0x100;
     gSessionPoolSplit.miscPoolSize = miscPoolSize;
     gSessionPoolSplit.cachePoolSize = cachePoolSize;
+    
     AudioHeap_InitSessionPools(&gSessionPoolSplit);
+
     gCachePoolSplit.persistentCommonPoolSize = persistentSize;
     gCachePoolSplit.temporaryCommonPoolSize = temporarySize;
+
     AudioHeap_InitCachePools(&gCachePoolSplit);
+
     gPersistentCommonPoolSplit.seqCacheSize = spec->persistentSeqCacheSize;
     gPersistentCommonPoolSplit.fontCacheSize = spec->persistentFontCacheSize;
     gPersistentCommonPoolSplit.sampleBankCacheSize = spec->persistentSampleBankCacheSize;
+
     AudioHeap_InitPersistentPoolsAndCaches(&gPersistentCommonPoolSplit);
+
     gTemporaryCommonPoolSplit.seqCacheSize = spec->temporarySeqCacheSize;
     gTemporaryCommonPoolSplit.fontCacheSize = spec->temporaryFontCacheSize;
     gTemporaryCommonPoolSplit.sampleBankCacheSize = spec->temporarySampleBankCacheSize;
+
     AudioHeap_InitTemporaryPoolsAndCaches(&gTemporaryCommonPoolSplit);
     AudioHeap_InitSampleCaches(spec->persistentSampleCacheSize, spec->temporarySampleCacheSize);
     AudioHeap_ResetLoadStatus();
+
     gNotes = AudioHeap_AllocZeroed(&gMiscPool, gNumNotes * sizeof(Note));
+
     func_800132E8();
     func_800128B4();
+
     gNoteSubsEu = AudioHeap_AllocZeroed(&gMiscPool, gAudioBufferParams.ticksPerUpdate * gNumNotes * sizeof(NoteSubEu));
+    
     for (i = 0; i != 2; i++) {
         gAbiCmdBuffs[i] = AudioHeap_AllocZeroed(&gMiscPool, gMaxAudioCmds * 8);
     }
     for (i = 0; i < ARRAY_COUNT(gSynthReverbs); i++) {
         gSynthReverbs[i].useReverb = 0;
     }
+
     gNumSynthReverbs = spec->numReverbs;
     for (i = 0; i < gNumSynthReverbs; i++) {
         settings = &spec->reverbSettings[i];

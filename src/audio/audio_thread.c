@@ -43,23 +43,26 @@ void AudioThread_CreateNextAudioBuffer(s16* samples, u32 num_samples) {
     static s32 gMaxAbiCmdCnt = 128;
     static SPTask* gWaitingAudioTask = NULL;
     s32 abiCmdCount;
-    u32 specId;
+    OSMesg specId;
     OSMesg msg;
+
+    gCurAiBuffIndex++;
+    gCurAiBuffIndex %= 3;
 
     gCurAudioFrameDmaCount = 0;
     AudioLoad_DecreaseSampleDmaTtls();
     AudioLoad_ProcessLoads(gAudioResetStep);
 
-    if (MQ_GET_MESG(gAudioSpecQueue, &specId)) {
+    if (osRecvMesg(gAudioSpecQueue, &specId, 0) != -1) {
         if (gAudioResetStep == 0) {
             gAudioResetStep = 5;
         }
-        gAudioSpecId = specId;
+        gAudioSpecId = specId.data8;
     }
 
     if ((gAudioResetStep != 0) && (AudioHeap_ResetStep() == 0)) {
         if (gAudioResetStep == 0) {
-            osSendMesg(gAudioResetQueue, OS_MESG_32((s32) gAudioSpecId), OS_MESG_NOBLOCK);
+            osSendMesg8(gAudioResetQueue, gAudioSpecId, OS_MESG_NOBLOCK);
         }
         gWaitingAudioTask = NULL;
         return NULL;
@@ -82,6 +85,7 @@ void AudioThread_CreateNextAudioBuffer(s16* samples, u32 num_samples) {
     AudioSynth_Update(gCurAbiCmdBuffer, &abiCmdCount, samples, num_samples);
     memcpy(gAiBuffers[gCurAiBuffIndex], samples, num_samples);
     gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
+    
 
     gAudioCurTask->msg = OS_MESG_PTR(NULL);
 
@@ -457,22 +461,24 @@ u8* AudioThread_GetFontsForSequence(s32 seqId, u32* outNumFonts) {
 
 bool AudioThread_ResetComplete(void) {
     s32 pad;
-    s32 sp18;
+    OSMesg sp18;
 
     if (!MQ_GET_MESG(gAudioResetQueue, &sp18)) {
         return false;
     }
-    if (sp18 != gAudioSpecId) {
+    if (sp18.data8 != gAudioSpecId) {
         return false;
     }
     return true;
 }
 
 void AudioThread_ResetAudioHeap(s32 specId) {
+    OSMesg msg;
+    msg.data8 = specId & 0xFF;
     MQ_CLEAR_QUEUE(gAudioResetQueue);
 
     AudioThread_ResetCmdQueue();
-    osSendMesg(gAudioSpecQueue, OS_MESG_32(specId), OS_MESG_NOBLOCK);
+    osSendMesg8(gAudioSpecQueue, msg.data8, OS_MESG_NOBLOCK);
 }
 
 void AudioThread_PreNMIReset(void) {
