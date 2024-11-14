@@ -776,18 +776,10 @@ typedef struct {
         void* data;
         f32 asFloat;
         s32 asInt;
-        struct {
-            u8 pad2[2];
-            u16 asUShort;
-        };
-        struct {
-            u8 pad1[3];
-            s8 asSbyte;
-        };
-        struct {
-            u8 pad0[3];
-            u8 asUbyte;
-        };
+        uintptr_t asPtr;
+        u16 asUShort;
+        s8 asSbyte;
+        u8 asUbyte;
         u32 asUInt;
     };
 } AudioCmd; // size = 0x8
@@ -1034,10 +1026,10 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
 
 // audio_effects
 void Audio_SequencePlayerProcessSound(SequencePlayer* seqplayer);
-void func_80013A18(Note* note);
+void Audio_NoteVibratoUpdate(Note* note);
 void Audio_NoteVibratoInit(Note* note);
-void func_80013B6C(AdsrState* adsr, EnvelopePoint* envelope, s16* arg2);
-f32 func_80013B90(AdsrState* adsr);
+void Audio_AdsrInit(AdsrState* adsr, EnvelopePoint* envelope, s16* arg2);
+f32 Audio_AdsrUpdate(AdsrState* adsr);
 
 // audio_heap
 void AudioHeap_DiscardFont(s32 fontId);

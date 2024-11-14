@@ -218,10 +218,10 @@ Drum* Audio_GetDrum(s32 fontId, s32 drumId) {
 
 void func_80011EB8(Note* note) {
     if (note->playbackState.parentLayer->adsr.decayIndex == 0) {
-        func_80013B6C(&note->playbackState.adsr, note->playbackState.parentLayer->channel->adsr.envelope,
+        Audio_AdsrInit(&note->playbackState.adsr, note->playbackState.parentLayer->channel->adsr.envelope,
                       &note->playbackState.adsrVolModUnused);
     } else {
-        func_80013B6C(&note->playbackState.adsr, note->playbackState.parentLayer->adsr.envelope,
+        Audio_AdsrInit(&note->playbackState.adsr, note->playbackState.parentLayer->adsr.envelope,
                       &note->playbackState.adsrVolModUnused);
     }
     note->playbackState.adsr.state = 1;
@@ -323,8 +323,8 @@ void Audio_ProcessNotes(void) {
                 goto next;
             }
 
-            temp_fs0 = func_80013B90(&playbackState->adsr);
-            func_80013A18(note);
+            temp_fs0 = Audio_AdsrUpdate(&playbackState->adsr);
+            Audio_NoteVibratoUpdate(note);
             attr = &playbackState->attributes;
             if ((playbackState->unk_04 == 1) || (playbackState->unk_04 == 2)) {
                 sp70.freqMod = attr->freqMod;

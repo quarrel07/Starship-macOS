@@ -361,15 +361,15 @@ func_80012ED4 = 0x80012ED4;
 func_80012F24 = 0x80012F24;
 Audio_AllocNote = 0x8001301C;
 func_800132E8 = 0x800132E8;
-func_80013400 = 0x80013400;
+Audio_SequenceChannelProcessSound = 0x80013400;
 Audio_SequencePlayerProcessSound = 0x800135A8;
-func_80013708 = 0x80013708;
-func_800137DC = 0x800137DC;
-func_80013820 = 0x80013820;
-func_80013A18 = 0x80013A18;
+Audio_GetPortamentoFreqScale = 0x80013708;
+Audio_GetVibratoPitchChange = 0x800137DC;
+Audio_GetVibratoFreqScale = 0x80013820;
+Audio_NoteVibratoUpdate = 0x80013A18;
 Audio_NoteVibratoInit = 0x80013A84;
-func_80013B6C = 0x80013B6C;
-func_80013B90 = 0x80013B90;
+Audio_AdsrInit = 0x80013B6C;
+Audio_AdsrUpdate = 0x80013B90;
 
 
 

@@ -317,6 +317,14 @@ void AudioThread_QueueCmd(AudioCmd cmd) {
     }
 }
 
+void AudioThread_QueueCmdPtr(u32 opArgs, void* data) {
+    AudioCmd cmd = {
+        .opArgs = opArgs,
+        .asPtr = data,
+    };
+    AudioThread_QueueCmd(cmd);
+}
+
 void AudioThread_QueueCmdF32(u32 opArgs, f32 val) {
     AudioCmd cmd = { .opArgs = opArgs, .asFloat = val };
     AudioThread_QueueCmd(cmd);

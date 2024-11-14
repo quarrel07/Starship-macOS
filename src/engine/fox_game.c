@@ -357,6 +357,7 @@ void Game_SetScene(void) {
 extern u8 gAudioSpecId;
 extern int audBuffer;
 extern AudioBufferParameters gAudioBufferParams;
+extern int countermin;
 void Game_Update(void) {
     s32 i;
     u8 partialFill;
@@ -625,6 +626,8 @@ void Game_Update(void) {
     }
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
+    Graphics_DisplaySmallText(10, 190, 1.0f, 1.0f, "SEC:");
+    Graphics_DisplaySmallNumber(90, 190, countermin);
     Graphics_DisplaySmallText(10, 200, 1.0f, 1.0f, "AUDIOBUF:");
     Graphics_DisplaySmallNumber(90, 200, audBuffer);
     Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "AUDIOSPEC:");

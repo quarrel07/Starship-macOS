@@ -387,7 +387,7 @@ typedef enum {
  * @param drumPtr (s32) the ptr to the `Drum` struct
  */
 #define AUDIOCMD_GLOBAL_SET_DRUM_FONT(fontId, drumId, drumPtr) \
-    AudioThread_QueueCmdS32(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_DRUM_FONT, fontId, drumId, 0), drumPtr)
+    AudioThread_QueueCmdPtr(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_DRUM_FONT, fontId, drumId, 0), drumPtr)
 
 /**
  * Set a soundeffect ptr within a soundfont
@@ -397,7 +397,7 @@ typedef enum {
  * @param soundEffectPtr (s32) the ptr to the `SoundEffect` struct
  */
 #define AUDIOCMD_GLOBAL_SET_SFX_FONT(fontId, soundEffectId, soundEffectPtr) \
-    AudioThread_QueueCmdS32(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_SFX_FONT, fontId, soundEffectId, 0), soundEffectPtr)
+    AudioThread_QueueCmdPtr(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_SFX_FONT, fontId, soundEffectId, 0), soundEffectPtr)
 
 /**
  * Set an instrument ptr within a soundfont
@@ -407,7 +407,7 @@ typedef enum {
  * @param instPtr (s32) the ptr to the `Instrument` struct
  */
 #define AUDIOCMD_GLOBAL_SET_INSTRUMENT_FONT(fontId, instId, instPtr) \
-    AudioThread_QueueCmdS32(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_INSTRUMENT_FONT, fontId, instId, 0), instPtr)
+    AudioThread_QueueCmdPtr(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_INSTRUMENT_FONT, fontId, instId, 0), instPtr)
 
 /**
  * Pop the persistent cache of the specified table
@@ -507,7 +507,7 @@ typedef enum {
  * @param functionPtr (s32) address of the function to run once every audio frame
  */
 #define AUDIOCMD_GLOBAL_SET_CUSTOM_UPDATE_FUNCTION(functionPtr) \
-    AudioThread_QueueCmdS32(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_CUSTOM_UPDATE_FUNCTION, 0, 0, 0), functionPtr)
+    AudioThread_QueueCmdPtr(AUDIO_MK_CMD(AUDIOCMD_OP_GLOBAL_SET_CUSTOM_UPDATE_FUNCTION, 0, 0, 0), functionPtr)
 
 /**
  * Asynchronously load a sequence

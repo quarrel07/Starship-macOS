@@ -37,28 +37,26 @@ extern uint16_t gFPS;
 float gInterpolationStep = 0.0f;
 #include <sf64thread.h>
 #include <macros.h>
-void AudioThread_CreateNextAudioBuffer(int16_t *samples, uint32_t num_samples);
+void AudioThread_CreateNextAudioBuffer(int16_t* samples, uint32_t num_samples);
 }
 
 GameEngine* GameEngine::Instance;
-static GamePool MemoryPool = {
-    .chunk = 1024 * 512,
-    .cursor = 0,
-    .length = 0,
-    .memory = nullptr
-};
+static GamePool MemoryPool = { .chunk = 1024 * 512, .cursor = 0, .length = 0, .memory = nullptr };
 
 GameEngine::GameEngine() {
     std::vector<std::string> OTRFiles;
-    if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.otr"); std::filesystem::exists(cube_path)) {
+    if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.otr");
+        std::filesystem::exists(cube_path)) {
         OTRFiles.push_back(cube_path);
     }
-    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.otr"); std::filesystem::exists(sm64_otr_path)) {
+    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.otr");
+        std::filesystem::exists(sm64_otr_path)) {
         OTRFiles.push_back(sm64_otr_path);
     }
-    if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods"); !patches_path.empty() && std::filesystem::exists(patches_path)) {
+    if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods");
+        !patches_path.empty() && std::filesystem::exists(patches_path)) {
         if (std::filesystem::is_directory(patches_path)) {
-            for (const auto&p: std::filesystem::recursive_directory_iterator(patches_path)) {
+            for (const auto& p : std::filesystem::recursive_directory_iterator(patches_path)) {
                 if (StringHelper::IEquals(p.path().extension().string(), ".otr")) {
                     OTRFiles.push_back(p.path().generic_string());
                 }
@@ -66,32 +64,56 @@ GameEngine::GameEngine() {
         }
     }
 
-    this->context = Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 1024, 2480 });
+    this->context =
+        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 1024, 2480 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY, "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(), RESOURCE_FORMAT_BINARY, "Skeleton", static_cast<uint32_t>(SF64::ResourceType::Skeleton), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryLimbV0>(), RESOURCE_FORMAT_BINARY, "Limb", static_cast<uint32_t>(SF64::ResourceType::Limb), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryMessageV0>(), RESOURCE_FORMAT_BINARY, "Message", static_cast<uint32_t>(SF64::ResourceType::Message), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryMessageLookupV0>(), RESOURCE_FORMAT_BINARY, "MessageTable", static_cast<uint32_t>(SF64::ResourceType::MessageTable), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryEnvSettingsV0>(), RESOURCE_FORMAT_BINARY, "EnvSettings", static_cast<uint32_t>(SF64::ResourceType::Environment), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryObjectInitV0>(), RESOURCE_FORMAT_BINARY, "ObjectInit", static_cast<uint32_t>(SF64::ResourceType::ObjectInit), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryHitboxV0>(), RESOURCE_FORMAT_BINARY, "Hitbox", static_cast<uint32_t>(SF64::ResourceType::Hitbox), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptV0>(), RESOURCE_FORMAT_BINARY, "Script", static_cast<uint32_t>(SF64::ResourceType::Script), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptCMDV0>(), RESOURCE_FORMAT_BINARY, "ScriptCMD", static_cast<uint32_t>(SF64::ResourceType::ScriptCmd), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryColPolyV0>(), RESOURCE_FORMAT_BINARY, "ColPoly", static_cast<uint32_t>(SF64::ResourceType::ColPoly), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3fV0>(), RESOURCE_FORMAT_BINARY, "Vec3f", static_cast<uint32_t>(SF64::ResourceType::Vec3f), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3sV0>(), RESOURCE_FORMAT_BINARY, "Vec3s", static_cast<uint32_t>(SF64::ResourceType::Vec3s), 0);
-    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryGenericArrayV0>(), RESOURCE_FORMAT_BINARY, "GenericArray", static_cast<uint32_t>(SF64::ResourceType::GenericArray), 0);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryTextureV0>(), RESOURCE_FORMAT_BINARY, "Texture", static_cast<uint32_t>(LUS::ResourceType::Texture), 0);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryTextureV1>(), RESOURCE_FORMAT_BINARY, "Texture", static_cast<uint32_t>(LUS::ResourceType::Texture), 1);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY, "Vertex", static_cast<uint32_t>(LUS::ResourceType::Vertex), 0);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryDisplayListV0>(), RESOURCE_FORMAT_BINARY, "DisplayList", static_cast<uint32_t>(LUS::ResourceType::DisplayList), 0);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY, "Matrix", static_cast<uint32_t>(LUS::ResourceType::Matrix), 0);
-    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY, "Blob", static_cast<uint32_t>(LUS::ResourceType::Blob), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Skeleton", static_cast<uint32_t>(SF64::ResourceType::Skeleton), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryLimbV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Limb", static_cast<uint32_t>(SF64::ResourceType::Limb), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryMessageV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Message", static_cast<uint32_t>(SF64::ResourceType::Message), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryMessageLookupV0>(),
+                                    RESOURCE_FORMAT_BINARY, "MessageTable",
+                                    static_cast<uint32_t>(SF64::ResourceType::MessageTable), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryEnvSettingsV0>(),
+                                    RESOURCE_FORMAT_BINARY, "EnvSettings",
+                                    static_cast<uint32_t>(SF64::ResourceType::Environment), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryObjectInitV0>(), RESOURCE_FORMAT_BINARY,
+                                    "ObjectInit", static_cast<uint32_t>(SF64::ResourceType::ObjectInit), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryHitboxV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Hitbox", static_cast<uint32_t>(SF64::ResourceType::Hitbox), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Script", static_cast<uint32_t>(SF64::ResourceType::Script), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptCMDV0>(), RESOURCE_FORMAT_BINARY,
+                                    "ScriptCMD", static_cast<uint32_t>(SF64::ResourceType::ScriptCmd), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryColPolyV0>(), RESOURCE_FORMAT_BINARY,
+                                    "ColPoly", static_cast<uint32_t>(SF64::ResourceType::ColPoly), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3fV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Vec3f", static_cast<uint32_t>(SF64::ResourceType::Vec3f), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryVec3sV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Vec3s", static_cast<uint32_t>(SF64::ResourceType::Vec3s), 0);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryGenericArrayV0>(),
+                                    RESOURCE_FORMAT_BINARY, "GenericArray",
+                                    static_cast<uint32_t>(SF64::ResourceType::GenericArray), 0);
+    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryTextureV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Texture", static_cast<uint32_t>(LUS::ResourceType::Texture), 0);
+    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryTextureV1>(), RESOURCE_FORMAT_BINARY,
+                                    "Texture", static_cast<uint32_t>(LUS::ResourceType::Texture), 1);
+    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Vertex", static_cast<uint32_t>(LUS::ResourceType::Vertex), 0);
+    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryDisplayListV0>(), RESOURCE_FORMAT_BINARY,
+                                    "DisplayList", static_cast<uint32_t>(LUS::ResourceType::DisplayList), 0);
+    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Matrix", static_cast<uint32_t>(LUS::ResourceType::Matrix), 0);
+    loader->RegisterResourceFactory(std::make_shared<LUS::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Blob", static_cast<uint32_t>(LUS::ResourceType::Blob), 0);
 }
 
-void GameEngine::Create(){
+void GameEngine::Create() {
     const auto instance = Instance = new GameEngine();
     instance->AudioInit();
     GameUI::SetupGuiElements();
@@ -100,13 +122,13 @@ void GameEngine::Create(){
 #endif
 }
 
-void GameEngine::Destroy(){
+void GameEngine::Destroy() {
     free(MemoryPool.memory);
 }
 
 bool ShouldClearTextureCacheAtEndOfFrame = false;
 
-void GameEngine::StartFrame() const{
+void GameEngine::StartFrame() const {
     using Ship::KbScancode;
     const int32_t dwScancode = this->context->GetWindow()->GetLastScancode();
     this->context->GetWindow()->SetLastScancode(-1);
@@ -118,7 +140,8 @@ void GameEngine::StartFrame() const{
             ShouldClearTextureCacheAtEndOfFrame = true;
             break;
         }
-        default: break;
+        default:
+            break;
     }
     this->context->GetWindow()->StartFrame();
 }
@@ -128,13 +151,14 @@ void GameEngine::StartFrame() const{
 #define NUM_AUDIO_CHANNELS 2
 #define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
 
-s16 audio_buffer[SAMPLES_PER_FRAME*2] = {0};
+s16 audio_buffer[SAMPLES_PER_FRAME * 2] = { 0 };
 
 extern "C" s32 audBuffer = 0;
 #include <sf64audio_provisional.h>
 
 extern "C" volatile s32 gAudioTaskCountQ;
-
+int frames = 0;
+extern "C" int countermin = 0;
 void GameEngine::HandleAudioThread() {
     while (audio.running) {
         {
@@ -147,23 +171,31 @@ void GameEngine::HandleAudioThread() {
             }
         }
 
-        #define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1 )
+#define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1)
 
         std::unique_lock<std::mutex> Lock(audio.mutex);
         int samples_left = AudioPlayerBuffered();
         u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? 560 : 528;
-        
-        for (int i = 0; i < 2; i++) {
-            AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS), num_audio_samples);
+
+        frames++;
+
+        if (frames > 60) {
+            countermin++;
         }
-        
-        AudioPlayerPlayFrame((u8 *) audio_buffer, num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
+
+        for (int i = 0; i < 2; i++) {
+            AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS),
+                                              num_audio_samples);
+        }
+
+        AudioPlayerPlayFrame((u8*) audio_buffer,
+                             num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
         audio.processing = false;
         audio.cv_from_thread.notify_one();
     }
 }
 
-void GameEngine::StartAudioFrame(){
+void GameEngine::StartAudioFrame() {
     {
         std::unique_lock<std::mutex> Lock(audio.mutex);
         audio.processing = true;
@@ -171,7 +203,7 @@ void GameEngine::StartAudioFrame(){
     audio.cv_to_thread.notify_one();
 }
 
-void GameEngine::EndAudioFrame(){
+void GameEngine::EndAudioFrame() {
     {
         std::unique_lock<std::mutex> Lock(audio.mutex);
         while (audio.processing) {
@@ -242,7 +274,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     while (time + original_fps <= next_original_frame) {
         time += original_fps;
         if (time != next_original_frame) {
-            mtx_replacements.push_back(FrameInterpolation_Interpolate((float)time / next_original_frame));
+            mtx_replacements.push_back(FrameInterpolation_Interpolate((float) time / next_original_frame));
         } else {
             mtx_replacements.emplace_back();
         }
@@ -269,7 +301,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     last_update_rate = gVIsPerFrame;
 }
 
-uint32_t GameEngine::GetInterpolationFPS(){
+uint32_t GameEngine::GetInterpolationFPS() {
     if (Ship::Context::GetInstance()->GetWindow()->GetWindowBackend() == Ship::WindowBackend::FAST3D_DXGI_DX11) {
         return CVarGetInteger("gInterpolationFPS", 20);
     }
@@ -295,7 +327,7 @@ extern "C" uint32_t GameEngine_GetSampleRate() {
     return player->GetSampleRate();
 }
 
-extern "C" uint32_t GameEngine_GetSamplesPerFrame(){
+extern "C" uint32_t GameEngine_GetSamplesPerFrame() {
     return SAMPLES_PER_FRAME;
 }
 
@@ -312,7 +344,7 @@ extern "C" uint32_t GameEngine_GetGameVersion() {
 static const char* sOtrSignature = "__OTR__";
 
 extern "C" uint8_t GameEngine_OTRSigCheck(const char* data) {
-    if(data == nullptr) {
+    if (data == nullptr) {
         return 0;
     }
     return strncmp(data, sOtrSignature, strlen(sOtrSignature)) == 0;
@@ -342,7 +374,6 @@ struct TimedEntry {
 };
 
 std::vector<TimedEntry> gTimerTasks;
-
 
 uint64_t Timer_GetCurrentMillis() {
     return SDL_GetTicks();
@@ -380,7 +411,7 @@ void Timer_CompleteTask(TimedEntry& task) {
 
 extern "C" void Timer_Update() {
 
-    if(gTimerTasks.empty()) {
+    if (gTimerTasks.empty()) {
         return;
     }
 
@@ -427,11 +458,11 @@ extern "C" uint32_t OTRGetGameRenderHeight() {
 }
 
 extern "C" int16_t OTRGetRectDimensionFromLeftEdge(float v) {
-    return ((int)floorf(OTRGetDimensionFromLeftEdge(v)));
+    return ((int) floorf(OTRGetDimensionFromLeftEdge(v)));
 }
 
 extern "C" int16_t OTRGetRectDimensionFromRightEdge(float v) {
-    return ((int)ceilf(OTRGetDimensionFromRightEdge(v)));
+    return ((int) ceilf(OTRGetDimensionFromRightEdge(v)));
 }
 
 extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
@@ -458,19 +489,20 @@ extern "C" void* GameEngine_Malloc(size_t size) {
 
     const auto chunk = MemoryPool.chunk;
 
-    if(size == 0) {
+    if (size == 0) {
         return nullptr;
     }
 
-    if(MemoryPool.cursor + size < MemoryPool.length) {
+    if (MemoryPool.cursor + size < MemoryPool.length) {
         const auto res = static_cast<uint8_t*>(MemoryPool.memory) + MemoryPool.cursor;
         MemoryPool.cursor += size;
-        //SPDLOG_INFO("Allocating {} into memory pool", size);
+        // SPDLOG_INFO("Allocating {} into memory pool", size);
         return res;
     }
 
     MemoryPool.length += chunk;
-    MemoryPool.memory = MemoryPool.memory == nullptr ? malloc(MemoryPool.length) : realloc(MemoryPool.memory, MemoryPool.length);
+    MemoryPool.memory =
+        MemoryPool.memory == nullptr ? malloc(MemoryPool.length) : realloc(MemoryPool.memory, MemoryPool.length);
     memset(static_cast<uint8_t*>(MemoryPool.memory) + MemoryPool.length, 0, MemoryPool.length - chunk);
     SPDLOG_INFO("Memory pool resized from {} to {}", MemoryPool.length - chunk, MemoryPool.length);
     return GameEngine_Malloc(size);

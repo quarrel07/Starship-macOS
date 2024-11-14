@@ -4,13 +4,13 @@
 
 static const char devstr[] = "Audio:Envp: overflow  %f\n";
 
-void func_80013400(SequenceChannel* channel, s32 updateVolume) {
+void Audio_SequenceChannelProcessSound(SequenceChannel* channel, s32 updateVolume) {
     s32 i;
 
     if (channel->changes.s.volume || updateVolume) {
         f32 channelVolume = channel->volume * channel->volumeMod * channel->seqPlayer->appliedFadeVolume;
 
-        if (channel->seqPlayer->muted && (channel->muteBehavior & 0x20)) {
+        if (channel->seqPlayer->muted && (channel->muteBehavior & MUTE_BEHAVIOR_SOFTEN)) {
             channelVolume = channel->seqPlayer->muteVolumeMod * channelVolume;
         }
         channel->appliedVolume = SQ(channelVolume);
@@ -66,13 +66,13 @@ void Audio_SequencePlayerProcessSound(SequencePlayer* seqplayer) {
     }
     for (i = 0; i < 16; i++) {
         if ((IS_SEQUENCE_CHANNEL_VALID(seqplayer->channels[i]) == 1) && (seqplayer->channels[i]->enabled == 1)) {
-            func_80013400(seqplayer->channels[i], seqplayer->recalculateVolume);
+            Audio_SequenceChannelProcessSound(seqplayer->channels[i], seqplayer->recalculateVolume);
         }
     }
     seqplayer->recalculateVolume = false;
 }
 
-f32 func_80013708(Portamento* portamento) {
+f32 Audio_GetPortamentoFreqScale(Portamento* portamento) {
     u32 temp;
     f32 temp2;
 
@@ -85,7 +85,7 @@ f32 func_80013708(Portamento* portamento) {
     return temp2;
 }
 
-s16 func_800137DC(VibratoState* vibrato) {
+s16 Audio_GetVibratoPitchChange(VibratoState* vibrato) {
     s32 index;
 
     vibrato->time += (s32) vibrato->rate;
@@ -93,7 +93,7 @@ s16 func_800137DC(VibratoState* vibrato) {
     return vibrato->curve[index] >> 8;
 }
 
-f32 func_80013820(VibratoState* vibrato) {
+f32 Audio_GetVibratoFreqScale(VibratoState* vibrato) {
     s32 ret;
     f32 temp;
     f32 temp2;
@@ -131,18 +131,18 @@ f32 func_80013820(VibratoState* vibrato) {
     if (vibrato->depth == 0.0f) {
         return 1.0f;
     }
-    ret = func_800137DC(vibrato);
+    ret = Audio_GetVibratoPitchChange(vibrato);
     temp = vibrato->depth / 4096.0f;
     temp2 = 1.0f + temp * (gBendPitchOneOctaveFrequencies[0x80 + ret] - 1.0f);
     return temp2;
 }
 
-void func_80013A18(Note* note) {
+void Audio_NoteVibratoUpdate(Note* note) {
     if (note->playbackState.portamento.mode != 0) {
-        note->playbackState.portamentoFreqMod = func_80013708(&note->playbackState.portamento);
+        note->playbackState.portamentoFreqMod = Audio_GetPortamentoFreqScale(&note->playbackState.portamento);
     }
     if ((note->playbackState.vibratoState.active != 0) && (note->playbackState.parentLayer != NO_LAYER)) {
-        note->playbackState.vibratoFreqMod = func_80013820(&note->playbackState.vibratoState);
+        note->playbackState.vibratoFreqMod = Audio_GetVibratoFreqScale(&note->playbackState.vibratoState);
     }
 }
 
@@ -174,7 +174,7 @@ void Audio_NoteVibratoInit(Note* note) {
     noteState->portamento = noteState->parentLayer->portamento;
 }
 
-void func_80013B6C(AdsrState* adsr, EnvelopePoint* envelope, s16* arg2) {
+void Audio_AdsrInit(AdsrState* adsr, EnvelopePoint* envelope, s16* arg2) {
     adsr->action.asByte = 0;
     adsr->state = 0;
     adsr->delay = 0;
@@ -183,7 +183,7 @@ void func_80013B6C(AdsrState* adsr, EnvelopePoint* envelope, s16* arg2) {
     adsr->current = 0.0f;
 }
 
-f32 func_80013B90(AdsrState* adsr) {
+f32 Audio_AdsrUpdate(AdsrState* adsr) {
     u8 action = adsr->action.asByte;
     u8 state = adsr->state;
 
@@ -200,7 +200,7 @@ f32 func_80013B90(AdsrState* adsr) {
             adsr->state = ADSR_STATE_LOOP;
         case_ADSR_STATE_LOOP:
         case ADSR_STATE_LOOP:
-            adsr->delay = BSWAP16(adsr->envelope[adsr->envIndex].delay);
+            adsr->delay = (s16)BSWAP16(adsr->envelope[adsr->envIndex].delay);
             switch (adsr->delay) {
                 case ADSR_DISABLE:
                     adsr->state = ADSR_STATE_DISABLED;
@@ -209,7 +209,7 @@ f32 func_80013B90(AdsrState* adsr) {
                     adsr->state = ADSR_STATE_HANG;
                     break;
                 case ADSR_GOTO:
-                    adsr->envIndex = BSWAP16(adsr->envelope[adsr->envIndex].arg);
+                    adsr->envIndex = (s16)BSWAP16(adsr->envelope[adsr->envIndex].arg);
                     goto case_ADSR_STATE_LOOP;
                 case ADSR_RESTART:
                     adsr->state = ADSR_STATE_INITIAL;

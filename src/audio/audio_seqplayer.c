@@ -1243,7 +1243,7 @@ void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
     s32 pad3;
 
     // @port:
-    gSeqLoadStatus[seqPlayer->seqId] = 2;
+    gSeqLoadStatus[seqPlayer->seqId] = LOAD_STATUS_COMPLETE;
 
     if (!seqPlayer->enabled) {
         return;
