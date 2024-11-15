@@ -786,8 +786,8 @@ Acmd* AudioSynth_DoOneAudioUpdate(s16* aiBuf, s32 aiBufLen, Acmd* aList, s32 upd
     u8 sp84[0x3C];
     NoteSubEu* temp_v0;
     s16 count;
-    s16 i;
-    s32 j;
+    s16 i = 0;
+    s32 j = 0;
 
     count = 0;
     if (gNumSynthReverbs == 0) {

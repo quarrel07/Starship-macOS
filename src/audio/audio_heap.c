@@ -720,6 +720,8 @@ void AudioHeap_Init(void) {
         gSynthReverbs[i].useReverb = 0;
     }
 
+    // LTODO: Reverbs are causing distortion.
+    /*
     gNumSynthReverbs = spec->numReverbs;
     for (i = 0; i < gNumSynthReverbs; i++) {
         settings = &spec->reverbSettings[i];
@@ -756,6 +758,7 @@ void AudioHeap_Init(void) {
             }
         }
     }
+    */
     AudioLoad_InitSampleDmaBuffers(gNumNotes);
     gPreloadSampleStackTop = 0;
     D_8014C1B4 = 0x1000;

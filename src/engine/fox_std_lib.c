@@ -31,7 +31,11 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
     u16 tempPxl;
     s32 u;
     s32 v;
-    return;
+
+    // LTODO: figure out why this function crashes in other levels
+    if ((gCurrentLevel != LEVEL_SOLAR)) {
+        return;
+    }
     // LTodo: [HD-Textures] This is broken
 
     switch (mode) {
@@ -83,7 +87,12 @@ void Lib_Texture_Mottle(u16* dst, u16* src, u8 mode) {
     u8* dst8;
     u8* src8;
     s32 offset;
-    return;
+
+    // LTODO: figure out why this function crashes in other levels
+    // CAUSES CORRUPTION!!!!
+    if ((gCurrentLevel != LEVEL_SOLAR) || (gGameState == GSTATE_MAP)) {
+        return;
+    }
 
     // LTodo: [HD-Textures] This is broken
     dst = LOAD_ASSET(dst);
@@ -601,7 +610,7 @@ void Lib_TextureRect_CI8(Gfx** gfxPtr, u8* texture, u16* palette, u32 width, u32
 }
 
 void Lib_TextureRect_RGBA16(Gfx** gfxPtr, u16* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale,
-                         f32 yScale) {
+                            f32 yScale) {
     gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                      G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
@@ -615,7 +624,7 @@ void Lib_TextureRect_RGBA16(Gfx** gfxPtr, u16* texture, u32 width, u32 height, f
 }
 
 void Lib_TextureRect_RGBA16_MirX(Gfx** gfxPtr, u16* texture, u32 width, u32 height, f32 xPos, f32 yPos, f32 xScale,
-                              f32 yScale) {
+                                 f32 yScale) {
     gDPSetTileCustom((*gfxPtr)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                      G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
