@@ -16,8 +16,8 @@
 #define ROUND_DOWN_16(v) ((v) & ~0xf)
 
 //#define DMEM_BUF_SIZE (0x1000 - 0x0330 - 0x10 - 0x40)
-#define DMEM_BUF_SIZE (0x1000 - 0x450 - 0x40)
-// #define DMEM_BUF_SIZE 0xC90
+//#define DMEM_BUF_SIZE (0x1000 - 0x450 - 0x40)
+#define DMEM_BUF_SIZE 0xC90
 #define BUF_U8(a) (rspa.buf.as_u8 + ((a)-0x450))
 #define BUF_S16(a) (rspa.buf.as_s16 + ((a)-0x450) / sizeof(int16_t))
 

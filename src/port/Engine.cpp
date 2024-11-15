@@ -68,7 +68,7 @@ GameEngine::GameEngine() {
     }
 
     this->context =
-        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 1024, 2480 });
+        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 512, 1240 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
@@ -149,8 +149,8 @@ void GameEngine::StartFrame() const {
     this->context->GetWindow()->StartFrame();
 }
 
-#define SAMPLES_HIGH 752
-#define SAMPLES_LOW 720
+#define SAMPLES_HIGH 560
+#define SAMPLES_LOW 528
 #define NUM_AUDIO_CHANNELS 2
 #define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
 
@@ -179,10 +179,9 @@ void GameEngine::HandleAudioThread() {
 //#define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1)
 #define AUDIO_FRAMES_PER_UPDATE 2
 
-
         std::unique_lock<std::mutex> Lock(audio.mutex);
         int samples_left = AudioPlayerBuffered();
-        u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? 560 : 528;
+        u32 num_audio_samples = samples_left < AudioPlayerGetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
 
         frames++;
 
