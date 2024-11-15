@@ -68,7 +68,7 @@ GameEngine::GameEngine() {
     }
 
     this->context =
-        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 32000, 512, 1240 });
+        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 44100, 1024, 2480 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
@@ -149,8 +149,8 @@ void GameEngine::StartFrame() const {
     this->context->GetWindow()->StartFrame();
 }
 
-#define SAMPLES_HIGH 560
-#define SAMPLES_LOW 528
+#define SAMPLES_HIGH 1056
+#define SAMPLES_LOW 890
 #define NUM_AUDIO_CHANNELS 2
 #define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
 
