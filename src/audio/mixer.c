@@ -132,7 +132,7 @@ void aInterleaveImpl(uint16_t dest, uint16_t left, uint16_t right, uint16_t c) {
         return;
     }
 
-    int count = ROUND_UP_16(rspa.nbytes) >> 2;
+    int count = ROUND_UP_16(rspa.nbytes) >> 3;
 
     int16_t *l = BUF_S16(left);
     int16_t *r = BUF_S16(right);

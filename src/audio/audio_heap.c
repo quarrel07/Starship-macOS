@@ -558,8 +558,6 @@ void AudioHeap_ClearCurrentAiBuffer(void) {
     }
 }
 
-extern s16 audio_buffer[];
-
 s32 AudioHeap_ResetStep(void) {
     s32 i;
     s32 j;
@@ -599,7 +597,7 @@ s32 AudioHeap_ResetStep(void) {
                 gResetFadeoutFramesLeft--;
                 AudioHeap_UpdateReverbs();
             } else {
-                memset(audio_buffer, 0, (1056 * 2 * 3) * 2 * 2);
+//                memset(audio_buffer, 0, (1056 * 2 * 3) * 2 * 2);
                 gResetFadeoutFramesLeft = 4 / sp24;
                 gAudioResetStep--;
                 break; // needed to match
@@ -617,7 +615,7 @@ s32 AudioHeap_ResetStep(void) {
         case 1:
             AudioHeap_Init();
             gAudioResetStep = 0;
-            memset(audio_buffer, 0, (1056 * 2 * 3) * 2 * 2);
+//            memset(audio_buffer, 0, (1056 * 2 * 3) * 2 * 2);
             break;
     }
     if (gAudioResetStep < 3) {
@@ -643,15 +641,12 @@ void AudioHeap_Init(void) {
     gAudioBufferParams.aiSamplingFrequency = osAiSetFrequency(gAudioBufferParams.samplingFrequency);
     gAudioBufferParams.samplesPerFrameTarget = ALIGN16(gAudioBufferParams.samplingFrequency / gRefreshRate);
 
-    printf("aiSamplingFrequency %d\n", gAudioBufferParams.aiSamplingFrequency);
-    printf("samplesPerFrameTarget %d\n", gAudioBufferParams.samplesPerFrameTarget);
-
     gAudioBufferParams.minAiBufferLength = gAudioBufferParams.samplesPerFrameTarget - 0x10;
     gAudioBufferParams.maxAiBufferLength = gAudioBufferParams.samplesPerFrameTarget + 0x10;
 
-    gAudioBufferParams.ticksPerUpdate = ((gAudioBufferParams.samplesPerFrameTarget + 0x10) / 192);
+    gAudioBufferParams.ticksPerUpdate = ((gAudioBufferParams.samplesPerFrameTarget + 0x10) / 192) + 1;
     gAudioBufferParams.samplesPerTick =
-        (gAudioBufferParams.samplesPerFrameTarget / (gAudioBufferParams.ticksPerUpdate + 1)) & ~7;
+        (gAudioBufferParams.samplesPerFrameTarget / gAudioBufferParams.ticksPerUpdate) & ~7;
     gAudioBufferParams.samplesPerTickMax = gAudioBufferParams.samplesPerTick + 8;
     gAudioBufferParams.samplesPerTickMin = gAudioBufferParams.samplesPerTick - 8;
     gAudioBufferParams.resampleRate = 32000.0f / (s32) gAudioBufferParams.samplingFrequency;
@@ -665,11 +660,11 @@ void AudioHeap_Init(void) {
 	// Using 1 buffer has caused issues, so we hardcoded it to 2.
 	// To prevent sequences from going too fast, we added a * 2 here.
 	// This is not an optimal fix but it works. We may wish to find something better in the future.
-    gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2 * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
-    //gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
+    // gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
+    gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
 
     gAudioBufferParams.numBuffers = spec->numBuffers;
-    gAudioBufferParams.numBuffers = 2;
+    gAudioBufferParams.numBuffers = 1;
 
     gAudioBufferParams.samplesPerFrameTarget *= gAudioBufferParams.numBuffers;
     gAudioBufferParams.maxAiBufferLength *= gAudioBufferParams.numBuffers;

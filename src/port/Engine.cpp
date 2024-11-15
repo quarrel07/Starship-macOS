@@ -30,6 +30,10 @@
 #include <Fast3D/gfx_pc.h>
 #include <Fast3D/gfx_rendering_api.h>
 #include <SDL2/SDL.h>
+#include <fstream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 //extern "C" AudioBufferParameters gAudioBufferParams;
 
@@ -68,7 +72,7 @@ GameEngine::GameEngine() {
     }
 
     this->context =
-        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 44100, 1056, 1056 * 2 });
+        Ship::Context::CreateInstance("Starship", "ship", "starship.cfg.json", OTRFiles, {}, 3, { 44100, 1024, 2480 });
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
@@ -126,6 +130,7 @@ void GameEngine::Create() {
 }
 
 void GameEngine::Destroy() {
+    AudioExit();
     free(MemoryPool.memory);
 }
 
@@ -149,13 +154,9 @@ void GameEngine::StartFrame() const {
     this->context->GetWindow()->StartFrame();
 }
 
-#define SAMPLES_HIGH 1056
-#define SAMPLES_LOW 880
+#define SAMPLES_HIGH 752
+#define SAMPLES_LOW 720
 #define NUM_AUDIO_CHANNELS 2
-#define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
-
-extern "C"
-s16 audio_buffer[SAMPLES_PER_FRAME * 2 * 2] = { 0 };
 
 extern "C" s32 audBuffer = 0;
 #include <sf64audio_provisional.h>
@@ -164,6 +165,9 @@ extern "C" volatile s32 gAudioTaskCountQ;
 int frames = 0;
 extern "C" int countermin = 0;
 void GameEngine::HandleAudioThread() {
+#ifdef PIPE_DEBUG
+    std::ofstream outfile("audio.bin", std::ios::binary | std::ios::app);
+#endif
     while (audio.running) {
         {
             std::unique_lock<std::mutex> Lock(audio.mutex);
@@ -177,8 +181,7 @@ void GameEngine::HandleAudioThread() {
 
 		//gVIsPerFrame = 2;
 
-//#define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1)
-#define AUDIO_FRAMES_PER_UPDATE 2
+#define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1)
 
         std::unique_lock<std::mutex> Lock(audio.mutex);
         int samples_left = AudioPlayerBuffered();
@@ -190,16 +193,24 @@ void GameEngine::HandleAudioThread() {
             countermin++;
         }
 
+        s16 audio_buffer[SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3] = { 0 };
         for (int i = 0; i < AUDIO_FRAMES_PER_UPDATE; i++) {
             AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS),
                                               num_audio_samples);
         }
-
+#ifdef PIPE_DEBUG
+        if(outfile.is_open()){
+            outfile.write(reinterpret_cast<char*>(audio_buffer), num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
+        }
+#endif
         AudioPlayerPlayFrame((u8*) audio_buffer,
                              num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
         audio.processing = false;
         audio.cv_from_thread.notify_one();
     }
+#ifdef PIPE_DEBUG
+    outfile.close();
+#endif
 }
 
 void GameEngine::StartAudioFrame() {

@@ -701,7 +701,7 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
             AudioSynth_DoOneAudioUpdate((s16*) aiBufPtr, chunkLen, aCmdPtr, gAudioBufferParams.ticksPerUpdate - i);
         aiBufLen -= chunkLen;
         // if (aiBufLen < 0) aiBufLen = 0;
-        aiBufPtr += chunkLen*2;
+        aiBufPtr += chunkLen * 2;
     }
 
     for (j = 0; j < gNumSynthReverbs; j++) {
