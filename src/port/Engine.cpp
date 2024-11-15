@@ -25,10 +25,13 @@
 #include <BlobFactory.h>
 #include <VertexFactory.h>
 #include "audio/GameAudio.h"
+//#include "sf64audio_provisional.h"
 
 #include <Fast3D/gfx_pc.h>
 #include <Fast3D/gfx_rendering_api.h>
 #include <SDL2/SDL.h>
+
+//extern "C" AudioBufferParameters gAudioBufferParams;
 
 #include <utility>
 
@@ -151,7 +154,7 @@ void GameEngine::StartFrame() const {
 #define NUM_AUDIO_CHANNELS 2
 #define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3)
 
-s16 audio_buffer[SAMPLES_PER_FRAME * 2] = { 0 };
+s16 audio_buffer[SAMPLES_PER_FRAME * 2 * 2] = { 0 };
 
 extern "C" s32 audBuffer = 0;
 #include <sf64audio_provisional.h>
@@ -171,7 +174,11 @@ void GameEngine::HandleAudioThread() {
             }
         }
 
-#define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1)
+		//gVIsPerFrame = 2;
+
+//#define AUDIO_FRAMES_PER_UPDATE (gVIsPerFrame > 0 ? gVIsPerFrame : 1)
+#define AUDIO_FRAMES_PER_UPDATE 2
+
 
         std::unique_lock<std::mutex> Lock(audio.mutex);
         int samples_left = AudioPlayerBuffered();
@@ -183,7 +190,7 @@ void GameEngine::HandleAudioThread() {
             countermin++;
         }
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < AUDIO_FRAMES_PER_UPDATE; i++) {
             AudioThread_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS),
                                               num_audio_samples);
         }

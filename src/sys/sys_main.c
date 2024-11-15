@@ -277,7 +277,6 @@ void Graphics_ThreadUpdate() {
     //     osRecvMesg(&gGfxVImsgQueue, NULL, OS_MESG_BLOCK);
     // }
 
-    // LTODO: There is no audio for now :P
     osSendMesg(&gTaskMesgQueue, OS_MESG_PTR(NULL), OS_MESG_NOBLOCK);
     Audio_Update();
 }
@@ -363,7 +362,6 @@ void Main_ThreadEntry(void* arg0) {
     OSMesg ogMsg;
     u32 mesg;
 
-    // LTODO: Implement audio
     Audio_ThreadEntry(NULL);
     Graphics_ThreadEntry(NULL);
     Controller_Init();

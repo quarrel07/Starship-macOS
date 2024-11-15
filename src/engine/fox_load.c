@@ -34,8 +34,9 @@ void Load_RomFile(void* vRomAddress, void* dest, ptrdiff_t size) {
 
 u8 Load_SceneFiles(Scene* scene) {
 #if 1
+    bool hasSceneChanged = memcmp(&sCurrentScene, scene, sizeof(Scene)) != 0;
     sCurrentScene = *scene;
-    return true;
+    return hasSceneChanged;
 #else
     u8* ramPtr = SEGMENT_VRAM_START(ovl_i1);
     u8 segment;
@@ -167,13 +168,13 @@ u8 Load_SceneSetup(u8 sceneId, u8 sceneSetup) {
         case SCENE_VERSUS:
             changeScene = Load_SceneFiles(&sOvli2_Versus[sceneSetup]);
             if (changeScene == true) {
-                // AUDIO_SET_SPEC_ALT(SFXCHAN_3, AUDIOSPEC_16);
+                AUDIO_SET_SPEC_ALT(SFXCHAN_3, AUDIOSPEC_16);
             }
             break;
         case SCENE_LOGO:
             changeScene = Load_SceneFiles(&sNoOvl_Logo[sceneSetup]); // Logo does not load an overlay file
             if (changeScene == true) {
-                // AUDIO_SET_SPEC(SFXCHAN_0, AUDIOSPEC_MA);
+                AUDIO_SET_SPEC(SFXCHAN_0, AUDIOSPEC_MA);
             }
             break;
         case SCENE_CREDITS:

@@ -692,7 +692,12 @@ void Audio_ProcessSeqCmd(u32 seqCmd) {
             seqNumber = seqCmd & 0xFF;
             seqArgs = (seqCmd & 0xFF00) >> 8;
             fadeTimer = (seqCmd & 0xFF0000) >> 13;
-            if (!sActiveSequences[seqPlayId].isWaitingForFonts) {
+
+			seqArgs = 0;
+
+            //if (!sActiveSequences[seqPlayId].isWaitingForFonts) 
+			if (true)
+			{
                 if (seqArgs < 0x80) {
                     Audio_StartSequence(seqPlayId, seqNumber, seqArgs, fadeTimer);
                 } else {
@@ -888,12 +893,14 @@ void Audio_ProcessSeqCmd(u32 seqCmd) {
             oldSpecId = sAudioSpecId;
             sAudioSpecId = specId;
 
-            if (oldSpecId != specId) {
+            if (oldSpecId != specId) 
+			{
                 AudioThread_ResetAudioHeap(specId);
                 Audio_StartReset(oldSpecId);
                 AUDIOCMD_GLOBAL_STOP_AUDIOCMDS();
-
-            } else {
+            } 
+			else 
+			{
                 Audio_StopSequence(SEQ_PLAYER_BGM, 1);
                 Audio_StopSequence(SEQ_PLAYER_FANFARE, 1);
             }
@@ -991,7 +998,8 @@ void Audio_UpdateActiveSequences(void) {
 
     for (seqPlayId = 0; seqPlayId < SEQ_PLAYER_MAX; seqPlayId++) {
         if (sActiveSequences[seqPlayId].isWaitingForFonts) {
-            switch ((s32) AudioThread_GetAsyncLoadStatus(&out)) {
+            switch ((s32) AudioThread_GetAsyncLoadStatus(&out)) 
+			{
                 case SEQ_PLAYER_BGM + 1:
                 case SEQ_PLAYER_FANFARE + 1:
                 case SEQ_PLAYER_SFX + 1:
@@ -1322,7 +1330,7 @@ void Audio_ProcessSfxRequest(void) {
     SfxRequest* request = &sSfxRequests[sSfxRequestReadIndex];
     u8 next;
     s32 bankId;
-    u8 evict;
+    u8 evict = 0;
     u32 sfxId;
     u8 count;
     SfxBankEntry* entry;
@@ -1850,6 +1858,7 @@ void Audio_UpdateVoice(void) {
         voiceId = sNextVoiceId % 1000;
         voiceIdHi = voiceId / 256;
         voiceIdLo = voiceId % 256;
+
         AUDIOCMD_CHANNEL_SET_IO(SEQ_PLAYER_VOICE, 15, 0, 1);
         AUDIOCMD_CHANNEL_SET_IO(SEQ_PLAYER_VOICE, 15, 4, voiceBank);
         AUDIOCMD_CHANNEL_SET_IO(SEQ_PLAYER_VOICE, 15, 5, voiceIdHi);
@@ -2570,6 +2579,7 @@ void Audio_SetBgmParam(s8 bgmParam) {
 }
 
 void Audio_PlaySequence(u8 seqPlayId, u16 seqId, u8 fadeinTime, u8 bgmParam) {
+    //seqId &= 0xFF;
     SEQCMD_SET_SEQPLAYER_IO(seqPlayId, 0, bgmParam);
     SEQCMD_PLAY_SEQUENCE(seqPlayId, fadeinTime, 0, seqId);
 }

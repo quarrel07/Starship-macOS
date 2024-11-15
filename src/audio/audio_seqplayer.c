@@ -143,13 +143,16 @@ void AudioSeq_SeqLayerDisable(SequenceLayer* layer) {
     }
 }
 
-void AudioSeq_SeqLayerFree(SequenceChannel* channel, s32 layerIndex) {
-    SequenceLayer* layer = channel->layers[layerIndex];
+void AudioSeq_SeqLayerFree(SequenceChannel* channel, s32 layerIndex) 
+{
+    if (layerIndex < 4) {
+        SequenceLayer* layer = channel->layers[layerIndex];
 
-    if (layer != NULL) {
-        AudioSeq_AudioListPushBack(&gLayerFreeList, &layer->listItem);
-        AudioSeq_SeqLayerDisable(layer);
-        channel->layers[layerIndex] = NULL;
+        if (layer != NULL) {
+            AudioSeq_AudioListPushBack(&gLayerFreeList, &layer->listItem);
+            AudioSeq_SeqLayerDisable(layer);
+            channel->layers[layerIndex] = NULL;
+        }
     }
 }
 
@@ -907,7 +910,8 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
                         sp52 = ((u16*) gSeqFontTable)[seqPlayer->seqId];
                         loBits = gSeqFontTable[sp52];
                         cmd = gSeqFontTable[sp52 + loBits - cmd];
-                        if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) {
+                        //if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) 
+						{
                             channel->fontId = cmd;
                         }
                         /* fallthrough */
@@ -1013,7 +1017,11 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
                         sp52 = ((u16*) gSeqFontTable)[seqPlayer->seqId];
                         loBits = gSeqFontTable[sp52];
                         cmd = gSeqFontTable[sp52 + loBits - cmd];
-                        if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) {
+
+						printf("seqID: %02X\n", seqPlayer->seqId);
+
+                        //if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) 
+						{
                             channel->fontId = cmd;
                         }
                         break;

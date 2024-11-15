@@ -90,7 +90,7 @@ extern "C" SoundFont* Audio_LoadFont(AudioTableEntry entry) {
         }
     }
 
-    gSampleFontLoadStatus[font->sampleBankId1] = 2;
+    gSampleFontLoadStatus[font->sampleBankId1] = LOAD_STATUS_COMPLETE;
 
     gAudioCache[entry.romAddr] = font;
     return font;

@@ -667,8 +667,9 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
     //if (gAudioBufferParams.ticksPerUpdate > 3 && gGameState != GSTATE_PLAY) return;
     aCmdPtr = aList;
     for (i = gAudioBufferParams.ticksPerUpdate; i > 0; i--) {
-        AudioSeq_ProcessSequences(i - 1);
-        AudioSynth_SyncSampleStates(gAudioBufferParams.ticksPerUpdate - i);
+
+		AudioSeq_ProcessSequences(i - 1);
+		AudioSynth_SyncSampleStates(gAudioBufferParams.ticksPerUpdate - i);
     }
 
     aiBufPtr = aiBufStart;
@@ -676,16 +677,16 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
     // problem
     for (i = gAudioBufferParams.ticksPerUpdate; i > 0; i--) {
         if (i == 1) {
-            printf("func_80009B64 i == 1\n");
+            //printf("func_80009B64 i == 1\n");
             chunkLen = aiBufLen;
         } else if ((aiBufLen / i) >= gAudioBufferParams.samplesPerTickMax) {
-            printf("func_80009B64 (aiBufLen / i) >= gAudioBufferParams.samplesPerTickMax\n");
+            //printf("func_80009B64 (aiBufLen / i) >= gAudioBufferParams.samplesPerTickMax\n");
             chunkLen = gAudioBufferParams.samplesPerTickMax;
         } else if (gAudioBufferParams.samplesPerTickMin >= (aiBufLen / i)) {
-            printf("func_80009B64 gAudioBufferParams.samplesPerTickMin >= (aiBufLen / i)\n");
+            //printf("func_80009B64 gAudioBufferParams.samplesPerTickMin >= (aiBufLen / i)\n");
             chunkLen = gAudioBufferParams.samplesPerTickMin;
         } else {
-            printf("func_80009B64 else\n");
+            //printf("func_80009B64 else\n");
             chunkLen = gAudioBufferParams.samplesPerTick;
         }
 
@@ -694,7 +695,7 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
                 AudioSynth_InitNextRingBuf(chunkLen, gAudioBufferParams.ticksPerUpdate - i, j);
             }
         }
-        printf("chunkLen: %d, aiBufLen: %d \n", chunkLen, aiBufLen);
+        //printf("chunkLen: %d, aiBufLen: %d \n", chunkLen, aiBufLen);
 
         aCmdPtr =
             AudioSynth_DoOneAudioUpdate((s16*) aiBufPtr, chunkLen, aCmdPtr, gAudioBufferParams.ticksPerUpdate - i);
@@ -866,7 +867,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
     s32 padE8;
     s32 padE4;
     s32 padE0;
-    s32 skipBytes;
+    s32 skipBytes = 0;
     s32 padD8;
     s32 padD4;
     s32 padD0;

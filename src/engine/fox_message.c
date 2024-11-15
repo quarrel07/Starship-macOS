@@ -7,7 +7,7 @@ u16* Message_PtrFromId(u16 msgId) {
 
     while (lookup->msgId != -1) {
         if (lookup->msgId == msgId) {
-            return lookup->path;
+            return ResourceGetDataByName(lookup->path);
         }
         lookup++;
     }

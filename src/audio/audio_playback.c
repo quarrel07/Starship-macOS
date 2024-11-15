@@ -169,9 +169,10 @@ TunedSample* Audio_GetInstrumentTunedSample(Instrument* instrument, s32 arg1) {
 Instrument* Audio_GetInstrument(s32 fontId, s32 instId) {
     Instrument* instrument;
 
-    // LTODO: Remove this
+	//fontId = 7;
+
     if(gSoundFontList[fontId].instruments == NULL){
-        gSoundFontList[fontId] = *Audio_LoadFont(gSoundFontTable->entries[fontId]);
+        gSoundFontList[fontId] = *Audio_LoadFont(gSoundFontTable->entries[fontId]);	
     }
 
     if ((gFontLoadStatus[fontId] < 2) != 0) {
