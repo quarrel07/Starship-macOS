@@ -558,6 +558,8 @@ void AudioHeap_ClearCurrentAiBuffer(void) {
     }
 }
 
+extern s16 audio_buffer[];
+
 s32 AudioHeap_ResetStep(void) {
     s32 i;
     s32 j;
@@ -597,11 +599,7 @@ s32 AudioHeap_ResetStep(void) {
                 gResetFadeoutFramesLeft--;
                 AudioHeap_UpdateReverbs();
             } else {
-                for (i = 0; i < 3; i++) {
-                    for (j = 0; j < AIBUF_LEN; j++) {
-                        gAiBuffers[i][j] = 0;
-                    }
-                }
+                memset(audio_buffer, 0, (1056 * 2 * 3) * 2 * 2);
                 gResetFadeoutFramesLeft = 4 / sp24;
                 gAudioResetStep--;
                 break; // needed to match
@@ -619,12 +617,7 @@ s32 AudioHeap_ResetStep(void) {
         case 1:
             AudioHeap_Init();
             gAudioResetStep = 0;
-            for (i = 0; i < 3; i++) {
-                gAiBuffLengths[i] = gAudioBufferParams.maxAiBufferLength;
-                for (j = 0; j < AIBUF_LEN; j++) {
-                    gAiBuffers[i][j] = 0;
-                }
-            }
+            memset(audio_buffer, 0, (1056 * 2 * 3) * 2 * 2);
             break;
     }
     if (gAudioResetStep < 3) {

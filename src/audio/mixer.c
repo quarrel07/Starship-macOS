@@ -16,10 +16,9 @@
 #define ROUND_DOWN_16(v) ((v) & ~0xf)
 
 //#define DMEM_BUF_SIZE (0x1000 - 0x0330 - 0x10 - 0x40)
-//#define DMEM_BUF_SIZE (0x1000 - 0x450 - 0x40)
-#define DMEM_BUF_SIZE 0xC90
-#define BUF_U8(a) (rspa.buf.as_u8 + ((a)-0x450))
-#define BUF_S16(a) (rspa.buf.as_s16 + ((a)-0x450) / sizeof(int16_t))
+#define DMEM_BUF_SIZE 0xC80
+#define BUF_U8(a) (rspa.buf.as_u8 + ((a)-0x0330))
+#define BUF_S16(a) (rspa.buf.as_s16 + ((a)-0x0330) / sizeof(int16_t))
 
 static struct {
     uint16_t in;
@@ -133,7 +132,7 @@ void aInterleaveImpl(uint16_t dest, uint16_t left, uint16_t right, uint16_t c) {
         return;
     }
 
-    int count = ROUND_UP_32(rspa.nbytes) >> 3;
+    int count = ROUND_UP_16(rspa.nbytes) >> 2;
 
     int16_t *l = BUF_S16(left);
     int16_t *r = BUF_S16(right);
