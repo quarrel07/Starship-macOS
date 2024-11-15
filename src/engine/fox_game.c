@@ -630,16 +630,16 @@ void Game_Update(void) {
     }
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
-    Graphics_DisplaySmallText(10, 180, 1.0f, 1.0f, "SAM_HIGH:");
-    Graphics_DisplaySmallNumber(90, 180, samples_high + audBuffer);
-    Graphics_DisplaySmallText(10, 190, 1.0f, 1.0f, "SAM_LOW:");
-    Graphics_DisplaySmallNumber(90, 190, samples_low + audBuffer);
-    Graphics_DisplaySmallText(10, 200, 1.0f, 1.0f, "AUDIOBUF:");
-    Graphics_DisplaySmallNumber(90, 200, audBuffer);
-    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "AUDIOSPEC:");
-    Graphics_DisplaySmallNumber(90, 210, gAudioSpecId);
-    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TICKS:");
-    Graphics_DisplaySmallNumber(90, 220, gAudioBufferParams.ticksPerUpdate);
+    // Graphics_DisplaySmallText(10, 180, 1.0f, 1.0f, "SAM_HIGH:");
+    // Graphics_DisplaySmallNumber(90, 180, samples_high + audBuffer);
+    // Graphics_DisplaySmallText(10, 190, 1.0f, 1.0f, "SAM_LOW:");
+    // Graphics_DisplaySmallNumber(90, 190, samples_low + audBuffer);
+    // Graphics_DisplaySmallText(10, 200, 1.0f, 1.0f, "AUDIOBUF:");
+    // Graphics_DisplaySmallNumber(90, 200, audBuffer);
+    // Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "AUDIOSPEC:");
+    // Graphics_DisplaySmallNumber(90, 210, gAudioSpecId);
+    // Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TICKS:");
+    // Graphics_DisplaySmallNumber(90, 220, gAudioBufferParams.ticksPerUpdate);
     if (gControllerPress[0].button & L_JPAD) {
       //  audBuffer-=1;
     } else if (gControllerPress[0].button & R_JPAD) {
