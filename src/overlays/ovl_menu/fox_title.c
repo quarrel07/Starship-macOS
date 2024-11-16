@@ -51,7 +51,7 @@ s32 gTotalHitsRanking[10];
 u8 sRankNameEntry[10][4];
 UNK_TYPE D_menu_801B8270[3];
 bool gGoToTitle;
-bool sLevelStartState;
+u8 sLevelStartState;
 s32 sWipeHeight;
 s32 sTitleRankMaxRecords;
 f32 D_menu_801B828C;
@@ -185,7 +185,7 @@ void Title_Setup(void) {
     D_menu_801B833C = 0;
 
     sSceneState = 0;
-    sLevelStartState = false;
+    sLevelStartState = 0;
 
     sTitleTextPrimColTarget = 255.0f;
     sTitleTextPrimCol = 255.0f;
@@ -3321,7 +3321,7 @@ void Title_NextState_TitleScreen(void) {
                 (START_BUTTON | A_BUTTON | B_BUTTON | D_CBUTTONS | L_CBUTTONS | U_CBUTTONS | R_CBUTTONS)) {
                 AUDIO_PLAY_SFX(NA_SE_DECIDE, gDefaultSfxSource, 4);
                 sWipeHeight = 0;
-                sLevelStartState = true;
+                sLevelStartState = 1;
                 gControllerLock = 30;
             }
             break;
@@ -3338,7 +3338,7 @@ void Title_NextState_TitleScreen(void) {
                 sCutsceneState = TITLE_SCREEN;
                 gControllerLock = 30;
                 sWipeHeight = 0;
-                sLevelStartState = false;
+                sLevelStartState = 0;
             }
             break;
     }
@@ -3355,7 +3355,7 @@ void Title_NextState_OptionMenu(void) {
                     SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 30);
                     SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_FANFARE, 30);
                     sWipeHeight = 0;
-                    sLevelStartState = true;
+                    sLevelStartState = 1;
                 }
                 break;
 
@@ -3368,7 +3368,7 @@ void Title_NextState_OptionMenu(void) {
                     gOptionMenuStatus = OPTION_WAIT;
                     gDrawMode = DRAW_NONE;
                     gStarCount = 0;
-                    sLevelStartState = false;
+                    sLevelStartState = 0;
                     sWipeHeight = 0;
                     gControllerLock = 3;
                 }

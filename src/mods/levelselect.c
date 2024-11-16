@@ -3,7 +3,7 @@
 
 extern PlanetId sPlanetList[15];
 extern PlanetId sCurrentPlanetId;
-extern bool sLevelStartState;
+extern u8 sLevelStartState;
 extern s32 D_menu_801CD968;
 extern s32 sMapState;
 extern s32 sMapSubState;
