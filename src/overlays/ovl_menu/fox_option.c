@@ -1437,14 +1437,17 @@ void Option_Sound_SetVolumeLevels(void) {
         switch (D_menu_801B9288 - 1) {
             case 0:
                 gSaveFile.save.data.musicVolume = var_v1;
+                CVarSetFloat("gMainMusicVolume", var_v1 / 100.0f);
                 break;
 
             case 1:
                 gSaveFile.save.data.voiceVolume = var_v1;
+                CVarSetFloat("gVoiceVolume", var_v1 / 100.0f);
                 break;
 
             case 2:
                 gSaveFile.save.data.sfxVolume = var_v1;
+                CVarSetFloat("gSFXMusicVolume", var_v1 / 100.0f);
                 break;
         }
         Audio_SetVolume(D_menu_801B924C, var_v1);

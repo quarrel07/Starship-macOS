@@ -447,6 +447,9 @@ void Game_Update(void) {
 #ifdef MODS_BOOT_STATE
                 gNextGameState = MODS_BOOT_STATE;
 #endif
+                CVarSetFloat("gMainMusicVolume", gSaveFile.save.data.musicVolume / 100.0f);
+                CVarSetFloat("gVoiceVolume", gSaveFile.save.data.voiceVolume / 100.0f);
+                CVarSetFloat("gSFXMusicVolume", gSaveFile.save.data.sfxVolume / 100.0f);
                 for (i = 0; i < 4; i++) {
                     gBoostButton[i] = L_CBUTTONS;
                     gBrakeButton[i] = D_CBUTTONS;
