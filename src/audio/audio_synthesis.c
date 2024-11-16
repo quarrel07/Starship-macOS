@@ -576,6 +576,8 @@ s32 func_8000967C(s32 length, s16* ramAddr, UnkStruct_800097A8* arg2) {
 }
 
 u8* func_800097A8(Sample* sample, s32 length, u32 flags, UnkStruct_800097A8* arg3) {
+    // @port: We don't need to do a dma call
+    return sample->sampleAddr;
     s32 pad1;
     SampleDma* pad2;
     SampleDma* sp1C;
@@ -910,7 +912,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
     s32 dmemUncompressedAddrOffset1;
     u32 sampleslenFixedPoint;
     u8* samplesToLoadAddr;
-    s32 temp;
+    uintptr_t temp;
     s32 temp2;
     unsigned int new_var2;
     u32 nEntries;
@@ -1039,7 +1041,6 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                     case 2:
                         temp = func_800097A8(bookSample, numSamplesToLoadAdj, flags,
                                              &synthState->synthesisBuffers->unk_40);
-                        if (0) {}
                         aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(temp), 0x5F0, (numSamplesToLoadAdj + 0x10) * 2);
                         flags = 0;
                         skipBytes = 0;
