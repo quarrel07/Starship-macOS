@@ -656,11 +656,6 @@ void AudioHeap_Init(void) {
     gNumNotes = spec->numNotes;
     D_8014C1B0 = spec->unk_14;
 
-	// STARTODO: The game was originally designed to use either 1 or 2 buffers depending on the scenario
-	// Using 1 buffer has caused issues, so we hardcoded it to 2.
-	// To prevent sequences from going too fast, we added a * 2 here.
-	// This is not an optimal fix but it works. We may wish to find something better in the future.
-    // gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
     gMaxTempo = (u16) ((gAudioBufferParams.ticksPerUpdate * 2880000.0f / gSeqTicksPerBeat) / gMaxTempoTvTypeFactors);
 
     gAudioBufferParams.numBuffers = spec->numBuffers;
