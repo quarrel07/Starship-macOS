@@ -309,6 +309,14 @@ void Spawner_Playground(void) {
     gLaserStrength[0] = 2;
     gBombCount[0] = 9;
     gLifeCount[0] = 9;
+
+#if 0
+    if (gControllerPress[0].button & L_JPAD) {
+        gArwingSpeed-=50;
+    } else if (gControllerPress[0].button & R_JPAD) {
+        gArwingSpeed+=50;
+    }
+#endif
 }
 
 void Spawner(void) {
