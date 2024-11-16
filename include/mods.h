@@ -96,6 +96,8 @@ void RamMod_Update(void);
 void Spawner(void);
 #endif
 
+#define DEBUG_SKIP_BRIEFING 1
+
 /*
 
 // @port: Tag the transform.
