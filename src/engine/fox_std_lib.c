@@ -33,7 +33,7 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
     s32 v;
 
     // LTODO: figure out why this function crashes in other levels
-    if ((gCurrentLevel != LEVEL_SOLAR)) {
+    if ((gCurrentLevel != LEVEL_SOLAR)&& (gCurrentLevel != LEVEL_ZONESS)) {
         return;
     }
     // LTodo: [HD-Textures] This is broken
@@ -90,7 +90,7 @@ void Lib_Texture_Mottle(u16* dst, u16* src, u8 mode) {
 
     // LTODO: figure out why this function crashes in other levels
     // CAUSES CORRUPTION!!!!
-    if ((gCurrentLevel != LEVEL_SOLAR) || (gGameState == GSTATE_MAP)) {
+    if ((gCurrentLevel != LEVEL_SOLAR) && (gCurrentLevel != LEVEL_ZONESS) || (gGameState == GSTATE_MAP)) {
         return;
     }
 
