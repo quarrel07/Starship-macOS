@@ -77,7 +77,7 @@ extern u8* gAssetMapPlanetTextures[9];
 
 extern s32 gTotalHitsRanking[];
 extern bool gGoToTitle;   // engine
-extern bool sLevelStartState;
+extern u8 sLevelStartState;
 extern s32 sWipeHeight;
 extern s32 sTitleRankMaxRecords;
 

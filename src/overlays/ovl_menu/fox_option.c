@@ -979,7 +979,7 @@ void Option_MainMenu_Update(void) {
             if (gControllerPress[gMainController].button & B_BUTTON) {
                 AUDIO_PLAY_SFX(NA_SE_ARWING_CANCEL, gDefaultSfxSource, 4);
                 sWipeHeight = 0;
-                sLevelStartState = true;
+                sLevelStartState = 1;
                 sMainMenuState = 100;
             }
             break;
@@ -1058,7 +1058,7 @@ void Option_MainMenu_Update(void) {
                 gTitleState = 0;
                 gGoToTitle = true;
                 gDrawMode = DRAW_NONE;
-                sLevelStartState = false;
+                sLevelStartState = 0;
                 sWipeHeight = 0;
                 gControllerLock = 3;
             }
