@@ -118,8 +118,11 @@ void func_80011890(Note* note, NoteAttributes* noteAttr) {
     if (velocity > 1.0f) {
         velocity = 1.0f;
     }
-    noteSub->panVolLeft = (s32) (velocity * panVolumeLeft * 4095.999f);
-    noteSub->panVolRight = (s32) (velocity * pamVolumeRight * 4095.999f);
+
+    float master_vol = CVarGetFloat("gGameMasterVolume", 1.0f);
+    noteSub->panVolLeft = (s32) (velocity * panVolumeLeft * 4095.999f) * master_vol;
+    noteSub->panVolRight = (s32) (velocity * pamVolumeRight * 4095.999f) * master_vol;
+
     noteSub->gain = noteAttr->gain;
     if (noteSub->reverb != reverb) {
         noteSub->reverb = reverb;

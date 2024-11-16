@@ -14,6 +14,7 @@
 
 extern "C" {
 #include "sys.h"
+#include <sf64audio_provisional.h>
 }
 
 namespace GameUI {
@@ -88,56 +89,62 @@ static const char* filters[3] = {
 
 void DrawSettingsMenu(){
     if(UIWidgets::BeginMenu("Settings")){
-        // if (UIWidgets::BeginMenu("Audio")) {
-        //     UIWidgets::CVarSliderFloat("Master Volume", "gGameMasterVolume", 0.0f, 1.0f, 1.0f, {
-        //         .format = "%.0f%%",
-        //         .isPercentage = true,
-        //     });
-        //     if (UIWidgets::CVarSliderFloat("Main Music Volume", "gMainMusicVolume", 0.0f, 1.0f, 1.0f, {
-        //         .format = "%.0f%%",
-        //         .isPercentage = true,
-        //     })) {
-        //         audio_set_player_volume(SEQ_PLAYER_LEVEL, CVarGetFloat("gMainMusicVolume", 1.0f));
-        //     }
-        //     if (UIWidgets::CVarSliderFloat("Sound Effects Volume", "gSFXMusicVolume", 0.0f, 1.0f, 1.0f, {
-        //         .format = "%.0f%%",
-        //         .isPercentage = true,
-        //     })) {
-        //         audio_set_player_volume(SEQ_PLAYER_SFX, CVarGetFloat("gSFXMusicVolume", 1.0f));
-        //     }
-        //     if (UIWidgets::CVarSliderFloat("Environment Volume", "gEnvironmentVolume", 0.0f, 1.0f, 1.0f, {
-        //         .format = "%.0f%%",
-        //         .isPercentage = true,
-        //     })) {
-        //         audio_set_player_volume(SEQ_PLAYER_ENV, CVarGetFloat("gEnvironmentVolume", 1.0f));
-        //     }
+        if (UIWidgets::BeginMenu("Audio")) {
+            UIWidgets::CVarSliderFloat("Master Volume", "gGameMasterVolume", 0.0f, 1.0f, 1.0f, {
+                .format = "%.0f%%",
+                .isPercentage = true,
+            });
+            if (UIWidgets::CVarSliderFloat("Main Music Volume", "gMainMusicVolume", 0.0f, 1.0f, 1.0f, {
+                .format = "%.0f%%",
+                .isPercentage = true,
+            })) {
+                float val = CVarGetFloat("gMainMusicVolume", 1.0f) * 100;
+                gSaveFile.save.data.musicVolume = val;
+                Audio_SetVolume(AUDIO_TYPE_MUSIC, val);
+            }
+            if (UIWidgets::CVarSliderFloat("Voice Volume", "gVoiceVolume", 0.0f, 1.0f, 1.0f, {
+                .format = "%.0f%%",
+                .isPercentage = true,
+            })) {
+                float val = CVarGetFloat("gVoiceVolume", 1.0f) * 100;
+                gSaveFile.save.data.voiceVolume = val;
+                Audio_SetVolume(AUDIO_TYPE_VOICE, val);
+            }
+            if (UIWidgets::CVarSliderFloat("Sound Effects Volume", "gSFXMusicVolume", 0.0f, 1.0f, 1.0f, {
+                .format = "%.0f%%",
+                .isPercentage = true,
+            })) {
+                float val = CVarGetFloat("gSFXMusicVolume", 1.0f) * 100;
+                gSaveFile.save.data.sfxVolume = val;
+                Audio_SetVolume(AUDIO_TYPE_SFX, val);
+            }
 
-        //     static std::unordered_map<Ship::AudioBackend, const char*> audioBackendNames = {
-        //             { Ship::AudioBackend::WASAPI, "Windows Audio Session API" },
-        //             { Ship::AudioBackend::SDL, "SDL" },
-        //     };
+            static std::unordered_map<Ship::AudioBackend, const char*> audioBackendNames = {
+                    { Ship::AudioBackend::WASAPI, "Windows Audio Session API" },
+                    { Ship::AudioBackend::SDL, "SDL" },
+            };
 
-        //     ImGui::Text("Audio API (Needs reload)");
-        //     auto currentAudioBackend = Ship::Context::GetInstance()->GetAudio()->GetAudioBackend();
+            ImGui::Text("Audio API (Needs reload)");
+            auto currentAudioBackend = Ship::Context::GetInstance()->GetAudio()->GetCurrentAudioBackend();
 
-        //     if (Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size() <= 1) {
-        //         UIWidgets::DisableComponent(ImGui::GetStyle().Alpha * 0.5f);
-        //     }
-        //     if (ImGui::BeginCombo("##AApi", audioBackendNames[currentAudioBackend])) {
-        //         for (uint8_t i = 0; i < Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size(); i++) {
-        //             auto backend = Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->data()[i];
-        //             if (ImGui::Selectable(audioBackendNames[backend], backend == currentAudioBackend)) {
-        //                 Ship::Context::GetInstance()->GetAudio()->SetAudioBackend(backend);
-        //             }
-        //         }
-        //         ImGui::EndCombo();
-        //     }
-        //     if (Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size() <= 1) {
-        //         UIWidgets::ReEnableComponent("");
-        //     }
+            if (Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size() <= 1) {
+                UIWidgets::DisableComponent(ImGui::GetStyle().Alpha * 0.5f);
+            }
+            if (ImGui::BeginCombo("##AApi", audioBackendNames[currentAudioBackend])) {
+                for (uint8_t i = 0; i < Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size(); i++) {
+                    auto backend = Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->data()[i];
+                    if (ImGui::Selectable(audioBackendNames[backend], backend == currentAudioBackend)) {
+                        Ship::Context::GetInstance()->GetAudio()->SetCurrentAudioBackend(backend);
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            if (Ship::Context::GetInstance()->GetAudio()->GetAvailableAudioBackends()->size() <= 1) {
+                UIWidgets::ReEnableComponent("");
+            }
 
-        //     ImGui::EndMenu();
-        // }
+            ImGui::EndMenu();
+        }
 
         UIWidgets::Spacer(0);
 
