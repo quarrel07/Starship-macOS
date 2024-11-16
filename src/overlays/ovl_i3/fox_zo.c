@@ -3212,10 +3212,10 @@ void Zoness_ZoSarumarine_Update(ZoSarumarine* this) {
 }
 
 void Zoness_801986FC(ZoSarumarine* this, s32 arg1, f32 xOff, f32 yOff, f32 zOff, f32 yRot) {
-    ZoBall* actor245;
+    ZoBall* actor245 = NULL;
     Vec3f src = { 0.0f, 0.0f, 50.0f };
-    Vec3f dest;
-    s32 i;
+    Vec3f dest = { 0 };
+    s32 i = 0;
 
     if ((sZoSwork[ZO_BSS_0 + arg1] == 0) && (sZoSwork[ZO_BSS_11 + arg1] != 0)) {
         sZoSwork[ZO_BSS_0 + arg1] = 70;
@@ -3268,8 +3268,18 @@ void Zoness_801986FC(ZoSarumarine* this, s32 arg1, f32 xOff, f32 yOff, f32 zOff,
         }
     }
 
-    if (i < ARRAY_COUNT(gActors)) {
+    if (i >= ARRAY_COUNT(gActors)) {
+        actor245 = NULL;
+    }
+
+    if (actor245 != NULL) {
         actor245->obj.status = OBJ_FREE;
+    }
+
+    if (i < ARRAY_COUNT(gActors)) {
+        if (actor245 != NULL) {
+            actor245->obj.status = OBJ_FREE;
+        }
     }
 }
 
