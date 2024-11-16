@@ -302,7 +302,7 @@ void Spawner_ObjKill(void) {
 }
 
 // Use this function to add code that eases your documentation work!
-Spawner_Playground(void) {
+void Spawner_Playground(void) {
     Player* player = &gPlayer[0];
 
     player->mercyTimer = 100;
