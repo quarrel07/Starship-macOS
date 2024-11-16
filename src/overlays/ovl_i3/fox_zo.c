@@ -3965,6 +3965,9 @@ void Zoness_ZoSpikeBall_Draw(ZoSpikeBall* this) {
 
         sp94 = (180.0f / var_s4) + 1.0f;
 
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("ZoSpikeBall", 0);
+
         for (i = 0; i < var_s4; i++) {
             temp_fs1_2 = SIN_DEG(i * sp94) * this->fwork[5];
             temp_fs0_4 = COS_DEG(i * sp94) * this->fwork[5] * -0.25f;
@@ -3982,6 +3985,8 @@ void Zoness_ZoSpikeBall_Draw(ZoSpikeBall* this) {
             Matrix_Pop(&gGfxMatrix);
             var_fs5 += 90.0f;
         }
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
     Matrix_Pop(&gGfxMatrix);
     Matrix_Push(&gGfxMatrix);
@@ -4784,6 +4789,7 @@ void Zoness_LevelComplete(Player* player) {
             gCsCamAtX = player->cam.at.x;
             gCsCamAtY = player->cam.at.y;
             gCsCamAtZ = player->cam.at.z;
+
             for (i = 10; i < ARRAY_COUNT(gActors); i++) {
                 if (gActors[i].animFrame == 0) {
                     Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
@@ -4845,6 +4851,7 @@ void Zoness_LevelComplete(Player* player) {
 
         case 2:
             gPathTexScroll += 60.0f;
+
             if (player->csTimer == 0) {
                 player->pos.x = 0.0f;
                 player->pos.y = 200.0f;
