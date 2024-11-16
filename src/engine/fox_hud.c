@@ -222,9 +222,9 @@ void TextureRect_CI8_2(Gfx** gfxP, u8* texture, u16* palette, u32 tWidth, u32 tH
     gDPLoadTLUT((*gfxP)++, 256, 256, palette);
     gDPLoadTextureBlock((*gfxP)++, texture, G_IM_FMT_CI, G_IM_SIZ_8b, tWidth, tHeight, 0, G_TX_NOMIRROR, G_TX_NOMIRROR,
                         G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-    gSPTextureRectangle((*gfxP)++, (xPos * 4.0f), (yPos * 4.0f), ((xPos + (xWidth * xScale)) * 4.0f),
-                        ((yPos + (yWidth * yScale)) * 4.0f), G_TX_RENDERTILE, 0 * 32, 0 * 32,
-                        (s32) (1 / xScale * (32 * 32)), (s32) (1 / yScale * (32 * 32)));
+    gSPWideTextureRectangle((*gfxP)++, (xPos * 4.0f), (yPos * 4.0f), ((xPos + (xWidth * xScale)) * 4.0f),
+                            ((yPos + (yWidth * yScale)) * 4.0f), G_TX_RENDERTILE, 0 * 32, 0 * 32,
+                            (s32) (1 / xScale * (32 * 32)), (s32) (1 / yScale * (32 * 32)));
 }
 
 void HUD_MsgWindowBg_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
@@ -587,8 +587,7 @@ void HUD_VenomTitleCard_Draw(void) {
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
         Lib_TextureRect_IA8(&gMasterDisp, sVenomTitleCardDLs[i], sVenomTitleCardWidths[i], 19, sVenomTitleCardWidths[i],
-                            sVenomTitleCardxPos[i] - 28.0f, 1.0f,
-                         1.0f);
+                            sVenomTitleCardxPos[i] - 28.0f, 1.0f, 1.0f);
     }
 }
 
@@ -666,8 +665,7 @@ void HUD_TitleCard_Draw(f32 x, f32 y) {
     }
 
     Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[levelIdx].titleCardTex, sLevelTitleCard[levelIdx].titleCardWidth,
-                        sLevelTitleCard[levelIdx].titleCardHeight, x2, y2, 1.0f,
-                     1.0f);
+                        sLevelTitleCard[levelIdx].titleCardHeight, x2, y2, 1.0f, 1.0f);
 
     if ((gSavedObjectLoadIndex == 0) && (gAllRangeCheckpoint == 0) && (gCurrentLevel != LEVEL_VENOM_ANDROSS) &&
         (gCurrentLevel != LEVEL_TRAINING)) {
@@ -904,6 +902,8 @@ void HUD_LivesCount2_Draw(f32 x, f32 y, s32 number) {
     s32 var_v1;
     s32 i;
     s32 form;
+
+    x = OTRGetDimensionFromRightEdge(x);
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_78);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
@@ -1464,7 +1464,9 @@ void HUD_PauseScreen_Update(void) {
                 sPauseScreenTimer[0] = 0;
 
             case 3:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - 1), SCREEN_HEIGHT - 1, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
+                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - 1), SCREEN_HEIGHT - 1, 0, 0, 0,
+                                       255);
 
                 gFillScreenAlphaTarget = 0;
 
@@ -1513,7 +1515,9 @@ void HUD_PauseScreen_Update(void) {
                 break;
 
             case 4:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - 1), SCREEN_HEIGHT - 1, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
+                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - 1), SCREEN_HEIGHT - 1, 0, 0, 0,
+                                       255);
                 if (sPauseScreenTimer[0] < 140) {
                     break;
                 }
@@ -1531,7 +1535,9 @@ void HUD_PauseScreen_Update(void) {
                 }
 
             case 5:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - 1), SCREEN_HEIGHT - 1, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
+                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - 1), SCREEN_HEIGHT - 1, 0, 0, 0,
+                                       255);
 
                 for (i = 0; i < 6; i++) {
                     if (gPrevPlanetTeamShields[i] == -1) {
@@ -1628,8 +1634,8 @@ void HUD_PauseScreen_Update(void) {
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76);
                 gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-                Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[j].titleCardTex, sLevelTitleCard[j].titleCardWidth, sLevelTitleCard[j].titleCardHeight, x2,
-                                 y2 + i, 1.0f, 1.0f);
+                Lib_TextureRect_IA8(&gMasterDisp, sLevelTitleCard[j].titleCardTex, sLevelTitleCard[j].titleCardWidth,
+                                    sLevelTitleCard[j].titleCardHeight, x2, y2 + i, 1.0f, 1.0f);
 
                 HUD_MsgWindowBg_Draw2(x1 - 10.0f, y0 - 4.0f, 4.7f, 2.8f);
 
@@ -2365,6 +2371,9 @@ void HUD_PlayerShieldGauge_Update(void) {
 }
 
 void HUD_PlayerShieldGauge_Draw(f32 x, f32 y) {
+    // gEXSetRectAlign(gMasterDisp++, G_EX_ORIGIN_LEFT, G_EX_ORIGIN_LEFT, 0, 0, 0, 0);
+
+    x = OTRGetDimensionFromLeftEdge(x);
     RCP_SetupDL(&gMasterDisp, SETUPDL_75);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
     HUD_ShieldGaugeBars_Draw(x + 8.0f, y + 2.0f, D_801617A8, 1.0f, D_801617AC);
@@ -2717,6 +2726,7 @@ void HUD_VsModePortraitTex_Draw(f32 xPos, f32 yPos, f32 scale, s32 idx) {
     Lib_TextureRect_RGBA16(&gMasterDisp, sVsModeFaceDL[idx], 44, 44, xPos, yPos, scale, scale);
 }
 
+// LTODO: Align these
 void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
     f32 D_800D1EF8[] = { 0.0f, 0.0f, -9.0f, 9.0f, 10.0f, 10.0f, 10.0f, 10.0f, 0.0f, 0.0f, -8.0f, 8.0f };
     f32 D_800D1F28[] = { -7.0f, 7.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 8.0f, -8.0f, 0.0f, 0.0f };
@@ -2866,7 +2876,8 @@ void HUD_VS_ShieldGaugeFrame_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
 
     // LTodo: [HD-Texture] Is broken
     u8* texture = (u8*) LOAD_ASSET(aVsShieldGaugeFrameTex);
-    Lib_TextureRect_IA8(&gMasterDisp, texture + 2 * ((640 * i) / 2), 80, 8, xPos, (8 * i * yScale) + yPos, xScale, yScale);
+    Lib_TextureRect_IA8(&gMasterDisp, texture + 2 * ((640 * i) / 2), 80, 8, xPos, (8 * i * yScale) + yPos, xScale,
+                        yScale);
 }
 
 void HUD_VS_ShieldGaugeTex_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale, f32 width) {
@@ -2927,11 +2938,26 @@ void HUD_BoostGauge_Draw(f32 xPos, f32 yPos) {
         sp60 = 1.0f;
         playerNum = gPlayerNum;
         sp68 = 24.0f;
+        switch (gPlayerNum) {
+            case 1:
+                xPos = OTRGetDimensionFromLeftEdge(xPos);
+                break;
+            case 2:
+                xPos = OTRGetDimensionFromLeftEdge(xPos);
+                break;
+            case 3:
+                xPos = OTRGetDimensionFromRightEdge(xPos);
+                break;
+            case 4:
+                xPos = OTRGetDimensionFromRightEdge(xPos);
+                break;
+        }
     } else {
         temp = 2.0f;
         sp60 = 2.0f;
         sp68 = 40.0f;
         playerNum = 4; // index for Single Player
+        xPos = OTRGetDimensionFromRightEdge(xPos);
         boostGaugeXpos[playerNum] = xPos;
         boostGaugeYpos[playerNum] = yPos;
     }
@@ -3077,12 +3103,16 @@ void HUD_DrawBossHealth(void) {
         temp4 = sp3C + 6.0f;
         temp5 = temp1 + 10.0f;
 
+        temp2 = OTRGetDimensionFromLeftEdge(temp2);
+        temp4 = OTRGetDimensionFromLeftEdge(temp4);
+
         RCP_SetupDL(&gMasterDisp, SETUPDL_78);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
         Lib_TextureRect_CI4(&gMasterDisp, D_1011A40, D_1011AB0, 32, 7, temp2, temp3, 1.0f, 1.0f);
-
+        f32 border = sp3C;
+        border = OTRGetDimensionFromLeftEdge(border);
         RCP_SetupDL(&gMasterDisp, SETUPDL_76);
-        Lib_TextureRect_IA8(&gMasterDisp, D_1002040, 40, 12, sp3C, temp1, 1.0f, 1.0f);
+        Lib_TextureRect_IA8(&gMasterDisp, D_1002040, 40, 12, border, temp1, 1.0f, 1.0f);
 
         if (sp3C >= 25.0f) {
             Math_SmoothStepToF(&D_801616C4, 0.88f, 0.3f, 0.2f, 0.1f);
@@ -3113,8 +3143,10 @@ void HUD_DrawBossHealth(void) {
         if (D_801616C4 >= 0.88f) {
             temp6 = sp3C + 8.0f;
             temp7 = 101.0f - ((2200.0f / 69.0f) * D_801616C8) + temp1;
+            temp6 = OTRGetDimensionFromLeftEdge(temp6);
             if (D_801616C8 > 0.0f) {
-                Lib_TextureRect_RGBA16(&gMasterDisp, D_Tex_800D99F8, 32, 32, temp6, temp7, 0.2f, D_801616C8);
+                // LTODO: FIX BOSS BAR
+                Lib_TextureRect_RGBA16(&gMasterDisp, D_Tex_800D99F8, 32, 32, temp6 + 0.5f, temp7, 0.2f, D_801616C8);
             }
         }
     } else {
@@ -3186,6 +3218,7 @@ void HUD_DrawCountdown(s32* countdown, f32 scale) {
     }
 }
 
+// LTODO: Align these
 void HUD_Radar(void) {
     if (gVersusMode) {
         HUD_VS_DrawHUD();
@@ -3291,7 +3324,7 @@ void HUD_Hitpoints_Update(f32 xPos, f32 yPos) {
         }
     }
     RCP_SetupDL(&gMasterDisp, SETUPDL_76);
-    gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, 255);    
+    gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, 255);
     HUD_Hitpoints_Draw(xPos, yPos);
 }
 
@@ -3305,6 +3338,8 @@ void HUD_BombCounter_Draw(f32 x, f32 y) {
     s32 sp68;
     f32 temp_fv0;
     f32 temp;
+
+    x = OTRGetDimensionFromRightEdge(x);
 
     // Max bombs
     if (gBombCount[gPlayerNum] > 9) {
@@ -5400,6 +5435,8 @@ void HUD_Hitpoints_Draw(f32 x, f32 y) {
     f32 x1;
     f32 y1;
     f32 xScale;
+
+    x = OTRGetDimensionFromLeftEdge(x);
 
     if (gHitCount > gDisplayedHitCount) {
         temp3 = gDisplayedHitCount + 1;
