@@ -7,6 +7,9 @@
 #include "assets/ast_sector_z.h"
 #include "port/interpolation/FrameInterpolation.h"
 
+// f32 path1 = 0.0f;
+// f32 path2 = 0.0f;
+
 Vec3f D_display_801613B0[4];
 Vec3f D_display_801613E0[4];
 s16 gReflectY;
@@ -2068,6 +2071,7 @@ void Display_Update(void) {
 
         if (gControllerPress[0].button & L_TRIG) {
             pl->state_1C8 = PLAYERSTATE_1C8_LEVEL_COMPLETE;
+            gMissionStatus = MISSION_ACCOMPLISHED;
         }
     }
 
@@ -2102,22 +2106,15 @@ void Display_Update(void) {
         gLaserStrength[0] = 2;
     }
     Hit64_Main();
-    // background testing
+    // ground testing
 #if 0
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
-    if (gTestVarF > 0.0f) {
-        Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TEST:");
-    } else {
-        Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TESTNEG:");
-    }
-    Graphics_DisplaySmallNumber(80, 220, (int) ABS(gTestVarF));
-
-    if (gControllerPress[0].button & Z_TRIG) {
-        gTestVarF -= 10;
-    } else if (gControllerPress[0].button & R_TRIG) {
-        gTestVarF += 10;
-    }
-
+    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "PATH1:");
+    Graphics_DisplaySmallNumber(60, 210, (int) ABS(path1));
+    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "PATH2:");
+    Graphics_DisplaySmallNumber(60, 220, (int) ABS(path2));
+    if (path1 < 0.0f) Graphics_DisplaySmallText(110, 210, 1.0f, 1.0f, "NEG:");
+    if (path2 < 0.0f) Graphics_DisplaySmallText(110, 220, 1.0f, 1.0f, "NEG:");
 #endif
 }
