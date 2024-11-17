@@ -406,7 +406,7 @@ extern f32 gTestVarF;
 // TODO: use SCREEN_WIDTH and _HEIGHT
 
 static f32 bgPrevPosX = 0.0f;
-
+static u8 skipInterpolation;
 void Background_DrawBackdrop(void) {
     f32 sp12C;
     f32 sp13C;
@@ -460,8 +460,8 @@ void Background_DrawBackdrop(void) {
                     }
 
                     Matrix_SetGfxMtx(&gMasterDisp);
-                    
-                    u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
+
+                    skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                     // Render the textures across the screen (left to right)
                     for (int i = 0; i < 6; i++) {
@@ -524,18 +524,7 @@ void Background_DrawBackdrop(void) {
                         }
                     }
 
-                    u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
-
-                    if (skipInterpolation) {
-                        // @port Skip interpolation
-                        FrameInterpolation_ShouldInterpolateFrame(false);
-                    } else {
-                        // @port: Tag the transform.
-                        FrameInterpolation_RecordOpenChild("Backdrop", 0);
-                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
-                    }
-
-                    // gTestVarF = sp13C;
+                    skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                     // Apply camera roll and translate matrix to the starting position (far left)
                     Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
@@ -584,7 +573,7 @@ void Background_DrawBackdrop(void) {
                         sp13C =
                             Math_ModF(Math_RadToDeg(gPlayer[gPlayerNum].camYaw) * (-7280.0f / 360.0f) * 5.0f, 7280.0f);
 
-                        u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
+                        skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                         if (skipInterpolation) {
                             // @port Skip interpolation
@@ -734,9 +723,13 @@ void Background_DrawBackdrop(void) {
 
                     f32 corneriaCamYawDeg = Math_RadToDeg(gPlayer[0].camYaw);
 
-                    if (corneriaCamYawDeg < 180.0f) {
-                        sp13C = -(7280.0f - sp13C);
+                    if (gLevelMode == LEVELMODE_ON_RAILS) {
+                        if (corneriaCamYawDeg < 180.0f) {
+                            sp13C = -(7280.0f - sp13C);
+                        }
                     }
+
+                    skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                     RCP_SetupDL_17();
                     Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
@@ -753,6 +746,14 @@ void Background_DrawBackdrop(void) {
 
                     // Render the textures across a wider range to cover the screen
                     for (int i = 0; i < 6; i++) {
+                            if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port: Tag the transform.
+                            FrameInterpolation_RecordOpenChild("Backdrop", i);
+                            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        }
 
                         if (gCurrentLevel == LEVEL_TITANIA) {
                             gSPDisplayList(gMasterDisp++, D_TI_6000A80);
@@ -768,7 +769,16 @@ void Background_DrawBackdrop(void) {
                         Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
 
                         Matrix_SetGfxMtx(&gMasterDisp);
+
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port Pop the transform id.
+                            FrameInterpolation_RecordCloseChild();
+                        }
                     }
+                    bgPrevPosX = sp13C;
                     break;
             }
             break;
