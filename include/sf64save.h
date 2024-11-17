@@ -63,8 +63,8 @@ typedef struct {
 s32 Save_Write(void);
 s32 Save_Read(void);
 
-void Save_ReadData(void);
-void Save_WriteData(void);
+bool Save_ReadData(void);
+bool Save_WriteData(void);
 
 s32 Save_WriteEeprom(SaveFile*);
 s32 Save_ReadEeprom(SaveFile*);

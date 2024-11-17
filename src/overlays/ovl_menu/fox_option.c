@@ -1875,8 +1875,12 @@ void Option_Data_Update(void) {
 
                         if (temp_fv0 == 0.0f) {
                             D_menu_801B91CC = 3;
-
+                        #ifdef AVOID_UB
+                            gSaveFile.save = gDefaultSave;
+                            gSaveFile.backup = gDefaultSave;
+                        #else
                             gSaveFile = *(SaveFile*) &gDefaultSave;
+                        #endif
 
                             Save_Write();
 

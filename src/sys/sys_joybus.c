@@ -98,20 +98,12 @@ void Controller_ReadData(void) {
     osSendMesg(&gControllerMesgQueue, OS_MESG_32(SI_CONT_READ_DONE), OS_MESG_PRI_NORMAL);
 }
 
-void Save_ReadData(void) {
-    if ((gStartNMI == 0) && (Save_ReadEeprom(&gSaveIOBuffer) == 0)) {
-        osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
-        return;
-    }
-    osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
+bool Save_ReadData(void) {
+    return Save_ReadEeprom(&gSaveIOBuffer) == 0;
 }
 
-void Save_WriteData(void) {
-    if ((gStartNMI == 0) && (Save_WriteEeprom(&gSaveIOBuffer) == 0)) {
-        osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_SUCCESS), OS_MESG_PRI_NORMAL);
-        return;
-    }
-    osSendMesg(&gSaveMesgQueue, OS_MESG_32(SI_SAVE_FAILED), OS_MESG_PRI_NORMAL);
+bool Save_WriteData(void) {
+    return Save_WriteEeprom(&gSaveIOBuffer) == 0;
 }
 
 void Controller_Rumble(void) {
