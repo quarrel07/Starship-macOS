@@ -2621,6 +2621,11 @@ void Katina_EnemyDraw(ActorAllRange* this) {
         }
     }
 
+    // @port: never use low poly
+    if (CVarGetInteger("gDisableLOD", 0) == 1) {
+        this->iwork[KA_ACTOR_LOW_POLY] = false;
+    }
+
     if ((this->iwork[KA_ACTOR_IWORK_8] != 0) && (this->aiType < AI360_GREAT_FOX)) {
         angle = SIN_DEG(this->iwork[KA_ACTOR_IWORK_8] * 400.0f) * this->iwork[KA_ACTOR_IWORK_8];
         Matrix_RotateY(gGfxMatrix, M_DTOR * angle, MTXF_APPLY);
