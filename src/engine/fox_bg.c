@@ -404,6 +404,9 @@ void func_bg_8003E1E0(void) {
 extern f32 gTestVarF;
 #endif
 // TODO: use SCREEN_WIDTH and _HEIGHT
+
+static f32 bgPrevPosX = 0.0f;
+
 void Background_DrawBackdrop(void) {
     f32 sp12C;
     f32 sp13C;
@@ -457,11 +460,19 @@ void Background_DrawBackdrop(void) {
                     }
 
                     Matrix_SetGfxMtx(&gMasterDisp);
+                    
+                    u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                     // Render the textures across the screen (left to right)
                     for (int i = 0; i < 6; i++) {
-                        FrameInterpolation_RecordOpenChild("Backdrop", i);
-                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port: Tag the transform.
+                            FrameInterpolation_RecordOpenChild("Backdrop", i);
+                            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        }
 
                         switch (gCurrentLevel) {
                             case LEVEL_VERSUS:
@@ -488,9 +499,15 @@ void Background_DrawBackdrop(void) {
                         Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
 
-                        // @port Pop the transform id.
-                        FrameInterpolation_RecordCloseChild();
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port Pop the transform id.
+                            FrameInterpolation_RecordCloseChild();
+                        }
                     }
+                    bgPrevPosX = sp13C;
                     break;
 
                 case LEVEL_CORNERIA:
@@ -507,7 +524,6 @@ void Background_DrawBackdrop(void) {
                         }
                     }
 
-                    static f32 bgPrevPosX = 0.0f;
                     u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                     if (skipInterpolation) {
@@ -533,7 +549,7 @@ void Background_DrawBackdrop(void) {
                             FrameInterpolation_ShouldInterpolateFrame(false);
                         } else {
                             // @port: Tag the transform.
-                            FrameInterpolation_RecordOpenChild("Backdrop", 0);
+                            FrameInterpolation_RecordOpenChild("Backdrop", i);
                             FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                         }
 
@@ -568,7 +584,6 @@ void Background_DrawBackdrop(void) {
                         sp13C =
                             Math_ModF(Math_RadToDeg(gPlayer[gPlayerNum].camYaw) * (-7280.0f / 360.0f) * 5.0f, 7280.0f);
 
-                        static f32 bgPrevPosX = 0.0f;
                         u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
                         if (skipInterpolation) {
