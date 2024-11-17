@@ -7,6 +7,7 @@
 #include "global.h"
 #include "assets/ast_enmy_planet.h"
 #include "assets/ast_zoness.h"
+#include "port/interpolation/FrameInterpolation.h"
 
 typedef struct {
     f32 id;
