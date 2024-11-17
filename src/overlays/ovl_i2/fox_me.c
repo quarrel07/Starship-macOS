@@ -1670,6 +1670,7 @@ void Meteo_MeCrusher_Draw(MeCrusher* this) {
     gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
 
     for (i = 0; i < 6; i++) {
+        FrameInterpolation_RecordOpenChild("MeCrusher_1", i);
         if ((this->fwork[i + 3] != 0) && (this->fwork[11] == 0.0f)) {
             var_fs1 = 2.0f * this->fwork[3 + i];
             Matrix_Push(&gGfxMatrix);
@@ -1713,9 +1714,11 @@ void Meteo_MeCrusher_Draw(MeCrusher* this) {
             }
             Matrix_Pop(&gGfxMatrix);
         }
+        FrameInterpolation_RecordCloseChild();
     }
 
     for (i = 0; i < 7; i++) {
+        FrameInterpolation_RecordOpenChild("MeCrusher_2", i);
         if (this->swork[2 + i] != 0) {
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, this->swork[19], 255);
 
@@ -1756,11 +1759,13 @@ void Meteo_MeCrusher_Draw(MeCrusher* this) {
             }
             Matrix_Pop(&gGfxMatrix);
         }
+        FrameInterpolation_RecordCloseChild();
     }
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 160, 255, 160, 128);
 
     for (i = 0; i < 4; i++) {
+        FrameInterpolation_RecordOpenChild("MeCrusher_3", i);
         if (this->fwork[11] != 0) {
             var_fs1 = this->fwork[11];
             if (this->fwork[11] > 15.0f) {
@@ -1813,9 +1818,11 @@ void Meteo_MeCrusher_Draw(MeCrusher* this) {
             gSPDisplayList(gMasterDisp++, D_102F5E0);
             Matrix_Pop(&gGfxMatrix);
         }
+        FrameInterpolation_RecordCloseChild();
     }
 
     if (this->fwork[11] > 15.0f) {
+        FrameInterpolation_RecordOpenChild("MeCrusher_3", 100);
         var_fs1 = this->fwork[11] - 15.0f;
         gDPSetPrimColor(gMasterDisp++, 0, 0, 160, 255, 160, 255);
         Matrix_Push(&gGfxMatrix);
@@ -1828,11 +1835,13 @@ void Meteo_MeCrusher_Draw(MeCrusher* this) {
         Matrix_SetGfxMtx(&gMasterDisp);
         gSPDisplayList(gMasterDisp++, aBlueSphereDL);
         Matrix_Pop(&gGfxMatrix);
+        FrameInterpolation_RecordCloseChild();
     }
 
     if ((this->state == 9) || (this->state == 10)) {
         var_fs1 = this->fwork[15];
         for (i = 0; i < 10; i++) {
+            FrameInterpolation_RecordOpenChild("MeCrusher_4", i);
             var_fs1 += 0.3f;
             var_fs0 = var_fs1;
             if (var_fs1 <= 7.0f) {
@@ -1867,6 +1876,7 @@ void Meteo_MeCrusher_Draw(MeCrusher* this) {
                 gSPDisplayList(gMasterDisp++, D_ME_6023810);
                 Matrix_Pop(&gGfxMatrix);
             }
+            FrameInterpolation_RecordCloseChild();
         }
     }
 
