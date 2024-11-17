@@ -485,6 +485,10 @@ void DrawDebugMenu() {
             .tooltip = "Allows you to select any level from the main menu"
         });
 
+        UIWidgets::CVarCheckbox("Enable Expert Mode", "gForceExpertMode", {
+            .tooltip = "Allows you to force expert mode"
+        });
+
         UIWidgets::CVarCheckbox("SFX Jukebox", "gSfxJukebox", {
             .tooltip = "Allows you to play sound effects from the game"
         });

@@ -366,16 +366,16 @@ void Option_Setup(void) {
     bool playedExpertMode;
     s32 i;
 
-#if MODS_LEVEL_SELECT == 1
-    for (i = 0; i < ARRAY_COUNT(gSaveFile.save.data.planet); i++) {
-        gSaveFile.save.data.planet[i].expertClear = 1;
-        gSaveFile.save.data.planet[i].normalClear = 1;
-        gSaveFile.save.data.planet[i].normalMedal = 1;
-        gSaveFile.save.data.planet[i].expertMedal = 1;
-        gSaveFile.save.data.planet[i].played = 1;
+    // @port: Force expert mode: Warning this  
+    if (CVarGetInteger("gForceExpertMode", 0) == 1) {
+        for (i = 0; i < ARRAY_COUNT(gSaveFile.save.data.planet); i++) {
+            gSaveFile.save.data.planet[i].expertClear = 1;
+            gSaveFile.save.data.planet[i].normalClear = 1;
+            gSaveFile.save.data.planet[i].normalMedal = 1;
+            gSaveFile.save.data.planet[i].expertMedal = 1;
+            gSaveFile.save.data.planet[i].played = 1;
+        }
     }
-    Save_Write();
-#endif
     gVIsPerFrame = 2;
 
     sOptionCardList[OPTION_MAP].tex.texture = aMainGameCardTex;
@@ -1437,17 +1437,14 @@ void Option_Sound_SetVolumeLevels(void) {
         switch (D_menu_801B9288 - 1) {
             case 0:
                 gSaveFile.save.data.musicVolume = var_v1;
-                CVarSetFloat("gMainMusicVolume", var_v1 / 100.0f);
                 break;
 
             case 1:
                 gSaveFile.save.data.voiceVolume = var_v1;
-                CVarSetFloat("gVoiceVolume", var_v1 / 100.0f);
                 break;
 
             case 2:
                 gSaveFile.save.data.sfxVolume = var_v1;
-                CVarSetFloat("gSFXMusicVolume", var_v1 / 100.0f);
                 break;
         }
         Audio_SetVolume(D_menu_801B924C, var_v1);
