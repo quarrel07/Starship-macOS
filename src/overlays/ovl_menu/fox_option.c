@@ -366,7 +366,7 @@ void Option_Setup(void) {
     bool playedExpertMode;
     s32 i;
 
-    // @port: Force expert mode: Warning this  
+    // @port: Force expert mode: Warning this
     if (CVarGetInteger("gForceExpertMode", 0) == 1) {
         for (i = 0; i < ARRAY_COUNT(gSaveFile.save.data.planet); i++) {
             gSaveFile.save.data.planet[i].expertClear = 1;
@@ -1875,12 +1875,12 @@ void Option_Data_Update(void) {
 
                         if (temp_fv0 == 0.0f) {
                             D_menu_801B91CC = 3;
-                        #ifdef AVOID_UB
+#ifdef AVOID_UB
                             gSaveFile.save = gDefaultSave;
                             gSaveFile.backup = gDefaultSave;
-                        #else
+#else
                             gSaveFile = *(SaveFile*) &gDefaultSave;
-                        #endif
+#endif
 
                             Save_Write();
 
@@ -4570,35 +4570,20 @@ void Option_InvoiceDraw(void) {
     RCP_SetupDL(&gMasterDisp, SETUPDL_78);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_8000000, D_OPT_8000680, 128, 16, D_menu_801AF3D0[0], D_menu_801AF3F0[0],
+    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_8000000, D_OPT_8000680, 128, 26, D_menu_801AF3D0[0], D_menu_801AF3F0[0],
                         1.0f, 1.0f);
 
-    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_8000000 + 128 * 16 / 2, D_OPT_8000680, 128, 10, D_menu_801AF3D0[0],
-                        D_menu_801AF3F0[0] + 16.0f, 1.0f, 1.0f);
+    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80006A0, D_OPT_80017A0, 256, 34, D_menu_801AF3D0[1], D_menu_801AF3F0[1],
+                        1.0f, 1.0f);
 
-    for (i = 0; i < 2; i++) {
-        Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80006A0 + (256 * 16 * i) / 2, D_OPT_80017A0, 256, 16,
-                            D_menu_801AF3D0[1], D_menu_801AF3F0[1] + (16 * i), 1.0f, 1.0f);
-    }
+    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80017C0, D_OPT_80038C0, 256, 66, D_menu_801AF3D0[2], D_menu_801AF3F0[2],
+                        1.0f, 1.0f);
 
-    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80006A0 + 256 * 32 / 2, D_OPT_80017A0, 256, 2, D_menu_801AF3D0[1],
-                        D_menu_801AF3F0[1] + 32.0f, 1.0f, 1.0f);
-
-    for (i = 0; i < 4; i++) {
-        Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80017C0 + (256 * 16 * i) / 2, D_OPT_80038C0, 256, 16,
-                            D_menu_801AF3D0[2], D_menu_801AF3F0[2] + (16 * i), 1.0f, 1.0f);
-    }
-
-    Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80017C0 + 256 * 16 * 4 / 2, D_OPT_80038C0, 256, 2, D_menu_801AF3D0[2],
-                        D_menu_801AF3F0[2] + 64.0f, 1.0f, 1.0f);
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_76);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-    for (i = 0; i < 30; i++) {
-        Lib_TextureRect_RGBA16(&gMasterDisp, D_OPT_800E170 + (188 * 2 * i), 188, 2, D_menu_801AF3D0[3],
-                               D_menu_801AF3F0[3] + (2.0f * i), 1.0f, 1.0f);
-    }
+    Lib_TextureRect_RGBA16(&gMasterDisp, D_OPT_800E170, 188, 60, D_menu_801AF3D0[3], D_menu_801AF3F0[3], 1.0f, 1.0f);
 
     gDPSetPrimColor(gMasterDisp++, 0, 0, 0, 0, 0, 255);
     Graphics_DisplayLargeNumber(D_menu_801AF3D0[6] - ((HUD_CountDigits(gTotalHits) - 1) * 13), D_menu_801AF3F0[6],
@@ -4611,10 +4596,7 @@ void Option_InvoiceDraw(void) {
 
     if (D_menu_801B9090) {
         gDPSetPrimColor(gMasterDisp++, 0, 0, 120, 0, 0, 192);
-        for (i = 0; i < 3; i++) {
-            Lib_TextureRect_IA8(&gMasterDisp, D_OPT_800D1F0 + (80 * 16 * i), 80, 16, D_menu_801AF3D0[5],
-                                D_menu_801AF3F0[5] + (16.0f * i), 1.0f, 1.0f);
-        }
+        Lib_TextureRect_IA8(&gMasterDisp, D_OPT_800D1F0, 80, 48, D_menu_801AF3D0[5], D_menu_801AF3F0[5], 1.0f, 1.0f);
     }
 
     /**
