@@ -501,8 +501,22 @@ void Background_DrawBackdrop(void) {
                         Math_ModF(Math_RadToDeg(gPlayer[gPlayerNum].camYaw) * (-7280.0f / 360.0f) * 5.0f, 7280.0f);
                     f32 corneriaCamYawDeg = Math_RadToDeg(gPlayer[0].camYaw);
 
-                    if (corneriaCamYawDeg < 180.0f) {
-                        sp13C = -(7280.0f - sp13C);
+                    if (gLevelMode == LEVELMODE_ON_RAILS) {
+                        if (corneriaCamYawDeg < 180.0f) {
+                            sp13C = -(7280.0f - sp13C);
+                        }
+                    }
+
+                    static f32 bgPrevPosX = 0.0f;
+                    u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
+
+                    if (skipInterpolation) {
+                        // @port Skip interpolation
+                        FrameInterpolation_ShouldInterpolateFrame(false);
+                    } else {
+                        // @port: Tag the transform.
+                        FrameInterpolation_RecordOpenChild("Backdrop", 0);
+                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                     }
 
                     // gTestVarF = sp13C;
@@ -514,8 +528,14 @@ void Background_DrawBackdrop(void) {
 
                     // Render the textures across a wider range to cover the screen
                     for (int i = 0; i < 10; i++) {
-                        FrameInterpolation_RecordOpenChild("Backdrop", i);
-                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port: Tag the transform.
+                            FrameInterpolation_RecordOpenChild("Backdrop", 0);
+                            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        }
 
                         switch ((s32) gCurrentLevel) {
                             case LEVEL_CORNERIA:
@@ -530,9 +550,15 @@ void Background_DrawBackdrop(void) {
                         Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
 
-                        // @port Pop the transform id.
-                        FrameInterpolation_RecordCloseChild();
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port Pop the transform id.
+                            FrameInterpolation_RecordCloseChild();
+                        }
                     }
+                    bgPrevPosX = sp13C;
                     break;
                 }
 
