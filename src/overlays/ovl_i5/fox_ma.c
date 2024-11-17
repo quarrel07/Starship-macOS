@@ -3889,7 +3889,8 @@ void Macbeth_801A6984(Actor207* this) {
         spA0 = temp_fs3_2;
         sp9C = temp_fs4;
     }
-    Macbeth_Texture_Scroll2(D_MA_6012C98, 4, 8);
+    // LTODO: Heap overflow
+    // Macbeth_Texture_Scroll2(D_MA_6012C98, 4, 8);
 }
 
 void Macbeth_801A6C78(Actor207* this) {
