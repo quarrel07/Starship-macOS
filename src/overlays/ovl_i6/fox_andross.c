@@ -1334,6 +1334,9 @@ void Andross_AndBrain_Draw(AndBrain* this) {
                 Matrix_RotateZ(gGfxMatrix, (this->fwork[18] + temp) * M_DTOR, MTXF_APPLY);
                 Matrix_RotateX(gGfxMatrix, this->fwork[17] * M_DTOR, MTXF_APPLY);
                 Matrix_Push(&gGfxMatrix);
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("Andross_AndBrain_Draw", i);
+
                 Matrix_Translate(gGfxMatrix, 0.0f, -5.0f, 0.0f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 if (j == 9) {
@@ -1342,6 +1345,9 @@ void Andross_AndBrain_Draw(AndBrain* this) {
                     gSPDisplayList(gMasterDisp++, D_VE2_600C560);
                 }
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
             }
             Matrix_Pop(&gGfxMatrix);
         }
