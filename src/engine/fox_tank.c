@@ -491,7 +491,8 @@ void func_tank_80044868(Player* player) {
             func_tank_80043280(D_landmaster_3005EA8, D_TI_6009BB8, gGameFrameCount * -55.0f);
         }
         if ((gCurrentLevel == LEVEL_MACBETH) && (player->state_1C8 == PLAYERSTATE_1C8_LEVEL_COMPLETE)) {
-            func_tank_80043280(D_landmaster_3005EA8, D_Tex_800DACB8, gGameFrameCount * -55.0f);
+            // Using D_TI_6009BB8 since it's the same texture, D_Tex_800DACB8 might be imported incorrectly.
+            func_tank_80043280(D_landmaster_3005EA8, /* D_Tex_800DACB8 */ D_TI_6009BB8, gGameFrameCount * -55.0f);
         }
     }
     if (player->baseSpeed > 10.0f) {
