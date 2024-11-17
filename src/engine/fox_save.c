@@ -44,15 +44,17 @@ s32 Save_Write(void) {
     gSaveFile.save.checksum = Save_Checksum(&gSaveFile.save);
     gSaveFile.backup = gSaveFile.save;
     gSaveIOBuffer = gSaveFile;
-    Save_WriteData();
-    return 0;
+    return Save_WriteData();
 }
 
 s32 Save_Read(void) {
     OSMesg* sp24;
     s32 i;
 
-    Save_ReadData();
+    if(!Save_ReadData()){
+        return 0;
+    }
+
     gSaveFile = gSaveIOBuffer;
 
     if (gSaveFile.save.checksum == Save_Checksum(&gSaveFile.save)) {
