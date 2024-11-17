@@ -425,13 +425,13 @@ void Bolse_UpdateEventHandler(ActorEvent* this) {
                 }
                 break;
 
-            case 660:
+            case 670:
                 if (gStarWolfTeamAlive[2] != 0) {
                     Radio_PlayMessage(gMsg_ID_11120, RCID_PIGMA);
                 }
                 break;
-
-            case 550:
+            // @recomp: Fix voice line being cut out
+            case 540: // Original value: 550
                 if (gStarWolfTeamAlive[3] != 0) {
                     Radio_PlayMessage(gMsg_ID_11130, RCID_ANDREW);
                 }
