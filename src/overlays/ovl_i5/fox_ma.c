@@ -434,6 +434,10 @@ void Macbeth_Texture_RotateZ(u8* destTex, u8* srcTex, f32 angle) {
 }
 
 void Macbeth_Texture_Scroll(u8* tex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    // return;
+
+    // LTODO: this is causing corruption, overflow.
+    // Texture at D_MA_6023228 might be the culprit.
     u8* texPtr = SEGMENTED_TO_VIRTUAL(tex);
     s32 i;
     s32 j;
@@ -444,7 +448,7 @@ void Macbeth_Texture_Scroll(u8* tex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         b = texPtr[i];
         a = texPtr[i + arg1];
 
-        for (j = 1; j < arg2 -2; j += 2) {
+        for (j = 1; j < arg2; j += 2) {
             texPtr[arg1 * (j - 1) + i] = texPtr[arg1 * (j + 1) + i];
             texPtr[arg1 * j + i] = texPtr[arg1 * (j + 2) + i];
         }
@@ -452,7 +456,6 @@ void Macbeth_Texture_Scroll(u8* tex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         texPtr[((arg2 - 2) * arg1) + i] = b;
         texPtr[((arg2 - 1) * arg1) + i] = a;
     }
-    gSPInvalidateTexCache(gMasterDisp++, texPtr);
 }
 
 void Macbeth_Texture_Scroll2(u16* tex, s32 arg1, s32 arg2) {
@@ -558,7 +561,8 @@ void Macbeth_Train_Init(Actor* this) {
 }
 
 void Macbeth_RotateTrainWheels(void) {
-    Macbeth_Texture_Scroll(D_MA_6023228, 16, 16, 0, 8);
+    // LTODO: This is broken and crashes the game
+    // Macbeth_Texture_Scroll(D_MA_6023228, 16, 16, 0, 8);
     Macbeth_Texture_RotateZ(D_MA_6023388, D_Tex_800DB4B8, gGameFrameCount * -20.0f);
 }
 
