@@ -27,6 +27,10 @@ s32 gTeamHelpTimer = 0;
 f32 D_display_800CA23C[3] = { 0.5f, 0.25f, 0.25f };
 f32 D_display_800CA248[3] = { 2.0f, 1.0f, 0.5f };
 
+#if DEBUG_BOSS_KILLER == 1
+void KillBoss(void);
+#endif
+
 void Display_DrawHelpAlert(void) {
     bool sp7C;
     f32 sp78;
@@ -1978,6 +1982,10 @@ void Display_Update(void) {
     Display_DrawHelpAlert();
     sPlayersVisible[gPlayerNum] = false;
     Matrix_Pop(&gGfxMatrix);
+
+#if DEBUG_BOSS_KILLER == 1
+    KillBoss();
+#endif
 
     if (CVarGetInteger("gDebugSpeedControl", 0) == 1) {
         Player* player = gPlayer;
