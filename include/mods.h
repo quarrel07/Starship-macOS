@@ -97,6 +97,7 @@ void Spawner(void);
 #endif
 
 #define DEBUG_SKIP_BRIEFING 1
+#define DEBUG_BOSS_KILLER 0
 
 /*
 
