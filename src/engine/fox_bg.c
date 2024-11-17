@@ -538,9 +538,21 @@ void Background_DrawBackdrop(void) {
 
                 case LEVEL_VENOM_ANDROSS: // WIP
                     if (gDrawBackdrop != 6) {
-                        // @port: Tag the transform.
-                        FrameInterpolation_RecordOpenChild("Backdrop", 0);
-                        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        sp134 = (gPlayer[gPlayerNum].camPitch * -6000.0f) - (gPlayer[gPlayerNum].cam.eye.y * 0.4f);
+                        sp13C =
+                            Math_ModF(Math_RadToDeg(gPlayer[gPlayerNum].camYaw) * (-7280.0f / 360.0f) * 5.0f, 7280.0f);
+
+                        static f32 bgPrevPosX = 0.0f;
+                        u8 skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
+
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port: Tag the transform.
+                            FrameInterpolation_RecordOpenChild("Backdrop", 0);
+                            FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                        }
 
                         if ((gDrawBackdrop == 2) || (gDrawBackdrop == 7)) {
                             Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
@@ -562,10 +574,6 @@ void Background_DrawBackdrop(void) {
 
                             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, (s32) gAndrossUnkBrightness,
                                             (s32) gAndrossUnkBrightness, (s32) gAndrossUnkAlpha);
-
-                            sp134 = (gPlayer[gPlayerNum].camPitch * -6000.0f) - (gPlayer[gPlayerNum].cam.eye.y * 0.4f);
-                            sp13C = Math_ModF(Math_RadToDeg(gPlayer[gPlayerNum].camYaw) * (-7280.0f / 360.0f) * 5.0f,
-                                              7280.0f);
 
                             // Leftmost DL (-2x translation)
                             Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
@@ -618,8 +626,14 @@ void Background_DrawBackdrop(void) {
                                 Matrix_Pop(&gGfxMatrix);
                             }
                         }
-                        // @port Pop the transform id.
-                        FrameInterpolation_RecordCloseChild();
+                        if (skipInterpolation) {
+                            // @port Skip interpolation
+                            FrameInterpolation_ShouldInterpolateFrame(false);
+                        } else {
+                            // @port Pop the transform id.
+                            FrameInterpolation_RecordCloseChild();
+                        }
+                        bgPrevPosX = sp13C;
                     }
                     break;
 
