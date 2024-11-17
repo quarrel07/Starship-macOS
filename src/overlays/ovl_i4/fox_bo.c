@@ -2213,8 +2213,12 @@ void Bolse_DrawDynamicGround(void) {
     Matrix_RotateY(gGfxMatrix, gBosses[0].obj.rot.y * M_DTOR, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 5.0f, 1.0f, 5.0f, MTXF_APPLY);
 
-    for (z = -3200.0f; z <= 3200.0f; z += 800.0f) {
-        for (x = -3200.0f; x <= 3200.0f; x += 800.0f) {
+    for (int i = 0, z = -3200.0f; z <= 3200.0f; z += 800.0f, i++) {
+        for (int j = 100, x = -3200.0f; x <= 3200.0f; x += 800.0f, j++) {
+
+            // @port: Tag the transform.
+            FrameInterpolation_RecordOpenChild(i, j);
+
             rnd = Rand_ZeroOneSeeded();
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, x, 0.0f, z, MTXF_APPLY);
@@ -2233,4 +2237,7 @@ void Bolse_DrawDynamicGround(void) {
         }
     }
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
