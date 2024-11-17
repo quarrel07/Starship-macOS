@@ -444,7 +444,7 @@ void Macbeth_Texture_Scroll(u8* tex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         b = texPtr[i];
         a = texPtr[i + arg1];
 
-        for (j = 1; j < arg2; j += 2) {
+        for (j = 1; j < arg2 -2; j += 2) {
             texPtr[arg1 * (j - 1) + i] = texPtr[arg1 * (j + 1) + i];
             texPtr[arg1 * j + i] = texPtr[arg1 * (j + 2) + i];
         }
@@ -452,6 +452,7 @@ void Macbeth_Texture_Scroll(u8* tex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         texPtr[((arg2 - 2) * arg1) + i] = b;
         texPtr[((arg2 - 1) * arg1) + i] = a;
     }
+    gSPInvalidateTexCache(gMasterDisp++, texPtr);
 }
 
 void Macbeth_Texture_Scroll2(u16* tex, s32 arg1, s32 arg2) {
