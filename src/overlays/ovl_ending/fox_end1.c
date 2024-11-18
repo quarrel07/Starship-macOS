@@ -84,7 +84,7 @@ void Ending_80187520(s32 arg0) {
             Lib_TextureRect_RGBA16(&gMasterDisp, gEndingAwardBack, 316, 270, 0.0f, 0.0f, 1.0f, 1.0f);
             break;
         case 1:
-            Lib_TextureRect_RGBA16(&gMasterDisp, gEndingAwardFront, 316, 240, 0.0f, 0.0f, 1.0f, 1.0f);
+            Lib_TextureRect_RGBA16(&gMasterDisp, gEndingAwardFront, 316, 240, 2.0f, 0.0f, 1.0f, 1.0f);
             break;
     }
 }
@@ -1071,6 +1071,39 @@ void Ending_Main(void) {
     Ending_8018ABE8();
 }
 
+void DrawBorders(void) {
+    s16 newX = OTRGetRectDimensionFromLeftEdge(0);
+
+    static int frame = 0;
+    int max_frame = 1300; // Duration of the animation in frames
+    int margin = ABS(newX) + 9;
+    float t;
+
+    if ((gGameState == GSTATE_ENDING) && (D_ending_80192E70 >= 1500)) {
+        if (frame > max_frame) {
+            frame = max_frame;
+        }
+
+        t = (float) frame / max_frame;
+
+        // Set up rendering state for opaque red rectangles
+        RCP_SetupDL_12();
+        gDPSetRenderMode(gMasterDisp++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+        gDPSetCombineMode(gMasterDisp++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+        gDPSetPrimColor(gMasterDisp++, 0, 0, 0, 0, 0, 255); // Set color to black
+
+        gDPSetFillColor(gMasterDisp++, FILL_COLOR(0 | 1));
+        gDPFillWideRectangle(gMasterDisp++, OTRGetRectDimensionFromLeftEdge(0.0f), 0,
+                             OTRGetRectDimensionFromLeftEdge(margin * t), SCREEN_HEIGHT);
+
+        gDPFillWideRectangle(gMasterDisp++, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - (margin * t)), 0,
+                             OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT);
+        frame++; // Increment frame count for animation
+    } else {
+        frame = 0; // Reset frame when not in ending state
+    }
+}
+
 void Ending_Draw(void) {
     Matrix_Push(&gGfxMatrix);
     Matrix_LookAt(gGfxMatrix, gCsCamEyeX, gCsCamEyeY, gCsCamEyeZ, gCsCamAtX, gCsCamAtY, gCsCamAtZ, 0.0f, 100.0f, 0.0f,
@@ -1097,6 +1130,20 @@ void Ending_Draw(void) {
     Ending_8018CE20(D_ending_80196D04);
     D_ending_80196D04++;
     Radio_Draw();
+
+    if (gGameState == GSTATE_ENDING) {
+        DrawBorders();
+    }
+
+#if 0
+    if ((D_ending_80192E70 >= 0) && (D_ending_80192E70 < 10000)) {
+        RCP_SetupDL(&gMasterDisp, SETUPDL_83);
+        gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
+        Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "TIMER");
+        Graphics_DisplaySmallNumber(80, 220, D_ending_80192E70);
+    }
+#endif
+
     Matrix_Pop(&gGfxMatrix);
 }
 
