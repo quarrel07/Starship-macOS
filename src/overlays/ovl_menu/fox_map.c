@@ -1989,7 +1989,7 @@ void Map_Draw(void) {
         D_menu_801CEEC4 = 0;
     }
 
-    Lib_Texture_Mottle((u16*) aMapVenomCloud1Tex, (u16*) D_MAP_6048F80, 5);
+    Lib_Texture_Mottle(aMapVenomCloudEffectTex, D_MAP_6048F80, 5);
 }
 
 s32 Map_801A05B4(void) {
@@ -4783,7 +4783,13 @@ void Map_VenomCloud_Draw(f32* zAngle, f32 next, f32 scale) {
 
     Matrix_SetGfxMtx(&gMasterDisp);
 
-    gSPDisplayList(gMasterDisp++, aMapVenomCloudDL);
+    // @port This should be aMapVenomCloudDL but torch is stupid sometimes
+    u8* buffer = SEGMENTED_TO_VIRTUAL(aMapVenomCloudEffectTex);
+    gSPVertex(gMasterDisp++, ast_map_seg6_vtx_47F00, 8, 0);
+    gDPLoadTextureBlock(gMasterDisp++, buffer, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 33, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gSP2Triangles(gMasterDisp++, 1, 2, 3, 0, 1, 3, 0, 0);
+    gDPLoadTextureBlock(gMasterDisp++, buffer + 64 * 32, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 32, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gSP2Triangles(gMasterDisp++, 5, 6, 7, 0, 5, 7, 4, 0);
 
     Matrix_Pop(&gGfxMatrix);
 
