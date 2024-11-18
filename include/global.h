@@ -44,6 +44,7 @@ typedef enum OverlayCalls {
 #include "libc/math.h"
 #include "assets/ast_common.h"
 #include "gfx_dimensions.h"
+#include "port/interpolation/FrameInterpolation.h"
 #include <libultraship.h>
 
 
