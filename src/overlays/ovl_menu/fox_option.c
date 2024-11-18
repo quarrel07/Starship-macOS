@@ -4268,11 +4268,17 @@ void Option_NameEntry_Draw(void) {
     Matrix_SetGfxMtx(&gMasterDisp);
 
     for (i = 0; i < 3; i++) {
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Option_3DFont_Draw", i);
+
         if (gGameFrameCount & bitmask[i]) {
             Option_3DFont_Draw(D_menu_801B9150[i][0], D_menu_801AF300[i], 18.0f, -455.0f, 1.0f,
                                D_menu_801B90C0[i] + D_menu_801B90F0[i], D_menu_801B90D0[i] + D_menu_801B9100[i],
                                D_menu_801B90E0[i] + D_menu_801B9110[i]);
         }
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 
     Matrix_Pop(&gGfxMatrix);
@@ -4578,7 +4584,6 @@ void Option_InvoiceDraw(void) {
 
     Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80017C0, D_OPT_80038C0, 256, 66, D_menu_801AF3D0[2], D_menu_801AF3F0[2],
                         1.0f, 1.0f);
-
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_76);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
