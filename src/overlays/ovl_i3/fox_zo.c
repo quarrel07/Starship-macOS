@@ -3269,19 +3269,13 @@ void Zoness_801986FC(ZoSarumarine* this, s32 arg1, f32 xOff, f32 yOff, f32 zOff,
         }
     }
 
+#ifndef AVOID_UB
+    // @Bug: checking out of bounds
+    // If this passes the boss kills himself.
     if (i >= ARRAY_COUNT(gActors)) {
-        actor245 = NULL;
-    }
-
-    if (actor245 != NULL) {
         actor245->obj.status = OBJ_FREE;
     }
-
-    if (i < ARRAY_COUNT(gActors)) {
-        if (actor245 != NULL) {
-            actor245->obj.status = OBJ_FREE;
-        }
-    }
+#endif
 }
 
 void Zoness_801989FC(ZoSarumarine* this) {
