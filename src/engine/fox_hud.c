@@ -267,7 +267,7 @@ void HUD_ShieldGaugeFrame_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
 }
 
 void HUD_ShieldGaugeBars_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale, f32 arg4) {
-    TextureRect_CI8_2(&gMasterDisp, aShieldGaugeTex, aShieldGaugeTLUT, 48, 12, xPos, yPos, xScale, yScale, 48.0f * arg4,
+    TextureRect_CI8_2(&gMasterDisp, aShieldGaugeTex, aShieldGaugeTLUT, 48, 8, xPos, yPos, xScale, yScale, 48.0f * arg4,
                       8.0f);
 }
 
@@ -312,6 +312,7 @@ void HUD_GoldRings_Draw(void) {
     f32 x;
     f32 y;
     s32 goldRingFrameIdx;
+    s16 newX = OTRGetRectDimensionFromLeftEdge(0);
 
     sGoldRingsFwork[6] += 0.7f;
     if (sGoldRingsFwork[6] >= 12.0f) {
@@ -366,8 +367,8 @@ void HUD_GoldRings_Draw(void) {
                     y += 7.00f;
                     scale += 0.06f;
                 }
-
-                Matrix_Translate(gGfxMatrix, x, y, -100.0f, MTXF_NEW);
+                
+                Matrix_Translate(gGfxMatrix, newX + x, y, -100.0f, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, scale, scale, scale, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gDPSetPrimColor(gMasterDisp++, 0, 0, 180, 180, 0, 50);
