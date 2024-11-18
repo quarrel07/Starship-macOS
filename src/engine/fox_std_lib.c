@@ -83,11 +83,6 @@ void Lib_Texture_Mottle(u16* dst, u16* src, u8 mode) {
     u8* src8;
     s32 offset;
 
-    // LTODO: Causes corruption in the map, there's probably a badly extracted texture
-    if ((gGameState == GSTATE_MAP)) {
-        return;
-    }
-    
     dst = LOAD_ASSET(dst);
     src = LOAD_ASSET(src);
     

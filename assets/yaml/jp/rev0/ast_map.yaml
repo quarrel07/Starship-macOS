@@ -366,8 +366,8 @@ D_MAP_6047A68:
 aMapVenomCloudDL:
   { type: GFX, offset: 0x6047E70, symbol: aMapVenomCloudDL }
 
-aMapVenomCloud1Tex:
-  { type: TEXTURE, format: IA8, offset: 0x06047F80, width: 64, height: 32, ctype: u8, symbol: aMapVenomCloud1Tex }
+aMapVenomCloudEffectTex:
+  { type: TEXTURE, format: IA8, offset: 0x06047F80, width: 64, height: 32, ctype: u8, symbol: aMapVenomCloudEffectTex }
 
 aMapVenomCloud2Tex:
   { type: TEXTURE, format: IA8, offset: 0x06048780, width: 64, height: 32, ctype: u8, symbol: aMapVenomCloud2Tex }
