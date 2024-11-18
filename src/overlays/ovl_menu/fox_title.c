@@ -3364,6 +3364,7 @@ void Title_NextState_OptionMenu(void) {
                     sWipeHeight += 18;
                 } else {
                     gGameState = GSTATE_MENU;
+                    //gGameState = GSTATE_ENDING;
                     gNextGameStateTimer = 2;
                     gOptionMenuStatus = OPTION_WAIT;
                     gDrawMode = DRAW_NONE;
