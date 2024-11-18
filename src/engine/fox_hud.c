@@ -317,6 +317,7 @@ void HUD_GoldRings_Draw(void) {
     f32 x;
     f32 y;
     s32 goldRingFrameIdx;
+    s16 newX = OTRGetRectDimensionFromLeftEdge(0);
 
     sGoldRingsFwork[6] += 0.7f;
     if (sGoldRingsFwork[6] >= 12.0f) {
@@ -371,8 +372,8 @@ void HUD_GoldRings_Draw(void) {
                     y += 7.00f;
                     scale += 0.06f;
                 }
-
-                Matrix_Translate(gGfxMatrix, x, y, -100.0f, MTXF_NEW);
+                
+                Matrix_Translate(gGfxMatrix, newX + x, y, -100.0f, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, scale, scale, scale, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gDPSetPrimColor(gMasterDisp++, 0, 0, 180, 180, 0, 50);
