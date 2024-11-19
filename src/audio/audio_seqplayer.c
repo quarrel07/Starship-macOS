@@ -1018,8 +1018,6 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
                         loBits = gSeqFontTable[sp52];
                         cmd = gSeqFontTable[sp52 + loBits - cmd];
 
-						printf("seqID: %02X\n", seqPlayer->seqId);
-
                         //if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) 
 						{
                             channel->fontId = cmd;
