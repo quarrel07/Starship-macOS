@@ -627,6 +627,9 @@ void Display_ArwingWings(ArwingInfo* arwing) {
         drawFace = true;
     }
 
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild(arwing, 0);
+
     if (drawFace != 0) {
         Matrix_Push(&gGfxMatrix);
 
@@ -677,6 +680,9 @@ void Display_ArwingWings(ArwingInfo* arwing) {
 
     gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Display_Unused(f32 arg0, f32 arg1, UNK_TYPE arg2, UNK_TYPE arg3) {
@@ -1296,6 +1302,9 @@ void Display_ArwingWingTrail_Draw(Player* player) {
         RCP_SetupDL_64();
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 100);
 
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("WingTrail", 0);
+
         if (player->arwing.leftWingState == WINGSTATE_INTACT) {
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, sp5C, sp58, -100.0f, MTXF_APPLY);
@@ -1309,6 +1318,13 @@ void Display_ArwingWingTrail_Draw(Player* player) {
             gSPDisplayList(gMasterDisp++, aRadarMarkKaSaucererDL);
             Matrix_Pop(&gGfxMatrix);
         }
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("WingTrail", 1);
+
         if (player->arwing.rightWingState == WINGSTATE_INTACT) {
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, -sp5C, sp58, -100.0f, MTXF_APPLY);
@@ -1322,6 +1338,9 @@ void Display_ArwingWingTrail_Draw(Player* player) {
             gSPDisplayList(gMasterDisp++, aRadarMarkKaSaucererDL);
             Matrix_Pop(&gGfxMatrix);
         }
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 }
 
@@ -1752,10 +1771,16 @@ void Display_Update(void) {
 
     sDrawCockpit = false;
 
+    // @port: Display player's face at all times.
+    gPlayer[0].arwing.drawFace = true;
+
+    // @port remove 511 hit count cap, hated by generations
+#if 0
     // 511 hit count cap
     if (gHitCount > 511) {
         gHitCount = 511;
     }
+#endif
 
     Matrix_Push(&gGfxMatrix);
     if ((gCurrentLevel == LEVEL_AQUAS) && (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_ACTIVE)) {
