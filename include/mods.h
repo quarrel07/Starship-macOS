@@ -78,7 +78,7 @@
  * D-Pad DOWN to freeze/unfreeze the ship speed.
  * WARNING: Spawning an object that's not loaded in memory will likely result in a crash.
  */
-#define MODS_SPAWNER 0
+#define MODS_SPAWNER 1
 
 /* ************************* */
 

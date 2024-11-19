@@ -627,9 +627,9 @@ void Game_Update(void) {
 #if MODS_FPS_COUNTER == 1
         Play_RenderFps();
 #endif
-#if MODS_SPAWNER == 1
-        Spawner();
-#endif
+        if(CVarGetInteger("gSpawnerMod", 0) == 1){
+            Spawner();
+        }
     }
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);

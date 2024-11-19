@@ -493,6 +493,19 @@ void DrawDebugMenu() {
             .tooltip = "Allows you to play sound effects from the game"
         });
 
+        UIWidgets::CVarCheckbox("Spawner Mod", "gSpawnerMod", {
+            .tooltip = "Spawn Scenery, Actors, Bosses, Sprites, Items, Effects and even Event Actors.\n"
+                       "\n"
+                       "Controls:\n"
+                       "D-Pad left and right to set the object Id.\n"
+                       "C-Right to change between spawn modes.\n"
+                       "Analog stick sets the spawn position.\n"
+                       "L-Trigger to spawn the object.\n"
+                       "D-Pad UP to kill all objects.\n"
+                       "D-Pad DOWN to freeze/unfreeze the ship speed.\n"
+                       "WARNING: Spawning an object that's not loaded in memory will likely result in a crash."
+        });
+
         UIWidgets::CVarCheckbox("Disable stars interpolation", "gDisableStarsInterpolation", {
             .tooltip = "Disable starfield interpolation for performance"
         });
