@@ -3075,7 +3075,8 @@ void Corneria_LevelStart(Player* player) {
                 peppy->state = 0;
                 slippy->state = 0;
                 falco->obj.pos.y = player->pos.y + 80.0f;
-                falco->obj.pos.z += 100.0f;
+                // @port: adjust Falco's position so he appears from further right
+                falco->obj.pos.z += 3.0f * 100.0f;
             }
 
             if (gMsgCharIsPrinting && ((gGameFrameCount & 2) != 0)) {
@@ -3084,7 +3085,8 @@ void Corneria_LevelStart(Player* player) {
             break;
 
         case 3: // Falco appears on scene from behind
-            if (fabsf(Math_SmoothStepToF(&falco->obj.pos.z, player->pos.z + 100.0f, 0.05f, 5.0f, 0.0f)) < 1.0f) {
+            // @port: adjust Falco's maxStep so he flies faster in compensation for the previous change
+            if (fabsf(Math_SmoothStepToF(&falco->obj.pos.z, player->pos.z + 100.0f, 0.05f, 3.0f * 5.0f, 0.0f)) < 1.0f) {
                 player->csState = 4;
                 D_ctx_80177A48[0] = 0.0f;
                 player->csTimer = 190;
