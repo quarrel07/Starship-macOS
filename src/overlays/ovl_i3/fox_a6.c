@@ -2182,7 +2182,7 @@ void Area6_8018D694(ActorCutscene* this, s32 index) {
     AUDIO_PLAY_SFX(NA_SE_EN_ENGINE_01, this->sfxSource, 4);
 }
 
-void Area6_8018D804(ActorCutscene* this, s32 arg1) {
+void Area6_8018D804(ActorCutscene* this, s32 teamIdx) {
     Vec3f sp2C[3] = {
         { -200.0f, 0.0f, -500.0f },
         { 200.0f, 30.0f, -600.0f },
@@ -2194,9 +2194,9 @@ void Area6_8018D804(ActorCutscene* this, s32 arg1) {
     this->obj.status = OBJ_ACTIVE;
     this->obj.id = OBJ_ACTOR_CUTSCENE;
 
-    this->obj.pos.x = sp2C[arg1].x + player->pos.x;
-    this->obj.pos.y = sp2C[arg1].y + player->pos.y;
-    this->obj.pos.z = sp2C[arg1].z + player->pos.z;
+    this->obj.pos.x = sp2C[teamIdx].x + player->pos.x;
+    this->obj.pos.y = sp2C[teamIdx].y + player->pos.y;
+    this->obj.pos.z = sp2C[teamIdx].z + player->pos.z;
 
     this->state = 5;
     this->iwork[11] = 1;
