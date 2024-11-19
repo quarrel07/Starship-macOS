@@ -222,8 +222,8 @@ void TextureRect_CI8_2(Gfx** gfxP, u8* texture, u16* palette, u32 tWidth, u32 tH
     gDPLoadTLUT((*gfxP)++, 256, 256, palette);
     gDPLoadTextureBlock((*gfxP)++, texture, G_IM_FMT_CI, G_IM_SIZ_8b, tWidth, tHeight, 0, G_TX_NOMIRROR, G_TX_NOMIRROR,
                         G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-    gSPWideTextureRectangle((*gfxP)++, (xPos * 4.0f), (yPos * 4.0f), ((xPos + (xWidth * xScale)) * 4.0f),
-                            ((yPos + (yWidth * yScale)) * 4.0f), G_TX_RENDERTILE, 0 * 32, 0 * 32,
+    gSPWideTextureRectangle((*gfxP)++, (s32) (xPos * 4.0f), (s32) (yPos * 4.0f), (s32) ((xPos + (xWidth * xScale)) * 4.0f),
+                            (s32) ((yPos + (yWidth * yScale)) * 4.0f), G_TX_RENDERTILE, 0 * 32, 0 * 32,
                             (s32) (1 / xScale * (32 * 32)), (s32) (1 / yScale * (32 * 32)));
 }
 
