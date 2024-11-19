@@ -1343,7 +1343,7 @@ CameraPoint D_menu_801ADA94[50] = {
 };
 
 void Title_CsTeamRunning_Update(void) {
-    static s32 D_menu_801ADF44[] = { 63, 170, 268, 368 };
+    static s32 D_menu_801ADF44[] = { 63, 170, 268, 368, 368 };
 
     switch (sSceneState) {
         case 0:
@@ -3590,7 +3590,8 @@ void Title_Matrix_Push(void) {
 void Title_Radio_PlayMessage(u16** msgList, RadioCharacterId character) {
     gRadioMsgList = msgList;
     gRadioMsgListIndex = 0;
-    gRadioMsg = msgList[gRadioMsgListIndex];
+    gRadioMsg = SEGMENTED_TO_VIRTUAL(msgList[gRadioMsgListIndex]);
+    gRadioMsgId = 10 * (gRadioMsgListIndex + 1);
     gRadioMsgRadioId = character;
     gRadioState = 100;
 

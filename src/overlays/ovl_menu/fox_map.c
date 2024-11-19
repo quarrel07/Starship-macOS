@@ -5924,7 +5924,7 @@ void Map_PathPlanetMedal_Draw(f32 x, f32 y, f32 z) {
 
 void Map_BriefingRadio_Setup(void) {
     D_menu_801CD940 = 0;
-    gRadioMsg = sBriefingMsg[sCurrentPlanetId][D_menu_801CD940];
+    gRadioMsg = SEGMENTED_TO_VIRTUAL(sBriefingMsg[sCurrentPlanetId][D_menu_801CD940]);
     gRadioMsgRadioId = D_menu_801AF420[D_menu_801CD940];
     D_menu_801CF018 = 100;
     gRadioPrintPosX = 78;
@@ -5964,7 +5964,7 @@ void Map_BriefingRadio_Update(void) {
             }
 
             D_menu_801CD940 = 1;
-            gRadioMsg = sBriefingMsg[sCurrentPlanetId][D_menu_801CD940];
+            gRadioMsg = SEGMENTED_TO_VIRTUAL(sBriefingMsg[sCurrentPlanetId][D_menu_801CD940]);
 
             Audio_PlayVoice(Message_IdFromPtr(gRadioMsg));
 
@@ -6042,7 +6042,7 @@ void Map_BriefingRadio_Update(void) {
                 break;
             } else {
                 D_menu_801CD940 = 1;
-                gRadioMsg = sBriefingMsg[sCurrentPlanetId][D_menu_801CD940];
+                gRadioMsg = SEGMENTED_TO_VIRTUAL(sBriefingMsg[sCurrentPlanetId][D_menu_801CD940]);
                 Audio_PlayVoice(Message_IdFromPtr(gRadioMsg));
                 gRadioMsgRadioId = D_menu_801AF420[D_menu_801CD940];
                 gCurrentRadioPortrait = gRadioMsgRadioId;

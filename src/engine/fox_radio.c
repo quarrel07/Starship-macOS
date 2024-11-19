@@ -572,7 +572,8 @@ void Radio_Draw(void) {
         case 32:
             if (Audio_GetCurrentVoice() == 0) {
                 gRadioMsgListIndex++;
-                gRadioMsg = gRadioMsgList[gRadioMsgListIndex];
+                gRadioMsgId = 10 * (gRadioMsgListIndex + 1);
+                gRadioMsg = SEGMENTED_TO_VIRTUAL(gRadioMsgList[gRadioMsgListIndex]);
                 Audio_PlayVoice(Message_IdFromPtr(gRadioMsg));
                 gRadioMsgCharIndex = 0;
                 sRadioCheckMouthFlag = 0;
@@ -602,7 +603,7 @@ void Radio_Draw(void) {
             if (!(fakeTemp)) {
                 ret = Audio_GetCurrentVoiceStatus();
 
-                if (gRadioMsgCharIndex < 60) {
+                if (gRadioMsgId < 50) {
                     if (gRadioMsg[gRadioMsgCharIndex + 1] == MSGCHAR_NXT) {
                         if (ret == 0) {
                             gRadioState = 31;
@@ -610,6 +611,8 @@ void Radio_Draw(void) {
                     } else {
                         gRadioMsgCharIndex++;
                     }
+                } else {
+                    gRadioMsgCharIndex++;
                 }
 
                 if (sRadioCheckMouthFlag) {

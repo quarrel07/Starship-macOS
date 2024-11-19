@@ -154,7 +154,7 @@ D_TITLE_6028708: { type: TEXTURE, ctype: u16, format: RGBA16, width: 8, height: 
 
 D_TITLE_6028788: { type: TEXTURE, ctype: u16, format: RGBA16, width: 16, height: 16, offset: 0x6028788, symbol: D_TITLE_6028788 }
 
-D_TITLE_6028988: { type: TEXTURE, ctype: u16, format: RGBA16, width: 8, height: 8, offset: 0x6028988, symbol: D_TITLE_6028988 }
+D_TITLE_6028988: { type: TEXTURE, ctype: u16, format: RGBA16, width: 16, height: 16, offset: 0x6028988, symbol: D_TITLE_6028988 }
 
 D_TITLE_6028A08: { type: TEXTURE, ctype: u16, format: RGBA16, width: 16, height: 16, offset: 0x6028A08, symbol: D_TITLE_6028A08 }
 
