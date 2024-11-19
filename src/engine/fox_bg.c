@@ -157,6 +157,10 @@ static Gfx starSetupDL[] = {
     gsSPEndDisplayList(),
 };
 
+// New global variables for storing the previoous positions
+f32 gStarPrevX[3000];
+f32 gStarPrevY[3000];
+
 // @port: Starfield drawn with triangles, re-engineered by @Tharo & @TheBoy181
 void Background_DrawStarfield(void) {
     f32 by;
@@ -257,8 +261,18 @@ void Background_DrawStarfield(void) {
             // Check if the star is within the visible screen area with margin
             if ((vx >= STAR_MARGIN) && (vx < currentScreenWidth - STAR_MARGIN) && (vy >= STAR_MARGIN) &&
                 (vy < currentScreenHeight - STAR_MARGIN)) {
-                FrameInterpolation_RecordOpenChild("Starfield", i);
-                FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+
+                // @port: Some garbage stars can be seen while scrolling faster, because of this
+                // we should skip interpolation when the stars warp from left to right.
+                u8 skipStarsInterpolation = (fabsf(vx - gStarPrevX[i]) > starfieldWidth / 2.0f) ||
+                                            (fabsf(vy - gStarPrevY[i]) > starfieldHeight / 2.0f);
+
+                if (skipStarsInterpolation) {
+                    FrameInterpolation_ShouldInterpolateFrame(false);
+                } else {
+                    FrameInterpolation_RecordOpenChild("Starfield", i);
+                    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                }
 
                 // Translate to (vx, vy) in ortho coordinates
                 Matrix_Push(&gGfxMatrix);
@@ -280,8 +294,16 @@ void Background_DrawStarfield(void) {
                 // Draw the star using the predefined display list
                 gSPDisplayList(gMasterDisp++, starDL);
                 Matrix_Pop(&gGfxMatrix);
-                // Pop the transform id
-                FrameInterpolation_RecordCloseChild();
+
+                if (skipStarsInterpolation) {
+                    FrameInterpolation_ShouldInterpolateFrame(true);
+                } else {
+                    // Pop the transform id
+                    FrameInterpolation_RecordCloseChild();
+                }
+
+                gStarPrevX[i] = vx;
+                gStarPrevY[i] = vy;
             }
         }
 
