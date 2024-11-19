@@ -2585,20 +2585,20 @@ Vec3f D_i6_801A6AEC[5] = {
     { 0.0f, 345.0f, 350.0f },   { 90.0f, 87.0f, 93.0f },
 };
 
-void SectorY_801A06A4(ActorCutscene* this, s32 arg1) {
-    if (gTeamShields[1 + arg1] > 0) {
+void SectorY_801A06A4(ActorCutscene* this, s32 teamIdx) {
+    if (gTeamShields[1 + teamIdx] > 0) {
         Actor_Initialize(this);
         this->obj.status = OBJ_ACTIVE;
         this->obj.id = OBJ_ACTOR_CUTSCENE;
 
-        this->obj.pos.x = gPlayer[0].pos.x + D_i6_801A6AEC[arg1].x;
-        this->obj.pos.y = gPlayer[0].pos.y + D_i6_801A6AEC[arg1].y;
-        this->obj.pos.z = gPlayer[0].pos.z + D_i6_801A6AEC[arg1].z;
+        this->obj.pos.x = gPlayer[0].pos.x + D_i6_801A6AEC[teamIdx].x;
+        this->obj.pos.y = gPlayer[0].pos.y + D_i6_801A6AEC[teamIdx].y;
+        this->obj.pos.z = gPlayer[0].pos.z + D_i6_801A6AEC[teamIdx].z;
 
         this->fwork[0] = gPlayer[0].baseSpeed;
         this->rot_0F4.y = gPlayer[0].rot.y;
         this->rot_0F4.z = gPlayer[0].rot.z;
-        this->state = arg1 + 7;
+        this->state = teamIdx + 7;
         this->iwork[11] = 1;
         Object_SetInfo(&this->info, this->obj.id);
         

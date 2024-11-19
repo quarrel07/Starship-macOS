@@ -2614,7 +2614,7 @@ void Area6_8018EB3C(ActorCutscene* this) {
     AUDIO_PLAY_SFX(NA_SE_GREATFOX_BURNER, this->sfxSource, 0);
 }
 
-void Area6_8018EC38(ActorCutscene* this, s32 arg1) {
+void Area6_8018EC38(ActorCutscene* this, s32 teamIdx) {
     Vec3f sp2C[3] = {
         { -150.0f, 40.0f, 75.0f },
         { 150.0f, 40.0f, 150.0f },
@@ -2622,14 +2622,14 @@ void Area6_8018EC38(ActorCutscene* this, s32 arg1) {
     };
     Player* player = &gPlayer[0];
 
-    if (gTeamShields[arg1 + 1] > 0) {
+    if (gTeamShields[teamIdx + 1] > 0) {
         Actor_Initialize(this);
         this->obj.status = OBJ_ACTIVE;
         this->obj.id = OBJ_ACTOR_CUTSCENE;
 
-        this->obj.pos.x = sp2C[arg1].x + player->pos.x;
-        this->obj.pos.y = sp2C[arg1].y + player->pos.y;
-        this->obj.pos.z = sp2C[arg1].z + player->pos.z;
+        this->obj.pos.x = sp2C[teamIdx].x + player->pos.x;
+        this->obj.pos.y = sp2C[teamIdx].y + player->pos.y;
+        this->obj.pos.z = sp2C[teamIdx].z + player->pos.z;
 
         this->state = 100;
 
