@@ -3428,6 +3428,8 @@ void Corneria_CsLevelComplete1_TeamSetup(ActorCutscene* this, s32 index) {
     Object_SetInfo(&this->info, this->obj.id);
 
     this->iwork[11] = 1;
+    // @port set team faces
+    this->iwork[14] = index + 2;
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
 

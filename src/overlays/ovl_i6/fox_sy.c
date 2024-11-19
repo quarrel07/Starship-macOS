@@ -2068,6 +2068,12 @@ void SectorY_8019EB80(void) {
             actor->scale = 0.125f;
         }
         actor->iwork[11] = 1;
+
+        // @port: Setup team faces
+        if ((i >= 0) && (i <= 2)) {
+            actor->iwork[14] = i + 2;
+        }
+
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, actor->sfxSource, 4);
     }
 }
@@ -2595,6 +2601,10 @@ void SectorY_801A06A4(ActorCutscene* this, s32 arg1) {
         this->state = arg1 + 7;
         this->iwork[11] = 1;
         Object_SetInfo(&this->info, this->obj.id);
+        
+        // @port: Setup team faces
+        this->iwork[14] = teamIdx + 2;
+
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
         AUDIO_PLAY_SFX(NA_SE_ARWING_BOOST, this->sfxSource, 0);
     }

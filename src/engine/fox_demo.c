@@ -99,6 +99,10 @@ void func_demo_80048CC4(ActorCutscene* this, s32 index) {
         this->animFrame = ACTOR_CS_GREAT_FOX;
     } else {
         this->iwork[11] = 1;
+
+        // @port: Setup team faces
+        this->iwork[14] = index + 2;
+        
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
     }
 }
@@ -686,6 +690,9 @@ void func_demo_8004A700(ActorCutscene* this, s32 index) {
     this->obj.rot.z = D_demo_800CA074[index];
     this->iwork[11] = 1;
     Object_SetInfo(&this->info, this->obj.id);
+
+    // @port set team faces
+    this->iwork[14] = index + 2;
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
 

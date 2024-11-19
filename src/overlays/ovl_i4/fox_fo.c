@@ -634,6 +634,9 @@ void Fortuna_LevelComplete_CsSpawnTeam(ActorCutscene* this, s32 actorIdx) {
     if (actorIdx < 3) {
         this->iwork[11] = 1;
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
+
+        // @port: Setup team faces
+        this->iwork[14] = actorIdx + 2;
     } else {
         this->obj.pos.z = -9500.0f;
         this->animFrame = ACTOR_CS_GREAT_FOX;

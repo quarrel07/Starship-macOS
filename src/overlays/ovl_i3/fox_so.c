@@ -3129,6 +3129,10 @@ void Solar_801A7750(void) {
         actor->state = 1;
         Object_SetInfo(&actor->info, actor->obj.id);
         actor->iwork[11] = 1;
+
+        // @port: Setup team faces
+        actor->iwork[14] = i + 2;
+
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, actor->sfxSource, 4);
     }
 }

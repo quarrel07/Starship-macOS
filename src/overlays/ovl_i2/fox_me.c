@@ -1916,6 +1916,9 @@ void Meteo_LevelStart_SetupTeam(ActorCutscene* this, s32 teamIdx) {
     if (this->animFrame == 0) {
         this->iwork[11] = 1;
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
+
+        // @port: Setup team faces
+        this->iwork[14] = teamIdx + 2;
         return;
     }
 
@@ -2398,6 +2401,9 @@ void Meteo_LevelComplete_SetupTeam(ActorCutscene* this, s32 teamIdx) {
     } else {
         this->iwork[11] = 1;
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
+
+        // @port: Setup team faces
+        this->iwork[14] = teamIdx + 2;
     }
 }
 

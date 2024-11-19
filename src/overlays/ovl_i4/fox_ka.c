@@ -1715,6 +1715,9 @@ void Katina_SFTeamMissionAccomUpdate(ActorCutscene* this, s32 idx) {
 
     this->iwork[KA_ACTOR_IWORK_11] = 1;
 
+    // @port: Setup team faces
+    this->iwork[14] = idx + 1;
+
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
 
@@ -1740,6 +1743,9 @@ void Katina_SFTeamFleeUpdate(ActorCutscene* this, s32 idx) {
     Object_SetInfo(&this->info, this->obj.id);
 
     this->iwork[KA_ACTOR_IWORK_11] = 1;
+
+    // @port: Setup team faces
+    this->iwork[14] = idx + 1;
 
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
@@ -1782,6 +1788,11 @@ void Katina_SFTeam_LevelComplete_Update(void) {
 
             if (i >= 3) {
                 actor->animFrame = ACTOR_CS_CORNERIAN_FIGHTER;
+            }
+
+            // @port: Setup team faces
+            if ((i >= 0) && (i <= 2)) {
+                actor->iwork[14] = i + 2;
             }
 
             Object_SetInfo(&actor->info, actor->obj.id);

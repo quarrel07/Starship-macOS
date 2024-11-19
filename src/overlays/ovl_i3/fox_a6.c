@@ -2202,6 +2202,10 @@ void Area6_8018D804(ActorCutscene* this, s32 arg1) {
     this->iwork[11] = 1;
     this->fwork[0] = 0.0f;
     Object_SetInfo(&this->info, this->obj.id);
+
+    // @port: Setup team faces
+    this->iwork[14] = teamIdx + 2;
+
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
 
@@ -2632,9 +2636,10 @@ void Area6_8018EC38(ActorCutscene* this, s32 arg1) {
         this->iwork[11] = 1;
         this->fwork[0] = 0.0f;
 
-        if (arg1 + 1 != 3) {
-            this->iwork[14] = arg1 + 2;
-        }
+        // @port: Setup team faces (original code was omitting Peppy)
+        // if (teamIdx + 1 != 3) {
+        this->iwork[14] = teamIdx + 2;
+        // }
 
         Object_SetInfo(&this->info, this->obj.id);
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
