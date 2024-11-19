@@ -1783,6 +1783,9 @@ void Area6_8018BCD4(Vec3f* arg0, f32 arg1, f32 arg2, Vec3f* arg3, s32 arg4, f32 
             Matrix_Push(&gGfxMatrix);
             Matrix_Push(&gCalcMatrix);
 
+            // @port: Tag the transform.
+            FrameInterpolation_RecordOpenChild(arg0, i);
+
             if (i == 11) {
                 Matrix_Scale(gCalcMatrix, 1.5f, 1.5f, 1.5f, MTXF_APPLY);
                 Matrix_Mult(gGfxMatrix, gCalcMatrix, MTXF_APPLY);
@@ -1807,6 +1810,9 @@ void Area6_8018BCD4(Vec3f* arg0, f32 arg1, f32 arg2, Vec3f* arg3, s32 arg4, f32 
             Matrix_RotateY(gCalcMatrix, arg0[i].y * M_DTOR, MTXF_APPLY);
             Matrix_RotateX(gCalcMatrix, arg0[i].x * M_DTOR, MTXF_APPLY);
             Matrix_Translate(gCalcMatrix, 0.0f, 0.0f, arg5, MTXF_APPLY);
+
+            // @port Pop the transform id.
+            FrameInterpolation_RecordCloseChild();
         }
         Matrix_Pop(&gGfxMatrix);
     }
@@ -2074,9 +2080,16 @@ void Area6_A6Gorgon_Draw(A6Gorgon* this) {
 
         Matrix_SetGfxMtx(&gMasterDisp);
 
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild(this, 0);
+
         gSPDisplayList(gMasterDisp++, D_A6_601B2B0);
 
         Matrix_Pop(&gGfxMatrix);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+
         RCP_SetupDL(&gMasterDisp, SETUPDL_71);
         if (D_i3_801C22F0.unk_24 != 255.0f) {
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, this->swork[A6_SWK_22], this->swork[A6_SWK_23],
@@ -2087,8 +2100,15 @@ void Area6_A6Gorgon_Draw(A6Gorgon* this) {
         }
         Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 74.0f, MTXF_APPLY);
         Matrix_SetGfxMtx(&gMasterDisp);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild(this, 1);
+
         gSPDisplayList(gMasterDisp++, D_A6_6011910);
         Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 74.0f, MTXF_APPLY);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 }
 
