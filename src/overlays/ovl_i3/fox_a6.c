@@ -1847,6 +1847,9 @@ void Area6_8018C0D0(f32* arg0, f32 arg1, Vec3f* arg2, f32 arg3, s32 arg4) {
         Matrix_Push(&gGfxMatrix);
         Matrix_Push(&gCalcMatrix);
 
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild(arg0, i);
+
         if (i == 4) {
             Matrix_RotateX(gCalcMatrix, 80.0f * M_DTOR, MTXF_APPLY);
             Matrix_RotateX(gCalcMatrix, (90.0f - arg3) * M_DTOR, MTXF_APPLY);
@@ -1874,6 +1877,9 @@ void Area6_8018C0D0(f32* arg0, f32 arg1, Vec3f* arg2, f32 arg3, s32 arg4) {
         Matrix_Translate(gCalcMatrix, 0.0f, -120.0f, 0.0f, MTXF_APPLY);
         Matrix_RotateX(gCalcMatrix, -20.0f * M_DTOR, MTXF_APPLY);
         Matrix_RotateZ(gCalcMatrix, arg0[i] * M_DTOR, MTXF_APPLY);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
     Matrix_Pop(&gCalcMatrix);
     Matrix_Pop(&gGfxMatrix);
