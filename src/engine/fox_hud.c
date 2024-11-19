@@ -303,6 +303,11 @@ void HUD_BoostGaugeCool_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
     }
 }
 
+void HUD_MatrixTranslateCoord(f32* transX, f32* transY){
+    *transX = OTRGetRectDimensionFromLeftEdge(*transX) - (SCREEN_WIDTH / 2.0f);
+    *transY = (SCREEN_HEIGHT / 2.0f) - *transY;
+}
+
 void HUD_GoldRings_Draw(void) {
     Gfx* sGoldRingDLs[] = {
         aGoldRingFrame1DL, aGoldRingFrame2DL,  aGoldRingFrame3DL,  aGoldRingFrame4DL,
@@ -311,13 +316,13 @@ void HUD_GoldRings_Draw(void) {
     };
     s32 i;
     s32 j;
-    f32 D_800D1AC4[] = { 0.0f, -30.0f, -26.0f, -22.0f, -18.0f };
-    f32 D_800D1AD8[] = { 0.0f, 28.0f, 28.0f, 28.0f, 28.0f };
+    f32 D_800D1AC4[] = { 0.0f, 74.0f, 86.0f, 98.0f, 110.0f };
+    f32 D_800D1AD8[] = { 0.0f, 39.0f, 39.0f, 39.0f, 39.0f };
+    f32 ringScale = 2.9f;
     f32 scale;
     f32 x;
     f32 y;
     s32 goldRingFrameIdx;
-    s16 newX = OTRGetRectDimensionFromLeftEdge(0);
 
     sGoldRingsFwork[6] += 0.7f;
     if (sGoldRingsFwork[6] >= 12.0f) {
@@ -356,6 +361,8 @@ void HUD_GoldRings_Draw(void) {
         }
     }
 
+    Lib_InitOrtho(&gMasterDisp);
+
     // One for each gold ring slot
     for (i = 0; i < 3; i++) {
         switch (sGoldRingsIwork[i + 1]) {
@@ -372,9 +379,11 @@ void HUD_GoldRings_Draw(void) {
                     y += 7.00f;
                     scale += 0.06f;
                 }
-                
-                Matrix_Translate(gGfxMatrix, newX + x, y, -100.0f, MTXF_NEW);
+
+                HUD_MatrixTranslateCoord(&x, &y);
+                Matrix_Translate(gGfxMatrix, x, y, -100.0f, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, scale, scale, scale, MTXF_APPLY);
+                Matrix_Scale(gGfxMatrix, ringScale, ringScale, ringScale, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gDPSetPrimColor(gMasterDisp++, 0, 0, 180, 180, 0, 50);
                 gSPDisplayList(gMasterDisp++, aGoldRingEmptySlotDL);
@@ -393,11 +402,13 @@ void HUD_GoldRings_Draw(void) {
                     RCP_SetupDL(&gMasterDisp, SETUPDL_62);
                     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
+                    HUD_MatrixTranslateCoord(&D_800D1AC4[i + 1], &D_800D1AD8[i + 1]);
+
                     Matrix_Push(&gGfxMatrix);
                     Matrix_Translate(gGfxMatrix, D_800D1AC4[i + 1], D_800D1AD8[i + 1], -100.0f, MTXF_NEW);
                     Matrix_RotateZ(gGfxMatrix, M_DTOR * sGoldRingsFwork[0], MTXF_APPLY);
-                    Matrix_Scale(gGfxMatrix, sGoldRingsFwork[i + 2], sGoldRingsFwork[i + 2], sGoldRingsFwork[i + 2],
-                                 MTXF_APPLY);
+                    Matrix_Scale(gGfxMatrix, sGoldRingsFwork[i + 2], sGoldRingsFwork[i + 2], sGoldRingsFwork[i + 2], MTXF_APPLY);
+                    Matrix_Scale(gGfxMatrix, ringScale, ringScale, ringScale, MTXF_APPLY);
 
                     Matrix_SetGfxMtx(&gMasterDisp);
                     gSPDisplayList(gMasterDisp++, aStarDL);
@@ -423,8 +434,10 @@ void HUD_GoldRings_Draw(void) {
                         scale += 0.06f;
                     }
 
+                    HUD_MatrixTranslateCoord(&x, &y);
                     Matrix_Translate(gGfxMatrix, x, y, -100.0f, MTXF_NEW);
                     Matrix_Scale(gGfxMatrix, scale, scale, scale, MTXF_APPLY);
+                    Matrix_Scale(gGfxMatrix, ringScale, ringScale, ringScale, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
 
                     if (sGoldRingsIwork[i + 1] == 2) {
@@ -459,6 +472,8 @@ void HUD_GoldRings_Draw(void) {
     }
     sGoldRingsFwork[0] += 35.0f;
     sGoldRingsFwork[1] += 10.0f;
+
+    Lib_InitPerspective(&gMasterDisp);
 }
 
 void HUD_TeamShields_Draw(f32 xPos, f32 yPos, s32 arg2) {
