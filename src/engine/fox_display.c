@@ -139,7 +139,7 @@ void Display_DrawHelpAlert(void) {
 
         switch (sp7C) {
             case false:
-                RCP_SetupDL(&gMasterDisp, SETUPDL_76);
+                RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
                 if (sp78 < 0.0f) {
                     Graphics_DisplaySmallText(43 - 19, 106, 1.0f, 1.0f, "HELP!!");
@@ -149,7 +149,7 @@ void Display_DrawHelpAlert(void) {
                 break;
 
             case true:
-                RCP_SetupDL(&gMasterDisp, SETUPDL_76);
+                RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
                 Graphics_DisplaySmallText(43 - 19, 106, 1.0f, 1.0f, "HELP!!");
                 Graphics_DisplaySmallText(SCREEN_WIDTH - 43 - 19, 106, 1.0f, 1.0f, "HELP!!");

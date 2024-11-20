@@ -423,7 +423,7 @@ void func_radio_800BAAE8(void) {
             D_800D4A74 = -1.0f;
         }
         sp38 = gRadioPortraitScaleY * 20.0f * D_800D4A74;
-        RCP_SetupDL_76();
+        gSPDisplayList(gMasterDisp++, gRcpSetupDLs[SETUPDL_76_POINT]);
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
 
         if (mirror) {
@@ -700,7 +700,7 @@ void Radio_Draw(void) {
             if ((gTeamShields[idx] <= 0) && (gGameFrameCount & 4) && (gTeamShields[idx] != -2) &&
                 (gCurrentRadioPortrait != RCID_STATIC) && (gCurrentRadioPortrait != RCID_STATIC + 1) &&
                 (gCurrentRadioPortrait != RCID_1000)) {
-                RCP_SetupDL(&gMasterDisp, SETUPDL_76);
+                RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
                 Graphics_DisplaySmallText(31, 167, 1.0f, 1.0f, "DOWN");
                 HUD_TeamDownWrench_Draw(1);
@@ -749,7 +749,7 @@ void Radio_Draw(void) {
             if ((gActors[idx].obj.status != OBJ_ACTIVE) && (gGameFrameCount & 4) &&
                 (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_ACTIVE) && (gCurrentRadioPortrait != RCID_STATIC) &&
                 (gCurrentRadioPortrait != RCID_STATIC + 1) && (gCurrentRadioPortrait != RCID_1000)) {
-                RCP_SetupDL(&gMasterDisp, SETUPDL_76);
+                RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
                 Graphics_DisplaySmallText(31, 167, 1.0f, 1.0f, "DOWN");
             }

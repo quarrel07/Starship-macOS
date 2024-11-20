@@ -37,6 +37,10 @@ void Map_LevelSelect(void) {
     s32 nextPlanetId;
     OSContPad* contPress = &gControllerPress[gMainController];
 
+    if ((sMapState != MAP_IDLE) && (sMapState != MAP_ZOOM_PLANET)) {
+        return;
+    }
+
     if (contPress->button & L_JPAD) {
         mission--;
         if (mission < 0) {
@@ -81,7 +85,7 @@ void Map_LevelSelect(void) {
 
     /* Draw */
     if ((sCurrentPlanetId >= 0) && (sCurrentPlanetId < PLANET_MAX)) {
-        RCP_SetupDL(&gMasterDisp, SETUPDL_83);
+        RCP_SetupDL(&gMasterDisp, SETUPDL_83_POINT);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
 
         Graphics_DisplaySmallText(20, y, 1.0f, 1.0f, "PLANET:");

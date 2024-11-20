@@ -59,7 +59,7 @@ void Ending_8018CE20(u32 arg0) {
                                             130.0f, 1.0f, 1.0f);
                     } else {
                         xPos = (320 - Graphics_GetSmallTextWidth(D_ending_80192E74[i].unk_00)) / 2;
-                        RCP_SetupDL(&gMasterDisp, SETUPDL_83);
+                        RCP_SetupDL(&gMasterDisp, SETUPDL_83_POINT);
                         gDPSetTextureFilter(gMasterDisp++, G_TF_POINT);
                         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 155, 155, alpha);
                         Graphics_DisplaySmallText(xPos, D_ending_80192E74[i].unk_0E, 1.0f, 1.0f,
