@@ -434,7 +434,7 @@ void Title_Ranking_Draw(void) {
 
     // This Kanji texture was used to draw a white line.
     Lib_TextureRect_IA8(&gMasterDisp, &aTextKanjiCOMPLETE_Data[288], 16, 2, 36, 32, 15.2f, 1.0f);
-    
+
     RCP_SetupDL(&gMasterDisp, SETUPDL_83_POINT);
 
     Title_RankingData_Draw();
@@ -2844,6 +2844,8 @@ bool Title_Team_OverrideLimbDraw(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* 
     return false;
 }
 
+f32 prevPassageWayOffset = 0.0f;
+
 void Title_Passage_Draw(void) {
     f32 sZoffsetScale;
 
@@ -2858,9 +2860,20 @@ void Title_Passage_Draw(void) {
     sPassageWayZoffset += 70.0f;
     sPassageWayZoffset = Math_ModF(sPassageWayZoffset, 4101.6f);
 
+    s8 skipInterpolation = (fabsf(sPassageWayZoffset - prevPassageWayOffset) > 4101.6f / 2.0f);
+
     RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, 255, 995, 1000);
 
     Matrix_Push(&gGfxMatrix);
+
+    if (skipInterpolation) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(false);
+
+    } else {
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Title_Passage_Draw", 0);
+    }
 
     Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, (3079.2002f * sZoffsetScale) - sPassageWayZoffset, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, 0.6f, 0.6f, 0.6f, MTXF_APPLY);
@@ -2879,6 +2892,16 @@ void Title_Passage_Draw(void) {
     gSPDisplayList(gMasterDisp++, aTitleCsPassageWayDL);
 
     Matrix_Pop(&gGfxMatrix);
+
+    if (skipInterpolation) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(true);
+    } else {
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+    }
+
+    prevPassageWayOffset = sPassageWayZoffset;
 }
 
 void Title_StarfoxLogo_Draw(void) {
@@ -3366,7 +3389,7 @@ void Title_NextState_OptionMenu(void) {
                     sWipeHeight += 18;
                 } else {
                     gGameState = GSTATE_MENU;
-                    //gGameState = GSTATE_ENDING;
+                    // gGameState = GSTATE_ENDING;
                     gNextGameStateTimer = 2;
                     gOptionMenuStatus = OPTION_WAIT;
                     gDrawMode = DRAW_NONE;
