@@ -102,7 +102,7 @@ void func_demo_80048CC4(ActorCutscene* this, s32 index) {
 
         // @port: Setup team faces
         this->iwork[14] = index + 2;
-        
+
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
     }
 }
@@ -2916,6 +2916,9 @@ void Cutscene_DrawGreatFox(void) {
         RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, 1005);
     }
 
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Cutscene_DrawGreatFox", 0);
+
     if (gGreatFoxIntact) {
         gSPDisplayList(gMasterDisp++, aGreatFoxIntactDL);
     } else {
@@ -2983,4 +2986,6 @@ void Cutscene_DrawGreatFox(void) {
             gSPDisplayList(gMasterDisp++, dList);
         }
     }
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
