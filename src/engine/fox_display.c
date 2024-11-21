@@ -779,7 +779,7 @@ void Display_Reticle(Player* player) {
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, translate->x, translate->y, translate->z, MTXF_APPLY);
             if (gChargeTimers[player->num] >= 20) {
-                RCP_SetupDL(&gMasterDisp, SETUPDL_63);
+                RCP_SetupDL(&gMasterDisp, SETUPDL_63_POINT);
                 if (i == 1) {
                     gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
                     gDPSetEnvColor(gMasterDisp++, 255, 0, 0, 255);
@@ -789,7 +789,7 @@ void Display_Reticle(Player* player) {
                     gDPSetEnvColor(gMasterDisp++, 255, 255, 0, 255);
                 }
             } else {
-                RCP_SetupDL_36();
+                gSPDisplayList(gMasterDisp++, gRcpSetupDLs[SETUPDL_36_POINT]);
             }
 
             if (i == 1) {
