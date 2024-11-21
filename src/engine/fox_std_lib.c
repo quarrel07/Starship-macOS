@@ -85,7 +85,7 @@ void Lib_Texture_Mottle(u16* dst, u16* src, u8 mode) {
 
     dst = LOAD_ASSET(dst);
     src = LOAD_ASSET(src);
-    
+
     switch (mode) {
         case 2:
             for (v = 0; v < 32 * 32; v += 32) {
@@ -150,6 +150,9 @@ s32 Animation_GetLimbIndex(Limb* limb, Limb** skeleton) {
     return 0;
 }
 
+#define TAG_LIMB_ADDRESS(ptr, data) ((((u32) (ptr) << 16) & 0xFFFF0000) | ((u32) (data) & 0x0000FFFF))
+#define TAG_LIMB(limb, data) ((u32) (0x80000000 | (TAG_LIMB_ADDRESS(limb, data))))
+
 void Animation_DrawLimb(s32 mode, Limb* limb, Limb** skeleton, Vec3f* jointTable, OverrideLimbDraw overrideLimbDraw,
                         PostLimbDraw postLimbDraw, void* data) {
     bool override;
@@ -171,6 +174,9 @@ void Animation_DrawLimb(s32 mode, Limb* limb, Limb** skeleton, Vec3f* jointTable
     trans.z = limb->trans.z;
     dList = limb->dList;
     Matrix_Push(&gGfxMatrix);
+
+    // @port Tag the transform.
+    FrameInterpolation_RecordOpenChild(TAG_LIMB(limb, data), limbIndex);
 
     if (overrideLimbDraw == NULL) {
         override = false;
@@ -194,6 +200,9 @@ void Animation_DrawLimb(s32 mode, Limb* limb, Limb** skeleton, Vec3f* jointTable
             gSPDisplayList(gMasterDisp++, dList);
         }
     }
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 
     if (postLimbDraw != NULL) {
         postLimbDraw(limbIndex - 1, &rot, data);
@@ -235,6 +244,10 @@ void Animation_DrawSkeleton(s32 mode, Limb** skeletonSegment, Vec3f* jointTable,
     }
     dList = rootLimb->dList;
     Matrix_Push(&gGfxMatrix);
+
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild(TAG_LIMB(rootLimb, data), rootIndex);
+
     if (overrideLimbDraw == NULL) {
         override = 0;
     } else {
@@ -254,6 +267,10 @@ void Animation_DrawSkeleton(s32 mode, Limb** skeletonSegment, Vec3f* jointTable,
     if (postLimbDraw != NULL) {
         postLimbDraw(rootIndex - 1, &baseRot, data);
     }
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
+
     Matrix_Pop(&gGfxMatrix);
     if (rootLimb->child != NULL) {
         Animation_DrawLimb(mode, rootLimb->child, skeleton, jointTable, overrideLimbDraw, postLimbDraw, data);
