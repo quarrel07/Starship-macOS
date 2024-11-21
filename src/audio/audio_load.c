@@ -610,7 +610,6 @@ void AudioLoad_RelocateFont(s32 fontId, uintptr_t fontBaseAddr, SampleBankRelocI
     //        }
     //    }
     AudioTable* table = AudioLoad_GetLoadTable(FONT_TABLE);
-    printf("fontId: %d\n", fontId);
     SoundFont* font = Audio_LoadFont(table->entries[fontId], fontId);
 
     gSoundFontList[fontId] = *font;
@@ -714,7 +713,6 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
             return ResourceGetDataByCrc((uint64_t) table->entries[id].romAddr);
         case FONT_TABLE:
             gFontLoadStatus[id] = LOAD_STATUS_COMPLETE;
-            printf("fontId: %d\n", id);
             osSendMesg(retQueue, OS_MESG_32(retData << 0x18), OS_MESG_NOBLOCK);
             return Audio_LoadFont(table->entries[id], id);
         case SAMPLE_TABLE:
