@@ -159,6 +159,8 @@ GameEngine::GameEngine() {
 
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySampleV1>(), RESOURCE_FORMAT_BINARY,
                                     "Sample", static_cast<uint32_t>(SF64::ResourceType::Sample), 1);
+    loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySampleV2>(), RESOURCE_FORMAT_BINARY,
+                                    "Sample", static_cast<uint32_t>(SF64::ResourceType::Sample), 2);
 
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySoundFontV0>(), RESOURCE_FORMAT_BINARY,
                                     "SoundFont", static_cast<uint32_t>(SF64::ResourceType::SoundFont), 0);
