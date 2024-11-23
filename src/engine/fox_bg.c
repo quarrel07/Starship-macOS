@@ -804,7 +804,7 @@ void Background_DrawBackdrop(void) {
             }
             break;
 
-        case LEVELTYPE_SPACE: // WIP Needed (space levels have textures that wrap around the screen)
+        case LEVELTYPE_SPACE:
             if (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_ENTER_WARP_ZONE) {
                 Matrix_Push(&gGfxMatrix);
                 camYawDeg = Math_RadToDeg(gPlayer[0].camYaw);
@@ -851,6 +851,9 @@ void Background_DrawBackdrop(void) {
                     if ((sp130 > 180.0f) && (sp134 > 280.0f)) {
                         sp134 = -(360.0f - sp134);
                     }
+
+                    // @port: Tag the transform.
+                    FrameInterpolation_RecordOpenChild("Backdrop_Space", 0);
 
                     Matrix_RotateZ(gGfxMatrix, gStarfieldRoll, MTXF_APPLY);
 
@@ -970,6 +973,8 @@ void Background_DrawBackdrop(void) {
                             gSPDisplayList(gMasterDisp++, D_SY_6001840);
                             break;
                     }
+                    // @port Pop the transform id.
+                    FrameInterpolation_RecordCloseChild();
                 }
                 Matrix_Pop(&gGfxMatrix);
             }
