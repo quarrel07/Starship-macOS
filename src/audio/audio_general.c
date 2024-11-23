@@ -2780,6 +2780,9 @@ void Audio_StartReset(u8 oldSpecId) {
     } else {
         sAudioResetStatus = AUDIORESET_WAIT;
     }
+    // LTODO: Workaround for the crash after quitting the Practice mode
+    sAudioResetStatus = AUDIORESET_WAIT;
+
     AUDIOCMD_GLOBAL_UNMUTE(true);
     Audio_ResetVoicesAndPlayers();
     Audio_ResetSfxChannelState();
