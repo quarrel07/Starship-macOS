@@ -4020,9 +4020,9 @@ f32 D_i3_801BF804[8] = { 0.0f, 0.0f, 270.0f, 90.0f, 0.0f, 180.0f, 400.0f, 400.0f
 
 void Zoness_ZoTanker_Init(ZoTanker* actor) {
     s32 temp_v1;
-    s32 var_s3;
+    s32 containerIdx;
     s32 i;
-    s32 var_s6;
+    s32 j;
     Vec3f sp84;
     Vec3f sp78;
     Vec3f sp6C;
@@ -4037,19 +4037,19 @@ void Zoness_ZoTanker_Init(ZoTanker* actor) {
     actor->vel.z = sp6C.z;
     actor->obj.rot.z = 0.0f;
 
-    var_s3 = 1;
+    containerIdx = 1;
     if (actor->obj.rot.x >= 100.0f) {
         actor->state = 1;
         actor->iwork[3] = actor->obj.rot.x / 100.0f;
         actor->obj.rot.x = (s32) fabsf(Math_ModF(actor->obj.rot.x, 100.0f));
     }
 
-    for (i = 0, var_s6 = 0; (var_s3 < 3) && (i < ARRAY_COUNT(gActors)); i++) {
+    for (i = 0, j = 0; (containerIdx < 3) && (i < ARRAY_COUNT(gActors)); i++) {
         if (gActors[i].obj.status == OBJ_FREE) {
             if (actor->state == 0) {
-                Matrix_MultVec3f(gCalcMatrix, &D_i3_801BF744[var_s3], &sp84);
+                Matrix_MultVec3f(gCalcMatrix, &D_i3_801BF744[containerIdx], &sp84);
             } else {
-                Matrix_MultVec3f(gCalcMatrix, &D_i3_801BF768[var_s3], &sp84);
+                Matrix_MultVec3f(gCalcMatrix, &D_i3_801BF768[containerIdx], &sp84);
             }
 
             Actor_Initialize(&gActors[i]);
@@ -4063,11 +4063,11 @@ void Zoness_ZoTanker_Init(ZoTanker* actor) {
             gActors[i].obj.pos.x = actor->obj.pos.x + sp84.x;
             gActors[i].obj.pos.y = actor->obj.pos.y + sp84.y;
             gActors[i].obj.pos.z = actor->obj.pos.z + sp84.z;
-            ((s32*) &actor->iwork[7])[var_s3] = (s32) (actor->obj.rot.x * 3.0f) + var_s3;
+            ((s32*) &actor->iwork[7])[containerIdx] = (s32) (actor->obj.rot.x * 3.0f) + containerIdx;
             gActors[i].obj.rot.y = actor->obj.rot.y;
-            gActors[i].iwork[0] = D_i3_801BF78C[((s32*) &actor->iwork[7])[var_s3]];
+            gActors[i].iwork[0] = D_i3_801BF78C[((s32*) &actor->iwork[7])[containerIdx]];
             gActors[i].iwork[1] = actor->index;
-            gActors[i].iwork[2] = var_s3;
+            gActors[i].iwork[2] = containerIdx;
             Object_SetInfo(&gActors[i].info, gActors[i].obj.id);
 
             if (actor->state != 0) {
@@ -4075,13 +4075,13 @@ void Zoness_ZoTanker_Init(ZoTanker* actor) {
                 if (D_i3_801BF804[actor->iwork[3]] >= 361.0f) {
                     gActors[i].obj.rot.x = actor->obj.rot.y;
                 } else {
-                    temp_v1 = (actor->iwork[3] * 2) + var_s6;
+                    temp_v1 = (actor->iwork[3] * 2) + j;
                     gActors[i].obj.rot.x = D_i3_801BF804[temp_v1];
                 }
-                var_s6++;
+                j++;
             }
-            ((s32*) &actor->iwork[0])[var_s3] = i;
-            var_s3++;
+            ((uintptr_t*) &actor->iwork[0])[containerIdx] = i;
+            containerIdx++;
         }
     }
     actor->obj.rot.x = 0.0f;
