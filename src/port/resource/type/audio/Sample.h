@@ -16,6 +16,7 @@ struct SampleData {
     uint8_t* sampleAddr;
     AdpcmLoopData* loop;
     AdpcmBookData* book;
+    float tuning = 0.0f;
 };
 
 class Sample : public Ship::Resource<SampleData> {
