@@ -3254,7 +3254,7 @@ void Macbeth_MaBoulder_Update(MaBoulder* this) {
                             this->vel.y = -this->vel.y * (this->work_046 * 0.07f);
                         }
 
-                        this->fwork[0] /= 1.2f + RAND_FLOAT(1.0f) / 2;
+                        this->fwork[0] /= 1.2f + RAND_FLOAT(1.0f) / 2.0f;
                         this->work_046--;
                         this->vel.z /= 1.5f;
                         if (this->work_046 == 0) {
@@ -3262,11 +3262,11 @@ void Macbeth_MaBoulder_Update(MaBoulder* this) {
                         }
                     } else {
                         if (this->timer_0BE <= 0) {
-                            this->fwork[0] = 0;
-                            this->vel.x = 0;
+                            this->fwork[0] = 0.0f;
+                            this->vel.x = 0.0f;
                         }
-                        this->vel.y = 0;
-                        this->vel.z = 0;
+                        this->vel.y = 0.0f;
+                        this->vel.z = 0.0f;
                     }
                 }
 
@@ -3277,7 +3277,7 @@ void Macbeth_MaBoulder_Update(MaBoulder* this) {
                 }
 
                 if (this->work_046 != this->work_04A) {
-                    this->obj.rot.x = this->obj.rot.x + (0.1 * this->vel.z);
+                    this->obj.rot.x = this->obj.rot.x + (0.1f * this->vel.z);
                 }
             }
 
@@ -3803,7 +3803,8 @@ void Macbeth_MaFallingBoulder_Update(MaFallingBoulder* this) {
         }
 
         Macbeth_MaBoulder_Spawn(this->obj.pos.x, this->obj.pos.y, this->obj.pos.z,
-                                (RAND_FLOAT(2.0f) + 20.0f) * this->iwork[4], 0.0f, this->iwork[4] * -34.0f, 0.0f, 2, 3);
+                                (RAND_FLOAT(2.0f) + 20.0f) * (signed int) this->iwork[4], 0.0f,
+                                (signed int) this->iwork[4] * -34.0f, 0.0f, 2, 3);
         Object_Kill(&this->obj, this->sfxSource);
     }
 }
