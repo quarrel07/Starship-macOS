@@ -23,6 +23,7 @@ static void CalculateFrameTimeFromOSTime(OSTime diff) {
 }
 
 static void Play_RenderFps(void) {
+    return;
     // Toggle rendering framerate with the L button.
     if ((gControllerPress[gMainController].button & L_TRIG) &&
         !(~gControllerHold[gMainController].button & (Z_TRIG | R_TRIG))) {
