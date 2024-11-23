@@ -134,7 +134,7 @@ void BonusText_DrawAll(void) {
     BonusText* bonus;
     s32 i;
 
-    RCP_SetupDL(&gMasterDisp, SETUPDL_62);
+    RCP_SetupDL(&gMasterDisp, SETUPDL_62_POINT);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
     for (i = 0, bonus = gBonusText; i < ARRAY_COUNT(gBonusText); i++, bonus++) {
