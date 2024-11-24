@@ -302,6 +302,10 @@ void DrawSettingsMenu(){
             UIWidgets::Tooltip("When Interpolation FPS setting is at least this threshold, add one frame of input lag (e.g. 16.6 ms for 60 FPS) in order to avoid jitter. This setting allows the CPU to work on one frame while GPU works on the previous frame.\nThis setting should be used when your computer is too slow to do CPU + GPU work in time.");
         }
 
+        UIWidgets::CVarCheckbox("Disable Starfield interpolation", "gDisableStarsInterpolation", {
+            .tooltip = "Disable starfield interpolation to increase performance on slower CPUs"
+        });
+
         UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
 
 
@@ -515,10 +519,6 @@ void DrawDebugMenu() {
                        "D-Pad UP to kill all objects.\n"
                        "D-Pad DOWN to freeze/unfreeze the ship speed.\n"
                        "WARNING: Spawning an object that's not loaded in memory will likely result in a crash."
-        });
-
-        UIWidgets::CVarCheckbox("Disable stars interpolation", "gDisableStarsInterpolation", {
-            .tooltip = "Disable starfield interpolation for performance"
         });
 
         UIWidgets::CVarCheckbox("Jump To Map", "gDebugJumpToMap", {
