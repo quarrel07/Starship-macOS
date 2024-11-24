@@ -22,7 +22,7 @@ It is recommended that you install Python and Git standalone, the install proces
 
 _Note: Be sure to either clone with the ``--recursive`` flag or do ``git submodule update --init`` after cloning to pull in the libultraship submodule!_
 
-2. After setup and initial build, use the built-in O2R extraction to make your sf64.otr file.
+2. After setup and initial build, use the built-in OTR extraction to make your sf64.otr file.
 
 _Note: Instructions assume using powershell_
 ```powershell
@@ -76,12 +76,6 @@ cd "build/x64"
 ```powershell
 # If you need to clean the project you can run
 C:\Program Files\CMake\bin\cmake.exe --build build-cmake --target clean
-```
-
-#### Regenerate Asset Headers
-```powershell
-# If you need to regenerate the asset headers to check them into source
-C:\Program Files\CMake\bin\cmake.exe --build build-cmake --target ExtractAssetHeaders
 ```
 
 ## Linux
@@ -165,12 +159,6 @@ cpack -G External (creates appimage)
 cmake --build build-cmake --target clean
 ```
 
-#### Regenerate Asset Headers
-```bash
-# If you need to regenerate the asset headers to check them into source
-cmake --build build-cmake --target ExtractAssetHeaders
-```
-
 ## macOS
 Requires Xcode (or xcode-tools) && `sdl2, libpng, glew, ninja, cmake, nlohmann-json, libzip` (can be installed via homebrew, macports, etc)
 
@@ -215,12 +203,6 @@ cpack
 ```bash
 # If you need to clean the project you can run
 cmake --build build-cmake --target clean
-```
-
-#### Regenerate Asset Headers
-```bash
-# If you need to regenerate the asset headers to check them into source
-cmake --build build-cmake --target ExtractAssetHeaders
 ```
 
 # Compatible Roms
