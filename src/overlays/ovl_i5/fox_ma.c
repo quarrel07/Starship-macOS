@@ -3803,8 +3803,8 @@ void Macbeth_MaFallingBoulder_Update(MaFallingBoulder* this) {
         }
 
         Macbeth_MaBoulder_Spawn(this->obj.pos.x, this->obj.pos.y, this->obj.pos.z,
-                                (RAND_FLOAT(2.0f) + 20.0f) * (s32) this->iwork[4], 0.0f,
-                                (s32) this->iwork[4] * -34.0f, 0.0f, 2, 3);
+                                (RAND_FLOAT(2.0f) + 20.0f) * (s32) this->iwork[4], 0.0f, (s32) this->iwork[4] * -34.0f,
+                                0.0f, 2, 3);
         Object_Kill(&this->obj, this->sfxSource);
     }
 }
@@ -6991,14 +6991,19 @@ void Macbeth_LevelComplete2(Player* player) {
                 Math_SmoothStepToF(&gCsCamEyeX, player->pos.x - 2000.0f, 0.1f, D_ctx_80177A48[8], 0.0f);
                 gCsCamEyeZ -= 1.0f;
             }
-            
+
             //! @BUG: The following condition is always true:
             // if ((gCsFrameCount >= 2120) || (gCsFrameCount < 2175)) {
-
-            // LTODO: Fixed the bug, maybe have an option for it
-            if ((gCsFrameCount >= 2120) && (gCsFrameCount < 2175)) {
-                Math_SmoothStepToF(&gCsCamAtY, player->pos.y + 70.0f, 0.1f, 8.0f, 0.0f);
+            if (CVarGetInteger("gMaCameraFix", 0) == 1) {
+                if ((gCsFrameCount >= 2120) && (gCsFrameCount < 2175)) {
+                    Math_SmoothStepToF(&gCsCamAtY, player->pos.y + 70.0f, 0.1f, 8.0f, 0.0f);
+                }
+            } else {
+                if ((gCsFrameCount >= 2120) || (gCsFrameCount < 2175)) {
+                    Math_SmoothStepToF(&gCsCamAtY, player->pos.y + 70.0f, 0.1f, 8.0f, 0.0f);
+                }
             }
+
             if (gCsFrameCount == 2120) {
                 D_ctx_80177A48[0] = 0.0f;
             }

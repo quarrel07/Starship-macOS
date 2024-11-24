@@ -426,6 +426,13 @@ void DrawEnhancementsMenu() {
 
             ImGui::EndMenu();
         }
+        if (UIWidgets::BeginMenu("Fixes")) {
+            UIWidgets::CVarCheckbox("Macbeth: Level ending cutscene camera fix", "gMaCameraFix", {
+                .tooltip = "Fixes a camera bug found in the code of the game"
+            });
+
+            ImGui::EndMenu();
+        }
 
         ImGui::EndMenu();
     }
