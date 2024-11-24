@@ -3050,7 +3050,7 @@ void Title_SunGlare_Draw(void) {
                 D_menu_801B7BD0 -= 2;
             }
 
-            RCP_SetupDL(&gMasterDisp, SETUPDL_83);
+            RCP_SetupDL(&gMasterDisp, SETUPDL_83_POINT);
 
             gDPSetAlphaDither(gMasterDisp++, G_AD_NOISE);
             gDPSetColorDither(gMasterDisp++, G_CD_NOISE);
