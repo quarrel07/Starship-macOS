@@ -1,1 +1,0 @@
-Save_Read = 0x800BED14;
