@@ -430,9 +430,18 @@ void DrawEnhancementsMenu() {
 
             ImGui::EndMenu();
         }
+        
         if (UIWidgets::BeginMenu("Fixes")) {
             UIWidgets::CVarCheckbox("Macbeth: Level ending cutscene camera fix", "gMaCameraFix", {
                 .tooltip = "Fixes a camera bug found in the code of the game"
+            });
+
+            ImGui::EndMenu();
+        }
+
+        if (UIWidgets::BeginMenu("Restoration")) {
+            UIWidgets::CVarCheckbox("Sector Z: Missile cutscene bug", "gSzMissileBug", {
+                .tooltip = "Restores the missile cutscene bug present in JP 1.0"
             });
 
             ImGui::EndMenu();

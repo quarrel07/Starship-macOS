@@ -182,11 +182,18 @@ void SectorZ_Missile_Update(ActorAllRange* this) {
         }
     }
 
+    s32 bugFixCond;
+    if (CVarGetInteger("gSzMissileBug", 0) == 1) {
+        bugFixCond = 0;
+    } else {
+        bugFixCond = (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_GFOX_REPAIR);
+    }
+
     // Level complete trigger check
     if (((fabsf(this->fwork[MISSILE_TARGET_Z] - this->obj.pos.z) < 2000.0f) &&
          (((gPlayer[0].cam.eye.z < 0.0f) || (D_edisplay_801615D0.y < 0.0f)) ||
-          (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_GFOX_REPAIR))) &&
-        (((gPlayer[0].state_1C8 == PLAYERSTATE_1C8_ACTIVE) || (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_GFOX_REPAIR)) ||
+          bugFixCond)) &&
+        (((gPlayer[0].state_1C8 == PLAYERSTATE_1C8_ACTIVE) || bugFixCond) ||
          (gPlayer[0].state_1C8 == PLAYERSTATE_1C8_U_TURN))) {
         gPlayer[0].state_1C8 = PLAYERSTATE_1C8_LEVEL_COMPLETE;
         gPlayer[0].csState = 100;
