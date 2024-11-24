@@ -4,6 +4,3 @@
 [submodule "tools/Torch"]
 	path = tools/Torch
 	url = https://github.com/HarbourMasters/Torch
-[submodule "libultraship"]
-	path = libultraship
-	url = https://github.com/KiritoDv/libultraship
