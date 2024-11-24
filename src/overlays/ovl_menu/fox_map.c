@@ -4741,7 +4741,7 @@ void Map_Titania_DrawRings2(PlanetId planetId) {
     gDPSetEnvColor(gMasterDisp++, 73, 31, 15, 0);
 
     Matrix_Push(&gGfxMatrix);
-    
+
     // @port: Tag the transform.
     FrameInterpolation_RecordOpenChild("TAG_TITANIA_RINGS", planetId);
 
@@ -4786,9 +4786,11 @@ void Map_VenomCloud_Draw(f32* zAngle, f32 next, f32 scale) {
     // @port This should be aMapVenomCloudDL but torch is stupid sometimes
     u8* buffer = SEGMENTED_TO_VIRTUAL(aMapVenomCloudEffectTex);
     gSPVertex(gMasterDisp++, ast_map_seg6_vtx_47F00, 8, 0);
-    gDPLoadTextureBlock(gMasterDisp++, buffer, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 33, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTextureBlock(gMasterDisp++, buffer, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 33, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
     gSP2Triangles(gMasterDisp++, 1, 2, 3, 0, 1, 3, 0, 0);
-    gDPLoadTextureBlock(gMasterDisp++, buffer + 64 * 32, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 32, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTextureBlock(gMasterDisp++, buffer + 64 * 32, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 32, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
     gSP2Triangles(gMasterDisp++, 5, 6, 7, 0, 5, 7, 4, 0);
 
     Matrix_Pop(&gGfxMatrix);
@@ -4906,14 +4908,14 @@ void Map_PlanetMedal_Draw(PlanetId planetId) {
 
                 // @port: Tag the transform.
                 FrameInterpolation_RecordOpenChild("TAG_MEDAL", planetId);
-                
+
                 Matrix_Copy(gGfxMatrix, &D_menu_801CE1E0[planetId]);
                 Matrix_Translate(gGfxMatrix, 0.0f, -30.0f, 0.0f, MTXF_APPLY);
 
                 Matrix_SetGfxMtx(&gMasterDisp);
 
                 gSPDisplayList(gMasterDisp++, D_MAP_604D680);
-                
+
                 Matrix_Pop(&gGfxMatrix);
 
                 // @port Pop the transform id.
@@ -6384,8 +6386,13 @@ void Map_Arwing_Draw(s32 index) {
 
     Matrix_Push(&gGfxMatrix);
 
-    // @port Skip interpolation
-    FrameInterpolation_ShouldInterpolateFrame(false);
+    if (sPaths[index].unk_14 == 2) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(false);
+    } else {
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Map_Arwing_Draw", 0);
+    }
 
     Matrix_Translate(gGfxMatrix, D_menu_801CEEB0.x, D_menu_801CEEB0.y, D_menu_801CEEB0.z, MTXF_APPLY);
 
