@@ -485,6 +485,10 @@ void DrawDebugMenu() {
             .tooltip = "Allows you to select any level from the main menu"
         });
 
+        UIWidgets::CVarCheckbox("Skip Briefing", "gSkipBriefing", {
+            .tooltip = "Allows you to skip the briefing sequence in level select"
+        });
+
         UIWidgets::CVarCheckbox("Enable Expert Mode", "gForceExpertMode", {
             .tooltip = "Allows you to force expert mode"
         });

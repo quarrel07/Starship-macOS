@@ -112,27 +112,27 @@ void Map_LevelSelect(void) {
     }
 
     // Bypass briefing
-    #if DEBUG_SKIP_BRIEFING
-    if ((timer == 0) && (startLevel == 1)) {
-        if ((sMapState == 2) && (sMapSubState > 0)) {
-            if (sCurrentPlanetId == PLANET_VENOM) {
-                if (startOption) {
-                    gCurrentLevel = LEVEL_VENOM_ANDROSS;
-                } else if (sPlanetArray[mission][difficulty] == SAVE_SLOT_VENOM_2) {
-                    gCurrentLevel = LEVEL_VENOM_2;
+    if (CVarGetInteger("gSkipBriefing", 0) == 1) {
+        if ((timer == 0) && (startLevel == 1)) {
+            if ((sMapState == 2) && (sMapSubState > 0)) {
+                if (sCurrentPlanetId == PLANET_VENOM) {
+                    if (startOption) {
+                        gCurrentLevel = LEVEL_VENOM_ANDROSS;
+                    } else if (sPlanetArray[mission][difficulty] == SAVE_SLOT_VENOM_2) {
+                        gCurrentLevel = LEVEL_VENOM_2;
+                    }
+                } else if ((sCurrentPlanetId == PLANET_AREA_6) && startOption) {
+                    gCurrentLevel = LEVEL_UNK_4;
                 }
-            } else if ((sCurrentPlanetId == PLANET_AREA_6) && startOption) {
-                gCurrentLevel = LEVEL_UNK_4;
-            }
-            Map_LevelStart_AudioSpecSetup(gCurrentLevel);
-            sLevelStartState = 0;
-            D_menu_801CD968 = 0;
-            Map_PlayLevel();
-            if (startOption && ((gCurrentLevel == LEVEL_METEO) || (gCurrentLevel == LEVEL_SECTOR_X) ||
-                                (sPlanetArray[mission][difficulty] == SAVE_SLOT_VENOM_2))) {
-                gLevelPhase = 1;
+                Map_LevelStart_AudioSpecSetup(gCurrentLevel);
+                sLevelStartState = 0;
+                D_menu_801CD968 = 0;
+                Map_PlayLevel();
+                if (startOption && ((gCurrentLevel == LEVEL_METEO) || (gCurrentLevel == LEVEL_SECTOR_X) ||
+                                    (sPlanetArray[mission][difficulty] == SAVE_SLOT_VENOM_2))) {
+                    gLevelPhase = 1;
+                }
             }
         }
     }
-    #endif
 }
