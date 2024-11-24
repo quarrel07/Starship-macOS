@@ -1,112 +1,84 @@
-[![Discord Invitation](https://discordapp.com/api/guilds/1190102597521133700/widget.png?style=banner2 'Starfox 64')](https://discord.gg/tuwdmuTTqc)
+[comment]: <> (Todo: Make Light Mode Image)
+[comment]: <> (Todo: Make Dark Mode Image)
 
-# Starfox 64 (US) REV 1.1
+# Starship
 
-This is a WIP **matching decompilation** of ***Starfox 64***. The purpose of the project is to recreate a source code base for the game from scratch, using information found inside the game along with static and/or dynamic analysis.
+## Discord
 
-It currently builds the following ROM:
+Official Discord: https://discord.com/invite/shipofharkinian
 
-* starfox64.us.rev1.z64 `MD5: 741a94eee093c4c8684e66b89f8685e8`
+If you're having any trouble after reading through this `README`, feel free ask for help in the Starship Support text channels. Please keep in mind that we do not condone piracy.
 
-**This repo does not include any assets or assembly code necessary for compiling the ROM. A prior copy of the game is required to extract the required assets.**
+# Quick Start
 
-## Installation
+Starship does not include any copyrighted assets.  You are required to provide a supported copy of the game.
 
-#### 1. Install build dependencies
+### 1. Verify your ROM dump
+You can verify you have dumped a supported copy of the game by using the compatibility checker at https://2ship.equipment/. If you'd prefer to manually validate your ROM dump, you can cross-reference its `sha1` hash with the hashes [here](docs/supportedHashes.json).
 
-### Windows
+### 2. Download Starship from [Releases](https://github.com/HarbourMasters/starship/releases)
 
-For Windows 10, install WSL and a distribution by following this
-[Windows Subsystem for Linux Installation Guide](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
-We recommend using Debian or Ubuntu 22.04 Linux distributions.
+### 3. Launch the Game!
+#### Windows
+* Extract the zip
+* Launch `starship.exe`
 
-### Linux (Native or under WSL / VM)
+#### Linux
+* Place your supported copy of the game in the same folder as the appimage.
+* Execute `starship.appimage`. You may have to `chmod +x` the appimage via terminal.
 
-The build process has the following package requirements:
+#### macOS
+* Run `starship.app`.
+* When prompted, select your supported copy of the game.
 
-* make
-* git
-* build-essential
-* binutils-mips-linux-gnu
-* python3
-* pip3
-* libpng-dev
+### 4. Play!
 
-Under Debian / Ubuntu (which we recommend using), you can install them with the following commands:
+Congratulations, you are now sailing with Starship! Have fun!
 
-```bash
-sudo apt update
-sudo apt install make cmake git build-essential binutils-mips-linux-gnu python3 python3-pip clang-format-14 clang-tidy
-```
+# Configuration
 
-### MacOS
+### Default keyboard configuration
+| N64 | A | B | Z | Start | Analog stick | C buttons | D-Pad |
+| - | - | - | - | - | - | - | - |
+| Keyboard | X | C | Z | Space | WASD | Arrow keys | TFGH |
 
-Install [Homebrew](https://brew.sh) and the following dependencies:
-```
-brew update
-brew install coreutils make pkg-config tehzz/n64-dev/mips64-elf-binutils
-```
+### Other shortcuts
+| Keys | Action |
+| - | - |
+| F1 | Toggle menubar |
+| F11 | Fullscreen |
+| Tab | Toggle Alternate assets |
+| Ctrl+R | Reset |
 
-#### 2. Clone the repository
+### Graphics Backends
+Currently, there are three rendering APIs supported: DirectX11 (Windows), OpenGL (all platforms), and Metal (macOS). You can change which API to use in the `Settings` menu of the menubar, which requires a restart.  If you're having an issue with crashing, you can change the API in the `starship.json` file by finding the line `"Backend":{`... and changing the `id` value to `3` and set the `Name` to `OpenGL`. `DirectX 11` with id `2` is the default on Windows. `Metal` with id `4` is the default on macOS.
 
-Create your own fork of the repository at `https://github.com/sonicdcer/sf64`. Then clone your fork where you wish to have the project, with the command:
+# Custom Assets
 
-```bash
-git clone https://github.com/<YOUR_USERNAME>/sf64.git
-```
+Custom assets are packed in `.o2r` or `.otr` files. To use custom assets, place them in the `mods` folder.
 
-This will copy the GitHub repository contents into a new folder in the current directory called `sf64`. Change into this directory before doing anything else:
+If you're interested in creating and/or packing your own custom asset `.o2r`/`.otr` files, check out the following tools:
+* [**retro - OTR and O2R generator**](https://github.com/HarbourMasters64/retro)
+* [**fast64 - Blender plugin (Note that MM is not fully supported at this time)**](https://github.com/HarbourMasters/fast64)
 
-```bash
-cd sf64
-```
+# Development
+### Building
 
-#### 3. Install python dependencies
+If you want to manually compile Starship, please consult the [building instructions](docs/BUILDING.md).
 
-The build process has a few python packages required that are located in `/tools/requirements-python.txt`.
 
-To install them simply run in a terminal:
+### Playtesting
+If you want to playtest a continuous integration build, you can find them at the links below. Keep in mind that these are for playtesting only, and you will likely encounter bugs and possibly crashes. 
 
-```bash
-python3 -m pip install -r ./tools/requirements-python.txt
-```
-* Depending on your python version, you might need to add  --break-system-packages, or use venv.
+[comment]: <> (Todo: Make these...)
 
-#### 4. Update submodules & build toolchain
+* [Windows](https://nightly.link/HarbourMasters/2ship2harkinian/workflows/main/develop/2ship-windows.zip)
+* [Linux](https://nightly.link/HarbourMasters/2ship2harkinian/workflows/main/develop/2ship-linux.zip)
+* [Mac](https://nightly.link/HarbourMasters/2ship2harkinian/workflows/main/develop/2ship-mac.zip)
 
-```bash
-git submodule update --init --recursive
-make toolchain
-```
-
-#### 5. Prepare a base ROM
-
-Copy your ROM to the root of this new project directory, and rename the file of the baserom to reflect the version of ROM you are using. ex: `baserom.us.rev1.z64`
-* Make sure the ROM is the US version, revision 1.1 (REV A).
-
-#### 6. Make and Build the ROM
-
-To start the extraction/build process, run the following command:
-
-```bash
-make init
-```
-This will create the build folders, a new folder with the assembly as well as containing the disassembly of nearly all the files containing code.
-
-this make target will also build the ROM. If all goes well, a new ROM called "starfox64.us.rev1.z64" should be built and the following text should be printed:
-
-```bash
-741a94eee093c4c8684e66b89f8685e8  build/starfox64.us.rev1.z64
-./build/starfox64.us.rev1.z64: OK
-```
-
-If you instead see the following:
-
-```bash
-./build/starfox64.us.rev1.z64: FAILED
-md5sum: WARNING: 1 computed checksum did NOT match
-```
-
-This means that something is wrong with the ROM's contents. Either the base files are incorrect due to a bad ROM, or some of the code is not matching.
-
-From now on you should be able to build the rom by running `make`.
+<a href="https://github.com/Kenix3/libultraship/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/poweredbylus.darkmode.png">
+    <img alt="Powered by libultraship" src="./docs/poweredbylus.lightmode.png">
+  </picture>
+</a>
