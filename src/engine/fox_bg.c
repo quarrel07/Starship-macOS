@@ -548,9 +548,16 @@ void Background_DrawBackdrop(void) {
 
                     skipInterpolation = (fabsf(sp13C - bgPrevPosX) > 7280.0f / 2.0f);
 
+                    f32 bgCutsceneFix;
+                    if ((gPlayer[0].state_1C8 == PLAYERSTATE_1C8_LEVEL_INTRO) && (gCurrentLevel == LEVEL_CORNERIA)) {
+                        bgCutsceneFix = 100.0f;
+                    } else {
+                        bgCutsceneFix = 0.0f;
+                    }
+
                     // Apply camera roll and translate matrix to the starting position (far left)
                     Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
-                    Matrix_Translate(gGfxMatrix, sp13C - 14560.0f, -2000.0f + sp134, -6000.0f, MTXF_APPLY);
+                    Matrix_Translate(gGfxMatrix, sp13C - 14560.0f, -2000.0f + sp134 + bgCutsceneFix, -6000.0f, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
 
                     // Render the textures across a wider range to cover the screen
@@ -1675,7 +1682,7 @@ void Background_DrawGround(void) {
             {
                 u32 skipInfo = skipInterpolationGround << 8 | skipInterpolationGround2 << 16;
 
-                printf("skipInfo: %x \n", skipInfo);
+                // printf("skipInfo: %x \n", skipInfo);
 
                 for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
                     FrameInterpolation_RecordOpenChild("Ground", i | skipInfo);
