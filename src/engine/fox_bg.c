@@ -1413,91 +1413,71 @@ void Background_DrawGround(void) {
         case LEVEL_TRAINING:
             RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
 
-            static Vtx trainingGroundVtx_FIX[] = {
-                { { { 4000, 0, -6000 }, 0, { 20947, -19923 }, { 0, 120, 0, 255 } } },
-                { { { -4000, 0, -6000 }, 0, { 0, -19923 }, { 0, 120, 0, 255 } } },
-                { { { -4000, 0, 0 }, 0, { 0, -9449 }, { 0, 120, 0, 255 } } },
-                { { { 4000, 0, 0 }, 0, { 20947, -9449 }, { 0, 120, 0, 255 } } },
-                { { { -4000, 0, 6000 }, 0, { 0, 1023 }, { 0, 120, 0, 255 } } },
-                { { { 4000, 0, 6000 }, 0, { 20947, 1023 }, { 0, 120, 0, 255 } } },
-            };
-
-            static Gfx trainingGroundDL_FIX[] = {
-                gsSPVertex(trainingGroundVtx_FIX, 6, 0),
-                gsSP2Triangles(1, 2, 3, 0, 1, 3, 0, 0),
-                gsSP2Triangles(4, 5, 3, 0, 4, 3, 2, 0),
-                gsSPEndDisplayList(),
-            };
-
-            sp1C4 = D_TR_6005938;
-            sp1C0 = trainingGroundDL_FIX;
-            gDPLoadTextureBlock(gMasterDisp++, sp1C4, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                                G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
-            RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
+            skipInterpolationGround = (fabsf(gPlayer[gPlayerNum].xPath - prevPlayerPath) > 12000.0f / 2.0f);
+            skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
 
             if (gLevelMode == LEVELMODE_ON_RAILS) {
-                // if (gPathTexScroll > 290.0f) {
-                //     gPathTexScroll -= 290.0f;
-                // }
-                gDPSetTextureImage(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, sp1C4);
-                temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f)); // 0.64f / 3.0f
-                temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
-                gDPSetupTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+                if (gPathTexScroll > (32.0f * 36.7f) / 2.0f) {
+                    gPathTexScroll -= (32.0f * 36.7f) / 2.0f;
+                }
 
-                // CENTER FAR
+                // Original Display (Center)
                 Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -3000.0f /* + gPathTexScroll*/, MTXF_APPLY);
+                Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -2500.0f + gPathTexScroll, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
-                Matrix_Pop(&gGfxMatrix);
-                // LEFT
-                Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, -8000.0f, 0.0f, -3000.0f, MTXF_APPLY);
-                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
-                Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
-                Matrix_Pop(&gGfxMatrix);
-                // RIGHT
-                Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, 8000.0f, 0.0f, -3000.0f /* + gPathTexScroll*/, MTXF_APPLY);
-                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
-                Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
+                gSPDisplayList(gMasterDisp++, D_TR_6005880);
                 Matrix_Pop(&gGfxMatrix);
 
-                // CENTER
+                // Mirrored Display - Left Side
                 Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -9000.0f /* + gPathTexScroll*/, MTXF_APPLY);
+                Matrix_Translate(gGfxMatrix, -8000.0f, 0.0f, -2500.0f + gPathTexScroll,
+                                 MTXF_APPLY); // Move left by the width of the original (-8000.0f)
                 Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
-                Matrix_Pop(&gGfxMatrix);
-                // LEFT
-                Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, -8000.0f, 0.0f, -9000.0f /* + gPathTexScroll*/, MTXF_APPLY);
-                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
-                Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
-                Matrix_Pop(&gGfxMatrix);
-                // RIGHT
-                Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, 8000.0f, 0.0f, -9000.0f /* + gPathTexScroll*/, MTXF_APPLY);
-                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
-                Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
+                gSPDisplayList(gMasterDisp++, D_TR_6005880);
                 Matrix_Pop(&gGfxMatrix);
 
+                // Mirrored Display - Right Side
                 Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 3000.0f /* + gPathTexScroll*/, MTXF_APPLY);
+                Matrix_Translate(gGfxMatrix, 8000.0f, 0.0f, -2500.0f + gPathTexScroll,
+                                 MTXF_APPLY); // Move right by the width of the original (+8000.0f)
                 Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                gSPDisplayList(gMasterDisp++, sp1C0);
+                gSPDisplayList(gMasterDisp++, D_TR_6005880);
                 Matrix_Pop(&gGfxMatrix);
 
+                // Original Display for the second section (Center)
+                Matrix_Push(&gGfxMatrix);
+                Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -8435.0f + 65 + gPathTexScroll, MTXF_APPLY);
+                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
+                Matrix_SetGfxMtx(&gMasterDisp);
+                gSPDisplayList(gMasterDisp++, D_TR_6005880);
+                Matrix_Pop(&gGfxMatrix);
+
+                // Mirrored Display - Left Side for the second section
+                Matrix_Push(&gGfxMatrix);
+                Matrix_Translate(gGfxMatrix, -8000.0f, 0.0f, -8435.0f + 65 + gPathTexScroll,
+                                 MTXF_APPLY); // Move left by the width of the original (-8000.0f)
+                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
+                Matrix_SetGfxMtx(&gMasterDisp);
+                gSPDisplayList(gMasterDisp++, D_TR_6005880);
+                Matrix_Pop(&gGfxMatrix);
+
+                // Mirrored Display - Right Side for the second section
+                Matrix_Push(&gGfxMatrix);
+                Matrix_Translate(gGfxMatrix, 8000.0f, 0.0f, -8435.0f + 65 + gPathTexScroll,
+                                 MTXF_APPLY); // Move right by the width of the original (+8000.0f)
+                Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 0.5f, MTXF_APPLY);
+                Matrix_SetGfxMtx(&gMasterDisp);
+                gSPDisplayList(gMasterDisp++, D_TR_6005880);
+                Matrix_Pop(&gGfxMatrix);
             } else {
+                u32 skipInfo = skipInterpolationGround << 8 | skipInterpolationGround2 << 16;
+
                 for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
+                    FrameInterpolation_RecordOpenChild("Ground", i | skipInfo);
+                    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
                     Matrix_Push(&gGfxMatrix);
                     Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i],
                                      MTXF_APPLY);
@@ -1505,8 +1485,11 @@ void Background_DrawGround(void) {
                     Matrix_SetGfxMtx(&gMasterDisp);
                     gSPDisplayList(gMasterDisp++, D_TR_6005880);
                     Matrix_Pop(&gGfxMatrix);
+                    FrameInterpolation_RecordCloseChild();
                 }
             }
+            prevPlayerPath = gPlayer[gPlayerNum].xPath;
+            prevPlayerPath2 = sp1D4;
             break;
 
         case LEVEL_AQUAS:
