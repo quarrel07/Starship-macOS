@@ -7191,6 +7191,11 @@ void Macbeth_LevelComplete2(Player* player) {
             break;
     }
 
+    // @port: Make the Great Fox carry the landmaster for real.
+    if (gCsFrameCount >= 2300) {
+        player->pos = gActors[3].obj.pos;
+    }
+
     if (player->pathChangeTimer != 0) {
         player->pathChangeTimer--;
         Math_SmoothStepToF(&player->yRot_114, -player->pathChangeYaw, 0.03f, 0.5f, 0.0001f);
