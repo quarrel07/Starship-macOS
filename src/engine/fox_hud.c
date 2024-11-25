@@ -2018,8 +2018,8 @@ s32 HUD_RadarMarks_Update(void) {
     f32 x1;
     f32 y1;
     f32 z1;
-    f32 x;
-    f32 y;
+    f32 x = 0;
+    f32 y = 0;
     s32 pad;
     f32 temp;
     f32 temp2;
@@ -2897,11 +2897,7 @@ void HUD_KillCountStars_Update(void) {
 }
 
 void HUD_VS_ShieldGaugeFrame_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
-    s32 i;
-
-    // LTodo: [HD-Texture] Is broken
-    u8* texture = (u8*) LOAD_ASSET(aVsShieldGaugeFrameTex);
-    Lib_TextureRect_IA8(&gMasterDisp, texture + 2 * ((640 * i) / 2), 80, 8, xPos, (8 * i * yScale) + yPos, xScale,
+    Lib_TextureRect_IA8(&gMasterDisp, aVsShieldGaugeFrameTex, 80, 26, xPos, yPos, xScale,
                         yScale);
 }
 

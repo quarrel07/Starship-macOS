@@ -168,9 +168,7 @@ void func_versus_800BD350(f32 xPos, f32 yPos) {
 }
 
 void func_versus_800BD3A8(f32 xPos, f32 yPos) {
-    s32 i;
-
-    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex + ((80 * 8 * i) / 2), aVsHandicapFrameTLUT, 80, 71, xPos, yPos, 1.0f,
+    Lib_TextureRect_CI4(&gMasterDisp, aVsHandicapFrameTex, aVsHandicapFrameTLUT, 80, 71, xPos, yPos, 1.0f,
                      1.0f);
 }
 
