@@ -425,7 +425,12 @@ void DrawEnhancementsMenu() {
 
         if (UIWidgets::BeginMenu("Gameplay")) {
             UIWidgets::CVarCheckbox("No Level of Detail (LOD)", "gDisableLOD", {
-                .tooltip = "Disable Level of Detail (LOD) to avoid models using lower poly versions at a distance"
+                .tooltip = "Disable Level of Detail (LOD) to avoid models using lower poly versions at a distance",
+                .defaultValue = true
+            });
+            UIWidgets::CVarCheckbox("Character heads inside Arwings at all times", "gTeamFaces", {
+                .tooltip = "Character heads are displayed inside Arwings in all cutscenes",
+                .defaultValue = true
             });
 
             ImGui::EndMenu();
@@ -454,6 +459,7 @@ void DrawEnhancementsMenu() {
 void DrawCheatsMenu() {
     if (UIWidgets::BeginMenu("Cheats")) {
         UIWidgets::CVarCheckbox("Infinite Lives", "gInfiniteLives");
+        UIWidgets::CVarCheckbox("Unbreakable Wings", "gUnbreakableWings");
         UIWidgets::CVarCheckbox("Infinite Bombs", "gInfiniteBombs");
         UIWidgets::CVarCheckbox("Hyper Laser", "gHyperLaser");
 
@@ -475,8 +481,6 @@ void DrawHit64Menu() {
         UIWidgets::CVarCheckbox("Start with Peppy dead", "gHit64PeppyDead", {
                 .tooltip = "Start the level with with Peppy dead."
             });
-        // UIWidgets::CVarCheckbox("Infinite Bombs", "gInfiniteBombs");
-        // UIWidgets::CVarCheckbox("Hyper Laser", "gHyperLaser");
 
         ImGui::EndMenu();
     }

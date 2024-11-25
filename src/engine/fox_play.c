@@ -935,14 +935,16 @@ void Player_DamageWings(Player* player, s32 side, s32 damage) {
             gRightWingFlashTimer[player->num] = 30;
             if (player->arwing.rightWingState == WINGSTATE_INTACT) {
                 gRightWingHealth[player->num] -= damage;
-                if (gRightWingHealth[player->num] <= 0) {
-                    Play_SpawnDebris(1, player->hit1.x, player->hit1.y, player->hit1.z);
-                    player->arwing.rightWingState = WINGSTATE_BROKEN;
-                    func_effect_8007D0E0(player->hit1.x, player->hit1.y, player->hit1.z, 2.0f);
-                    gRightWingDebrisTimer[player->num] = 50;
-                    Player_PlaySfx(player->sfxSource, NA_SE_ARWING_WING_BROKEN, player->num);
-                    if (gAllRangeWingRepairTimer == 0) {
-                        gAllRangeWingRepairTimer = 1000;
+                if (CVarGetInteger("gUnbreakableWings", 0) == 0) {
+                    if (gRightWingHealth[player->num] <= 0) {
+                        Play_SpawnDebris(1, player->hit1.x, player->hit1.y, player->hit1.z);
+                        player->arwing.rightWingState = WINGSTATE_BROKEN;
+                        func_effect_8007D0E0(player->hit1.x, player->hit1.y, player->hit1.z, 2.0f);
+                        gRightWingDebrisTimer[player->num] = 50;
+                        Player_PlaySfx(player->sfxSource, NA_SE_ARWING_WING_BROKEN, player->num);
+                        if (gAllRangeWingRepairTimer == 0) {
+                            gAllRangeWingRepairTimer = 1000;
+                        }
                     }
                 }
             }
@@ -950,14 +952,16 @@ void Player_DamageWings(Player* player, s32 side, s32 damage) {
             gLeftWingFlashTimer[player->num] = 30;
             if (player->arwing.leftWingState == WINGSTATE_INTACT) {
                 gLeftWingHealth[player->num] -= damage;
-                if (gLeftWingHealth[player->num] <= 0) {
-                    Play_SpawnDebris(0, player->hit2.x, player->hit2.y, player->hit2.z);
-                    player->arwing.leftWingState = WINGSTATE_BROKEN;
-                    func_effect_8007D0E0(player->hit2.x, player->hit2.y, player->hit2.z, 2.0f);
-                    gLeftWingDebrisTimer[player->num] = 50;
-                    Player_PlaySfx(player->sfxSource, NA_SE_ARWING_WING_BROKEN, player->num);
-                    if (gAllRangeWingRepairTimer == 0) {
-                        gAllRangeWingRepairTimer = 1000;
+                if (CVarGetInteger("gUnbreakableWings", 0) == 0) {
+                    if (gLeftWingHealth[player->num] <= 0) {
+                        Play_SpawnDebris(0, player->hit2.x, player->hit2.y, player->hit2.z);
+                        player->arwing.leftWingState = WINGSTATE_BROKEN;
+                        func_effect_8007D0E0(player->hit2.x, player->hit2.y, player->hit2.z, 2.0f);
+                        gLeftWingDebrisTimer[player->num] = 50;
+                        Player_PlaySfx(player->sfxSource, NA_SE_ARWING_WING_BROKEN, player->num);
+                        if (gAllRangeWingRepairTimer == 0) {
+                            gAllRangeWingRepairTimer = 1000;
+                        }
                     }
                 }
             }
