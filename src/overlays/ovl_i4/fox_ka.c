@@ -1715,8 +1715,10 @@ void Katina_SFTeamMissionAccomUpdate(ActorCutscene* this, s32 idx) {
 
     this->iwork[KA_ACTOR_IWORK_11] = 1;
 
-    // @port: Setup team faces
-    this->iwork[14] = idx + 1;
+    if (CVarGetInteger("gTeamFaces", 1) == 1) {
+        // @port: Setup team faces
+        this->iwork[14] = idx + 1;
+    }
 
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
@@ -1744,8 +1746,10 @@ void Katina_SFTeamFleeUpdate(ActorCutscene* this, s32 idx) {
 
     this->iwork[KA_ACTOR_IWORK_11] = 1;
 
-    // @port: Setup team faces
-    this->iwork[14] = idx + 1;
+    if (CVarGetInteger("gTeamFaces", 1) == 1) {
+        // @port: Setup team faces
+        this->iwork[14] = idx + 1;
+    }
 
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
@@ -1790,9 +1794,11 @@ void Katina_SFTeam_LevelComplete_Update(void) {
                 actor->animFrame = ACTOR_CS_CORNERIAN_FIGHTER;
             }
 
-            // @port: Setup team faces
-            if ((i >= 0) && (i <= 2)) {
-                actor->iwork[14] = i + 2;
+            if (CVarGetInteger("gTeamFaces", 1) == 1) {
+                // @port: Setup team faces
+                if ((i >= 0) && (i <= 2)) {
+                    actor->iwork[14] = i + 2;
+                }
             }
 
             Object_SetInfo(&actor->info, actor->obj.id);
@@ -2633,7 +2639,7 @@ void Katina_EnemyDraw(ActorAllRange* this) {
     }
 
     // @port: never use low poly
-    if (CVarGetInteger("gDisableLOD", 0) == 1) {
+    if (CVarGetInteger("gDisableLOD", 1) == 1) {
         this->iwork[KA_ACTOR_LOW_POLY] = false;
     }
 

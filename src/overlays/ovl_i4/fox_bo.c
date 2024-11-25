@@ -1054,8 +1054,10 @@ void Bolse_8018EAEC(ActorCutscene* this, s32 index) {
     Object_SetInfo(&this->info, this->obj.id);
     this->iwork[11] = 1;
 
-    // @port: Setup team faces
-    this->iwork[14] = index + 2;
+    if (CVarGetInteger("gTeamFaces", 1) == 1) {
+        // @port: Setup team faces
+        this->iwork[14] = index + 2;
+    }
 
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
@@ -1371,9 +1373,11 @@ void Bolse_8018F83C(Actor* this, s32 index) {
     this->vel.z = -gPlayer[0].baseSpeed;
     Object_SetInfo(&this->info, this->obj.id);
     this->iwork[11] = 1;
-    
-    // @port: Setup team faces
-    this->iwork[14] = index + 2;
+
+    if (CVarGetInteger("gTeamFaces", 1) == 1) {
+        // @port: Setup team faces
+        this->iwork[14] = index + 2;
+    }
 
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
 }
@@ -2307,6 +2311,6 @@ void Bolse_DrawDynamicGround(void) {
     }
     Matrix_Pop(&gGfxMatrix);
 
-        // @port Pop the transform id.
+    // @port Pop the transform id.
     FrameInterpolation_RecordCloseChild();
 }

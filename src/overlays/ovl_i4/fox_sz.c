@@ -780,17 +780,19 @@ void SectorZ_CsTeamInit(ActorCutscene* this, s32 index) {
 
     Object_SetInfo(&this->info, this->obj.id);
 
-    // @port: Setup team faces
-    switch (index) {
-        case 0: // Slippy
-            this->iwork[14] = index + 3;
-            break;
-        case 1: // Falco
-            this->iwork[14] = index + 1;
-            break;
-        case 2: // Peppy
-            this->iwork[14] = index + 2;
-            break;
+    if (CVarGetInteger("gTeamFaces", 1) == 1) {
+        // @port: Setup team faces
+        switch (index) {
+            case 0: // Slippy
+                this->iwork[14] = index + 3;
+                break;
+            case 1: // Falco
+                this->iwork[14] = index + 1;
+                break;
+            case 2: // Peppy
+                this->iwork[14] = index + 2;
+                break;
+        }
     }
 
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);

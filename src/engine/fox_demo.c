@@ -100,8 +100,10 @@ void func_demo_80048CC4(ActorCutscene* this, s32 index) {
     } else {
         this->iwork[11] = 1;
 
-        // @port: Setup team faces
-        this->iwork[14] = index + 2;
+        if (CVarGetInteger("gTeamFaces", 1) == 1) {
+            // @port: Setup team faces
+            this->iwork[14] = index + 2;
+        }
 
         AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, this->sfxSource, 4);
     }
