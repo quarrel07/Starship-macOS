@@ -15,7 +15,6 @@ std::shared_ptr<Ship::IResource> ResourceFactoryBinaryMessageLookupV0::ReadResou
     auto count = reader->ReadUInt32();
 
     for (uint32_t i = 0; i < count - 1; i++) {
-        SPDLOG_INFO("Reading message lookup table entry {}", i);
         auto id = reader->ReadInt32();
         auto crc = reader->ReadUInt64();
 
