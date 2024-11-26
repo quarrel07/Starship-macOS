@@ -560,6 +560,10 @@ void DrawDebugMenu() {
             .tooltip = "Control the Arwing speed"
         });
 
+        UIWidgets::CVarCheckbox("Debug Ending", "gDebugEnding", {
+            .tooltip = "Jump to credits at the main menu"
+        });
+
         if (CVarGetInteger("gCheckpoint.Set", 0)) {
             if (UIWidgets::Button("Clear Checkpoint")) {
                 CVarClear("gCheckpoint.Set");
