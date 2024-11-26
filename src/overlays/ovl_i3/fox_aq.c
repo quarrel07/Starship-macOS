@@ -1832,6 +1832,9 @@ void Aquas_Actor255_Draw(Actor255* this) {
     Matrix_Push(&gGfxMatrix);
 
     for (i = 0; i <= this->iwork[1]; i++) {
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild(this, i);
+
         if ((this->iwork[1] != 10) && (i == 0)) {
             i = 1;
         }
@@ -1861,6 +1864,9 @@ void Aquas_Actor255_Draw(Actor255* this) {
 
         Aquas_801ADF7C(D_i3_801C27C0->pos.x, D_i3_801C27C0->pos.y, D_i3_801C27C0->pos.z, xRot, yRot,
                        D_i3_801C27C0->rot.z, D_i3_801BFB90[i], this->timer_0C6 % 2U, this->scale, i);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 }
 
@@ -2406,6 +2412,9 @@ void Aquas_Actor257_Draw(Actor257* this) {
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
     }
 
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild(this, this->iwork[0]);
+
     switch (this->iwork[0]) {
         case 0:
             gSPDisplayList(gMasterDisp++, D_AQ_6019E80);
@@ -2417,6 +2426,9 @@ void Aquas_Actor257_Draw(Actor257* this) {
             gSPDisplayList(gMasterDisp++, D_AQ_6019880);
             break;
     }
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Aquas_AqPearl_Update(AqPearl* this) {
