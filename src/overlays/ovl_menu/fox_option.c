@@ -4561,7 +4561,7 @@ void Option_InvoiceDraw(void) {
 
     Graphics_FillRectangle(&gMasterDisp, 25, 18, SCREEN_WIDTH - 25, SCREEN_HEIGHT - 18, 255, 255, 255, 255);
 
-    RCP_SetupDL(&gMasterDisp, SETUPDL_78);
+    RCP_SetupDL(&gMasterDisp, SETUPDL_78_POINT);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
     Lib_TextureRect_CI4(&gMasterDisp, D_OPT_8000000, D_OPT_8000680, 128, 26, D_menu_801AF3D0[0], D_menu_801AF3F0[0],
@@ -4573,7 +4573,7 @@ void Option_InvoiceDraw(void) {
     Lib_TextureRect_CI4(&gMasterDisp, D_OPT_80017C0, D_OPT_80038C0, 256, 66, D_menu_801AF3D0[2], D_menu_801AF3F0[2],
                         1.0f, 1.0f);
 
-    RCP_SetupDL(&gMasterDisp, SETUPDL_76);
+    RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
     Lib_TextureRect_RGBA16(&gMasterDisp, D_OPT_800E170, 188, 60, D_menu_801AF3D0[3], D_menu_801AF3F0[3], 1.0f, 1.0f);
@@ -4586,6 +4586,8 @@ void Option_InvoiceDraw(void) {
 
     Graphics_DisplayLargeNumber(D_menu_801AF3D0[7] - ((HUD_CountDigits(temp_a0) - 1) * 13), D_menu_801AF3F0[7],
                                 temp_a0);
+
+    RCP_SetupDL(&gMasterDisp, SETUPDL_76);
 
     if (D_menu_801B9090) {
         gDPSetPrimColor(gMasterDisp++, 0, 0, 120, 0, 0, 192);
