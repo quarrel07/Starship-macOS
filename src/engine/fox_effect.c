@@ -3891,6 +3891,9 @@ void Effect_Effect395_Draw(Effect395* this) {
         PRINTF("ＡＣ＿ＤＩＳＰ ＨＥＬＰ %d\n");
     }
 
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild(this, this->state);
+
     switch (this->state) {
         case 0:
             RCP_SetupDL(&gMasterDisp, SETUPDL_49);
@@ -3995,6 +3998,9 @@ void Effect_Effect395_Draw(Effect395* this) {
     }
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_64);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 void Effect_Effect391_Setup(Effect391* this, f32 xPos, f32 yPos, f32 zPos, f32 arg4, f32 scale) {
