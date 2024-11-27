@@ -486,7 +486,7 @@ void HUD_TeamShields_Draw(f32 xPos, f32 yPos, s32 arg2) {
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
     if (arg2 != 0) {
-        HUD_ShieldGaugeBars_Draw((8.0f * xScale) + xPos, yPos + 2.0f, xScale, 1.0f, arg2 / 255.0f);
+        HUD_ShieldGaugeBars_Draw((7.0f * xScale) + xPos, yPos + 2.0f, xScale, 1.0f, arg2 / 255.0f);
     }
 
     if ((arg2 <= 0) && (arg2 != -2) &&
@@ -500,7 +500,7 @@ void HUD_TeamShields_Draw(f32 xPos, f32 yPos, s32 arg2) {
         }
     }
 
-    RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
+    RCP_SetupDL(&gMasterDisp, SETUPDL_76);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
     HUD_ShieldGaugeEdgeLeft_Draw(xPos, yPos, xScale, 1.0f);
     HUD_ShieldGaugeEdgeRight_Draw(xPos + (7.0f * xScale) + (xScale * 6.0f) * 8.0f, yPos, 1.0f, 1.0f);
@@ -2399,11 +2399,11 @@ void HUD_PlayerShieldGauge_Update(void) {
 
 void HUD_PlayerShieldGauge_Draw(f32 x, f32 y) {
     x = OTRGetDimensionFromLeftEdge(x);
-    RCP_SetupDL(&gMasterDisp, SETUPDL_75_POINT);
+    RCP_SetupDL(&gMasterDisp, SETUPDL_75);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-    HUD_ShieldGaugeBars_Draw(x + 8.0f, y + 2.0f, D_801617A8, 1.0f, D_801617AC);
+    HUD_ShieldGaugeBars_Draw(x + 7.0f, y + 2.0f, D_801617A8, 1.0f, D_801617AC);
 
-    RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
+    RCP_SetupDL(&gMasterDisp, SETUPDL_76);
     gDPSetPrimColor(gMasterDisp++, 0, 0, D_800D1EB4, D_800D1EB8, D_800D1EBC, 255);
     HUD_ShieldGaugeEdgeLeft_Draw(x, y, 1.0f, 1.0f);
     HUD_ShieldGaugeEdgeRight_Draw(x + 7.0f + (D_801617A8 * 6.0f * 8.0f), y, 1.0f, 1.0f);
