@@ -51,7 +51,6 @@ namespace fs = std::filesystem;
 #include <utility>
 
 extern "C" {
-extern uint16_t gFPS;
 float gInterpolationStep = 0.0f;
 #include <sf64thread.h>
 #include <macros.h>
@@ -320,7 +319,6 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
         return;
     }
 
-    gFPS = 30;
     wnd->EnableSRGBMode();
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
 
@@ -330,7 +328,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     static int last_update_rate;
     static int time;
     int fps = target_fps;
-    int original_fps = gFPS = 60 / gVIsPerFrame;
+    int original_fps = 60 / gVIsPerFrame;
 
     if (target_fps == 20 || original_fps > target_fps) {
         fps = original_fps;
