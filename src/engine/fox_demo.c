@@ -2574,6 +2574,11 @@ void ActorCutscene_Draw(ActorCutscene* this) {
             gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, this->iwork[0]);
             gDPSetEnvColor(gMasterDisp++, 255, 255, 00, this->iwork[0]);
             gSPDisplayList(gMasterDisp++, aOrbDL);
+
+            // @port: Fix interpolation issue by killing the actor when it's done doing it's job.
+            if (gCsFrameCount >= 227) {
+                gActors[50].obj.status = OBJ_FREE;
+            }
             break;
 
         case ACTOR_CS_COMMANDER:
