@@ -3854,7 +3854,7 @@ void Andross_80193C4C(Player* player) {
     f32 sp80;
     Vec3f sp74;
     Vec3f sp68;
-    s32 temp_v0_2;
+    s32 rnd;
 
     Math_SmoothStepToF(D_ctx_80177A48, 1.0f, 1.0f, 0.01f, 0.0f);
 
@@ -4308,10 +4308,10 @@ void Andross_80193C4C(Player* player) {
                         break;
                 }
                 if (gCsFrameCount > 1300) {
-                    gStarOffsetsX[109] += 1.0f;
-                    gStarOffsetsY[109] += 0.5f;
-                    temp_v0_2 = RAND_INT(100.0f);
-                    gStarFillColors[109] = FILL_COLOR(gStarColors[temp_v0_2 % 16U]);
+                    rnd = RAND_INT(100.0f);
+                    gStarFillColors[1155] = FILL_COLOR(gStarColors[rnd % 16U]);
+                    gStarOffsetsX[1155] += 1.0f * 2.0f;
+                    gStarOffsetsY[1155] += 0.5f * 2.0f;
                 }
             } else {
                 switch (gCsFrameCount) {
