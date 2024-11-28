@@ -1417,7 +1417,7 @@ void Background_DrawGround(void) {
             Matrix_Pop(&gGfxMatrix);
             break;
 
-        case LEVEL_TRAINING:
+        case LEVEL_TRAINING: {
             static Vtx trainingGroundVtx_FIX[] = {
                 { { { 4000, 0, -6000 }, 0, { 20947, -19923 }, { 0, 120, 0, 255 } } },
                 { { { -4000, 0, -6000 }, 0, { 0, -19923 }, { 0, 120, 0, 255 } } },
@@ -1523,6 +1523,7 @@ void Background_DrawGround(void) {
             prevPlayerPath = gPlayer[gPlayerNum].xPath;
             prevPlayerPath2 = sp1D4;
             break;
+        }
 
         case LEVEL_AQUAS:
             RCP_SetupDL(&gMasterDisp, SETUPDL_20);
