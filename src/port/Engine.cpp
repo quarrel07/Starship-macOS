@@ -203,8 +203,17 @@ void GameEngine::StartFrame() const {
     this->context->GetWindow()->StartFrame();
 }
 
+#if 1
+// Values for 44100 hz
 #define SAMPLES_HIGH 752
 #define SAMPLES_LOW 720
+#else
+// Values for 32000 hz
+#define SAMPLES_HIGH 560
+#define SAMPLES_LOW 544
+
+#endif
+
 #define NUM_AUDIO_CHANNELS 2
 
 extern "C" u16 audBuffer = 0;

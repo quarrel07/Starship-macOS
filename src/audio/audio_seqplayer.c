@@ -784,7 +784,7 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
     s8 sp4B;
     u8* seqData;
     s32 pad;
-
+    
     if (!channel->enabled) {
         return;
     }

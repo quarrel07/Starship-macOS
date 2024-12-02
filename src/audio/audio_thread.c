@@ -83,14 +83,11 @@ void AudioThread_CreateNextAudioBuffer(s16* samples, u32 num_samples) {
 
     // Spectrum Analyzer fix
     memcpy(gAiBuffers[gCurAiBuffIndex], samples, num_samples);
-    
-    gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
 
-    if (gMaxAbiCmdCnt < abiCmdCount) {
-        gMaxAbiCmdCnt = abiCmdCount;
-    }
+    gAudioRandom = osGetCount() * (gAudioRandom + gAudioTaskCountQ);
 }
 
+// Original function, unused in the port.
 SPTask* AudioThread_CreateTask() {
     static s32 gMaxAbiCmdCnt = 128;
     static SPTask* gWaitingAudioTask = NULL;
