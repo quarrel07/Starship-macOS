@@ -835,7 +835,7 @@ Acmd* AudioSynth_DoOneAudioUpdate(s16* aiBuf, s32 aiBufLen, Acmd* aList, s32 upd
 
     j = aiBufLen * 2;
     aSetBuffer(aList++, 0, 0, DMEM_TEMP, j);
-    aInterleave(aList++, 0, DMEM_LEFT_CH, DMEM_RIGHT_CH, 0);
+    aInterleave(aList++, DMEM_LEFT_CH, DMEM_RIGHT_CH);
     aSaveBuffer(aList++, DMEM_TEMP, OS_K0_TO_PHYSICAL(aiBuf), j * 2);
 
     return aList;
