@@ -421,6 +421,18 @@ void aDuplicateImpl(uint16_t count, uint16_t in_addr, uint16_t out_addr) {
     } while (count-- > 0);
 }
 
+void aDMEMMove2Impl(uint8_t t, uint16_t in_addr, uint16_t out_addr, uint16_t count) {
+    uint8_t *in = BUF_U8(in_addr);
+    uint8_t *out = BUF_U8(out_addr);
+    int nbytes = ROUND_UP_32(count);
+
+    do {
+        memmove(out, in, nbytes);
+        in += nbytes;
+        out += nbytes;
+    } while (t-- > 0);
+}
+
 void aResampleZohImpl(uint16_t pitch, uint16_t start_fract) {
     int16_t *in = BUF_S16(rspa.in);
     int16_t *out = BUF_S16(rspa.out);
