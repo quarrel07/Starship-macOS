@@ -53,7 +53,7 @@ typedef void (*AudioCustomUpdateFunction)(void);
 #define SAMPLES_PER_FRAME ADPCMFSIZE
 
 // The length of one left/right channel is 13 frames
-#define DMEM_1CH_SIZE (13 * SAMPLES_PER_FRAME * SAMPLE_SIZE)
+#define DMEM_1CH_SIZE (12 * SAMPLES_PER_FRAME * SAMPLE_SIZE)
 // Both left and right channels
 #define DMEM_2CH_SIZE (2 * DMEM_1CH_SIZE)
 
@@ -610,7 +610,7 @@ typedef struct {
     /* 0x06 */ u16 panVolLeft;
     /* 0x08 */ u16 panVolRight;
     /* 0x0A */ u16 resampleRate;
-    /* 0x0C */ s16* waveSampleAddr;
+    /* 0x0C */ Sample** waveSampleAddr;
 } NoteSubEu; // size = 0x10
 
 typedef struct Note {
@@ -623,7 +623,7 @@ typedef struct Note {
 
 typedef struct {
     /* 0x00 */ u8 downsampleRate;
-    /* 0x02 */ u8 windowSize;
+    /* 0x01 */ u8 windowSize;
     /* 0x02 */ u16 decayRatio; // determines how much reverb persists
     /* 0x04 */ u16 leakRtL;
     /* 0x06 */ u16 leakLtR;
