@@ -7,6 +7,7 @@
 #include "prevent_bss_reordering.h"
 #include "global.h"
 #include "assets/ast_katina.h"
+#include "assets/ast_sector_z.h"
 
 #define INDEPENDENCE if (CVarGetInteger("gModIndependence", 0) == 1)
 
@@ -610,11 +611,20 @@ void Katina_KaFrontlineBase_Draw(KaFrontlineBase* this) {
 }
 
 void Katina_KaSaucerer_Init(KaSaucerer* this) {
-    this->swork[BOSS_HATCH_1_HP] = 100;
-    this->swork[BOSS_HATCH_2_HP] = 100;
-    this->swork[BOSS_HATCH_3_HP] = 100;
-    this->swork[BOSS_HATCH_4_HP] = 100;
-    this->swork[BOSS_CORE_HP] = 400;
+    INDEPENDENCE {
+        this->swork[BOSS_HATCH_1_HP] = 100 * 5;
+        this->swork[BOSS_HATCH_2_HP] = 100 * 5;
+        this->swork[BOSS_HATCH_3_HP] = 100 * 5;
+        this->swork[BOSS_HATCH_4_HP] = 100 * 5;
+        this->swork[BOSS_CORE_HP] = 400 * 5;
+    }
+    else {
+        this->swork[BOSS_HATCH_1_HP] = 100;
+        this->swork[BOSS_HATCH_2_HP] = 100;
+        this->swork[BOSS_HATCH_3_HP] = 100;
+        this->swork[BOSS_HATCH_4_HP] = 100;
+        this->swork[BOSS_CORE_HP] = 400;
+    }
     this->fwork[BOSS_CORE_TARGET_LEVEL] = 850.0f;
     this->fwork[BOSS_CORE_LEVEL] = 850.0f;
     this->vwork[0].y = 1000.0f;
@@ -629,11 +639,21 @@ void Katina_Hatch_Destroy(KaSaucerer* this, s32 hatchIdx) {
                          this->obj.pos.z + (this->vwork[hatchIdx + 1].z * 1.3f), 15.0f);
     this->swork[hatchIdx + 5] = 60;
 
-    for (i = 0; i < 20; i++) {
-        Effect_Effect357_Spawn50(this->obj.pos.x + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].x * 1.3f),
-                                 this->obj.pos.y + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].y * 1.3f),
-                                 this->obj.pos.z + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].z * 1.3f),
-                                 1.55f);
+    INDEPENDENCE {
+        for (i = 0; i < 20 * 5; i++) {
+            Effect_Effect357_Spawn50(
+                this->obj.pos.x + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].x * 1.3f),
+                this->obj.pos.y + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].y * 1.3f),
+                this->obj.pos.z + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].z * 1.3f), 1.55f);
+        }
+    }
+    else {
+        for (i = 0; i < 20; i++) {
+            Effect_Effect357_Spawn50(
+                this->obj.pos.x + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].x * 1.3f),
+                this->obj.pos.y + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].y * 1.3f),
+                this->obj.pos.z + RAND_FLOAT_CENTERED(300.0f) + (this->vwork[hatchIdx + 1].z * 1.3f), 1.55f);
+        }
     }
 
     pos.x = this->obj.pos.x + (this->vwork[hatchIdx + 1].x * 1.3f);
@@ -778,8 +798,8 @@ void Katina_BossSpawnEnemies(KaSaucerer* this, Vec3f* pos, f32 arg2) {
     s32 i;
     ActorAllRange* actor = &gActors[100];
 
-    /*INDEPENDENCE {
-        for (i = 10; i < 500; i++, actor++) {
+    INDEPENDENCE {
+        for (i = 10; i <= 500; i++, actor++) {
             if (actor->obj.status == OBJ_FREE) {
                 if ((actor->index == 100) || (actor->index == 200)) {
                     continue;
@@ -815,7 +835,14 @@ void Katina_BossSpawnEnemies(KaSaucerer* this, Vec3f* pos, f32 arg2) {
                 actor->drawShadow = true;
 
                 if (D_i4_801A0540 < 9600) {
-                    actor->itemDrop = (Rand_ZeroOne() < 0.1f) ? DROP_SILVER_RING_10p : DROP_NONE;
+                    // actor->itemDrop = (Rand_ZeroOne() < 0.1f) ? DROP_SILVER_RING_10p : DROP_NONE;
+                    if (Rand_ZeroOne() < 0.20f) {
+                        actor->itemDrop = DROP_BOMB;
+                    } else if (Rand_ZeroOne() < 0.20f) {
+                        actor->itemDrop = DROP_SILVER_RING;
+                    } else if (Rand_ZeroOne() < 0.1f) {
+                        actor->itemDrop = DROP_LASERS;
+                    }
                 }
 
                 actor->timer_0C2 = 30;
@@ -831,7 +858,7 @@ void Katina_BossSpawnEnemies(KaSaucerer* this, Vec3f* pos, f32 arg2) {
             }
         }
     }
-    else {*/
+    else {
         for (i = 10; i < 49; i++, actor++) {
             if (actor->obj.status == OBJ_FREE) {
                 Actor_Initialize(actor);
@@ -874,7 +901,7 @@ void Katina_BossSpawnEnemies(KaSaucerer* this, Vec3f* pos, f32 arg2) {
                 break;
             }
         }
-    //}
+    }
 }
 
 /**
@@ -1160,7 +1187,7 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
             Math_SmoothStepToF(&this->fwork[BOSS_MOVEMENT_SPEED], 30.0f, 0.1f, 0.5f, 0.0f);
 
             INDEPENDENCE {
-                if ((enemyCount < 400) || (this->timer_056 == 0)) {
+                if ((enemyCount < 350) || (this->timer_056 == 0)) {
                     this->state = SAUCERER_SEND_ENEMIES;
                     this->timer_050 = 300;
 
@@ -1237,7 +1264,7 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
                 Radio_PlayMessage(gMsg_ID_18050, RCID_BILL);
                 gAllRangeCountdownScale = 1.0f;
                 gShowAllRangeCountdown = true;
-                gAllRangeCountdown[0] = 1;
+                gAllRangeCountdown[0] = 2;
                 gAllRangeCountdown[1] = 1;
                 gAllRangeCountdown[2] = 30;
             }
@@ -1512,14 +1539,14 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
 
                 AUDIO_PLAY_SFX(NA_SE_KA_UFO_FALLING, this->sfxSource, 0);
 
-                //INDEPENDENCE {
-                //    // Nothing for now
-                //}
-                //else {
+                INDEPENDENCE {
+                    // Nothing for now
+                }
+                else {
                     for (i = 0; i < ARRAY_COUNT(gEffects); i++) {
                         Object_Kill(&gEffects[i].obj, gEffects[i].sfxSource);
                     }
-                //}
+                }
             }
             break;
 
@@ -1945,20 +1972,22 @@ void Katina_LevelComplete(Player* player) {
             gCsCamAtY = 1000.0f;
             gCsCamAtZ = boss->obj.pos.z;
 
-            //INDEPENDENCE {
-            //    for (i = 10; i < ARRAY_COUNT(gActors); i++) {
-            //        if (gActors[i].animFrame == 0) {
-            //            gActors[i].state = OBJ_DYING;
-            //        }
-            //    }
-            //}
-            //else {
+            INDEPENDENCE {
+                for (i = 100; i <= 500; i++) {
+                    if (gActors[i].obj.status == OBJ_ACTIVE) {
+                        if (gActors[i].animFrame == 0) {
+                            gActors[i].obj.status = OBJ_DYING;
+                        }
+                    }
+                }
+            }
+            else {
                 for (i = 10; i < ARRAY_COUNT(gActors); i++) {
                     if (gActors[i].animFrame == 0) {
                         Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
                     }
                 }
-            //}
+            }
 
             player->csState++;
 
@@ -2154,13 +2183,13 @@ void Katina_LevelComplete(Player* player) {
                         Radio_PlayMessage(gMsg_ID_18085, RCID_PEPPY);
                     }
 
-                    // INDEPENDENCE {
-                    //     for (i = 100; i < ARRAY_COUNT(gActors); i++) {
-                    //         if (gActors[i].animFrame == 0) {
-                    //             Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
-                    //         }
-                    //     }
-                    // }
+                    INDEPENDENCE {
+                        for (i = 100; i < ARRAY_COUNT(gActors); i++) {
+                            if (gActors[i].animFrame == 0) {
+                                Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
+                            }
+                        }
+                    }
                     break;
             }
             break;
@@ -2383,6 +2412,35 @@ void Katina_BillFighterInit(void) {
     AUDIO_PLAY_SFX(NA_SE_ARWING_ENGINE_FG, actor->sfxSource, 4);
 }
 
+void Mod_Independence_SpawnMissile(ActorAllRange* this, s32 missileWaveIdx) {
+    Vec3f sModIndependenceMissileInitPos[] = {
+    { 0.0f, 100.0f, 35000.0f },
+    { -2000.0f, 0.0f, 35000.0f },
+    { 2000.0f, 0.0f, 35000.0f },
+};
+    Actor_Initialize(this);
+    this->obj.status = OBJ_INIT;
+    this->obj.id = OBJ_ACTOR_ALLRANGE;
+    this->aiType = AI360_MISSILE;
+
+    this->obj.pos.x = sModIndependenceMissileInitPos[missileWaveIdx].x;
+    this->obj.pos.y = sModIndependenceMissileInitPos[missileWaveIdx].y;
+    this->obj.pos.z = sModIndependenceMissileInitPos[missileWaveIdx].z;
+
+    this->state = 5;
+    this->rot_0F4.y = 180.0f;
+
+    Object_SetInfo(&this->info, this->obj.id);
+
+    this->health = 250;
+    this->info.drawType = 2;
+    this->info.hitbox = SEGMENTED_TO_VIRTUAL(aSZMissileHitbox);
+    this->fwork[1] = 25.0f;
+    this->fwork[29] = 2.0f;
+
+    AUDIO_PLAY_SFX(NA_SE_EN_PUNCH_ENGINE, this->sfxSource, 4);
+}
+
 void Katina_UpdateEvents(ActorAllRange* this) {
     s32 pad[4];
     f32 D_i4_8019F494[5] = { -200.0f, -100.0f, -0.0f, 100.0f, 200.0f };
@@ -2448,6 +2506,49 @@ void Katina_UpdateEvents(ActorAllRange* this) {
                 Radio_PlayMessage(gMsg_ID_18010, RCID_SLIPPY);
                 break;
         }
+        /*
+        INDEPENDENCE {
+            switch (gAllRangeEventTimer) {
+                case -600:
+                    D_hud_80161710 = 490;
+                    Mod_Independence_SpawnMissile(&gActors[600], 0);
+
+                    gActors[600].fwork[1] = 10.0f;
+                    gActors[600].obj.pos.z = 25000.0f;
+
+                    // SectorZ_SpawnMissileEscort(&gActors[SZ_ESCORT_1], 0);
+                    // SectorZ_SpawnMissileEscort(&gActors[SZ_ESCORT_2], 1);
+                    // SectorZ_SpawnMissileEscort(&gActors[SZ_ESCORT_3], 2);
+                    // SectorZ_SpawnMissileEscort(&gActors[SZ_ESCORT_4], 3);
+
+                    gPlayer[0].state_1C8 = PLAYERSTATE_1C8_STANDBY;
+
+                    // this->state = 10;
+                    // this->fwork[10] = 0.0f;
+
+                    gPlayer[0].camRoll = 15.0f;
+
+                    gPlayer[0].cam.eye.x = gActors[600].obj.pos.x - 25000.0f;
+                    gPlayer[0].cam.eye.y = gActors[600].obj.pos.y;
+                    gPlayer[0].cam.eye.z = gActors[600].obj.pos.z;
+
+                    gPlayer[0].cam.at.x = gActors[600].obj.pos.x;
+                    gPlayer[0].cam.at.y = gActors[600].obj.pos.y;
+                    gPlayer[0].cam.at.z = gActors[600].obj.pos.z;
+
+                    //this->timer_0BC = 10000;
+                    //gFillScreenAlpha = gFillScreenAlphaTarget = 255;
+                    //gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 0;
+                    AUDIO_PLAY_BGM(NA_BGM_BOSS_SZ);
+                    break;
+
+                case -210:
+                    gPlayer[0].state_1C8 = PLAYERSTATE_1C8_ACTIVE;
+                    Camera_Update360(&gPlayer[0], true);
+                    break;
+            }
+        }
+        */
 
         if (gBosses[KA_BOSS_SAUCERER].state == 12) {
             if (((gAllRangeEventTimer % 256) == 0) && (Rand_ZeroOne() < 0.5f)) {
