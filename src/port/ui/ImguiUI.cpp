@@ -457,6 +457,17 @@ void DrawEnhancementsMenu() {
     }
 }
 
+void DrawModsMenu() {
+    if (UIWidgets::BeginMenu("Mods")) {
+        UIWidgets::CVarCheckbox("Independence", "gModIndependence", {
+                .tooltip = "Katina 850 Enemies",
+                .defaultValue = false
+            });
+
+        ImGui::EndMenu();
+    }
+}
+
 void DrawCheatsMenu() {
     if (UIWidgets::BeginMenu("Cheats")) {
         UIWidgets::CVarCheckbox("Infinite Lives", "gInfiniteLives");
@@ -617,6 +628,10 @@ void GameMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawEnhancementsMenu();
+
+        ImGui::SetCursorPosY(0.0f);
+
+        DrawModsMenu();
 
         ImGui::SetCursorPosY(0.0f);
 
