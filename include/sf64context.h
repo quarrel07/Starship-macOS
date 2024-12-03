@@ -319,7 +319,7 @@ extern Vec3f gTeamArrowsViewPos[10];
 extern f32 D_ctx_80177F20[65];
 extern f32 D_ctx_80178028[65];
 extern f32 D_ctx_80178130[65];
-extern u8 D_ctx_80178238[65];
+// extern u8 D_ctx_80178238[65];
 extern Player* gPlayer;
 extern f32* gStarOffsetsX;
 extern f32* gStarOffsetsY;

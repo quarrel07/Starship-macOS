@@ -3791,12 +3791,15 @@ void ActorEvent_Update(ActorEvent* this) {
             break;
     }
 
+    // Unused early RadarMark implementation?
+    /*
     if (gLevelMode == LEVELMODE_ALL_RANGE) {
         D_ctx_80177F20[this->index + 1] = this->obj.pos.x;
         D_ctx_80178028[this->index + 1] = this->obj.pos.z;
         D_ctx_80178130[this->index + 1] = Math_ModF(this->rot_0F4.y, 360.0f) + 180.0f;
         D_ctx_80178238[this->index + 1] = 1;
     }
+    */
 }
 
 UNK_TYPE D_800D129C[140] = { 0 }; // unused
@@ -4241,11 +4244,14 @@ void func_enmy2_800763A4(Actor* this) {
             Object_Kill(&this->obj, this->sfxSource);
             Actor_Despawn(this);
 
+            // Unused early RadarMark implementation?
+            /*
             if (gLevelMode == LEVELMODE_ALL_RANGE) {
                 D_ctx_80177F20[this->index + 1] = this->obj.pos.x;
                 D_ctx_80178028[this->index + 1] = this->obj.pos.z;
                 D_ctx_80178130[this->index + 1] = 1001.0f;
             }
+            */
             return;
         }
     } else {
@@ -4446,11 +4452,14 @@ void func_enmy2_800763A4(Actor* this) {
         }
     }
 
+    // Unused early RadarMark implementation?
+    /*
     if (gLevelMode == LEVELMODE_ALL_RANGE) {
         D_ctx_80177F20[this->index + 1] = this->obj.pos.x;
         D_ctx_80178028[this->index + 1] = this->obj.pos.z;
         D_ctx_80178130[this->index + 1] = this->rot_0F4.y + 180.0f;
     }
+    */
 
     if (this->obj.id == OBJ_ACTOR_ALLRANGE) {
         ActorAllRange_SetShadowData(this);
