@@ -320,7 +320,7 @@ void Spawner_Playground(void) {
 }
 
 void Spawner(void) {
-    static bool sFreeze = true;
+    // static bool sFreeze = false;
     static s32 sHoldTimer = 0;
     ObjCount counter;
 
@@ -346,7 +346,7 @@ void Spawner(void) {
     } else if (((sContHold->button & R_JPAD) && (sHoldTimer > 15)) || (sContPress->button & R_JPAD)) {
         sObjId++;
     } else if (gControllerPress[0].button & D_JPAD) {
-        sFreeze ^= 1; // Freeze arwing.
+        // sFreeze ^= 1; // Freeze arwing.
     } else if (gControllerPress[0].button & U_JPAD) {
         Spawner_ObjKill();
     } else if (gControllerPress[0].button & R_CBUTTONS) {
@@ -391,11 +391,11 @@ void Spawner(void) {
     }
 
     /* Freeze arwing */
-    if (sFreeze) {
-        gPlayer[0].baseSpeed = 0;
-    } else {
-        gPlayer[0].baseSpeed = gArwingSpeed;
-    }
+    // if (sFreeze) {
+    //     gPlayer[0].baseSpeed = 0;
+    // } else {
+    //     gPlayer[0].baseSpeed = gArwingSpeed;
+    // }
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_83_POINT);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
