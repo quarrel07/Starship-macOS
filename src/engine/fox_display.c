@@ -1361,7 +1361,7 @@ bool Display_CheckPlayerVisible(s32 index, s32 reflectY) {
     Matrix_MultVec3f(gGfxMatrix, &src, &dest);
 
     if ((dest.z < 200.0f) && (dest.z > -12000.0f)) {
-        if (fabsf(dest.x) < (fabsf(dest.z * 0.5f) + 500.0f)) {
+        if (fabsf(dest.x) < (fabsf(dest.z * /*0.5f*/ 1.5f) + 500.0f)) {
             if (fabsf(dest.y) < (fabsf(dest.z * 0.5f) + 500.0f)) {
                 if (reflectY == 0) {
                     sPlayersVisible[index] = true;
