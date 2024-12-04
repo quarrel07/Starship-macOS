@@ -2133,11 +2133,11 @@ void Display_Update(void) {
 #if 0
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
-    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "PATH1:");
-    Graphics_DisplaySmallNumber(60, 210, (int) ABS(path1));
-    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "PATH2:");
-    Graphics_DisplaySmallNumber(60, 220, (int) ABS(path2));
-    if (path1 < 0.0f) Graphics_DisplaySmallText(110, 210, 1.0f, 1.0f, "NEG:");
-    if (path2 < 0.0f) Graphics_DisplaySmallText(110, 220, 1.0f, 1.0f, "NEG:");
+    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "STICK_X:");
+    Graphics_DisplaySmallNumber(60, 210, (int) ABS(gInputPress->stick_x));
+    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "STICK_Y:");
+    Graphics_DisplaySmallNumber(60, 220, (int) ABS(gInputPress->stick_y));
+    if (gInputPress->stick_x < 0) Graphics_DisplaySmallText(110, 210, 1.0f, 1.0f, "NEG:");
+    if (gInputPress->stick_y < 0) Graphics_DisplaySmallText(110, 220, 1.0f, 1.0f, "NEG:");
 #endif
 }
