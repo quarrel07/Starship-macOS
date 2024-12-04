@@ -1237,8 +1237,8 @@ void PlayerShot_DrawShot(PlayerShot* shot) {
     Matrix_MultVec3f(gGfxMatrix, &sp11C, &sShotViewPos);
     if ((sShotViewPos.z < 0.0f) && (sShotViewPos.z > -10000.0f)) {
         var_fv1 = fabsf(sShotViewPos.x); // probably fake. The use of temps was likely different
-        if (var_fv1 < (fabsf(sShotViewPos.z * /* 0.5f */ 1.0f) + 500.0f)) {
-            if (fabsf(sShotViewPos.y) < (fabsf(sShotViewPos.z * /* 0.5f */ 1.0f) + 500.0f)) {
+        if (var_fv1 < (fabsf(sShotViewPos.z * /* 0.5f */ 1.5f) + 500.0f)) {
+            if (fabsf(sShotViewPos.y) < (fabsf(sShotViewPos.z * 0.5f) + 500.0f)) {
                 isDrawn = true;
             }
         }
