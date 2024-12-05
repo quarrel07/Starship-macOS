@@ -616,7 +616,7 @@ void Katina_KaSaucerer_Init(KaSaucerer* this) {
         this->swork[BOSS_HATCH_2_HP] = 100 * 5;
         this->swork[BOSS_HATCH_3_HP] = 100 * 5;
         this->swork[BOSS_HATCH_4_HP] = 100 * 5;
-        this->swork[BOSS_CORE_HP] = 400 * 5;
+        this->swork[BOSS_CORE_HP] = 400 * 8;
     }
     else {
         this->swork[BOSS_HATCH_1_HP] = 100;
@@ -836,11 +836,11 @@ void Katina_BossSpawnEnemies(KaSaucerer* this, Vec3f* pos, f32 arg2) {
 
                 if (D_i4_801A0540 < 9600) {
                     // actor->itemDrop = (Rand_ZeroOne() < 0.1f) ? DROP_SILVER_RING_10p : DROP_NONE;
-                    if (Rand_ZeroOne() < 0.20f) {
+                    if (Rand_ZeroOne() < 0.025f) {
                         actor->itemDrop = DROP_BOMB;
-                    } else if (Rand_ZeroOne() < 0.20f) {
+                    } else if (Rand_ZeroOne() < 0.025f) {
                         actor->itemDrop = DROP_SILVER_RING;
-                    } else if (Rand_ZeroOne() < 0.1f) {
+                    } else if (Rand_ZeroOne() < 0.025f) {
                         actor->itemDrop = DROP_LASERS;
                     }
                 }
@@ -956,8 +956,8 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
     if ((((this->swork[BOSS_HATCH_1_HP] <= 0) && (this->swork[BOSS_HATCH_2_HP] <= 0) &&
           (this->swork[BOSS_HATCH_3_HP] <= 0) && (this->swork[BOSS_HATCH_4_HP] <= 0)) ||
          (this->swork[BOSS_CORE_TIMER] == 1)) &&
-        (this->state < 10)) {
-        this->state = 10;
+        (this->state < SAUCERER_LOWER_CORE)) {
+        this->state = SAUCERER_LOWER_CORE;
         this->timer_050 = 50;
     }
 
@@ -1161,7 +1161,12 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
                 this->timer_054 = 200;
                 this->timer_056 = 1280;
 
-                this->swork[BOSS_CORE_TIMER] = 5760;
+                INDEPENDENCE {
+                    this->swork[BOSS_CORE_TIMER] = 5760 * 2;
+                }
+                else {
+                    this->swork[BOSS_CORE_TIMER] = 5760;
+                }
 
                 gBossFrameCount = 0;
 
@@ -1242,7 +1247,7 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
             }
 
             if (this->timer_050 == 0) {
-                this->state = 6;
+                this->state = SAUCERER_OPEN_HATCHES;
                 this->fwork[BOSS_HATCH_4_ANGLE_TARGET] = 0.0f;
                 this->fwork[BOSS_HATCH_3_ANGLE_TARGET] = 0.0f;
                 this->fwork[BOSS_HATCH_2_ANGLE_TARGET] = 0.0f;
@@ -1259,14 +1264,21 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
                 this->fwork[BOSS_CORE_TARGET_LEVEL] = 200.0f;
                 AUDIO_PLAY_SFX(NA_SE_KA_UFO_CORE_OPEN, this->sfxSource, 0);
                 Audio_KillSfxBySourceAndId(this->sfxSource, NA_SE_KA_UFO_ENGINE);
-                this->state = 11;
+                this->state = SAUCERER_LASER_CHARGE_START;
                 this->timer_050 = 100;
                 Radio_PlayMessage(gMsg_ID_18050, RCID_BILL);
                 gAllRangeCountdownScale = 1.0f;
                 gShowAllRangeCountdown = true;
-                gAllRangeCountdown[0] = 2;
-                gAllRangeCountdown[1] = 1;
-                gAllRangeCountdown[2] = 30;
+                INDEPENDENCE {
+                    gAllRangeCountdown[0] = 2;
+                    gAllRangeCountdown[1] = 2;
+                    gAllRangeCountdown[2] = 15;
+                }
+                else {
+                    gAllRangeCountdown[0] = 1;
+                    gAllRangeCountdown[1] = 1;
+                    gAllRangeCountdown[2] = 30;
+                }
             }
             break;
 
@@ -1274,8 +1286,12 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
         case SAUCERER_LASER_CHARGE_START:
             if (this->timer_050 == 0) {
                 AUDIO_PLAY_SFX(NA_SE_KA_UFO_HATCH_STOP, this->sfxSource, 0);
-                this->state = 12;
-                this->timer_050 = 1928;
+                this->state = SAUCERER_CS_LASER_CHARGE_END;
+                INDEPENDENCE {
+                    this->timer_050 = 1928 * 2;
+                } else {
+                    this->timer_050 = 1928;
+                }
                 Radio_PlayMessage(gMsg_ID_18055, RCID_BILL);
                 AUDIO_PLAY_SFX(NA_SE_KA_UFO_LONG_CHARGE, this->sfxSource, 0);
             }
@@ -2414,10 +2430,10 @@ void Katina_BillFighterInit(void) {
 
 void Mod_Independence_SpawnMissile(ActorAllRange* this, s32 missileWaveIdx) {
     Vec3f sModIndependenceMissileInitPos[] = {
-    { 0.0f, 100.0f, 35000.0f },
-    { -2000.0f, 0.0f, 35000.0f },
-    { 2000.0f, 0.0f, 35000.0f },
-};
+        { 0.0f, 100.0f, 35000.0f },
+        { -2000.0f, 0.0f, 35000.0f },
+        { 2000.0f, 0.0f, 35000.0f },
+    };
     Actor_Initialize(this);
     this->obj.status = OBJ_INIT;
     this->obj.id = OBJ_ACTOR_ALLRANGE;
