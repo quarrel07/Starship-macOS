@@ -124,8 +124,8 @@ void HUD_MatrixTranslateCoordLeft(f32* transX, f32* transY) {
 
 // Used in the status screen, and when losing a life
 void HUD_LivesCount1_Draw(f32 xPos, f32 yPos, s32 lifeCount) {
-    u8* sLifeIconTex[] = { aArwingLifeIconTex, aBlueMarineLifeIconTex, aLandmasterLifeIconTex };
-    u16* sLifeIconTLUT[] = { aArwingLifeIconTLUT, aBlueMarineLifeIconTLUT, aLandmasterLifeIconTLUT };
+    u8* sLifeIconTex[] = { aArwingLifeIconTex, aLandmasterLifeIconTex, aBlueMarineLifeIconTex };
+    u16* sLifeIconTLUT[] = { aArwingLifeIconTLUT, aLandmasterLifeIconTLUT, aBlueMarineLifeIconTLUT };
     Player* player;
     s32 lifeIconIdx;
     s32 maxLives;
@@ -919,8 +919,8 @@ void HUD_DrawLevelClearScreen(void) {
 
 // Used in gameplay hud
 void HUD_LivesCount2_Draw(f32 x, f32 y, s32 number) {
-    u8* sLivesCounterTexs[] = { aArwingLifeIconTex, aBlueMarineLifeIconTex, aLandmasterLifeIconTex };
-    u16* sLivesCounterTLUTs[] = { aArwingLifeIconTLUT, aBlueMarineLifeIconTLUT, aLandmasterLifeIconTLUT };
+    u8* sLivesCounterTexs[] = { aArwingLifeIconTex, aLandmasterLifeIconTex, aBlueMarineLifeIconTex };
+    u16* sLivesCounterTLUTs[] = { aArwingLifeIconTLUT, aLandmasterLifeIconTLUT, aBlueMarineLifeIconTLUT };
     Player* player = &gPlayer[0];
     f32 x0;
     f32 x1;
@@ -2823,8 +2823,8 @@ void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
     }
 
     if (arg1) {
-        Matrix_Translate(gGfxMatrix, xPos + D_800D1FE8[idx], D_800D1F28[idx] + D_800D2018[idx],
-                         D_800D1F58[idx], MTXF_APPLY);
+        Matrix_Translate(gGfxMatrix, xPos + D_800D1FE8[idx], D_800D1F28[idx] + D_800D2018[idx], D_800D1F58[idx],
+                         MTXF_APPLY);
     } else {
         Matrix_Translate(gGfxMatrix, xPos, D_800D1F28[idx], D_800D1F58[idx], MTXF_APPLY);
     }
