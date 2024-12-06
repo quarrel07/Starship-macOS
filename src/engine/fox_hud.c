@@ -117,6 +117,11 @@ Gfx sRadioDamageDL[] = {
     gsSPEndDisplayList(),
 };
 
+void HUD_MatrixTranslateCoordLeft(f32* transX, f32* transY) {
+    *transX = OTRGetRectDimensionFromLeftEdge(*transX) - (SCREEN_WIDTH / 2.0f);
+    *transY = (SCREEN_HEIGHT / 2.0f) - *transY;
+}
+
 // Used in the status screen, and when losing a life
 void HUD_LivesCount1_Draw(f32 xPos, f32 yPos, s32 lifeCount) {
     u8* sLifeIconTex[] = { aArwingLifeIconTex, aBlueMarineLifeIconTex, aLandmasterLifeIconTex };
@@ -203,16 +208,22 @@ void HUD_TeamDownWrench_Draw(s32 arg0) {
             }
         }
     } else {
+        f32 x = 48.0f;
+        f32 y = 0.0f;
+        HUD_MatrixTranslateCoordLeft(&x, &y);
+        y = -81.0f;
+        Lib_InitOrtho(&gMasterDisp);
         Matrix_Push(&gGfxMatrix);
-        Matrix_Translate(gGfxMatrix, -234.0f, -167.0f, -600.0f, MTXF_APPLY);
+        Matrix_Translate(gGfxMatrix, x, y, -600.0f, MTXF_APPLY);
         Matrix_RotateZ(gGfxMatrix, M_PI / 4, MTXF_APPLY);
-        Matrix_Scale(gGfxMatrix, 0.68f, 0.68f, 1.0f, MTXF_APPLY);
+        Matrix_Scale(gGfxMatrix, 0.31f, 0.31f, 1.0f, MTXF_APPLY);
         Matrix_SetGfxMtx(&gMasterDisp);
         gSPDisplayList(gMasterDisp++, aDownWrenchDL);
         Matrix_RotateZ(gGfxMatrix, 3 * M_PI / 2, MTXF_APPLY);
         Matrix_SetGfxMtx(&gMasterDisp);
         gSPDisplayList(gMasterDisp++, aDownWrenchDL);
         Matrix_Pop(&gGfxMatrix);
+        Lib_InitPerspective(&gMasterDisp);
     }
 }
 
@@ -302,11 +313,6 @@ void HUD_BoostGaugeCool_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
     } else {
         Lib_TextureRect_CI8(&gMasterDisp, aBoostGaugeCoolTex, aBoostGaugeCoolTLUT, 40, 5, xPos, yPos, xScale, yScale);
     }
-}
-
-void HUD_MatrixTranslateCoordLeft(f32* transX, f32* transY) {
-    *transX = OTRGetRectDimensionFromLeftEdge(*transX) - (SCREEN_WIDTH / 2.0f);
-    *transY = (SCREEN_HEIGHT / 2.0f) - *transY;
 }
 
 void HUD_GoldRings_Draw(void) {
@@ -2242,49 +2248,51 @@ void HUD_RadioCharacterName_Draw(void) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
 
+        f32 xPos = OTRGetRectDimensionFromLeftEdge(73.0f);
+
         switch ((s32) gRadioMsgRadioId) {
             case RCID_FOX:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "FOX");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "FOX");
                 break;
 
             case RCID_FALCO:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "FALCO");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "FALCO");
                 break;
 
             case RCID_SLIPPY:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "SLIPPY");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "SLIPPY");
                 break;
 
             case RCID_PEPPY:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "PEPPY");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "PEPPY");
                 break;
 
             case RCID_WOLF:
             case RCID_WOLF_2:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "WOLF");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "WOLF");
                 break;
 
             case RCID_LEON:
             case RCID_LEON_2:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "LEON");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "LEON");
                 break;
 
             case RCID_PIGMA:
             case RCID_PIGMA_2:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "PIGMA");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "PIGMA");
                 break;
 
             case RCID_ANDREW:
             case RCID_ANDREW_2:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "ANDREW");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "ANDREW");
                 break;
 
             case RCID_BILL:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "BILL");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "BILL");
                 break;
 
             case RCID_KATT:
-                Graphics_DisplaySmallText(73, 173, 1.0f, 1.0f, "KATT");
+                Graphics_DisplaySmallText(xPos, 173, 1.0f, 1.0f, "KATT");
                 break;
         }
     }
@@ -2615,12 +2623,18 @@ void HUD_RadioDamage_Draw(void) {
     if ((D_80161788 != 0) || (D_8016178C != 0)) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_12);
         gDPSetPrimColor(gMasterDisp++, 0, 0, r, g, b, alpha);
+        f32 x = 48.0f;
+        f32 y = 0.0f;
+        HUD_MatrixTranslateCoordLeft(&x, &y);
+        y = -81.0f;
+        Lib_InitOrtho(&gMasterDisp);
         Matrix_Push(&gGfxMatrix);
-        Matrix_Translate(gGfxMatrix, -53.9f, -38.5f, -139.4f, MTXF_APPLY);
-        Matrix_Scale(gGfxMatrix, 1.0f, 1.0f, 1.0f, MTXF_APPLY);
+        Matrix_Translate(gGfxMatrix, x, y, -139.4f, MTXF_APPLY);
+        Matrix_Scale(gGfxMatrix, 2.25f, 2.25f, 2.25f, MTXF_APPLY);
         Matrix_SetGfxMtx(&gMasterDisp);
         gSPDisplayList(gMasterDisp++, sRadioDamageDL);
         Matrix_Pop(&gGfxMatrix);
+        Lib_InitPerspective(&gMasterDisp);
     }
 }
 
@@ -2778,7 +2792,6 @@ void HUD_VsModePortraitTex_Draw(f32 xPos, f32 yPos, f32 scale, s32 idx) {
     Lib_TextureRect_RGBA16(&gMasterDisp, sVsModeFaceDL[idx], 44, 44, xPos, yPos, scale, scale);
 }
 
-// LTODO: Align these
 void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
     f32 D_800D1EF8[] = { 0.0f, 0.0f, -9.0f, 9.0f, 10.0f, 10.0f, 10.0f, 10.0f, 0.0f, 0.0f, -8.0f, 8.0f };
     f32 D_800D1F28[] = { -7.0f, 7.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 8.0f, -8.0f, 0.0f, 0.0f };
