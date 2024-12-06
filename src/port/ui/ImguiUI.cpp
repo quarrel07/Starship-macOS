@@ -532,7 +532,7 @@ void DrawDebugMenu() {
         });
 
         UIWidgets::CVarCheckbox("SFX Jukebox", "gSfxJukebox", {
-            .tooltip = "Allows you to play sound effects from the game"
+            .tooltip = "Press L in the Expert Sound options to play sound effects from the game"
         });
 
         UIWidgets::CVarCheckbox("Spawner Mod", "gSpawnerMod", {
