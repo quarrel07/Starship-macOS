@@ -125,13 +125,22 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
 
     switch (gGameState) {
         case GSTATE_TITLE:
-        case GSTATE_ENDING:
             gRadioPrintPosY = 176;
             gRadioPrintPosX = OTRGetRectDimensionFromLeftEdge(85.0f);
             gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdge(80.0f);
             gRadioTextBoxPosY = 174.0f;
             gRadioTextBoxScaleX = 4.63f;
             gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdge(32.0f);
+            gRadioPortraitPosY = 174.0f;
+            break;
+
+        case GSTATE_ENDING:
+            gRadioPrintPosY = 176;
+            gRadioPrintPosX = 85.0f;
+            gRadioTextBoxPosX = 80.0f;
+            gRadioTextBoxPosY = 174.0f;
+            gRadioTextBoxScaleX = 4.63f;
+            gRadioPortraitPosX = 32.0f;
             gRadioPortraitPosY = 174.0f;
             break;
 
@@ -428,10 +437,12 @@ void func_radio_800BAAE8(void) {
 
         if (mirror) {
             Lib_TextureRect_RGBA16_MirX(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
-                                     gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
+                                        gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f,
+                                        gRadioPortraitScaleY);
         } else {
             Lib_TextureRect_RGBA16(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
-                                gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f, gRadioPortraitScaleY);
+                                   gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f,
+                                   gRadioPortraitScaleY);
         }
     }
 }
@@ -607,8 +618,7 @@ void Radio_Draw(void) {
                         if (ret == 0) {
                             gRadioState = 31;
                         }
-                    }
-                    else {
+                    } else {
                         gRadioMsgCharIndex++;
                     }
                 }
