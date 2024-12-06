@@ -304,7 +304,7 @@ void HUD_BoostGaugeCool_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
     }
 }
 
-void HUD_MatrixTranslateCoord(f32* transX, f32* transY) {
+void HUD_MatrixTranslateCoordLeft(f32* transX, f32* transY) {
     *transX = OTRGetRectDimensionFromLeftEdge(*transX) - (SCREEN_WIDTH / 2.0f);
     *transY = (SCREEN_HEIGHT / 2.0f) - *transY;
 }
@@ -381,7 +381,7 @@ void HUD_GoldRings_Draw(void) {
                     scale += 0.06f;
                 }
 
-                HUD_MatrixTranslateCoord(&x, &y);
+                HUD_MatrixTranslateCoordLeft(&x, &y);
                 Matrix_Translate(gGfxMatrix, x, y, -100.0f, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, scale, scale, scale, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, ringScale, ringScale, ringScale, MTXF_APPLY);
@@ -403,7 +403,7 @@ void HUD_GoldRings_Draw(void) {
                     RCP_SetupDL(&gMasterDisp, SETUPDL_62);
                     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
 
-                    HUD_MatrixTranslateCoord(&D_800D1AC4[i + 1], &D_800D1AD8[i + 1]);
+                    HUD_MatrixTranslateCoordLeft(&D_800D1AC4[i + 1], &D_800D1AD8[i + 1]);
 
                     Matrix_Push(&gGfxMatrix);
                     Matrix_Translate(gGfxMatrix, D_800D1AC4[i + 1], D_800D1AD8[i + 1], -100.0f, MTXF_NEW);
@@ -436,7 +436,7 @@ void HUD_GoldRings_Draw(void) {
                         scale += 0.06f;
                     }
 
-                    HUD_MatrixTranslateCoord(&x, &y);
+                    HUD_MatrixTranslateCoordLeft(&x, &y);
                     Matrix_Translate(gGfxMatrix, x, y, -100.0f, MTXF_NEW);
                     Matrix_Scale(gGfxMatrix, scale, scale, scale, MTXF_APPLY);
                     Matrix_Scale(gGfxMatrix, ringScale, ringScale, ringScale, MTXF_APPLY);
@@ -1492,8 +1492,7 @@ void HUD_PauseScreen_Update(void) {
 
             case 3:
                 Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
-                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0,
-                                       255);
+                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
 
                 gFillScreenAlphaTarget = 0;
 
@@ -1543,8 +1542,7 @@ void HUD_PauseScreen_Update(void) {
 
             case 4:
                 Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
-                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0,
-                                       255);
+                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
                 if (sPauseScreenTimer[0] < 140) {
                     break;
                 }
@@ -1563,8 +1561,7 @@ void HUD_PauseScreen_Update(void) {
 
             case 5:
                 Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
-                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH ), SCREEN_HEIGHT, 0, 0, 0,
-                                       255);
+                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
 
                 for (i = 0; i < 6; i++) {
                     if (gPrevPlanetTeamShields[i] == -1) {
@@ -2012,6 +2009,9 @@ void HUD_RadarMarks_Setup(void) {
     }
 }
 
+static f32 gHudOffsetRect = 0.0f;
+static f32 gHudOffsetPers = 0.0f;
+
 s32 HUD_RadarMarks_Update(void) {
     s32 i;
     f32 scale;
@@ -2020,10 +2020,31 @@ s32 HUD_RadarMarks_Update(void) {
     f32 z1;
     f32 x = 0;
     f32 y = 0;
-    s32 pad;
     f32 temp;
     f32 temp2;
     f32 temp3;
+
+    switch (gCurrentLevel) {
+        case LEVEL_CORNERIA:
+            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetPers = gHudOffsetRect * 2.15f;
+            break;
+
+        case LEVEL_SECTOR_Z:
+            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetPers = gHudOffsetRect * 5.50f;
+            break;
+
+        case LEVEL_BOLSE:
+            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetPers = gHudOffsetRect * 2.70f;
+            break;
+
+        default:
+            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetPers = gHudOffsetRect * 3.35f;
+            break;
+    }
 
     if (!gVersusMode) {
         if (gLevelMode != LEVELMODE_ALL_RANGE) {
@@ -2098,7 +2119,7 @@ s32 HUD_RadarMarks_Update(void) {
     }
 
     HUD_RadarMarks_Setup();
-    HUD_RadarWindow_Draw(x, y);
+    HUD_RadarWindow_Draw(x + gHudOffsetRect, y);
 
     if (!gVersusMode &&
         ((gCurrentLevel == LEVEL_SECTOR_Z) || (gCurrentLevel == LEVEL_FORTUNA) || (gCurrentLevel == LEVEL_VENOM_2) ||
@@ -2109,15 +2130,18 @@ s32 HUD_RadarMarks_Update(void) {
 
         switch (gCurrentLevel) {
             case LEVEL_SECTOR_Z:
-                Lib_TextureRect_IA8(&gMasterDisp, D_SZ_60012D0, 16, 9, 251.0f + D_800D1E10, 181.0f, 1.00f, 1.00f);
+                Lib_TextureRect_IA8(&gMasterDisp, D_SZ_60012D0, 16, 9, gHudOffsetRect + 251.0f + D_800D1E10, 181.0f,
+                                    1.00f, 1.00f);
                 break;
 
             case LEVEL_FORTUNA:
-                Lib_TextureRect_IA8(&gMasterDisp, D_FO_6001260, 16, 16, 251.0f + D_800D1E10, 178.0f, 1.00f, 1.00f);
+                Lib_TextureRect_IA8(&gMasterDisp, D_FO_6001260, 16, 16, gHudOffsetRect + 251.0f + D_800D1E10, 178.0f,
+                                    1.00f, 1.00f);
                 break;
 
             case LEVEL_BOLSE:
-                Lib_TextureRect_IA8(&gMasterDisp, D_BO_6000C80, 16, 16, 251.0f + D_800D1E10, 178.0f, 1.00f, 1.00f);
+                Lib_TextureRect_IA8(&gMasterDisp, D_BO_6000C80, 16, 16, gHudOffsetRect + (251.0f + D_800D1E10), 178.0f,
+                                    1.00f, 1.00f);
                 break;
 
             case LEVEL_SECTOR_Y:
@@ -2128,22 +2152,25 @@ s32 HUD_RadarMarks_Update(void) {
                     if ((y < 150.0f) || (y > 206.0f)) {
                         break;
                     }
-                    Lib_TextureRect_IA8(&gMasterDisp, D_SY_6000840, 64, 64, 250.0f + D_800D1E10, temp, 0.25f, 0.25f);
+                    Lib_TextureRect_IA8(&gMasterDisp, D_SY_6000840, 64, 64, gHudOffsetRect + 250.0f + D_800D1E10, temp,
+                                        0.25f, 0.25f);
                 }
                 break;
 
             case LEVEL_KATINA:
-                Lib_TextureRect_IA8(&gMasterDisp, D_KA_6001260, 8, 8, 254.0f + D_800D1E10, 182.0f, 1.00f, 1.00f);
+                Lib_TextureRect_IA8(&gMasterDisp, D_KA_6001260, 8, 8, 254.0f + D_800D1E10 + gHudOffsetRect, 182.0f,
+                                    1.00f, 1.00f);
                 break;
 
             case LEVEL_VENOM_2:
-                Lib_TextureRect_IA8(&gMasterDisp, D_VE2_6002890, 16, 16, 251.0f + D_800D1E10, 178.0f, 1.00f, 1.00f);
+                Lib_TextureRect_IA8(&gMasterDisp, D_VE2_6002890, 16, 16, gHudOffsetRect + 251.0f + D_800D1E10, 178.0f,
+                                    1.00f, 1.00f);
                 break;
         }
     }
 
     Matrix_Push(&gGfxMatrix);
-    Matrix_Translate(gGfxMatrix, x1, y1, z1, MTXF_APPLY);
+    Matrix_Translate(gGfxMatrix, x1 + gHudOffsetPers, y1, z1, MTXF_APPLY);
 
     if ((gCurrentLevel == LEVEL_SECTOR_Z) && (D_hud_80161710 != 0)) {
         Matrix_Push(&gGfxMatrix);
@@ -2897,8 +2924,7 @@ void HUD_KillCountStars_Update(void) {
 }
 
 void HUD_VS_ShieldGaugeFrame_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale) {
-    Lib_TextureRect_IA8(&gMasterDisp, aVsShieldGaugeFrameTex, 80, 26, xPos, yPos, xScale,
-                        yScale);
+    Lib_TextureRect_IA8(&gMasterDisp, aVsShieldGaugeFrameTex, 80, 26, xPos, yPos, xScale, yScale);
 }
 
 void HUD_VS_ShieldGaugeTex_Draw(f32 xPos, f32 yPos, f32 xScale, f32 yScale, f32 width) {
