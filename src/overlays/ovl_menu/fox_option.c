@@ -2163,6 +2163,7 @@ void Option_RankingMenu_Draw(void) {
         Option_Color_FlashRed(&D_menu_801B93F0);
         colorGB = D_menu_801B93F0;
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, colorGB, colorGB, 255);
+        // Selection arrow
         Lib_TextureRect_IA8(&gMasterDisp, D_VS_MENU_7004010, 8, 8, 70.0f, (D_menu_801B93E4 * 17.0f) + 55.0f, 1.0f,
                             1.0f);
     }
@@ -2245,13 +2246,19 @@ void Option_80197914(void) {
 
     for (i = 0, vec1 = D_menu_801AF100, vec2 = D_menu_801AF118; i < 2; i++, vec1++, vec2++) {
         Matrix_Push(&gGfxMatrix);
-        Matrix_Translate(gGfxMatrix, vec1->x, vec1->y, -500.0f, MTXF_APPLY);
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("RANKING_BORDERS", i);
+
+                Matrix_Translate(gGfxMatrix, vec1->x, vec1->y, -500.0f, MTXF_APPLY);
 
         // @port: Increase the scale by 2.5f to compensate for missing borders
         Matrix_Scale(gGfxMatrix, vec2->x * 4, vec2->y + 2.5f, 1.0f, MTXF_APPLY);
         Matrix_SetGfxMtx(&gMasterDisp);
         gSPDisplayList(gMasterDisp++, D_menu_801AEF30);
         Matrix_Pop(&gGfxMatrix);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
     }
 }
 
@@ -2610,11 +2617,17 @@ f32 D_menu_801AF144 = 2.7f;
 void Option_RankingRouteMedal_Draw(f32 xPos, f32 yPos, f32 zPos) {
     RCP_SetupDL(&gMasterDisp, SETUPDL_53);
     Matrix_Push(&gGfxMatrix);
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Option_RankingRouteMedal_Draw", (u32) xPos << 8 | (u32) yPos);
+
     Matrix_Translate(gGfxMatrix, xPos - D_menu_801AF140, yPos + D_menu_801AF144, zPos, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, D_menu_801AF13C, D_menu_801AF13C, D_menu_801AF13C, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
     gSPDisplayList(gMasterDisp++, aMapMedalDL);
     Matrix_Pop(&gGfxMatrix);
+
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 }
 
 s32 Option_GetRouteLineColor(PlanetId start, PlanetId end) {
