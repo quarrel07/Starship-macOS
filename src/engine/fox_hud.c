@@ -2800,11 +2800,20 @@ void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
         Matrix_RotateZ(gGfxMatrix, M_DTOR * D_800D1F88[idx], MTXF_APPLY);
     }
 
+    // Simplified perspective alignment based on X position
+    f32 xPos = D_800D1EF8[idx];
+
+    if (xPos < 0.0f) {
+        xPos = xPos * OTRGetAspectRatio() + 1;
+    } else if (xPos > 0.0f) {
+        xPos = xPos * OTRGetAspectRatio() - 1;
+    }
+
     if (arg1) {
-        Matrix_Translate(gGfxMatrix, D_800D1EF8[idx] + D_800D1FE8[idx], D_800D1F28[idx] + D_800D2018[idx],
+        Matrix_Translate(gGfxMatrix, xPos + D_800D1FE8[idx], D_800D1F28[idx] + D_800D2018[idx],
                          D_800D1F58[idx], MTXF_APPLY);
     } else {
-        Matrix_Translate(gGfxMatrix, D_800D1EF8[idx], D_800D1F28[idx], D_800D1F58[idx], MTXF_APPLY);
+        Matrix_Translate(gGfxMatrix, xPos, D_800D1F28[idx], D_800D1F58[idx], MTXF_APPLY);
     }
 
     Matrix_RotateZ(gGfxMatrix, M_DTOR * D_800D1FB8[idx], MTXF_APPLY);
