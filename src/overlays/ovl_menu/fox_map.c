@@ -4093,6 +4093,10 @@ bool Map_LevelPlayedStatus_Check(PlanetId planet) {
         case PLANET_SOLAR:
             planetSaveSlot = SAVE_SLOT_SOLAR;
             break;
+
+        default:
+            planetSaveSlot = planet;
+            break;
     }
 
     if (CVarGetInteger("gLevelSelector", 0) && gMissionNumber == 6) {
@@ -6086,7 +6090,7 @@ void Map_BriefingRadio_Update(void) {
     if ((D_menu_801CF018 > 0) && (D_menu_801CF018 != 100)) {
         Map_BriefingRadio_Draw(gCurrentRadioPortrait);
         Map_BriefingRadio_Draw(D_menu_801AF420[!D_menu_801CD940]);
-        if (CVarGetInteger("gLevelSelector", 0) && (sCurrentPlanetId == 6)) {
+        if (CVarGetInteger("gLevelSelector", 0) && (gMissionNumber == 6)) {
             return;
         }
         func_radio_800BB388();
