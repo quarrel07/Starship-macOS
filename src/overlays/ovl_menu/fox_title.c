@@ -3629,21 +3629,21 @@ void Title_Radio_PlayMessage(u16** msgList, RadioCharacterId character) {
     switch (gGameState) {
         case GSTATE_TITLE:
             gRadioPrintPosY = 176;
-            gRadioPrintPosX = 85;
-            gRadioTextBoxPosX = 80.0f;
+            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdge(85);
+            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdge(80.0f);
             gRadioTextBoxPosY = 174.0f;
             gRadioTextBoxScaleX = 4.63f;
-            gRadioPortraitPosX = 32.0f;
+            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdge(32.0f);
             gRadioPortraitPosY = 174.0f;
             break;
 
         case GSTATE_PLAY:
             gRadioPrintPosY = 179;
-            gRadioPrintPosX = 79;
-            gRadioTextBoxPosX = 74.0f;
+            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdge(79);
+            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdge(74.0f);
             gRadioTextBoxPosY = 178.0f;
             gRadioTextBoxScaleX = 4.53f;
-            gRadioPortraitPosX = 26.0f;
+            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdge(26.0f);
             gRadioPortraitPosY = 178.0f;
     }
 

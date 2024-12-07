@@ -100,24 +100,24 @@ void DrawSettingsMenu(){
                 .isPercentage = true,
             })) {
                 float val = CVarGetFloat("gMainMusicVolume", 1.0f) * 100;
-                gSaveFile.save.data.musicVolume = val;
-                Audio_SetVolume(AUDIO_TYPE_MUSIC, val);
+                gSaveFile.save.data.musicVolume = (u8) val;
+                Audio_SetVolume(AUDIO_TYPE_MUSIC, (u8) val);
             }
             if (UIWidgets::CVarSliderFloat("Voice Volume", "gVoiceVolume", 0.0f, 1.0f, 1.0f, {
                 .format = "%.0f%%",
                 .isPercentage = true,
             })) {
                 float val = CVarGetFloat("gVoiceVolume", 1.0f) * 100;
-                gSaveFile.save.data.voiceVolume = val;
-                Audio_SetVolume(AUDIO_TYPE_VOICE, val);
+                gSaveFile.save.data.voiceVolume = (u8) val;
+                Audio_SetVolume(AUDIO_TYPE_VOICE, (u8) val);
             }
             if (UIWidgets::CVarSliderFloat("Sound Effects Volume", "gSFXMusicVolume", 0.0f, 1.0f, 1.0f, {
                 .format = "%.0f%%",
                 .isPercentage = true,
             })) {
                 float val = CVarGetFloat("gSFXMusicVolume", 1.0f) * 100;
-                gSaveFile.save.data.sfxVolume = val;
-                Audio_SetVolume(AUDIO_TYPE_SFX, val);
+                gSaveFile.save.data.sfxVolume = (u8) val;
+                Audio_SetVolume(AUDIO_TYPE_SFX, (u8) val);
             }
 
             static std::unordered_map<Ship::AudioBackend, const char*> audioBackendNames = {
@@ -543,7 +543,7 @@ void DrawDebugMenu() {
         });
 
         UIWidgets::CVarCheckbox("SFX Jukebox", "gSfxJukebox", {
-            .tooltip = "Allows you to play sound effects from the game"
+            .tooltip = "Press L in the Expert Sound options to play sound effects from the game"
         });
 
         UIWidgets::CVarCheckbox("Spawner Mod", "gSpawnerMod", {

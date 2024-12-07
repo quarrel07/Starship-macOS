@@ -35,7 +35,7 @@ void KillBoss(void);
 #endif
 
 void Display_DrawHelpAlert(void) {
-    bool sp7C;
+    bool centered; // Enemy pos is centered, so both help arrows should be displayed
     f32 sp78;
     f32 sp74;
     Vec3f sp68;
@@ -44,11 +44,13 @@ void Display_DrawHelpAlert(void) {
     if ((gPlayState == PLAY_PAUSE) || (gTeamHelpActor == NULL)) {
         return;
     }
+
     if ((gTeamHelpActor->obj.status != OBJ_ACTIVE) || (gPlayer[0].state_1C8 != PLAYERSTATE_1C8_ACTIVE)) {
         gTeamHelpActor = NULL;
         gTeamHelpTimer = 0;
         return;
     }
+
     if (gTeamHelpTimer != 0) {
         gTeamHelpTimer--;
         if (gTeamHelpTimer == 0) {
@@ -67,9 +69,9 @@ void Display_DrawHelpAlert(void) {
 
         Matrix_MultVec3f(gCalcMatrix, &sp68, &sp5C);
 
-        sp7C = false;
+        centered = false;
         if ((sp5C.z < 0.0f) && (sp5C.z > -12000.0f) && (fabsf(sp5C.x) < fabsf(sp5C.z * 0.4f))) {
-            sp7C = true;
+            centered = true;
         }
 
         RCP_SetupDL(&gMasterDisp, SETUPDL_12);
@@ -86,19 +88,19 @@ void Display_DrawHelpAlert(void) {
                 break;
         }
 
-        switch (sp7C) {
+        switch (centered) {
             case false:
                 if (gTeamHelpActor->sfxSource[0] > 0.0f) {
-                    sp78 = 20.0f;
+                    sp78 = 20.0f * OTRGetAspectRatio()-8;
                     sp74 = M_PI / 2;
                 } else {
-                    sp78 = -20.0f;
+                    sp78 = -20.0f * OTRGetAspectRatio()+8;
                     sp74 = -M_PI / 2;
                 }
                 Matrix_Push(&gGfxMatrix);
 
                 // @port: Tag the transform.
-                FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", sp7C);
+                FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", centered);
 
                 Matrix_Translate(gGfxMatrix, sp78, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, sp74, MTXF_APPLY);
@@ -112,20 +114,22 @@ void Display_DrawHelpAlert(void) {
                 break;
 
             case true:
+                // right arrow (both at the same time)
                 Matrix_Push(&gGfxMatrix);
 
                 // @port: Tag the transform.
-                FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", sp7C);
-
-                Matrix_Translate(gGfxMatrix, 20.0f, 0.0f, -50.0f, MTXF_APPLY);
+                FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", centered);
+                Matrix_Translate(gGfxMatrix, 20.0f * OTRGetAspectRatio() - 8, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, -M_PI / 2, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 0.03f, 0.03f, 0.03f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, D_1023700);
                 Matrix_Pop(&gGfxMatrix);
                 sp78 = -20.0f;
+
+                // left arrow (both in simultaneous)
                 Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, -20.0f, 0.0f, -50.0f, MTXF_APPLY);
+                Matrix_Translate(gGfxMatrix, -20.0f * OTRGetAspectRatio() + 8, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, M_PI / 2, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 0.03f, 0.03f, 0.03f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
@@ -136,23 +140,23 @@ void Display_DrawHelpAlert(void) {
                 FrameInterpolation_RecordCloseChild();
                 break;
         }
-
-        switch (sp7C) {
+        
+        switch (centered) {
             case false:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
                 if (sp78 < 0.0f) {
-                    Graphics_DisplaySmallText(43 - 19, 106, 1.0f, 1.0f, "HELP!!");
+                    Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdge(38.0f), 106, 1.0f, 1.0f, "HELP!!");
                 } else {
-                    Graphics_DisplaySmallText(SCREEN_WIDTH - 43 - 19, 106, 1.0f, 1.0f, "HELP!!");
+                    Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdge(248), 106, 1.0f, 1.0f, "HELP!!");
                 }
                 break;
 
             case true:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
-                Graphics_DisplaySmallText(43 - 19, 106, 1.0f, 1.0f, "HELP!!");
-                Graphics_DisplaySmallText(SCREEN_WIDTH - 43 - 19, 106, 1.0f, 1.0f, "HELP!!");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdge(38.0f) , 106, 1.0f, 1.0f, "HELP!!");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdge(248), 106, 1.0f, 1.0f, "HELP!!");
                 break;
         }
     }
@@ -1361,7 +1365,7 @@ bool Display_CheckPlayerVisible(s32 index, s32 reflectY) {
     Matrix_MultVec3f(gGfxMatrix, &src, &dest);
 
     if ((dest.z < 200.0f) && (dest.z > -12000.0f)) {
-        if (fabsf(dest.x) < (fabsf(dest.z * 0.5f) + 500.0f)) {
+        if (fabsf(dest.x) < (fabsf(dest.z * /*0.5f*/ 1.5f) + 500.0f)) {
             if (fabsf(dest.y) < (fabsf(dest.z * 0.5f) + 500.0f)) {
                 if (reflectY == 0) {
                     sPlayersVisible[index] = true;
@@ -2133,11 +2137,11 @@ void Display_Update(void) {
 #if 0
     RCP_SetupDL(&gMasterDisp, SETUPDL_83);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
-    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "PATH1:");
-    Graphics_DisplaySmallNumber(60, 210, (int) ABS(path1));
-    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "PATH2:");
-    Graphics_DisplaySmallNumber(60, 220, (int) ABS(path2));
-    if (path1 < 0.0f) Graphics_DisplaySmallText(110, 210, 1.0f, 1.0f, "NEG:");
-    if (path2 < 0.0f) Graphics_DisplaySmallText(110, 220, 1.0f, 1.0f, "NEG:");
+    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "STICK_X:");
+    Graphics_DisplaySmallNumber(60, 210, (int) ABS(gInputPress->stick_x));
+    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "STICK_Y:");
+    Graphics_DisplaySmallNumber(60, 220, (int) ABS(gInputPress->stick_y));
+    if (gInputPress->stick_x < 0) Graphics_DisplaySmallText(110, 210, 1.0f, 1.0f, "NEG:");
+    if (gInputPress->stick_y < 0) Graphics_DisplaySmallText(110, 220, 1.0f, 1.0f, "NEG:");
 #endif
 }
