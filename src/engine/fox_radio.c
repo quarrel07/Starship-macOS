@@ -613,8 +613,8 @@ void Radio_Draw(void) {
             if (!(fakeTemp)) {
                 ret = Audio_GetCurrentVoiceStatus();
 
-                if (gRadioMsgCharIndex < 60) {
-                    if (gRadioMsg[gRadioMsgCharIndex + 1] == MSGCHAR_NXT && *gRadioMsg != 38) {
+                if (gRadioMsg[gRadioMsgCharIndex + 1] != MSGCHAR_END) {
+                    if (gRadioMsg[gRadioMsgCharIndex + 1] == MSGCHAR_NXT) {
                         if (ret == 0) {
                             gRadioState = 31;
                         }
