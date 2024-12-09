@@ -126,11 +126,11 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
     switch (gGameState) {
         case GSTATE_TITLE:
             gRadioPrintPosY = 176;
-            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdge(85.0f);
-            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdge(80.0f);
+            gRadioPrintPosX = 85.0f;
+            gRadioTextBoxPosX = 80.0f;
             gRadioTextBoxPosY = 174.0f;
             gRadioTextBoxScaleX = 4.63f;
-            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdge(32.0f);
+            gRadioPortraitPosX = 32.0f;
             gRadioPortraitPosY = 174.0f;
             break;
 
@@ -146,11 +146,11 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
 
         case GSTATE_PLAY:
             gRadioPrintPosY = 180;
-            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdge(79.0f);
-            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdge(74.0f);
+            gRadioPrintPosX = 79.0f;
+            gRadioTextBoxPosX = 74.0f;
             gRadioTextBoxPosY = 178.0f;
             gRadioTextBoxScaleX = 4.53f;
-            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdge(26.0f);
+            gRadioPortraitPosX = 26.0f;
             gRadioPortraitPosY = 178.0f;
             break;
     }
@@ -436,11 +436,11 @@ void func_radio_800BAAE8(void) {
         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
 
         if (mirror) {
-            Lib_TextureRect_RGBA16_MirX(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
+            Lib_TextureRect_RGBA16_MirX(&gMasterDisp, radioPortraitTex, 44, 44, OTRGetRectDimensionFromLeftEdge(gRadioPortraitPosX),
                                         gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f,
                                         gRadioPortraitScaleY);
         } else {
-            Lib_TextureRect_RGBA16(&gMasterDisp, radioPortraitTex, 44, 44, gRadioPortraitPosX,
+            Lib_TextureRect_RGBA16(&gMasterDisp, radioPortraitTex, 44, 44, OTRGetRectDimensionFromLeftEdge(gRadioPortraitPosX),
                                    gRadioPortraitPosY + 20.0f + sp38 + gRadioPortraitScaleY, 1.0f,
                                    gRadioPortraitScaleY);
         }
@@ -486,14 +486,14 @@ void func_radio_800BB388(void) {
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 60, 60, 255, 170);
         }
 
-        Lib_TextureRect_CI8(&gMasterDisp, texture, palette, 32, 32, gRadioTextBoxPosX, gRadioTextBoxPosY + 16.0f + sp30,
+        Lib_TextureRect_CI8(&gMasterDisp, texture, palette, 32, 32, OTRGetRectDimensionFromLeftEdge(gRadioTextBoxPosX), gRadioTextBoxPosY + 16.0f + sp30,
                             gRadioTextBoxScaleX, gRadioTextBoxScaleY);
     }
 
     if (gRadioTextBoxScaleY == 1.3f) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_85);
         gMsgCharIsPrinting =
-            Message_DisplayText(&gMasterDisp, gRadioMsg, gRadioPrintPosX, gRadioPrintPosY, gRadioMsgCharIndex);
+            Message_DisplayText(&gMasterDisp, gRadioMsg, OTRGetRectDimensionFromLeftEdge(gRadioPrintPosX), gRadioPrintPosY, gRadioMsgCharIndex);
     }
 }
 
