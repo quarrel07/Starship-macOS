@@ -98,7 +98,7 @@ extern s32 gRadioMsgCharIndex;
 extern UNK_TYPE F_801782E0;
 extern s32 gRadioMsgId;
 extern UNK_TYPE F_801782F0;
-extern s32 gMsgCharIsPrinting;
+extern bool gMsgCharIsPrinting;
 extern bool gHideRadio;
 extern u16* gRadioMsg;
 extern ObjectInit* gLevelObjects;
