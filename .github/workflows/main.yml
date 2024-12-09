@@ -16,7 +16,7 @@ jobs:
       with:
         submodules: true
     - name: Install dependencies
-      run: sudo apt-get install gcc g++ git cmake ninja-build lsb-release
+      run: sudo apt-get install gcc g++ git cmake ninja-build lsb-release libsdl2-dev libpng-dev libsdl2-net-dev libzip-dev zipcmp zipmerge ziptool nlohmann-json3-dev libtinyxml2-dev libspdlog-dev libboost-dev libopengl-dev
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.13
       with:
