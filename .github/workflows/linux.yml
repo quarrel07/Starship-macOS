@@ -42,7 +42,7 @@ jobs:
       - name: Create Package
         run: |
           mkdir starship-release
-          mv build-cmake/UltraViewer starship-release/
+          mv build-cmake/Starship starship-release/
       - name: Publish packaged artifacts
         uses: actions/upload-artifact@v4
         with:
