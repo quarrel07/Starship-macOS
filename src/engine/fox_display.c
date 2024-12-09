@@ -2105,7 +2105,7 @@ void Display_Update(void) {
     if (CVarGetInteger("gDebugJumpToAllRange", 0) == 1) {
         Player* pl2 = &gPlayer[0];
 
-        if (gControllerPress[0].button & L_TRIG) {
+        if ((gLevelMode != LEVELMODE_ALL_RANGE) && (gControllerPress[0].button & L_TRIG)) {
             pl2->state_1C8 = PLAYERSTATE_1C8_START_360;
         }
     }
