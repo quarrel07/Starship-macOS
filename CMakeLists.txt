@@ -546,7 +546,13 @@ add_custom_target(
     DEPENDS torch
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMAND ${TORCH_EXECUTABLE} otr baserom.us.rev1.z64
-    COMMAND ${TORCH_EXECUTABLE} pack port starship.otr
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/sf64.otr" "${CMAKE_BINARY_DIR}/sf64.otr"
+)
+
+add_custom_target(
+    GeneratePortOTR
+    DEPENDS torch
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMAND ${TORCH_EXECUTABLE} pack port starship.otr
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/starship.otr" "${CMAKE_BINARY_DIR}/starship.otr"
 )

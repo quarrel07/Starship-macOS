@@ -1,10 +1,8 @@
-name: Linux Compile
+name: Linux Validation
 
 on:
-  push:
-    branches: [ "*" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -48,3 +46,4 @@ jobs:
         with:
           name: starship-linux-x64
           path: starship-release
+          retention-days: 1

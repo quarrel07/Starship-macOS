@@ -1,10 +1,8 @@
-name: Windows Compile
+name: Windows Validation
 
 on:
-  push:
-    branches: [ "*" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -22,3 +20,4 @@ jobs:
         with:
           name: starship-windows
           path: ./build/x64/Debug
+          retention-days: 1
