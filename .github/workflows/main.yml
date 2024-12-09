@@ -16,7 +16,7 @@ jobs:
       with:
         submodules: true
     - name: Install dependencies
-      run: sudo apt-get install gcc g++ git cmake ninja-build lsb-release libsdl2-dev libpng-dev libsdl2-net-dev libzip-dev zipcmp zipmerge ziptool nlohmann-json3-dev libtinyxml2-dev libspdlog-dev libboost-dev libopengl-dev
+      run: sudo apt-get install gcc g++ git cmake ninja-build lsb-release
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.13
       with:
@@ -32,14 +32,12 @@ jobs:
           ${{ runner.os }}-otr-build-${{ github.ref }}
           ${{ runner.os }}-otr-build-
         path: |
-          build-cmake
-          SDL2-2.28.5
-          tinyxml2-10.0.0
+          tools/Torch/cmake-build-release
     - name: Generate starship.otr
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release
-        cmake --build build-cmake --config Release --target GeneratePortOTR -j3
+        make -C tools/Torch type=release -j12
+        tools/Torch/cmake-build-release/torch pack port starship.otr
     - uses: actions/upload-artifact@v4
       with:
         name: starship.otr
