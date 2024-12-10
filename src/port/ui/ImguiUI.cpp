@@ -302,13 +302,8 @@ void DrawSettingsMenu(){
                                                   "##ExtraLatencyThreshold", "gExtraLatencyThreshold", 0, 360, "", 0, true, true, false);
             UIWidgets::Tooltip("When Interpolation FPS setting is at least this threshold, add one frame of input lag (e.g. 16.6 ms for 60 FPS) in order to avoid jitter. This setting allows the CPU to work on one frame while GPU works on the previous frame.\nThis setting should be used when your computer is too slow to do CPU + GPU work in time.");
         }
-
-        UIWidgets::CVarCheckbox("Disable Starfield interpolation", "gDisableStarsInterpolation", {
-            .tooltip = "Disable starfield interpolation to increase performance on slower CPUs"
-        });
-
+      
         UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
-
 
         static std::unordered_map<Ship::WindowBackend, const char*> windowBackendNames = {
                 { Ship::WindowBackend::FAST3D_DXGI_DX11, "DirectX" },
@@ -464,13 +459,6 @@ void DrawCheatsMenu() {
         UIWidgets::CVarCheckbox("Unbreakable Wings", "gUnbreakableWings");
         UIWidgets::CVarCheckbox("Infinite Bombs", "gInfiniteBombs");
         UIWidgets::CVarCheckbox("Hyper Laser", "gHyperLaser");
-
-        ImGui::EndMenu();
-    }
-}
-
-void DrawHit64Menu() {
-    if (UIWidgets::BeginMenu("Hit+64")) {
         UIWidgets::CVarCheckbox("Self destruct button", "gHit64SelfDestruct", {
                 .tooltip = "Press Down on the D-PAD to instantly self destruct."
             });
@@ -533,6 +521,10 @@ void DrawDebugMenu() {
 
         UIWidgets::CVarCheckbox("SFX Jukebox", "gSfxJukebox", {
             .tooltip = "Press L in the Expert Sound options to play sound effects from the game"
+        });
+
+        UIWidgets::CVarCheckbox("Disable Starfield interpolation", "gDisableStarsInterpolation", {
+            .tooltip = "Disable starfield interpolation to increase performance on slower CPUs"
         });
 
         UIWidgets::CVarCheckbox("Spawner Mod", "gSpawnerMod", {
@@ -623,8 +615,6 @@ void GameMenuBar::DrawElement() {
         DrawCheatsMenu();
 
         ImGui::SetCursorPosY(0.0f);
-
-        DrawHit64Menu();
 
         ImGui::SetCursorPosY(0.0f);
 
