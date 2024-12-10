@@ -110,7 +110,7 @@ f32 sGroundPositions360z[4] = {
 };
 
 // Declare global variables for screen dimensions
-float gCurrentScreenWidth = 320.0f * 5;  // Default width
+float gCurrentScreenWidth = 320.0f * 3;  // Default width
 float gCurrentScreenHeight = 240.0f * 3; // Default height
 
 // Custom floating-point modulo function (replaces fmodf)
@@ -229,7 +229,7 @@ void Background_DrawStarfield(void) {
             FrameInterpolation_ShouldInterpolateFrame(false);
         }
 
-        float originalWidth = currentScreenWidth / 5;
+        float originalWidth = currentScreenWidth / 3;
         float originalAspect = originalWidth / (currentScreenHeight / 3);
         float renderMaskWidth = originalWidth * (OTRGetAspectRatio() / originalAspect);
         float marginX = (currentScreenWidth - renderMaskWidth) / 2;
