@@ -455,7 +455,7 @@ void DrawEnhancementsMenu() {
 void DrawModsMenu() {
     if (UIWidgets::BeginMenu("Mods")) {
         UIWidgets::CVarCheckbox("Independence", "gModIndependence", {
-                .tooltip = "Katina 850 Enemies",
+                .tooltip = "A reimagined Katina battlefield with over 500 enemies to conquer. Are you ready?",
                 .defaultValue = false
             });
 
