@@ -229,6 +229,12 @@ void Background_DrawStarfield(void) {
             FrameInterpolation_ShouldInterpolateFrame(false);
         }
 
+        float originalWidth = currentScreenWidth / 3;
+        float originalAspect = originalWidth / (currentScreenHeight / 3);
+        float renderMaskWidth = originalWidth * (OTRGetAspectRatio() / originalAspect);
+        float marginX = (currentScreenWidth - renderMaskWidth) / 2;
+        float renderMaskHeight = currentScreenHeight / 3;
+
         for (i = 0; i < starCount; i++, yStar++, xStar++, color++) {
             // Adjust star positions with field offsets
             bx = *xStar + xField;
@@ -259,20 +265,11 @@ void Background_DrawStarfield(void) {
             vy = (-zSin * bx) + (zCos * by) + currentScreenHeight / 2.0f;
 
             // Check if the star is within the visible screen area with margin
-            if ((vx >= STAR_MARGIN) && (vx < currentScreenWidth - STAR_MARGIN) && (vy >= STAR_MARGIN) &&
-                (vy < currentScreenHeight - STAR_MARGIN)) {
+            if (vx >= (marginX - STAR_MARGIN) && vx <= (marginX + renderMaskWidth + STAR_MARGIN) &&
+                vy >= (renderMaskHeight - STAR_MARGIN) && vy <= ((renderMaskHeight * 2) + STAR_MARGIN)) {
 
-                // @port: Some garbage stars can be seen while scrolling faster, because of this
-                // we should skip interpolation when the stars warp from left to right.
-                u8 skipStarsInterpolation = (fabsf(vx - gStarPrevX[i]) > starfieldWidth / 2.0f) ||
-                                            (fabsf(vy - gStarPrevY[i]) > starfieldHeight / 2.0f);
-
-                if (skipStarsInterpolation) {
-                    FrameInterpolation_ShouldInterpolateFrame(false);
-                } else {
-                    FrameInterpolation_RecordOpenChild("Starfield", i);
-                    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
-                }
+                FrameInterpolation_RecordOpenChild("Starfield", i);
+                FrameInterpolation_RecordMarker(__FILE__, __LINE__);
 
                 // Translate to (vx, vy) in ortho coordinates
                 Matrix_Push(&gGfxMatrix);
@@ -295,12 +292,7 @@ void Background_DrawStarfield(void) {
                 gSPDisplayList(gMasterDisp++, starDL);
                 Matrix_Pop(&gGfxMatrix);
 
-                if (skipStarsInterpolation) {
-                    FrameInterpolation_ShouldInterpolateFrame(true);
-                } else {
-                    // Pop the transform id
-                    FrameInterpolation_RecordCloseChild();
-                }
+                FrameInterpolation_RecordCloseChild();
 
                 gStarPrevX[i] = vx;
                 gStarPrevY[i] = vy;
