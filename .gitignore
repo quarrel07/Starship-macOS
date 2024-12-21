@@ -48,3 +48,4 @@ Starship.log
 *.lib
 *.pdb
 dumps/
+_packages/*
