@@ -38,6 +38,15 @@ void SetupGuiElements() {
 
     mGameMenuBar = std::make_shared<GameMenuBar>("gOpenMenuBar", CVarGetInteger("gOpenMenuBar", 0));
     gui->SetMenuBar(mGameMenuBar);
+
+    if (gui->GetMenuBar() && !gui->GetMenuBar()->IsVisible()) {
+#if defined(__SWITCH__) || defined(__WIIU__)
+        Notification::Emit({ .message = "Press - to access enhancements menu", .remainingTime = 10.0f });
+#else
+        Notification::Emit({ .message = "Press F1 to access enhancements menu", .remainingTime = 10.0f });
+#endif
+    }
+
     mStatsWindow = gui->GetGuiWindow("Stats");
     if (mStatsWindow == nullptr) {
         SPDLOG_ERROR("Could not find stats window");

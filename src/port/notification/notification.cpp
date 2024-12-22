@@ -1,5 +1,6 @@
 
 #include "notification.h"
+#include "macros.h"
 #include <libultraship/libultraship.h>
 
 namespace Notification {
