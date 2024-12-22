@@ -796,14 +796,27 @@ void Katina_BossHandleDamage(KaSaucerer* this) {
 
 void Katina_BossSpawnEnemies(KaSaucerer* this, Vec3f* pos, f32 arg2) {
     s32 i;
-    ActorAllRange* actor = &gActors[100];
+    ActorAllRange* actor = &gActors[20];
 
     INDEPENDENCE {
+        actor = &gActors[100];
         for (i = 10; i <= 500; i++, actor++) {
-            if (actor->obj.status == OBJ_FREE) {
-                if ((actor->index == 100) || (actor->index == 200)) {
+            // Protection against spawning actors with wrong radarmarks
+            RadarMarkTypes radarMarkType = i + AI360_ENEMY;
+            switch (radarMarkType) {
+                case RADARMARK_MISSILE:
+                case RADARMARK_KA_SAUCERER:
+                case RADARMARK_BOSS:
+                case RADARMARK_SUPPIES:
+                case RADARMARK_ITEM_1:
+                case RADARMARK_ITEM_2:
                     continue;
-                }
+            }
+
+            if (actor->obj.status == OBJ_FREE) {
+                // if ((actor->index == 100) || (actor->index == 200)) {
+                //     continue;
+                // }
 
                 Actor_Initialize(actor);
                 actor->obj.status = OBJ_ACTIVE;
@@ -1272,7 +1285,7 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
                 INDEPENDENCE {
                     gAllRangeCountdown[0] = 2;
                     gAllRangeCountdown[1] = 2;
-                    gAllRangeCountdown[2] = 15;
+                    gAllRangeCountdown[2] = 10;
                 }
                 else {
                     gAllRangeCountdown[0] = 1;
@@ -1289,7 +1302,8 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
                 this->state = SAUCERER_CS_LASER_CHARGE_END;
                 INDEPENDENCE {
                     this->timer_050 = 1928 * 2;
-                } else {
+                }
+                else {
                     this->timer_050 = 1928;
                 }
                 Radio_PlayMessage(gMsg_ID_18055, RCID_BILL);
@@ -1489,7 +1503,7 @@ void Katina_KaSaucerer_Update(KaSaucerer* this) {
 
             if (this->timer_050 == 1) {
                 gBosses[KA_BOSS_BASE].state = 1;
-                this->state = 18;
+                this->state = SAUCERER_CS_LASER_HIT;
                 this->timer_050 = 50;
                 AUDIO_PLAY_SFX(NA_SE_EXPLOSION_DEMO3, this->sfxSource, 0);
             }
@@ -2200,9 +2214,11 @@ void Katina_LevelComplete(Player* player) {
                     }
 
                     INDEPENDENCE {
-                        for (i = 100; i < ARRAY_COUNT(gActors); i++) {
-                            if (gActors[i].animFrame == 0) {
-                                Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
+                        for (i = 100; i <= 500; i++) {
+                            if (gActors[i].obj.status == OBJ_ACTIVE) {
+                                if (gActors[i].animFrame == 0) {
+                                    Object_Kill(&gActors[i].obj, gActors[i].sfxSource);
+                                }
                             }
                         }
                     }
