@@ -14,7 +14,7 @@ If you're having any trouble after reading through this `README`, feel free ask 
 Starship does not include any copyrighted assets.  You are required to provide a supported copy of the game.
 
 ### 1. Verify your ROM dump
-You can verify you have dumped a supported copy of the game by using the compatibility checker at https://2ship.equipment/. If you'd prefer to manually validate your ROM dump, you can cross-reference its `sha1` hash with the hashes [here](docs/supportedHashes.json).
+You can verify you have dumped a supported copy of the game by using the MD5 File Checksum Online at https://webencrypt.org/onlinetoolsjs/md5_checksum.html. The MD5 hash for a US 1.1 ROM is 741a94eee093c4c8684e66b89f8685e8.
 
 ### 2. Download Starship from [Releases](https://github.com/HarbourMasters/starship/releases)
 
