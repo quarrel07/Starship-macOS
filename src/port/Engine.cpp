@@ -385,7 +385,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
 
 uint32_t GameEngine::GetInterpolationFPS() {
     if (Ship::Context::GetInstance()->GetWindow()->GetWindowBackend() == Ship::WindowBackend::FAST3D_DXGI_DX11) {
-        return CVarGetInteger("gInterpolationFPS", 20);
+        return CVarGetInteger("gInterpolationFPS", 60);
     }
 
     if (CVarGetInteger("gMatchRefreshRate", 0)) {
@@ -393,7 +393,7 @@ uint32_t GameEngine::GetInterpolationFPS() {
     }
 
     return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
-                              CVarGetInteger("gInterpolationFPS", 20));
+                              CVarGetInteger("gInterpolationFPS", 60));
 }
 
 extern "C" uint32_t GameEngine_GetSampleRate() {
