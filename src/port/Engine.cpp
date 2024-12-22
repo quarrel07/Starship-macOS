@@ -335,7 +335,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
 
     std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
-    int target_fps = CVarGetInteger("gInterpolationFPS", 20);
+    int target_fps = CVarGetInteger("gInterpolationFPS", 60);
     static int last_fps;
     static int last_update_rate;
     static int time;
