@@ -14,7 +14,7 @@ If you're having any trouble after reading through this `README`, feel free ask 
 Starship does not include any copyrighted assets.  You are required to provide a supported copy of the game.
 
 ### 1. Verify your ROM dump
-The supported ROM is the USA 1.1 Rev A version. You can verify you have dumped a supported copy of the game by using the MD5 File Checksum Online at https://www.romhacking.net/hash/. The MD5 hash for a US 1.1 ROM is 741a94eee093c4c8684e66b89f8685e8.
+The supported ROM is the USA 1.1 Rev A version. You can verify you have dumped a supported copy of the game by using the MD5 File Checksum Online at https://www.romhacking.net/hash/. The MD5 hash for a US 1.1 ROM is 741A94EEE093C4C8684E66B89F8685E8.
 
 ### 2. Verify your ROM is in .z64 format
 Your ROM needs to be in .z64 format. If it's in .n64 format, use the following to convert it to a .z64: https://hack64.net/tools/swapper.php
@@ -33,7 +33,7 @@ Your ROM needs to be in .z64 format. If it's in .n64 format, use the following t
 * Run "generate_otr.sh"
 
 ### 4. Play!
-* Launch `starship.exe`
+* Launch `Starship.exe`
 Congratulations, you are now sailing with Starship! Have fun!
 
 # Configuration
@@ -60,7 +60,7 @@ Custom assets are packed in `.o2r` or `.otr` files. To use custom assets, place 
 
 If you're interested in creating and/or packing your own custom asset `.o2r`/`.otr` files, check out the following tools:
 * [**retro - OTR and O2R generator**](https://github.com/HarbourMasters64/retro)
-* [**fast64 - Blender plugin (Note that MM is not fully supported at this time)**](https://github.com/HarbourMasters/fast64)
+* [**fast64 - Blender plugin (Note that SF64 is not supported at this time)**](https://github.com/HarbourMasters/fast64)
 
 # Development
 ### Building
