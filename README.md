@@ -14,7 +14,7 @@ If you're having any trouble after reading through this `README`, feel free ask 
 Starship does not include any copyrighted assets.  You are required to provide a supported copy of the game.
 
 ### 1. Verify your ROM dump
-The supported ROM is the USA 1.1 Rev A version. You can verify you have dumped a supported copy of the game by using the MD5 File Checksum Online at https://www.romhacking.net/hash/. The MD5 hash for a US 1.1 ROM is 741A94EEE093C4C8684E66B89F8685E8.
+The supported ROM is the USA 1.1 Rev A version. You can verify you have dumped a supported copy of the game by using the SHA-1 File Checksum Online at https://www.romhacking.net/hash/. The MD5 hash for a US 1.1 ROM is SHA-1: 09F0D105F476B00EFA5303A3EBC42E60A7753B7A.
 
 ### 2. Verify your ROM is in .z64 format
 Your ROM needs to be in .z64 format. If it's in .n64 format, use the following to convert it to a .z64: https://hack64.net/tools/swapper.php
