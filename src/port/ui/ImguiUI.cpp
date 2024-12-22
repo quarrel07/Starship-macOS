@@ -11,6 +11,7 @@
 #include <libultraship/libultraship.h>
 #include <Fast3D/gfx_pc.h>
 #include "port/Engine.h"
+#include "port/notification/notification.h"
 
 extern "C" {
 #include "sys.h"
@@ -24,6 +25,7 @@ std::shared_ptr<Ship::GuiWindow> mConsoleWindow;
 std::shared_ptr<Ship::GuiWindow> mStatsWindow;
 std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
 std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
+std::shared_ptr<Notification::Window> mNotificationWindow;
 std::shared_ptr<AdvancedResolutionSettings::AdvancedResolutionSettingsWindow> mAdvancedResolutionSettingsWindow;
 
 void SetupGuiElements() {
@@ -59,13 +61,20 @@ void SetupGuiElements() {
 
     mAdvancedResolutionSettingsWindow = std::make_shared<AdvancedResolutionSettings::AdvancedResolutionSettingsWindow>("gAdvancedResolutionEditorEnabled", "Advanced Resolution Settings");
     gui->AddGuiWindow(mAdvancedResolutionSettingsWindow);
+    mNotificationWindow = std::make_shared<Notification::Window>("gNotifications", "Notifications Window");
+    gui->AddGuiWindow(mNotificationWindow);
+    mNotificationWindow->Show();
 }
 
 void Destroy() {
+    auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
+    gui->RemoveAllGuiWindows();
+
     mAdvancedResolutionSettingsWindow = nullptr;
     mConsoleWindow = nullptr;
     mStatsWindow = nullptr;
     mInputEditorWindow = nullptr;
+    mNotificationWindow = nullptr;
 }
 
 std::string GetWindowButtonText(const char* text, bool menuOpen) {
