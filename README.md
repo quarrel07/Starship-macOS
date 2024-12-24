@@ -73,3 +73,21 @@ If you want to manually compile Starship, please consult the [building instructi
     <img alt="Powered by libultraship" src="./docs/poweredbylus.lightmode.png">
   </picture>
 </a>
+
+# Special Thanks:
+
+* [ZeldaRET](https://github.com/zeldaret) : for teaching me the fundamental knowledge of N64 decompilation.
+* [Decompals](https://github.com/decompals) : for helping in the initial disassembly and decompilation of the game.
+* [HM64 Team](https://github.com/harbourMasters) : for creating Libultraship and helping with various issues.
+
+* [DarioSamo](https://github.com/DarioSamo) : for providing important fixes to the renderer and information about the inner workings of the game graphics system.
+* [garrettjoecox](https://github.com/garrettjoecox) : for contributing with interpolation fixes to this port.
+* [inspectredc](https://github.com/inspectredc) : for contributing to the [SF64 decompilation project](https://github.com/sonicdcer/sf64).
+* [Lywx](https://github.com/KiritoDv) : for co-developing this port as a lead and creating [Torch](https://github.com/HarbourMasters/Torch) asset extraction system.
+* [m4xw](https://github.com/m4xw) : for helping with audio issues in this port.
+* [Malkierian](https://github.com/Malkierian) : for contributing with important fixes to this port.
+* [petrie911](https://github.com/petrie911) : for contributing to the [SF64 decompilation project](https://github.com/sonicdcer/sf64) as a lead.
+* [Ryan-Myers](https://github.com/Ryan-Myers) : for contributing to the [SF64 decompilation project](https://github.com/sonicdcer/sf64).
+* [Thar0](https://github.com/Thar0) : for contributing with an improved Starfield that can be interpolated to any framerate.
+* [TheBoy181](https://github.com/TheBoy181) : for contributing to this project with various widescreen enhancements such as level floors, an extended Starfield among other things.
+* [Wiseguy](https://github.com/Mr-Wiseguy) : for providing important information about the inner workings of the N64 platform, as well as helping with the decompilation process.
