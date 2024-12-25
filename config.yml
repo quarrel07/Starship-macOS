@@ -22,6 +22,7 @@ f7475fb11e7e6830f82883412638e8390791ab87:
       headers: include/assets
       modding: src/assets
     enums:
+      - include/bgm.h
       - include/sf64object.h
       - include/sf64level.h
       - include/sf64mesg.h
