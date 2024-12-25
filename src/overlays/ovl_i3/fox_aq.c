@@ -1522,6 +1522,7 @@ void Aquas_BlueMarineBoost(Player* player) {
                     player->boostCooldown = 1;
                 }
             }
+
             player->boostSpeed += 2.0f;
             if (player->boostSpeed > 10.0f) {
                 player->boostSpeed = 10.0f;
@@ -1571,6 +1572,7 @@ void Aquas_BlueMarineBrake(Player* player) {
                 player->boostCooldown = 1;
             }
         }
+
         player->boostSpeed -= 1.0f;
         if (player->boostSpeed < -20.0f) {
             player->boostSpeed = -20.0f;

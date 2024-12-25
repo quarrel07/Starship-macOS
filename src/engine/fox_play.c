@@ -5201,7 +5201,7 @@ void Player_ArwingBrake(Player* player) {
     } else {
         sp30 = 1.5f;
         sp34 = 0.35f;
-    }    
+    }
     if (CVarGetInteger("gInfiniteBoost", 0)) {
         sp30 = 0.0f;
     } 
