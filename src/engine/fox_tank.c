@@ -1120,10 +1120,12 @@ void Tank_UpdateOnRails(Player* player) {
     func_tank_80045348(player);
     if (!player->boostCooldown) {
         if (D_800C9F14 != 0) {
-            if (D_800C9F14 >= 2) {
-                player->boostMeter += 2.0f;
-            } else {
-                player->boostMeter += 1.0f;
+            if (!CVarGetInteger("gInfiniteBoost", 0)) {
+                if (D_800C9F14 >= 2) {
+                    player->boostMeter += 2.0f;
+                } else {
+                    player->boostMeter += 1.0f;
+                }
             }
             if (player->boostMeter > 90.0f) {
                 player->boostMeter = 90.0f;

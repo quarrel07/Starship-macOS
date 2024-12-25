@@ -1515,12 +1515,13 @@ void Aquas_BlueMarineBoost(Player* player) {
                 AUDIO_PLAY_SFX(NA_SE_MARINE_BOOST, player->sfxSource, 4);
             }
 
-            player->boostMeter += 3.0f;
-            if (player->boostMeter > 90.0f) {
-                player->boostMeter = 90.0f;
-                player->boostCooldown = 1;
+            if (!CVarGetInteger("gInfiniteBoost", 0)) {
+                player->boostMeter += 3.0f;
+                if (player->boostMeter > 90.0f) {
+                    player->boostMeter = 90.0f;
+                    player->boostCooldown = 1;
+                }
             }
-
             player->boostSpeed += 2.0f;
             if (player->boostSpeed > 10.0f) {
                 player->boostSpeed = 10.0f;
@@ -1563,12 +1564,13 @@ void Aquas_BlueMarineBrake(Player* player) {
             AUDIO_PLAY_SFX(NA_SE_MARINE_BRAKE, player->sfxSource, 4);
         }
 
-        player->boostMeter += 3.0f;
-        if (player->boostMeter > 90.0f) {
-            player->boostMeter = 90.0f;
-            player->boostCooldown = 1;
+        if (!CVarGetInteger("gInfiniteBoost", 0)) {
+            player->boostMeter += 3.0f;
+            if (player->boostMeter > 90.0f) {
+                player->boostMeter = 90.0f;
+                player->boostCooldown = 1;
+            }
         }
-
         player->boostSpeed -= 1.0f;
         if (player->boostSpeed < -20.0f) {
             player->boostSpeed = -20.0f;
