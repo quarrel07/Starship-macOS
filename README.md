@@ -3,6 +3,10 @@
 
 # Starship
 
+Developed by: 
+* [SonicDcer](https://www.github.com/sonicdcer)
+* [Lywx](https://www.github.com/kiritodv)
+
 ## Discord
 
 Official Discord: https://discord.com/invite/shipofharkinian
