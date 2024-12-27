@@ -36,9 +36,7 @@
 #include <VertexFactory.h>
 #include "audio/GameAudio.h"
 #include "port/patches/DisplayListPatch.h"
-
-#include "port/hooks/impl/EventSystem.h"
-#include "port/hooks/Events.h"
+#include "port/mods/PortEnhancements.h"
 
 #include <Fast3D/gfx_pc.h>
 #include <SDL2/SDL.h>
@@ -184,15 +182,11 @@ void GameEngine::Create() {
 #if defined(__SWITCH__) || defined(__WIIU__)
     CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
 #endif
-
-    EventSystem::Instance->RegisterListener(EVENT_PLAYER_SHOT, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        auto pse = (PlayerShotEvent*) event;
-        SPDLOG_INFO("Player shot event fired for actor {}", pse->actorId);
-    });
-
+    PortEnhancements_Init();
 }
 
 void GameEngine::Destroy() {
+    PortEnhancements_Exit();
     AudioExit();
     free(MemoryPool.memory);
 }

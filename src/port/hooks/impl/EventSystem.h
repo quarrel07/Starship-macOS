@@ -1,13 +1,14 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 typedef uint16_t EventID;
 
 typedef enum EventType {
     EVENT_TYPE_PRE,
-    EVENT_TYPE_NORMAL,
-    EVENT_TYPE_POST,
+    EVENT_TYPE_POST
 } EventType;
 
 typedef enum EventPriority {
@@ -22,9 +23,9 @@ typedef struct IEvent {
 
 typedef void (*EventCallback)(IEvent*);
 
-// ID             Type
-// 00000000000000 00
-#define EVENT_ID(id, type) ((id << 2) | type)
+// ID              Type
+// 000000000000000 0
+#define EVENT_ID(id, type) ((id << 1) | type)
 
 #ifdef __cplusplus
 #include <array>
