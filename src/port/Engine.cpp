@@ -36,19 +36,15 @@
 #include <VertexFactory.h>
 #include "audio/GameAudio.h"
 #include "port/patches/DisplayListPatch.h"
-// #include "sf64audio_provisional.h"
+
+#include "port/hooks/impl/EventSystem.h"
+#include "port/hooks/Events.h"
 
 #include <Fast3D/gfx_pc.h>
-#include <Fast3D/gfx_rendering_api.h>
 #include <SDL2/SDL.h>
-#include <fstream>
 #include <filesystem>
 
 namespace fs = std::filesystem;
-
-// extern "C" AudioBufferParameters gAudioBufferParams;
-
-#include <utility>
 
 extern "C" {
 float gInterpolationStep = 0.0f;
@@ -188,6 +184,12 @@ void GameEngine::Create() {
 #if defined(__SWITCH__) || defined(__WIIU__)
     CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
 #endif
+
+    EventSystem::Instance->RegisterListener(EVENT_PLAYER_SHOT, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto pse = (PlayerShotEvent*) event;
+        SPDLOG_INFO("Player shot event fired for actor {}", pse->actorId);
+    });
+
 }
 
 void GameEngine::Destroy() {

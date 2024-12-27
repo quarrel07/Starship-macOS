@@ -1,9 +1,11 @@
+#include <stdlib.h>
 #include "global.h"
 #include "assets/ast_landmaster.h"
 #include "assets/ast_aquas.h"
 #include "assets/ast_great_fox.h"
 #include "assets/ast_versus.h"
 #include "port/interpolation/FrameInterpolation.h"
+#include "port/hooks/Events.h"
 
 Vec3f sShotViewPos;
 
@@ -660,6 +662,10 @@ bool PlayerShot_CheckPolyCollision(PlayerShot* shot, ObjectId objId, Object* obj
 void PlayerShot_ApplyDamageToActor(PlayerShot* shot, Actor* actor, s32 hitIndex) {
     Vec3f sp44 = { 0.0f, 0.0f, -100.0f };
     Vec3f sp38;
+
+    PlayerShotEvent* event = malloc(sizeof(PlayerShotEvent));
+    EventSystem_CallEvent(EVENT_PLAYER_SHOT, event);
+    free(event);
 
     actor->dmgType = DMG_BEAM;
     actor->dmgPart = hitIndex - 1;
