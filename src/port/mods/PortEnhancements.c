@@ -1,5 +1,5 @@
 #include "PortEnhancements.h"
-#include "port/hooks/list/EngineEvent.h"
+#include "port/hooks/Events.h"
 #include "global.h"
 #include "hit64.h"
 #include "mods.h"
@@ -157,8 +157,8 @@ void OnGameUpdatePost(IEvent* event) {
 
 void PortEnhancements_Init() {
     // Register event listeners
-    EventSystem_RegisterListener(DISPLAY_UPDATE_EVENT_PRE, OnDisplayUpdatePre, EVENT_PRIORITY_NORMAL);
-    EventSystem_RegisterListener(GAME_UPDATE_EVENT_POST, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
+    EventSystem_RegisterListener(DisplayPreUpdateEvent, OnDisplayUpdatePre, EVENT_PRIORITY_NORMAL);
+    EventSystem_RegisterListener(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
 }
 
 void PortEnhancements_Exit() {
