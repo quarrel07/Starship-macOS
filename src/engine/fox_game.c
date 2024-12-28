@@ -4,6 +4,7 @@
 #include "assets/ast_logo.h"
 #include "mods.h"
 #include "port/interpolation/FrameInterpolation.h"
+#include "port/hooks/list/EngineEvent.h"
 
 f32 gNextVsViewScale;
 f32 gVsViewScale;
@@ -346,6 +347,9 @@ void Game_Update(void) {
     u8 partialFill;
     u8 soundMode;
 
+    // @port: @event: Call GAME_UPDATE_EVENT_PRE
+    EventSystem_CallEvent(GAME_UPDATE_EVENT_PRE, NULL);
+
     Game_SetGameState();
     if (gGameStandby) {
         Game_InitStandbyDL(&gUnkDisp1);
@@ -600,12 +604,9 @@ void Game_Update(void) {
                                    gFillScreenRed, gFillScreenGreen, gFillScreenBlue, gFillScreenAlpha);
         }
         Audio_dummy_80016A50();
-#if MODS_RAM_MOD == 1
-        RamMod_Update();
-#endif
-        if(CVarGetInteger("gSpawnerMod", 0) == 1){
-            Spawner();
-        }
+
+        // @port: @event: Call GAME_UPDATE_EVENT_POST
+        EventSystem_CallEvent(GAME_UPDATE_EVENT_POST, NULL);
     }
 }
 
