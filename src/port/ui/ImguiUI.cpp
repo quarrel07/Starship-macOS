@@ -186,6 +186,9 @@ void DrawSettingsMenu(){
                     .format = "%.1fx",
                 });
             }
+            UIWidgets::CVarCheckbox("Invert Y Axis", "gInvertYAxis",{
+                .tooltip = "Inverts the Y axis for controlling vehicles"
+            });
 
             ImGui::EndMenu();
         }

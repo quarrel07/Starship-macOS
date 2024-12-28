@@ -803,7 +803,8 @@ void Aquas_801AA4BC(Player* player) {
 
 void Aquas_UpdateCamera(Player* player) {
     f32 stickX = +gInputPress->stick_x;
-    f32 stickY = -gInputPress->stick_y;
+    s8 YAxisMult = CVarGetInteger("gInvertYAxis", 0) ? -1 : 1;
+    f32 stickY = -gInputPress->stick_y * YAxisMult;
     f32 zRot;
 
     if (player->state != PLAYERSTATE_ACTIVE) {
@@ -877,7 +878,9 @@ void Aquas_BlueMarineMove(Player* player) {
     Aquas_801A8E30();
 
     stickX = -gInputPress->stick_x;
-    stickY = +gInputPress->stick_y;
+
+    s8 YAxisMult = CVarGetInteger("gInvertYAxis", 0) ? -1 : 1;
+    stickY = +gInputPress->stick_y * YAxisMult;
 
     gPlayerTurnStickMod = 0.68f;
 
