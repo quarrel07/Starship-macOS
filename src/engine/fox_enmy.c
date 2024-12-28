@@ -18,6 +18,7 @@
 #include "assets/ast_training.h"
 #include "assets/ast_versus.h"
 #include "assets/ast_zoness.h"
+#include "port/hooks/Events.h"
 
 s32 D_enmy_Timer_80161670[4];
 s32 gLastPathChange;
@@ -276,7 +277,9 @@ void Item_Load(Item* this, ObjectInit* objInit) {
     this->obj.rot.z = objInit->rot.z;
     this->obj.id = objInit->id;
     this->width = 1.0f;
-    Object_SetInfo(&this->info, this->obj.id);
+    CALL_CANCELLABLE_EVENT(ItemDropEvent, this){
+        Object_SetInfo(&this->info, this->obj.id);
+    }
 }
 
 void Effect_Effect346_Setup(Effect346* this, f32 xPos, f32 yPos, f32 zPos) {
@@ -1042,7 +1045,9 @@ void Scenery_CoStoneArch_Init(CoStoneArch* this, f32* hitboxData) {
             item->obj.pos.y = this->obj.pos.y;
             item->obj.pos.z = this->obj.pos.z;
             item->obj.rot.y = this->obj.rot.y;
-            Object_SetInfo(&item->info, item->obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                Object_SetInfo(&item->info, item->obj.id);
+            }
             item->info.hitbox = LOAD_ASSET(hitboxData);
             break;
         }
@@ -1696,7 +1701,9 @@ void func_enmy_800660F0(Actor* this) {
             item->obj.pos.z = this->obj.pos.z;
             item->timer_4A = 8;
 
-            Object_SetInfo(&item->info, item->obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                Object_SetInfo(&item->info, item->obj.id);
+            }
 
             if ((item->obj.id == OBJ_ITEM_SILVER_RING) || (item->obj.id == OBJ_ITEM_BOMB) ||
                 (item->obj.id == OBJ_ITEM_LASERS)) {
