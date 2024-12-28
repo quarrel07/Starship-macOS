@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "global.h"
 #include "assets/ast_landmaster.h"
 #include "assets/ast_aquas.h"

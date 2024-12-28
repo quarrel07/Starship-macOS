@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "global.h"
 #include "mods/hit64.c"
 #include "assets/ast_arwing.h"
