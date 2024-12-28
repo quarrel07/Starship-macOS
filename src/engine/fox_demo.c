@@ -18,6 +18,7 @@
 #include "assets/ast_title.h"
 #include "assets/ast_katina.h"
 #include "assets/ast_allies.h"
+#include "port/hooks/Events.h"
 
 void func_demo_80048AC0(TeamId teamId) {
     s32 teamShield;
@@ -1567,7 +1568,9 @@ void Cutscene_DropVsItem(Player* player, ObjectId itemId, Item* item) {
     item->obj.pos.y = player->pos.y;
     item->obj.pos.z = player->trueZpos;
     item->obj.id = itemId;
-    Object_SetInfo(&item->info, item->obj.id);
+    CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+        Object_SetInfo(&item->info, item->obj.id);
+    }
 }
 
 void Cutscene_KillPlayer(Player* player) {

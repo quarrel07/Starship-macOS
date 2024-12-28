@@ -21,6 +21,7 @@
 #include "assets/ast_versus.h"
 #include "assets/ast_area_6.h"
 #include "assets/ast_zoness.h"
+#include "port/hooks/Events.h"
 
 extern float gCurrentScreenWidth;
 extern float gCurrentScreenHeight;
@@ -7011,7 +7012,9 @@ void Play_SpawnVsItem(ObjectId objId, Item* item) {
             item->obj.pos.y = gScenery360[spawnIndex].obj.pos.y;
             item->obj.pos.z = gScenery360[spawnIndex].obj.pos.z;
             item->obj.id = objId;
-            Object_SetInfo(&item->info, item->obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                Object_SetInfo(&item->info, item->obj.id);
+            }
         }
     }
 }

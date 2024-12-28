@@ -1,35 +1,42 @@
 #include "EventSystem.h"
 #include <stdexcept>
+#include <algorithm>
 
 EventSystem* EventSystem::Instance = new EventSystem();
 
 ListenerID EventSystem::RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
-    if(std::find_if(this->mEventListeners[id].begin(), this->mEventListeners[id].end(), [callback](EventListener listener) {
+    auto& listeners = this->mEventListeners[(uint8_t)((id >> 16) & 0xFF)][(uint16_t)(id & 0xFFFF)];
+
+    if(std::find_if(listeners.begin(), listeners.end(), [callback](EventListener listener) {
         return listener.function == callback;
-    }) != this->mEventListeners[id].end()) {
+    }) != listeners.end()) {
         throw std::runtime_error("Listener already registered");
     }
 
-    this->mEventListeners[id].push_back({ priority, callback });
+    listeners.push_back({ priority, callback });
 
     // Sort by priority
-    std::sort(this->mEventListeners[id].begin(), this->mEventListeners[id].end(), [](EventListener a, EventListener b) {
+    std::sort(listeners.begin(), listeners.end(), [](EventListener a, EventListener b) {
         return a.priority < b.priority;
     });
 
-    return this->mEventListeners[id].size() - 1;
+    return listeners.size() - 1;
 }
 
-void EventSystem::UnregisterListener(EventID ev, ListenerID id) {
-    this->mEventListeners[ev].erase(this->mEventListeners[ev].begin() + id);
+void EventSystem::UnregisterListener(EventID id, ListenerID listenerId) {
+    auto& listeners = this->mEventListeners[(uint8_t)((id >> 16) & 0xFF)][(uint16_t)(id & 0xFFFF)];
+
+    listeners.erase(listeners.begin() + listenerId);
 }
 
 void EventSystem::CallEvent(EventID id, IEvent* event) {
-    if (this->mEventListeners[id].empty()) {
+    auto& listeners = this->mEventListeners[(uint8_t)((id >> 16) & 0xFF)][(uint16_t)(id & 0xFFFF)];
+
+    if (listeners.empty()) {
         return;
     }
 
-    for (auto& listener : this->mEventListeners[id]) {
+    for (auto& listener : listeners) {
         listener.function(event);
     }
 }

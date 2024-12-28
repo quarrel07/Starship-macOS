@@ -8,6 +8,7 @@
 #include "assets/ast_arwing.h"
 #include "assets/ast_corneria.h"
 #include "fox_co.h"
+#include "port/hooks/Events.h"
 
 u8 sFightCarrier;
 f32 sCoGrangaWork[68];
@@ -89,7 +90,9 @@ void Corneria_Granga_SpawnItem(Boss* this, f32 x, f32 y, f32 z, ObjectId itemId)
             gItems[i].obj.pos.x = x;
             gItems[i].obj.pos.y = y;
             gItems[i].obj.pos.z = z;
-            Object_SetInfo(&gItems[i].info, gItems[i].obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, &gItems[i]){
+                Object_SetInfo(&gItems[i].info, gItems[i].obj.id);
+            }
             break;
         }
     }
@@ -593,7 +596,9 @@ void Corneria_CoGranga_1UpCheck(CoGranga* this) {
                     gItems[i].obj.pos.z = gPlayer[0].trueZpos + dest.z;
                     gItems[i].timer_4A = 8;
 
-                    Object_SetInfo(&gItems[i].info, gItems[i].obj.id);
+                    CALL_CANCELLABLE_EVENT(ItemDropEvent, &gItems[i]){
+                        Object_SetInfo(&gItems[i].info, gItems[i].obj.id);
+                    }
                     Effect_Effect384_Spawn(gItems[i].obj.pos.x, gItems[i].obj.pos.y, gItems[i].obj.pos.z, 5.0f, 0);
                     break;
                 }

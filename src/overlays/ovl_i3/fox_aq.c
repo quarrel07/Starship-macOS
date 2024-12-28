@@ -7,6 +7,7 @@
 #include "global.h"
 #include "assets/ast_blue_marine.h"
 #include "assets/ast_aquas.h"
+#include "port/hooks/Events.h"
 // #include "prevent_bss_reordering2.h"
 
 const char D_i3_801C1A30[] = "プレイヤーのすべてをクリア \n"; // Clear of all players
@@ -380,7 +381,9 @@ void Aquas_SpawnItem(Vec3f* pos, ObjectId objId) {
             item->obj.pos.y = pos->y;
             item->obj.pos.z = pos->z;
             item->timer_4A = 2;
-            Object_SetInfo(&item->info, item->obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                Object_SetInfo(&item->info, item->obj.id);
+            }
             break;
         }
     }

@@ -7,6 +7,7 @@
 #include "assets/ast_bg_planet.h"
 #include "prevent_bss_reordering.h"
 #include "prevent_bss_reordering2.h"
+#include "port/hooks/Events.h"
 
 f32 D_i6_801A7F5C;
 f32 D_i6_801A7F64;
@@ -154,7 +155,9 @@ void Andross_801878A8() {
             item->obj.pos.z = -gLevelObjects[i].zPos1;
             item->obj.pos.z += gLevelObjects[i].zPos2;
             item->obj.pos.y = gLevelObjects[i].yPos;
-            Object_SetInfo(&item->info, item->obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                Object_SetInfo(&item->info, item->obj.id);
+            }
             item++;
         }
     }
@@ -235,7 +238,9 @@ void Andross_80187C5C(void) {
             item->obj.pos.z = -gLevelObjects[i].zPos1;
             item->obj.pos.z += gLevelObjects[i].zPos2;
             item->obj.pos.y = gLevelObjects[i].yPos;
-            Object_SetInfo(&item->info, item->obj.id);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                Object_SetInfo(&item->info, item->obj.id);
+            }
             item++;
         }
     }
@@ -1632,7 +1637,9 @@ void Andross_Effect396_Update(Effect396* this) {
                             item->obj.pos.y = this->obj.pos.y;
                             item->obj.pos.z = this->obj.pos.z;
                             item->timer_4A = 8;
-                            Object_SetInfo(&item->info, item->obj.id);
+                            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                                Object_SetInfo(&item->info, item->obj.id);
+                            }
                             item->unk_50 = 90.0f;
                             break;
                         }
