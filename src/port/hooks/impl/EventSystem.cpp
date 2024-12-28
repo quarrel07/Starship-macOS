@@ -1,4 +1,5 @@
 #include "EventSystem.h"
+#include <stdexcept>
 
 EventSystem* EventSystem::Instance = new EventSystem();
 
