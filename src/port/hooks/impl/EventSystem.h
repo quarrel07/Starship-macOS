@@ -6,18 +6,18 @@
 
 typedef uint16_t EventID;
 
-typedef enum EventType {
+typedef enum {
     EVENT_TYPE_PRE,
     EVENT_TYPE_POST
 } EventType;
 
-typedef enum EventPriority {
+typedef enum {
     EVENT_PRIORITY_LOW,
     EVENT_PRIORITY_NORMAL,
     EVENT_PRIORITY_HIGH,
 } EventPriority;
 
-typedef struct IEvent {
+typedef struct {
     bool cancelled;
 } IEvent;
 
