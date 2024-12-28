@@ -41,15 +41,15 @@ typedef struct {
         __VA_ARGS__ \
     } eventName; \
     \
-    static uint32_t eventName##_ID = INTERNAL_EVENT_ID(id, type);
+    static uint32_t eventName##ID = INTERNAL_EVENT_ID(id, type);
 
 #define CALL_EVENT(eventType, ...) \
     eventType eventType##_ = { {false}, __VA_ARGS__ }; \
-    EventSystem_CallEvent(eventType##_ID, &eventType##_);
+    EventSystem_CallEvent(eventType##ID, &eventType##_);
 
 #define CALL_CANCELLABLE_EVENT(eventType, ...) \
     eventType eventType##_ = { {false}, __VA_ARGS__ }; \
-    EventSystem_CallEvent(eventType##_ID, &eventType##_); \
+    EventSystem_CallEvent(eventType##ID, &eventType##_); \
     if (!eventType##_.event.cancelled)
 
 #ifdef __cplusplus
