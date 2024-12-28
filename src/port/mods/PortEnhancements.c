@@ -2,6 +2,7 @@
 #include "port/hooks/list/EngineEvent.h"
 #include "global.h"
 #include "hit64.h"
+#include "mods.h"
 
 void OnDisplayUpdatePre(IEvent* event) {
 #if DEBUG_BOSS_KILLER == 1
@@ -145,9 +146,19 @@ void OnDisplayUpdatePre(IEvent* event) {
 #endif
 }
 
+void OnGameUpdatePost(IEvent* event) {
+#if MODS_RAM_MOD == 1
+    RamMod_Update();
+#endif
+    if(CVarGetInteger("gSpawnerMod", 0) == 1){
+        Spawner();
+    }
+}
+
 void PortEnhancements_Init() {
     // Register event listeners
-    EventSystem_RegisterListener(DISPLAY_UPDATE_EVENT_PRE, EVENT_PRIORITY_NORMAL, OnDisplayUpdatePre);
+    EventSystem_RegisterListener(DISPLAY_UPDATE_EVENT_PRE, OnDisplayUpdatePre, EVENT_PRIORITY_NORMAL);
+    EventSystem_RegisterListener(GAME_UPDATE_EVENT_POST, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
 }
 
 void PortEnhancements_Exit() {

@@ -3,12 +3,25 @@
 
 EventSystem* EventSystem::Instance = new EventSystem();
 
-size_t EventSystem::RegisterListener(EventID id, EventPriority priority, EventCallback callback) {
-    if (std::find(this->mEventListeners[id].begin(), this->mEventListeners[id].end(), callback) != this->mEventListeners[id].end()) {
+ListenerID EventSystem::RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
+    if(std::find_if(this->mEventListeners[id].begin(), this->mEventListeners[id].end(), [callback](EventListener listener) {
+        return listener.function == callback;
+    }) != this->mEventListeners[id].end()) {
         throw std::runtime_error("Listener already registered");
     }
 
-    this->mEventListeners[id].push_back(callback);
+    this->mEventListeners[id].push_back({ priority, callback });
+
+    // Sort by priority
+    std::sort(this->mEventListeners[id].begin(), this->mEventListeners[id].end(), [](EventListener a, EventListener b) {
+        return a.priority < b.priority;
+    });
+
+    return this->mEventListeners[id].size() - 1;
+}
+
+void EventSystem::UnregisterListener(EventID ev, ListenerID id) {
+    this->mEventListeners[ev].erase(this->mEventListeners[ev].begin() + id);
 }
 
 void EventSystem::CallEvent(EventID id, IEvent* event) {
@@ -16,13 +29,17 @@ void EventSystem::CallEvent(EventID id, IEvent* event) {
         return;
     }
 
-    for (auto& callback : this->mEventListeners[id]) {
-        callback(event);
+    for (auto& listener : this->mEventListeners[id]) {
+        listener.function(event);
     }
 }
 
-extern "C" size_t EventSystem_RegisterListener(EventID id, EventPriority priority, EventCallback callback) {
-    return EventSystem::Instance->RegisterListener(id, priority, callback);
+extern "C" size_t EventSystem_RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
+    return EventSystem::Instance->RegisterListener(id, callback, priority);
+}
+
+extern "C" void EventSystem_UnregisterListener(EventID ev, size_t id) {
+    EventSystem::Instance->UnregisterListener(ev, id);
 }
 
 extern "C" void EventSystem_CallEvent(EventID id, void* event) {
