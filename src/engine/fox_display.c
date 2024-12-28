@@ -1782,9 +1782,8 @@ void Display_Update(void) {
     }
 #endif
 
-    // @port: @event: Start DISPLAY_UPDATE_EVENT_PRE
-    IEvent* event = malloc(sizeof(IEvent));
-    EventSystem_CallEvent(DISPLAY_UPDATE_EVENT_PRE, event);
+    // @port: @event: Call DISPLAY_UPDATE_EVENT_PRE
+    EventSystem_CallEvent(DISPLAY_UPDATE_EVENT_PRE, NULL);
 
     Matrix_Push(&gGfxMatrix);
     if ((gCurrentLevel == LEVEL_AQUAS) && (gPlayer[0].state == PLAYERSTATE_ACTIVE)) {
@@ -2017,13 +2016,6 @@ void Display_Update(void) {
     sPlayersVisible[gPlayerNum] = false;
     Matrix_Pop(&gGfxMatrix);
 
-    // @port: @event: End DISPLAY_UPDATE_EVENT_PRE
-    free(event);
-
-    // @port: @event: Start DISPLAY_UPDATE_EVENT_POST
-    event = malloc(sizeof(IEvent));
-    EventSystem_CallEvent(DISPLAY_UPDATE_EVENT_POST, event);
-
-    // @port: @event: End DISPLAY_UPDATE_EVENT_PRE
-    free(event);
+    // @port: @event: Call DISPLAY_UPDATE_EVENT_POST
+    EventSystem_CallEvent(DISPLAY_UPDATE_EVENT_POST, NULL);
 }
