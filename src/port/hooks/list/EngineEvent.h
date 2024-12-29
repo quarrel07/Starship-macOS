@@ -15,6 +15,8 @@ DEFINE_EVENT(DrawIncomingMsgHUDEvent);
 DEFINE_EVENT(DrawGoldRingsHUDEvent);
 DEFINE_EVENT(DrawLivesCounterHUDEvent);
 DEFINE_EVENT(DrawTrainingRingPassCountHUDEvent);
+DEFINE_EVENT(DrawEdgeArrowsHUDEvent);
+DEFINE_EVENT(DrawBossHealthHUDEvent);
 
 DEFINE_EVENT(DrawGlobalHUDPreEvent);
 DEFINE_EVENT(DrawGlobalHUDPostEvent);

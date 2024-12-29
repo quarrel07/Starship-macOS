@@ -568,9 +568,13 @@ void Game_Update(void) {
                 Radio_Draw();
                 if (gShowHud) {
                     HUD_Draw();
-                    HUD_EdgeArrows_Update();
+                    CALL_CANCELLABLE_EVENT(DrawEdgeArrowsHUDEvent){
+                        HUD_EdgeArrows_Update();
+                    }
                 }
-                HUD_DrawBossHealth();
+                CALL_CANCELLABLE_EVENT(DrawBossHealthHUDEvent){
+                    HUD_DrawBossHealth();
+                }
             }
         } else {
             for (i = 0; i < gCamCount; i++) {
