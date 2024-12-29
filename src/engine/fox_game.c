@@ -348,7 +348,7 @@ void Game_Update(void) {
     u8 soundMode;
 
     // @port: @event: Call GamePreUpdateEvent
-    EventSystem_CallEvent(GamePreUpdateEvent, NULL);
+    CALL_EVENT(GamePreUpdateEvent);
 
     Game_SetGameState();
     if (gGameStandby) {
@@ -606,7 +606,7 @@ void Game_Update(void) {
         Audio_dummy_80016A50();
 
         // @port: @event: Call GamePostUpdateEvent
-        EventSystem_CallEvent(GamePostUpdateEvent, NULL);
+        CALL_EVENT(GamePostUpdateEvent);
     }
 }
 

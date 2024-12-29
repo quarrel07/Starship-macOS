@@ -1782,7 +1782,7 @@ void Display_Update(void) {
 #endif
 
     // @port: @event: Call DisplayPreUpdateEvent
-    EventSystem_CallEvent(DisplayPreUpdateEvent, NULL);
+    CALL_EVENT(DisplayPreUpdateEvent);
 
     Matrix_Push(&gGfxMatrix);
     if ((gCurrentLevel == LEVEL_AQUAS) && (gPlayer[0].state == PLAYERSTATE_ACTIVE)) {
@@ -2016,5 +2016,5 @@ void Display_Update(void) {
     Matrix_Pop(&gGfxMatrix);
 
     // @port: @event: Call DisplayPostUpdateEvent
-    EventSystem_CallEvent(DisplayPostUpdateEvent, NULL);
+    CALL_EVENT(DisplayPostUpdateEvent);
 }

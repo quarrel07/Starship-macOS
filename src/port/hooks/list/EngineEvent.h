@@ -2,8 +2,19 @@
 
 #include "port/hooks/impl/EventSystem.h"
 
-#define DisplayPreUpdateEvent  INTERNAL_EVENT_ID(1, EVENT_TYPE_PRE)
-#define DisplayPostUpdateEvent INTERNAL_EVENT_ID(1, EVENT_TYPE_POST)
+DEFINE_EVENT(DisplayPreUpdateEvent);
+DEFINE_EVENT(DisplayPostUpdateEvent);
 
-#define GamePreUpdateEvent  INTERNAL_EVENT_ID(2, EVENT_TYPE_PRE)
-#define GamePostUpdateEvent INTERNAL_EVENT_ID(2, EVENT_TYPE_POST)
+DEFINE_EVENT(GamePreUpdateEvent);
+DEFINE_EVENT(GamePostUpdateEvent);
+
+DEFINE_EVENT(DrawRadarHUDEvent);
+DEFINE_EVENT(DrawBoostGaugeHUDEvent);
+DEFINE_EVENT(DrawBombCounterHUDEvent);
+DEFINE_EVENT(DrawIncomingMsgHUDEvent);
+DEFINE_EVENT(DrawGoldRingsHUDEvent);
+DEFINE_EVENT(DrawLivesCounterHUDEvent);
+DEFINE_EVENT(DrawTrainingRingPassCountHUDEvent);
+
+DEFINE_EVENT(DrawGlobalHUDPreEvent);
+DEFINE_EVENT(DrawGlobalHUDPostEvent);
