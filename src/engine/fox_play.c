@@ -3700,7 +3700,7 @@ void Player_MoveArwing360(Player* player) {
 
     sp7C = -gInputPress->stick_x;
     
-    sp78 = gInputPress->stick_y * (CVarGetInteger("gInvertYAxis", 0) == 0 ? 1 : -1);
+    sp78 = gInputPress->stick_y * (CVarGetInteger("gInvertYAxis", 0) == 1 ? -1 : 1);
 
     Math_SmoothStepToAngle(&player->aerobaticPitch, 0.0f, 0.1f, 5.0f, 0.01f);
     Matrix_RotateZ(gCalcMatrix, -player->zRotBank * M_DTOR, MTXF_NEW);
@@ -3946,7 +3946,7 @@ void Player_MoveArwingOnRails(Player* player) {
     }
 
     stickX = -gInputPress->stick_x;
-    stickY = gInputPress->stick_y * (CVarGetInteger("gInvertYAxis", 0) == 0 ? 1 : -1);
+    stickY = gInputPress->stick_y * (CVarGetInteger("gInvertYAxis", 0) == 1 ? -1 : 1);
 
     Math_SmoothStepToAngle(&player->aerobaticPitch, 0.0f, 0.1f, 5.0f, 0.01f);
 

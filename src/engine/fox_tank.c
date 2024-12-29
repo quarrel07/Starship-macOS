@@ -380,7 +380,7 @@ void func_tank_80044868(Player* player) {
     f32 stickTilt;
     f32 sp2C;
 
-    stickTilt = (gInputPress->stick_y * 0.7f * (CVarGetInteger("gInvertYAxis", 0) == 0 ? 1 : -1)) - 8.0f;
+    stickTilt = (gInputPress->stick_y * 0.7f * (CVarGetInteger("gInvertYAxis", 0) == 1 ? -1 : 1)) - 8.0f;
     if (stickTilt < -40.0f) {
         stickTilt = -40.0f;
     }
@@ -665,7 +665,7 @@ void func_tank_80045678(Player* player) {
         }
         player->zRotBank += ((__cosf(gGameFrameCount * M_DTOR * 8.0f) * 10.0f) - player->zRotBank) * 0.1f;
 
-        temp = -gInputPress->stick_y * (CVarGetInteger("gInvertYAxis", 0) == 0 ? 1 : -1);
+        temp = -gInputPress->stick_y * (CVarGetInteger("gInvertYAxis", 0) == 1 ? -1 : 1);
         Math_SmoothStepToF(&player->rot.x, temp * 0.3f, 0.05f, 5.0f, 0.00001f);
         Math_SmoothStepToF(&player->boostSpeed, 15.0f, 0.5f, 5.0f, 0.0f);
         Math_SmoothStepToF(&player->rot.z, 0.0f, 0.1f, 5.0f, 0.00001f);
