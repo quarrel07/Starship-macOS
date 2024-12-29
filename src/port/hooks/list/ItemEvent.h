@@ -4,6 +4,6 @@
 #include "sf64object.h"
 #include "port/hooks/impl/EventSystem.h"
 
-DEFINE_EVENT(ItemDropEvent, 
+DEFINE_EVENT(ItemDropEvent,
     Item* item;
 );

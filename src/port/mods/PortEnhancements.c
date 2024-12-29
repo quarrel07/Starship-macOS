@@ -172,6 +172,8 @@ void PortEnhancements_Init() {
     REGISTER_EVENT(DrawGoldRingsHUDEvent);
     REGISTER_EVENT(DrawLivesCounterHUDEvent);
     REGISTER_EVENT(DrawTrainingRingPassCountHUDEvent);
+    REGISTER_EVENT(DrawEdgeArrowsHUDEvent);
+    REGISTER_EVENT(DrawBossHealthHUDEvent);
     REGISTER_EVENT(DrawGlobalHUDPreEvent);
     REGISTER_EVENT(DrawGlobalHUDPostEvent);
 
