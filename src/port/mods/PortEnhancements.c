@@ -158,7 +158,15 @@ void OnGameUpdatePost(IEvent* event) {
 }
 
 void PortEnhancements_Init() {
+    PortEnhancements_Register();
+
     // Register event listeners
+    REGISTER_LISTENER(DisplayPreUpdateEvent, OnDisplayUpdatePre, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
+}
+
+void PortEnhancements_Register() {
+    // Register engine events
     REGISTER_EVENT(DisplayPreUpdateEvent);
     REGISTER_EVENT(DisplayPostUpdateEvent);
 
@@ -177,10 +185,14 @@ void PortEnhancements_Init() {
     REGISTER_EVENT(DrawGlobalHUDPreEvent);
     REGISTER_EVENT(DrawGlobalHUDPostEvent);
 
+    // Register item events
     REGISTER_EVENT(ItemDropEvent);
 
-    REGISTER_LISTENER(DisplayPreUpdateEvent, OnDisplayUpdatePre, EVENT_PRIORITY_NORMAL);
-    REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
+    // Register actor events
+    REGISTER_EVENT(ObjectInitEvent);
+    REGISTER_EVENT(ObjectUpdateEvent);
+    REGISTER_EVENT(ObjectDrawEvent);
+    REGISTER_EVENT(ObjectDestroyEvent);
 }
 
 void PortEnhancements_Exit() {
