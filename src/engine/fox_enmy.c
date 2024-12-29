@@ -277,7 +277,7 @@ void Item_Load(Item* this, ObjectInit* objInit) {
     this->obj.rot.z = objInit->rot.z;
     this->obj.id = objInit->id;
     this->width = 1.0f;
-    CALL_CANCELLABLE_EVENT(ItemDropEvent, this){
+    CALL_CANCELLABLE_EVENT(ItemDropEvent, this) {
         Object_SetInfo(&this->info, this->obj.id);
     }
 }
@@ -1045,10 +1045,10 @@ void Scenery_CoStoneArch_Init(CoStoneArch* this, f32* hitboxData) {
             item->obj.pos.y = this->obj.pos.y;
             item->obj.pos.z = this->obj.pos.z;
             item->obj.rot.y = this->obj.rot.y;
-            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+            item->info.hitbox = LOAD_ASSET(hitboxData);
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                 Object_SetInfo(&item->info, item->obj.id);
             }
-            item->info.hitbox = LOAD_ASSET(hitboxData);
             break;
         }
     }
@@ -1701,23 +1701,23 @@ void func_enmy_800660F0(Actor* this) {
             item->obj.pos.z = this->obj.pos.z;
             item->timer_4A = 8;
 
-            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                 Object_SetInfo(&item->info, item->obj.id);
-            }
+                if ((item->obj.id == OBJ_ITEM_SILVER_RING) || (item->obj.id == OBJ_ITEM_BOMB) ||
+                    (item->obj.id == OBJ_ITEM_LASERS)) {
+                    item->unk_50 = 90.0f;
+                }
 
-            if ((item->obj.id == OBJ_ITEM_SILVER_RING) || (item->obj.id == OBJ_ITEM_BOMB) ||
-                (item->obj.id == OBJ_ITEM_LASERS)) {
-                item->unk_50 = 90.0f;
-            }
-
-            if ((item->obj.id >= OBJ_ITEM_GOLD_RING) || (item->obj.id == OBJ_ITEM_1UP)) {
-                item->unk_50 = 90.0f;
-                AUDIO_PLAY_SFX(NA_SE_ITEM_APPEAR, gDefaultSfxSource, 4);
-                item->timer_48 = 1000;
-                if (item->obj.id == OBJ_ITEM_WING_REPAIR) {
-                    AUDIO_PLAY_SFX(NA_SE_OB_WING, item->sfxSource, 0);
+                if ((item->obj.id >= OBJ_ITEM_GOLD_RING) || (item->obj.id == OBJ_ITEM_1UP)) {
+                    item->unk_50 = 90.0f;
+                    AUDIO_PLAY_SFX(NA_SE_ITEM_APPEAR, gDefaultSfxSource, 4);
+                    item->timer_48 = 1000;
+                    if (item->obj.id == OBJ_ITEM_WING_REPAIR) {
+                        AUDIO_PLAY_SFX(NA_SE_OB_WING, item->sfxSource, 0);
+                    }
                 }
             }
+
             break;
         }
     }

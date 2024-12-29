@@ -1568,7 +1568,7 @@ void Cutscene_DropVsItem(Player* player, ObjectId itemId, Item* item) {
     item->obj.pos.y = player->pos.y;
     item->obj.pos.z = player->trueZpos;
     item->obj.id = itemId;
-    CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+    CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
         Object_SetInfo(&item->info, item->obj.id);
     }
 }
