@@ -381,7 +381,7 @@ void Aquas_SpawnItem(Vec3f* pos, ObjectId objId) {
             item->obj.pos.y = pos->y;
             item->obj.pos.z = pos->z;
             item->timer_4A = 2;
-            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                 Object_SetInfo(&item->info, item->obj.id);
             }
             break;

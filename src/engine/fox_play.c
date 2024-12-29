@@ -7011,7 +7011,7 @@ void Play_SpawnVsItem(ObjectId objId, Item* item) {
             item->obj.pos.y = gScenery360[spawnIndex].obj.pos.y;
             item->obj.pos.z = gScenery360[spawnIndex].obj.pos.z;
             item->obj.id = objId;
-            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                 Object_SetInfo(&item->info, item->obj.id);
             }
         }

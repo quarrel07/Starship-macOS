@@ -155,7 +155,7 @@ void Andross_801878A8() {
             item->obj.pos.z = -gLevelObjects[i].zPos1;
             item->obj.pos.z += gLevelObjects[i].zPos2;
             item->obj.pos.y = gLevelObjects[i].yPos;
-            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                 Object_SetInfo(&item->info, item->obj.id);
             }
             item++;
@@ -238,7 +238,7 @@ void Andross_80187C5C(void) {
             item->obj.pos.z = -gLevelObjects[i].zPos1;
             item->obj.pos.z += gLevelObjects[i].zPos2;
             item->obj.pos.y = gLevelObjects[i].yPos;
-            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                 Object_SetInfo(&item->info, item->obj.id);
             }
             item++;
@@ -1637,10 +1637,10 @@ void Andross_Effect396_Update(Effect396* this) {
                             item->obj.pos.y = this->obj.pos.y;
                             item->obj.pos.z = this->obj.pos.z;
                             item->timer_4A = 8;
-                            CALL_CANCELLABLE_EVENT(ItemDropEvent, item){
+                            item->unk_50 = 90.0f;
+                            CALL_CANCELLABLE_EVENT(ItemDropEvent, item) {
                                 Object_SetInfo(&item->info, item->obj.id);
                             }
-                            item->unk_50 = 90.0f;
                             break;
                         }
                     }
