@@ -2824,27 +2824,37 @@ void Actor_Update(Actor* this) {
     }
 
     switch (this->obj.status) {
-        case OBJ_INIT:
-            this->obj.status = OBJ_ACTIVE;
-            Object_Init(this->index, this->obj.id);
-            if (this->obj.id != OBJ_ACTOR_ZO_RADARBUOY) {
+        case OBJ_INIT: {
+            CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_ACTOR, this) {
+                this->obj.status = OBJ_ACTIVE;
+                Object_Init(this->index, this->obj.id);
+                if (this->obj.id != OBJ_ACTOR_ZO_RADARBUOY) {
+                    Actor_Move(this);
+                }
+            }
+            break;
+        }
+
+        case OBJ_ACTIVE: {
+            CALL_CANCELLABLE_EVENT(ObjectUpdateEvent, OBJECT_TYPE_ACTOR, this) {
                 Actor_Move(this);
+                if ((this->obj.status != OBJ_FREE) && (this->info.action != NULL)) {
+                    this->info.action(&this->obj);
+                }
             }
             break;
+        }
 
-        case OBJ_ACTIVE:
-            Actor_Move(this);
-            if ((this->obj.status != OBJ_FREE) && (this->info.action != NULL)) {
-                this->info.action(&this->obj);
+        case OBJ_DYING: {
+            CALL_CANCELLABLE_EVENT(ObjectDestroyEvent, OBJECT_TYPE_ACTOR, this) {
+                Actor_Move(this);
+                if (this->obj.status != OBJ_FREE) {
+                    Object_Dying(this->index, this->obj.id);
+                }
+                break;
             }
             break;
-
-        case OBJ_DYING:
-            Actor_Move(this);
-            if (this->obj.status != OBJ_FREE) {
-                Object_Dying(this->index, this->obj.id);
-            }
-            break;
+        }
     }
 }
 
@@ -2872,25 +2882,34 @@ void Boss_Update(Boss* this) {
     }
 
     switch (this->obj.status) {
-        case OBJ_INIT:
-            this->obj.status = OBJ_ACTIVE;
-            Object_Init(this->index, this->obj.id);
-            Boss_Move(this);
-            break;
-
-        case OBJ_ACTIVE:
-            Boss_Move(this);
-            if ((this->obj.status != OBJ_FREE) && (this->info.action != NULL)) {
-                this->info.action(&this->obj);
+        case OBJ_INIT: {
+            CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_BOSS, this) {
+                this->obj.status = OBJ_ACTIVE;
+                Object_Init(this->index, this->obj.id);
+                Boss_Move(this);
             }
             break;
+        }
 
-        case OBJ_DYING:
-            Boss_Move(this);
-            if (this->obj.status != OBJ_FREE) {
-                Object_Dying(this->index, this->obj.id);
+        case OBJ_ACTIVE: {
+            CALL_CANCELLABLE_EVENT(ObjectUpdateEvent, OBJECT_TYPE_BOSS, this) {
+                Boss_Move(this);
+                if ((this->obj.status != OBJ_FREE) && (this->info.action != NULL)) {
+                    this->info.action(&this->obj);
+                }
             }
             break;
+        }
+
+        case OBJ_DYING: {
+            CALL_CANCELLABLE_EVENT(ObjectDestroyEvent, OBJECT_TYPE_BOSS, this) {
+                Boss_Move(this);
+                if (this->obj.status != OBJ_FREE) {
+                    Object_Dying(this->index, this->obj.id);
+                }
+            }
+            break;
+        }
     }
 }
 
@@ -2900,40 +2919,54 @@ void Scenery_Update(Scenery* this) {
     }
 
     switch (this->obj.status) {
-        case OBJ_INIT:
-            this->obj.status = OBJ_ACTIVE;
-            Object_Init(this->index, this->obj.id);
-            Scenery_Move(this);
-            break;
-
-        case OBJ_ACTIVE:
-            Scenery_Move(this);
-            if (this->info.action != NULL) {
-                this->info.action(&this->obj);
+        case OBJ_INIT: {
+            CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_SCENERY, this) {
+                this->obj.status = OBJ_ACTIVE;
+                Object_Init(this->index, this->obj.id);
+                Scenery_Move(this);
             }
             break;
+        }
+
+        case OBJ_ACTIVE: {
+            CALL_CANCELLABLE_EVENT(ObjectUpdateEvent, OBJECT_TYPE_SCENERY, this) {
+                Scenery_Move(this);
+                if (this->info.action != NULL) {
+                    this->info.action(&this->obj);
+                }
+            }
+            break;
+        }
     }
 }
 
 void Sprite_Update(Sprite* this) {
     switch (this->obj.status) {
-        case OBJ_INIT:
-            this->obj.status = OBJ_ACTIVE;
-            Object_Init(this->index, this->obj.id);
-            Sprite_Move(this);
-            break;
-
-        case OBJ_ACTIVE:
-            Sprite_Move(this);
-            if (this->info.action != NULL) {
-                this->info.action(&this->obj);
+        case OBJ_INIT: {
+            CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_SPRITE, this) {
+                this->obj.status = OBJ_ACTIVE;
+                Object_Init(this->index, this->obj.id);
+                Sprite_Move(this);
             }
             break;
-
-        case OBJ_DYING:
-            Sprite_Move(this);
-            Object_Dying(this->index, this->obj.id);
+        }
+        case OBJ_ACTIVE: {
+            CALL_CANCELLABLE_EVENT(ObjectUpdateEvent, OBJECT_TYPE_SPRITE, this) {
+                Sprite_Move(this);
+                if (this->info.action != NULL) {
+                    this->info.action(&this->obj);
+                }
+            }
             break;
+        }
+
+        case OBJ_DYING: {
+            CALL_CANCELLABLE_EVENT(ObjectDestroyEvent, OBJECT_TYPE_SPRITE, this) {
+                Sprite_Move(this);
+                Object_Dying(this->index, this->obj.id);
+            }
+            break;
+        }
     }
 }
 
@@ -2946,18 +2979,24 @@ void Item_Update(Item* this) {
     }
 
     switch (this->obj.status) {
-        case OBJ_INIT:
-            this->obj.status = OBJ_ACTIVE;
-            Object_Init(this->index, this->obj.id);
-            Item_Move(this);
-            break;
-
-        case OBJ_ACTIVE:
-            Item_Move(this);
-            if (this->info.action != NULL) {
-                this->info.action(&this->obj);
+        case OBJ_INIT: {
+            CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_ITEM, this) {
+                this->obj.status = OBJ_ACTIVE;
+                Object_Init(this->index, this->obj.id);
+                Item_Move(this);
             }
             break;
+        }
+
+        case OBJ_ACTIVE: {
+            CALL_CANCELLABLE_EVENT(ObjectUpdateEvent, OBJECT_TYPE_ITEM, this) {
+                Item_Move(this);
+                if (this->info.action != NULL) {
+                    this->info.action(&this->obj);
+                }
+            }
+            break;
+        }
     }
 }
 
@@ -2967,16 +3006,23 @@ void Effect_Update(Effect* this) {
     }
 
     switch (this->obj.status) {
-        case OBJ_INIT:
-            this->obj.status = OBJ_ACTIVE;
-            Object_Init(this->index, this->obj.id);
+        case OBJ_INIT: {
+            CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_EFFECT, this) {
+                this->obj.status = OBJ_ACTIVE;
+                Object_Init(this->index, this->obj.id);
+                Effect_Move(this);
+            }
             /* fallthrough */
-        case OBJ_ACTIVE:
-            Effect_Move(this);
-            if ((this->obj.status != OBJ_FREE) && (this->info.action != NULL)) {
-                this->info.action(&this->obj);
+        }
+        case OBJ_ACTIVE: {
+            CALL_CANCELLABLE_EVENT(ObjectUpdateEvent, OBJECT_TYPE_EFFECT, this) {
+                Effect_Move(this);
+                if ((this->obj.status != OBJ_FREE) && (this->info.action != NULL)) {
+                    this->info.action(&this->obj);
+                }
             }
             break;
+        }
     }
 }
 
