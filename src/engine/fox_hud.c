@@ -3654,6 +3654,11 @@ void HUD_Draw(void) {
     s32 i;
     s32 goldRings;
     bool medalStatus;
+    CALL_EVENT(DrawGlobalHUDPreEvent);
+    if (DrawGlobalHUDPreEvent_.event.cancelled){
+        return;
+    }
+
     gDPSetTextureFilter(gMasterDisp++, G_TF_POINT);
 
     if (D_hud_80161730 == 0) {
@@ -3764,6 +3769,7 @@ void HUD_Draw(void) {
     HUD_RadioDamage();
     HUD_PauseScreen_Update();
     gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
+    CALL_EVENT(DrawGlobalHUDPostEvent);
 }
 
 void FoBase_Draw(Boss* this) {
