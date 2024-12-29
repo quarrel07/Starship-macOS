@@ -4,8 +4,16 @@
 
 EventSystem* EventSystem::Instance = new EventSystem();
 
+EventID EventSystem::RegisterEvent() {
+    return this->mInternalEventID++;
+}
+
 ListenerID EventSystem::RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
-    auto& listeners = this->mEventListeners[(uint8_t)((id >> 16) & 0xFF)][(uint16_t)(id & 0xFFFF)];
+    if(id == -1) {
+        throw std::runtime_error("Trying to register listener for unregistered event");
+    }
+
+    auto& listeners = this->mEventListeners[id];
 
     if(std::find_if(listeners.begin(), listeners.end(), [callback](EventListener listener) {
         return listener.function == callback;
@@ -24,21 +32,21 @@ ListenerID EventSystem::RegisterListener(EventID id, EventCallback callback, Eve
 }
 
 void EventSystem::UnregisterListener(EventID id, ListenerID listenerId) {
-    auto& listeners = this->mEventListeners[(uint8_t)((id >> 16) & 0xFF)][(uint16_t)(id & 0xFFFF)];
+    auto& listeners = this->mEventListeners[id];
 
     listeners.erase(listeners.begin() + listenerId);
 }
 
 void EventSystem::CallEvent(EventID id, IEvent* event) {
-    auto& listeners = this->mEventListeners[(uint8_t)((id >> 16) & 0xFF)][(uint16_t)(id & 0xFFFF)];
-
-    if (listeners.empty()) {
-        return;
-    }
+    auto& listeners = this->mEventListeners[id];
 
     for (auto& listener : listeners) {
         listener.function(event);
     }
+}
+
+extern "C" EventID EventSystem_RegisterEvent() {
+    return EventSystem::Instance->RegisterEvent();
 }
 
 extern "C" size_t EventSystem_RegisterListener(EventID id, EventCallback callback, EventPriority priority) {

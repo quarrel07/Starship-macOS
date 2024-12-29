@@ -4,14 +4,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef uint16_t EventID;
-typedef uint16_t NamespaceID;
+typedef uint32_t EventID;
 typedef uint32_t ListenerID;
-
-typedef enum {
-    EVENT_TYPE_PRE,
-    EVENT_TYPE_POST
-} EventType;
 
 typedef enum {
     EVENT_PRIORITY_LOW,
@@ -30,18 +24,21 @@ typedef struct {
     EventCallback function;
 } EventListener;
 
-// Namespace        ID              Type
-// 00000000XXXXXXXX 000000000000000 0
-#define EVENT_ID(namespace_, id_, type_) ((((uint32_t)(namespace_) & 0xFFFF) << 16) | (((uint32_t)(id_) & 0x7FFF) << 1) | ((uint32_t)(type_) & 0x1))
+#ifdef INIT_EVENT_IDS
+#define DECLARE_EVENT(eventName) \
+    uint32_t eventName##ID = -1;
+#else
+#define DECLARE_EVENT(eventName) \
+    extern uint32_t eventName##ID;
+#endif
 
-#define INTERNAL_EVENT_ID(id, type) EVENT_ID(0, id, type)
-#define DEFINE_EVENT(id, eventName, type, ...) \
+#define DEFINE_EVENT(eventName, ...) \
     typedef struct { \
         IEvent event; \
         __VA_ARGS__ \
     } eventName; \
     \
-    static uint32_t eventName##ID = INTERNAL_EVENT_ID(id, type);
+    DECLARE_EVENT(eventName)
 
 #define CALL_EVENT(eventType, ...) \
     eventType eventType##_ = { {false}, __VA_ARGS__ }; \
@@ -52,6 +49,12 @@ typedef struct {
     EventSystem_CallEvent(eventType##ID, &eventType##_); \
     if (!eventType##_.event.cancelled)
 
+#define REGISTER_EVENT(eventType) \
+    eventType##ID = EventSystem_RegisterEvent();
+
+#define REGISTER_LISTENER(eventType, callback, priority) \
+    EventSystem_RegisterListener(eventType##ID, callback, priority);
+
 #ifdef __cplusplus
 #include <array>
 #include <vector>
@@ -60,13 +63,16 @@ typedef struct {
 class EventSystem {
 public:
     static EventSystem* Instance;
+    EventID RegisterEvent();
     ListenerID RegisterListener(EventID id, EventCallback callback, EventPriority priority = EVENT_PRIORITY_NORMAL);
     void UnregisterListener(EventID ev, ListenerID id);
     void CallEvent(EventID id, IEvent* event);
 private:
-    std::unordered_map<NamespaceID, std::unordered_map<EventID, std::vector<EventListener>>> mEventListeners;
+    std::unordered_map<EventID, std::vector<EventListener>> mEventListeners;
+    EventID mInternalEventID = 0;
 };
 #else
+extern EventID EventSystem_RegisterEvent();
 extern ListenerID EventSystem_RegisterListener(EventID id, EventCallback callback, EventPriority priority);
 extern void EventSystem_UnregisterListener(EventID ev, ListenerID id);
 extern void EventSystem_CallEvent(EventID id, void* event);
