@@ -1,6 +1,7 @@
 #include "global.h"
 #include "assets/ast_landmaster.h"
 #include "assets/ast_titania.h"
+#include "port/hooks/Events.h"
 
 void func_tank_80047754(Player* player);
 void func_tank_80047D38(Player* player, f32);
@@ -550,35 +551,39 @@ void func_tank_80045348(Player* player) {
 
     if (player->unk_19C >= 0) {
         if ((gBoostButton[player->num] & gInputHold->button) && !player->boostCooldown) {
-            D_800C9F14++;
-            sp2E = true;
-            if (D_800C9F24 == 0.0f) {
-                player->unk_190 = player->unk_194 = 4.0f;
-                AUDIO_PLAY_SFX(NA_SE_TANK_DASH, player->sfxSource, 0);
-            } else {
-                player->unk_190 = 2.0f;
-            }
-            baseSpeedTarget = 25.0f;
-            sp40 = -200.0f;
-            sp3C = 0.2f;
-            sp38 = 6.0f;
+            CALL_CANCELLABLE_EVENT(PlayerActionBoostEvent, player) {
+                D_800C9F14++;
+                sp2E = true;
+                if (D_800C9F24 == 0.0f) {
+                    player->unk_190 = player->unk_194 = 4.0f;
+                    AUDIO_PLAY_SFX(NA_SE_TANK_DASH, player->sfxSource, 0);
+                } else {
+                    player->unk_190 = 2.0f;
+                }
+                baseSpeedTarget = 25.0f;
+                sp40 = -200.0f;
+                sp3C = 0.2f;
+                sp38 = 6.0f;
 
-            D_800C9F24 += 1.0f;
-            if (D_ctx_801779A8[player->num] < 25.0f) {
-                D_ctx_801779A8[player->num] = 25.0f;
-            }
+                D_800C9F24 += 1.0f;
+                if (D_ctx_801779A8[player->num] < 25.0f) {
+                    D_ctx_801779A8[player->num] = 25.0f;
+                }
 
-            Math_SmoothStepToF(&D_ctx_801779A8[player->num], 50.0f, 1.0f, 10.0f, 0.0f);
+                Math_SmoothStepToF(&D_ctx_801779A8[player->num], 50.0f, 1.0f, 10.0f, 0.0f);
+            }
         } else {
             D_800C9F24 = 0.0f;
         }
         if ((gBrakeButton[player->num] & gInputHold->button) && !player->boostCooldown && !sp2E) {
-            D_800C9F14++;
-            baseSpeedTarget = 5.0f;
-            sp40 = 100.0f;
-            sp3C = 0.2f;
-            D_800C9F28 += 1.0f;
-            Math_SmoothStepToF(&D_ctx_801779A8[player->num], 25.0f, 1.0f, 5.0f, 0.0f);
+            CALL_CANCELLABLE_EVENT(PlayerActionBrakeEvent, player) {
+                D_800C9F14++;
+                baseSpeedTarget = 5.0f;
+                sp40 = 100.0f;
+                sp3C = 0.2f;
+                D_800C9F28 += 1.0f;
+                Math_SmoothStepToF(&D_ctx_801779A8[player->num], 25.0f, 1.0f, 5.0f, 0.0f);
+            }
         } else {
             D_800C9F28 = 0.0f;
         }
