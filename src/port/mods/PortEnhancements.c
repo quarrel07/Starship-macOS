@@ -193,6 +193,19 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(ObjectUpdateEvent);
     REGISTER_EVENT(ObjectDrawEvent);
     REGISTER_EVENT(ObjectDestroyEvent);
+
+    // Register player action events
+    REGISTER_EVENT(PlayerActionBoostEvent);
+    REGISTER_EVENT(PlayerActionBrakeEvent);
+
+    REGISTER_EVENT(PlayerActionPreShootEvent);
+    REGISTER_EVENT(PlayerActionPostShootEvent);
+    
+    REGISTER_EVENT(PlayerActionPreShootChargedEvent);
+    REGISTER_EVENT(PlayerActionPostShootChargedEvent);
+
+    REGISTER_EVENT(PlayerActionPreBombEvent);
+    REGISTER_EVENT(PlayerActionPostBombEvent);    
 }
 
 void PortEnhancements_Exit() {
