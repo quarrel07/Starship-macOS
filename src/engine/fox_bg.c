@@ -264,8 +264,16 @@ void Background_DrawStarfield(void) {
             if (vx >= (marginX - STAR_MARGIN) && vx <= (marginX + renderMaskWidth + STAR_MARGIN) &&
                 vy >= (renderMaskHeight - STAR_MARGIN) && vy <= ((renderMaskHeight * 2) + STAR_MARGIN)) {
 
-                FrameInterpolation_RecordOpenChild("Starfield", i);
-                FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                bool skipInterpolation = (fabsf(vx - gStarPrevX[i]) > starfieldWidth / 2.0f) ||
+                                         (fabsf(vy - gStarPrevY[i]) > starfieldHeight / 2.0f);
+
+                if (skipInterpolation) {
+                    // @port Skip interpolation
+                    FrameInterpolation_ShouldInterpolateFrame(false);
+                } else {
+                    FrameInterpolation_RecordOpenChild("Starfield", i);
+                    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                }
 
                 // Translate to (vx, vy) in ortho coordinates
                 Matrix_Push(&gGfxMatrix);
@@ -288,7 +296,12 @@ void Background_DrawStarfield(void) {
                 gSPDisplayList(gMasterDisp++, starDL);
                 Matrix_Pop(&gGfxMatrix);
 
-                FrameInterpolation_RecordCloseChild();
+                if (skipInterpolation) {
+                    // @port Skip interpolation
+                    FrameInterpolation_ShouldInterpolateFrame(true);
+                } else {
+                    FrameInterpolation_RecordCloseChild();
+                }
 
                 gStarPrevX[i] = vx;
                 gStarPrevY[i] = vy;
@@ -546,7 +559,8 @@ void Background_DrawBackdrop(void) {
 
                     // Apply camera roll and translate matrix to the starting position (far left)
                     Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
-                    Matrix_Translate(gGfxMatrix, sp13C - 14560.0f, -2000.0f + bgYpos + bgCutsceneFix, -6000.0f, MTXF_APPLY);
+                    Matrix_Translate(gGfxMatrix, sp13C - 14560.0f, -2000.0f + bgYpos + bgCutsceneFix, -6000.0f,
+                                     MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
 
                     // Render the textures across a wider range to cover the screen
