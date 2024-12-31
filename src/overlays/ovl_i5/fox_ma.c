@@ -560,8 +560,8 @@ void Macbeth_Train_Init(Actor* this) {
 }
 
 void Macbeth_RotateTrainWheels(void) {
-    // LTODO: This is broken and crashes the game
-    // Macbeth_Texture_Scroll(D_MA_6023228, 16, 16, 0, 8);
+    // LTODO: ASAN accuses Heap overflow
+    Macbeth_Texture_Scroll(D_MA_6023228, 16, 16, 0, 8);
     Macbeth_Texture_RotateZ(D_MA_6023388, D_Tex_800DB4B8, gGameFrameCount * -20.0f);
 }
 
@@ -3889,8 +3889,8 @@ void Macbeth_801A6984(Actor207* this) {
         spA0 = temp_fs3_2;
         sp9C = temp_fs4;
     }
-    // LTODO: Heap overflow
-    // Macbeth_Texture_Scroll2(D_MA_6012C98, 4, 8);
+    // LTODO: ASAN accuses Heap overflow
+    Macbeth_Texture_Scroll2(D_MA_6012C98, 4, 8);
 }
 
 void Macbeth_801A6C78(Actor207* this) {
