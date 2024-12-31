@@ -647,7 +647,7 @@ void Lib_TextureRect_RGBA16_MirX(Gfx** gfxPtr, u16* texture, u32 width, u32 heig
 
     gSPWideTextureRectangle((*gfxPtr)++, (s32) (xPos * 4.0f), (s32) (yPos * 4.0f),
                             (s32) ((xPos + width * xScale) * 4.0f), (s32) ((yPos + height * yScale) * 4.0f),
-                            G_TX_RENDERTILE, (width - 1) * 32, 0, (u16) (s32) (-1.0f / xScale * 1024.0f),
+                            G_TX_RENDERTILE, (width /* - 1*/) * 32, 0, (u16) (s32) (-1.0f / xScale * 1024.0f),
                             (s32) (1.0f / yScale * 1024.0f));
 }
 
