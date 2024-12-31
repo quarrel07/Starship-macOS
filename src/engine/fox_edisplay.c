@@ -1375,7 +1375,8 @@ void Effect_DrawAllRange(Effect* this) {
     }
 
     if ((dest.z < 0.0f) && (minZ < dest.z)) {
-        if (fabsf(dest.x) < (fabsf(dest.z * 0.5f) + 500.0f)) {
+        // @port: Extend draw distance up to 32/9
+        if (fabsf(dest.x) < (fabsf(dest.z * /* 0.5f */ 1.5f) + 500.0f)) {
             if (fabsf(dest.y) < (fabsf(dest.z * 0.5f) + 500.0f)) {
                 if (this->info.draw != NULL) {
                     Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
@@ -1406,13 +1407,10 @@ void Item_Draw(Item* this, s32 arg1) {
 
     drawn = false;
 
-    // @port draw no matter what
-    goto render;
-
     if ((dest.z < 0.0f) && (dest.z > -12000.0f)) {
-        if (fabsf(dest.x) < (fabsf(dest.z * 0.5f) + 500.0f)) {
+        // @port: Extend draw distance up to 32/9
+        if (fabsf(dest.x) < (fabsf(dest.z * /* 0.5f */ 1.5f) + 500.0f)) {
             if (fabsf(dest.y) < (fabsf(dest.z * 0.5f) + 500.0f)) {
-            render:
                 if (this->info.draw != NULL) {
                     Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                     Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
