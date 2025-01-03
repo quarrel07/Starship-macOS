@@ -599,7 +599,17 @@ void DrawDebugMenu() {
             .tooltip = "Jump to credits at the main menu"
         });
 
-        if (CVarGetInteger("gCheckpoint.Set", 0)) {
+        if (CVarGetInteger("gCheckpoint.Set", 0)) {            
+            LevelId savedLevel = CVarGetInteger("gCheckpoint.gSavedLevel", -1);
+            std::string CheckpointLabel = "Checkpoint is at ";
+            if (savedLevel == 77){
+                CheckpointLabel += "Warp Zone";
+            } else if (savedLevel < 0 || savedLevel >= sizeof(GameUI::LevelNameLookup)/sizeof(GameUI::LevelNameLookup[0])) {
+                CheckpointLabel += "Unknown (out of bounds)";
+            } else {
+                CheckpointLabel += GameUI::LevelNameLookup[CVarGetInteger("gCheckpoint.gSavedLevel", -1)];
+            }
+            ImGui::Text(CheckpointLabel.c_str());
             if (UIWidgets::Button("Clear Checkpoint")) {
                 CVarClear("gCheckpoint.Set");
                 Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
@@ -607,6 +617,7 @@ void DrawDebugMenu() {
         } else if (gPlayer != NULL) {
             if (UIWidgets::Button("Set Checkpoint")) {
                 CVarSetInteger("gCheckpoint.Set", 1);
+                CVarSetInteger("gCheckpoint.gSavedLevel", gCurrentLevel);
                 CVarSetInteger("gCheckpoint.gSavedPathProgress", gGroundSurface);
                 CVarSetFloat("gCheckpoint.gSavedPathProgress", (-gPlayer->pos.z) - 250.0f);
                 CVarSetInteger("gCheckpoint.gSavedObjectLoadIndex", gObjectLoadIndex);

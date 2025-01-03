@@ -4678,7 +4678,7 @@ void Player_Setup(Player* playerx) {
     gDisplayedHitCount = gHitCount;
     D_hud_80161730 = 0;
 
-    if (CVarGetInteger("gCheckpoint.Set", 0)) {
+    if (CVarGetInteger("gCheckpoint.Set", 0) && CVarGetInteger("gCheckpoint.gSavedLevel", -1) == gCurrentLevel) {
         gSavedGroundSurface = CVarGetInteger("gCheckpoint.gSavedGroundSurface", gSavedGroundSurface);
         gSavedPathProgress = CVarGetFloat("gCheckpoint.gSavedPathProgress", gSavedPathProgress);
         gSavedObjectLoadIndex = CVarGetInteger("gCheckpoint.gSavedObjectLoadIndex", gSavedObjectLoadIndex);
