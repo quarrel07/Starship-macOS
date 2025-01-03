@@ -4678,10 +4678,15 @@ void Player_Setup(Player* playerx) {
     gDisplayedHitCount = gHitCount;
     D_hud_80161730 = 0;
 
-    if (CVarGetInteger("gCheckpoint.Set", 0) && CVarGetInteger("gCheckpoint.gSavedLevel", -1) == gCurrentLevel) {
-        gSavedGroundSurface = CVarGetInteger("gCheckpoint.gSavedGroundSurface", gSavedGroundSurface);
-        gSavedPathProgress = CVarGetFloat("gCheckpoint.gSavedPathProgress", gSavedPathProgress);
-        gSavedObjectLoadIndex = CVarGetInteger("gCheckpoint.gSavedObjectLoadIndex", gSavedObjectLoadIndex);
+    char buffer [48] = {"\0"};
+    sprintf(buffer, "gCheckpoint.%d.Set", gCurrentLevel);
+    if (CVarGetInteger(buffer, 0)) {
+        sprintf(buffer, "gCheckpoint.%d.gSavedGroundSurface", gCurrentLevel);
+        gSavedGroundSurface = CVarGetInteger(buffer, gSavedGroundSurface);
+        sprintf(buffer, "gCheckpoint.%d.gSavedPathProgress", gCurrentLevel);
+        gSavedPathProgress = CVarGetFloat(buffer, gSavedPathProgress);
+        sprintf(buffer, "gCheckpoint.%d.gSavedObjectLoadIndex", gCurrentLevel);
+        gSavedObjectLoadIndex = CVarGetInteger(buffer, gSavedObjectLoadIndex);
     }
 
     gMissedZoSearchlight = gSavedZoSearchlightStatus;

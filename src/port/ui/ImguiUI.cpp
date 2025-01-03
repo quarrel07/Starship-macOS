@@ -12,6 +12,7 @@
 #include <Fast3D/gfx_pc.h>
 #include "port/Engine.h"
 #include "port/notification/notification.h"
+#include "utils/StringHelper.h"
 
 extern "C" {
 #include "sys.h"
@@ -599,28 +600,17 @@ void DrawDebugMenu() {
             .tooltip = "Jump to credits at the main menu"
         });
 
-        if (CVarGetInteger("gCheckpoint.Set", 0)) {            
-            LevelId savedLevel = CVarGetInteger("gCheckpoint.gSavedLevel", -1);
-            std::string CheckpointLabel = "Checkpoint is at ";
-            if (savedLevel == 77){
-                CheckpointLabel += "Warp Zone";
-            } else if (savedLevel < 0 || savedLevel >= sizeof(GameUI::LevelNameLookup)/sizeof(GameUI::LevelNameLookup[0])) {
-                CheckpointLabel += "Unknown (out of bounds)";
-            } else {
-                CheckpointLabel += GameUI::LevelNameLookup[CVarGetInteger("gCheckpoint.gSavedLevel", -1)];
-            }
-            ImGui::Text(CheckpointLabel.c_str());
+        if (CVarGetInteger(StringHelper::Sprintf("gCheckpoint.%d.Set", gCurrentLevel).c_str(), 0)) {
             if (UIWidgets::Button("Clear Checkpoint")) {
-                CVarClear("gCheckpoint.Set");
+                CVarClear(StringHelper::Sprintf("gCheckpoint.%d.Set", gCurrentLevel).c_str());
                 Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
-        } else if (gPlayer != NULL) {
+        } else if (gPlayer != NULL && gGameState == GSTATE_PLAY) {
             if (UIWidgets::Button("Set Checkpoint")) {
-                CVarSetInteger("gCheckpoint.Set", 1);
-                CVarSetInteger("gCheckpoint.gSavedLevel", gCurrentLevel);
-                CVarSetInteger("gCheckpoint.gSavedPathProgress", gGroundSurface);
-                CVarSetFloat("gCheckpoint.gSavedPathProgress", (-gPlayer->pos.z) - 250.0f);
-                CVarSetInteger("gCheckpoint.gSavedObjectLoadIndex", gObjectLoadIndex);
+                CVarSetInteger(StringHelper::Sprintf("gCheckpoint.%d.Set", gCurrentLevel).c_str(), 1);
+                CVarSetInteger(StringHelper::Sprintf("gCheckpoint.%d.gSavedPathProgress", gCurrentLevel).c_str(), gGroundSurface);
+                CVarSetFloat(StringHelper::Sprintf("gCheckpoint.%d.gSavedPathProgress", gCurrentLevel).c_str(), (-gPlayer->pos.z) - 250.0f);
+                CVarSetInteger(StringHelper::Sprintf("gCheckpoint.%d.gSavedObjectLoadIndex", gCurrentLevel).c_str(), gObjectLoadIndex);
                 Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
         }
