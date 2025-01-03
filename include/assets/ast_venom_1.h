@@ -118,7 +118,7 @@ static const ALIGN_ASSET(2) char D_VE1_6007E74[] = "__OTR__ast_venom_1/D_VE1_600
 
 static const ALIGN_ASSET(2) char D_VE1_6010088[] = "__OTR__ast_venom_1/D_VE1_6010088";
 
-static const char D_VE1_601B1E4[] = "__OTR__ast_venom_1/D_VE1_601B1E4";
+static const char aVe1EventScript[] = "__OTR__ast_venom_1/aVe1EventScript";
 
 static const ALIGN_ASSET(2) char aVe1Pillar5Hitbox[] = "__OTR__ast_venom_1/aVe1Pillar5Hitbox";
 

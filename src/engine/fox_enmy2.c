@@ -1106,7 +1106,7 @@ void ActorEvent_ProcessScript(ActorEvent* this) {
             levelScripts = (uint16_t**) LOAD_ASSET(D_ZO_602AAC0);
             break;
         case LEVEL_VENOM_1:
-            levelScripts = (uint16_t**) LOAD_ASSET(D_VE1_601B1E4);
+            levelScripts = (uint16_t**) LOAD_ASSET(aVe1EventScript);
             break;
         case LEVEL_MACBETH:
             levelScripts = (uint16_t**) LOAD_ASSET(D_MA_60381D8);
