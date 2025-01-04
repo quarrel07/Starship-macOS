@@ -6,7 +6,7 @@
 #define INIT_EVENT_IDS
 #include "port/hooks/Events.h"
 
-bool gBackToMap;
+bool gBackToMap = false;
 
 void OnDisplayUpdatePost(IEvent* event) {
 #if DEBUG_BOSS_KILLER == 1
