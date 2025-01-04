@@ -193,6 +193,65 @@ void OnPlayerShootPost(PlayerActionPostShootEvent* event) {
     event->shot->timer *= CVarGetInteger("gLaserRangeMult", 100) / 100.0f;
 }
 
+void OnItemGoldRingDraw(ObjectDrawPostSetupEvent* event) {
+    if (event->type != OBJECT_TYPE_ITEM) {
+        return;
+    }
+
+    Item* item = (Item*) event->object;
+    if (item->obj.id != OBJ_ITEM_GOLD_RING || CVarGetInteger("gRestoreBetaCoin", 0) != 1) {
+        return;
+    }
+
+    event->event.cancelled = true;
+    RCP_SetupDL(&gMasterDisp, SETUPDL_29_POINT);
+    Graphics_SetScaleMtx(item->width * 1.5f);
+    gSPDisplayList(gMasterDisp++, D_101D870);
+}
+
+void OnItemGoldRingUpdate(ObjectUpdateEvent* event){
+    if (event->type != OBJECT_TYPE_ITEM) {
+        return;
+    }
+
+    Item* item = (Item*) event->object;
+    if (item->obj.id != OBJ_ITEM_GOLD_RING || CVarGetInteger("gRestoreBetaCoin", 0) != 1) {
+        return;
+    }
+
+    Item_CheckBounds(item);
+    switch (item->state) {
+        case 0:
+            if (item->collected) {
+                item->state = 1;
+                gGoldRingCount[0]++;
+                if (gGoldRingCount[0] == 3) {
+                    Object_PlayerSfx(gPlayer[item->playerNum].sfxSource, NA_SE_SHIELD_UPGRADE, item->playerNum);
+                } else if (gGoldRingCount[0] == 6) {
+                    Object_PlayerSfx(gPlayer[item->playerNum].sfxSource, NA_SE_ONE_UP, item->playerNum);
+                    if (gCurrentLevel != LEVEL_TRAINING) {
+                        gLifeCount[item->playerNum]++;
+                    }
+                    gPlayer[item->playerNum].heal += 32;
+                    BonusText_Display(gPlayer[item->playerNum].pos.x, gPlayer[item->playerNum].pos.y,
+                                      gPlayer[item->playerNum].trueZpos, BONUS_TEXT_1UP);
+                } else {
+                    gPlayer[item->playerNum].heal += 32;
+                    Object_PlayerSfx(gPlayer[item->playerNum].sfxSource, NA_SE_GOLD_RING, item->playerNum);
+                }
+            }
+
+            if (item->timer_48 == 1) {
+                Object_Kill(&item->obj, item->sfxSource);
+            }
+            break;
+
+        case 1:
+            ItemSupplyRing_Update(item);
+            break;
+    }
+}
+
 void PortEnhancements_Init() {
     PortEnhancements_Register();
 
@@ -200,6 +259,9 @@ void PortEnhancements_Init() {
     REGISTER_LISTENER(DisplayPostUpdateEvent, OnDisplayUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerPostUpdateEvent, OnPlayerUpdatePost, EVENT_PRIORITY_NORMAL);
+
+    REGISTER_LISTENER(ObjectUpdateEvent, OnItemGoldRingUpdate, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(ObjectDrawPostSetupEvent, OnItemGoldRingDraw, EVENT_PRIORITY_NORMAL);
 
     // Register Action listeners
     REGISTER_LISTENER(PlayerActionBoostEvent, OnPlayerBoost, EVENT_PRIORITY_NORMAL);
@@ -236,7 +298,8 @@ void PortEnhancements_Register() {
     // Register actor events
     REGISTER_EVENT(ObjectInitEvent);
     REGISTER_EVENT(ObjectUpdateEvent);
-    REGISTER_EVENT(ObjectDrawEvent);
+    REGISTER_EVENT(ObjectDrawPreSetupEvent);
+    REGISTER_EVENT(ObjectDrawPostSetupEvent);
     REGISTER_EVENT(ObjectDestroyEvent);
 
     // Register player action events

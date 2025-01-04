@@ -310,6 +310,7 @@ typedef enum SetupDL {
     /* 0x55 */ SETUPDL_85,
     /* 0x56 */ SETUPDL_86,
     /* 0x57 */ SETUPDL_87,
+    SETUPDL_29_POINT,
     SETUPDL_36_POINT, 
     SETUPDL_62_POINT,
     SETUPDL_63_POINT, 
