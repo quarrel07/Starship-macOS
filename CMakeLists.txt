@@ -545,7 +545,7 @@ add_custom_target(
     ExtractAssets
     DEPENDS torch
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMAND ${TORCH_EXECUTABLE} otr baserom.us.*.z64
+    COMMAND ${TORCH_EXECUTABLE} otr baserom.z64
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/sf64.otr" "${CMAKE_BINARY_DIR}/sf64.otr"
 )
 
