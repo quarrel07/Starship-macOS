@@ -6,6 +6,8 @@
 #define INIT_EVENT_IDS
 #include "port/hooks/Events.h"
 
+bool gBackToMap;
+
 void OnDisplayUpdatePost(IEvent* event) {
 #if DEBUG_BOSS_KILLER == 1
     KillBoss();
@@ -41,13 +43,16 @@ void OnDisplayUpdatePost(IEvent* event) {
 
         if ((gControllerHold[0].button & Z_TRIG) && (gControllerHold[0].button & R_TRIG) &&
             (gControllerPress[0].button & U_CBUTTONS)) {
-            gFillScreenAlphaTarget = 255;
-            gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 0;
-            gFillScreenAlphaStep = 8;
-            gShowLevelClearStatusScreen = false;
-            pl->state = PLAYERSTATE_NEXT;
-            pl->csTimer = 0;
-            gFadeoutType = 4;
+                gShowLevelClearStatusScreen = false;
+                gLevelStartStatusScreenTimer = 0;
+                gStarCount = 0;
+                gGameState = GSTATE_MAP;
+                gNextGameStateTimer = 2;
+                gMapState = 0;
+                gLastGameState = GSTATE_NONE;
+                gDrawMode = DRAW_NONE;
+                gControllerLock = 3;
+                gBackToMap = true;
         }
     }
 
@@ -132,7 +137,6 @@ void OnDisplayUpdatePost(IEvent* event) {
             return;
         }
         gHitCount = CVarGetInteger("gScoreEditValue", 1);
-
     }
     Hit64_Main();
     // ground testing
@@ -152,13 +156,13 @@ void OnGameUpdatePost(IEvent* event) {
 #if MODS_RAM_MOD == 1
     RamMod_Update();
 #endif
-    if(CVarGetInteger("gSpawnerMod", 0) == 1){
+    if (CVarGetInteger("gSpawnerMod", 0) == 1) {
         Spawner();
     }
 }
 
 void RefillBoostMeter(Player* player) {
-    if (player->boostMeter > 1.0f){
+    if (player->boostMeter > 1.0f) {
         player->boostMeter = 1.0f;
     }
 }
@@ -174,18 +178,18 @@ void OnPlayerUpdatePost(PlayerPostUpdateEvent* event) {
 }
 
 void OnPlayerBoost(PlayerActionBoostEvent* event) {
-    if (CVarGetInteger("gInfiniteBoost", 0) == 1){
+    if (CVarGetInteger("gInfiniteBoost", 0) == 1) {
         RefillBoostMeter(event->player);
     }
 }
 void OnPlayerBrake(PlayerActionBrakeEvent* event) {
-    if (CVarGetInteger("gInfiniteBoost", 0) == 1){
+    if (CVarGetInteger("gInfiniteBoost", 0) == 1) {
         RefillBoostMeter(event->player);
     }
 }
 
-void OnPlayerShootPost(PlayerActionPostShootEvent* event){
-    event->shot->timer *= CVarGetInteger("gLaserRangeMult", 100)/100.0f;
+void OnPlayerShootPost(PlayerActionPostShootEvent* event) {
+    event->shot->timer *= CVarGetInteger("gLaserRangeMult", 100) / 100.0f;
 }
 
 void PortEnhancements_Init() {
@@ -240,12 +244,12 @@ void PortEnhancements_Register() {
 
     REGISTER_EVENT(PlayerActionPreShootEvent);
     REGISTER_EVENT(PlayerActionPostShootEvent);
-    
+
     REGISTER_EVENT(PlayerActionPreShootChargedEvent);
     REGISTER_EVENT(PlayerActionPostShootChargedEvent);
 
     REGISTER_EVENT(PlayerActionPreBombEvent);
-    REGISTER_EVENT(PlayerActionPostBombEvent);    
+    REGISTER_EVENT(PlayerActionPostBombEvent);
 }
 
 void PortEnhancements_Exit() {
