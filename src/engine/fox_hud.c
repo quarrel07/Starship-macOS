@@ -3654,10 +3654,7 @@ void HUD_Draw(void) {
     s32 i;
     s32 goldRings;
     bool medalStatus;
-    CALL_EVENT(DrawGlobalHUDPreEvent);
-    if (DrawGlobalHUDPreEvent_.event.cancelled){
-        return;
-    }
+    CALL_CANCELLABLE_RETURN_EVENT(DrawGlobalHUDPreEvent);
 
     gDPSetTextureFilter(gMasterDisp++, G_TF_POINT);
 
