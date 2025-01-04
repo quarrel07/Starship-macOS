@@ -6,7 +6,7 @@
 #define INIT_EVENT_IDS
 #include "port/hooks/Events.h"
 
-void OnDisplayUpdatePre(IEvent* event) {
+void OnDisplayUpdatePost(IEvent* event) {
 #if DEBUG_BOSS_KILLER == 1
     KillBoss();
 #endif
@@ -192,7 +192,7 @@ void PortEnhancements_Init() {
     PortEnhancements_Register();
 
     // Register event listeners
-    REGISTER_LISTENER(DisplayPreUpdateEvent, OnDisplayUpdatePre, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(DisplayPostUpdateEvent, OnDisplayUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerPostUpdateEvent, OnPlayerUpdatePost, EVENT_PRIORITY_NORMAL);
 
