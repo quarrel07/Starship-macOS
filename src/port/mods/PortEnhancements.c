@@ -2,6 +2,7 @@
 #include "global.h"
 #include "hit64.h"
 #include "mods.h"
+#include "hud.h"
 
 #define INIT_EVENT_IDS
 #include "port/hooks/Events.h"
@@ -224,6 +225,7 @@ void OnItemGoldRingUpdate(ObjectUpdateEvent* event){
         case 0:
             if (item->collected) {
                 item->state = 1;
+                item->timer_48 = 0;
                 gGoldRingCount[0]++;
                 if (gGoldRingCount[0] == 3) {
                     Object_PlayerSfx(gPlayer[item->playerNum].sfxSource, NA_SE_SHIELD_UPGRADE, item->playerNum);
@@ -252,6 +254,51 @@ void OnItemGoldRingUpdate(ObjectUpdateEvent* event){
     }
 }
 
+static const char* sBoostGaugeArrow[] = {
+    sBoostGaugeArrow0,
+    sBoostGaugeArrow1,
+    sBoostGaugeArrow2,
+    sBoostGaugeArrow3,
+    sBoostGaugeArrow4,
+    sBoostGaugeArrow5,
+    sBoostGaugeArrow6,
+    sBoostGaugeArrow7,
+    sBoostGaugeArrow8,
+};
+
+void OnBoostGaugeDraw(IEvent* event){
+    bool restore = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+
+    if(!restore){
+        return;
+    }
+
+    event->cancelled = true;
+    u8 step = MIN(8, (u8) ((gPlayer[0].boostMeter / 90.0f) * ARRAY_COUNT(sBoostGaugeArrow)));
+    f32 x = 70;
+    f32 y = 30;
+
+    RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
+    Lib_TextureRect_CI8(&gMasterDisp, D_1012290, D_10126B0, 48, 22, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - x), y, 1.0f, 1.0f);
+    Lib_TextureRect_CI8(&gMasterDisp, D_10126F0, D_1012750, 24, 4, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - (x - 9)), y + 3, 1.0f, 1.0f);
+    Lib_TextureRect_RGBA16(&gMasterDisp, sBoostGaugeArrow[step], 32, 32, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - (x - 6)), y - 1, 0.9f, 0.9f);
+}
+
+void OnBombCounterDraw(IEvent* ev){
+    bool restore = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+    if(!restore){
+        return;
+    }
+
+    ev->cancelled = true;
+    HUD_BombCounter_Draw(253.0f, 18.0f);
+}
+
+void OnLivesCounterDraw(IEvent* ev){
+    ev->cancelled = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+}
+
 void PortEnhancements_Init() {
     PortEnhancements_Register();
 
@@ -259,6 +306,9 @@ void PortEnhancements_Init() {
     REGISTER_LISTENER(DisplayPostUpdateEvent, OnDisplayUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerPostUpdateEvent, OnPlayerUpdatePost, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(DrawBoostGaugeHUDEvent, OnBoostGaugeDraw, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(DrawLivesCounterHUDEvent, OnLivesCounterDraw, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(DrawBombCounterHUDEvent, OnBombCounterDraw, EVENT_PRIORITY_NORMAL);
 
     REGISTER_LISTENER(ObjectUpdateEvent, OnItemGoldRingUpdate, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(ObjectDrawPostSetupEvent, OnItemGoldRingDraw, EVENT_PRIORITY_NORMAL);
