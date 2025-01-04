@@ -1597,8 +1597,8 @@ void Venom1_Ve1Golemech_Update(Ve1Golemech* this) {
             case 2:
                 if (D_i1_8019A500[this->dmgPart] == 15) {
                     AUDIO_PLAY_SFX(NA_SE_EN_VEBOSS_DAMAGE, this->sfxSource, 4);
-                    D_i1_8019B838[15].unk_02[2] = 10;
-                    D_i1_8019B838[15].unk_02[3] = 0;
+                    D_i1_8019B838[15].unk_02[3] = 10;
+                    D_i1_8019B838[15].unk_02[4] = 0;
                     D_i1_8019B838[15].unk_7C |= 0x80;
                     if (this->health > 0) {
                         this->health -= this->damage;
