@@ -15,20 +15,20 @@ f7475fb11e7e6830f82883412638e8390791ab87:
   config:
     gbi: F3DEX
     sort: OFFSET
-    logging: ERROR
+    # logging: ERROR
     output:
       binary: sf64.otr
-      code: src/assets
-      headers: include/assets
-      modding: src/assets
-    enums:
-      - include/bgm.h
-      - include/sf64object.h
-      - include/sf64level.h
-      - include/sf64mesg.h
-      - include/sf64audio_external.h
-      - include/sf64event.h
-      - include/sf64player.h
+#      code: src/assets
+#      headers: include/assets
+#      modding: src/assets
+#    enums:
+#      - include/bgm.h
+#      - include/sf64object.h
+#      - include/sf64level.h
+#      - include/sf64mesg.h
+#      - include/sf64audio_external.h
+#      - include/sf64event.h
+#      - include/sf64player.h
 
 d8b1088520f7c5f81433292a9258c1184afa1457:
   name: Star Fox 64 (U) (V1.0) (Compressed)
@@ -45,20 +45,20 @@ d8b1088520f7c5f81433292a9258c1184afa1457:
   config:
     gbi: F3DEX
     sort: OFFSET
-    logging: ERROR
+    # logging: ERROR
     output:
       binary: sf64.otr
-      code: src/assets
-      headers: include/assets
-      modding: src/assets
-    enums:
-      - include/bgm.h
-      - include/sf64object.h
-      - include/sf64level.h
-      - include/sf64mesg.h
-      - include/sf64audio_external.h
-      - include/sf64event.h
-      - include/sf64player.h
+#      code: src/assets
+#      headers: include/assets
+#      modding: src/assets
+#    enums:
+#      - include/bgm.h
+#      - include/sf64object.h
+#      - include/sf64level.h
+#      - include/sf64mesg.h
+#      - include/sf64audio_external.h
+#      - include/sf64event.h
+#      - include/sf64player.h
 
 9bd71afbecf4d0a43146e4e7a893395e19bf3220:
   name: Star Fox 64 (JP) (V1.0) (Compressed)
