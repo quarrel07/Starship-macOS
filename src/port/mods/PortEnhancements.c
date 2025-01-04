@@ -205,7 +205,7 @@ void OnItemGoldRingDraw(ObjectDrawPostSetupEvent* event) {
 
     event->event.cancelled = true;
     RCP_SetupDL(&gMasterDisp, SETUPDL_29_POINT);
-    Graphics_SetScaleMtx(item->width * 1.5f);
+    Graphics_SetScaleMtx(item->width * 2.0f);
     gSPDisplayList(gMasterDisp++, D_101D870);
 }
 
