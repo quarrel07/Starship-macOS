@@ -2572,8 +2572,8 @@ void Titania_8019002C(s32 limbIndex, Vec3f* rot, void* thisx) {
 }
 
 bool Titania_801903A0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* thisx) {
-    f32 sp24;
-    s32 sp20;
+    f32 sp24 = 0.0f;
+    s32 sp20 = 0;
 
     if (limbIndex == 0) {
         if (D_i5_801BBEF0[25] == 1) {
@@ -2587,16 +2587,18 @@ bool Titania_801903A0(s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3f* rot, void* 
 
     if (D_i5_801BBEF0[25] == 1) {
         sp20 = D_i5_801BBEF0[33] % 2U;
-        if (D_i5_801BBEF0[33] != 0) {
-            sp24 = (D_i5_801BBEF0[33] / 15.0f) * D_i5_801BBEF0[37];
-            rot->z += SIN_DEG((D_i5_801BBEF0[33] / (f32) D_i5_801BBEF0[35]) * 360.0f) * sp24;
-        }
+        // LTODO: This is causing graphical errors when shooting these limbs, investigate.
+        //if (D_i5_801BBEF0[33] != 0) {
+        //    sp24 = (D_i5_801BBEF0[33] / 15.0f) * D_i5_801BBEF0[37];
+        //    rot->z += SIN_DEG((D_i5_801BBEF0[33] / (f32) D_i5_801BBEF0[35]) * 360.0f) * sp24;
+        //}
     } else {
         sp20 = D_i5_801BBEF0[34] % 2U;
-        if (D_i5_801BBEF0[34] != 0) {
-            sp24 = (D_i5_801BBEF0[34] / 15.0f) * D_i5_801BBEF0[38];
-            rot->z += SIN_DEG((D_i5_801BBEF0[34] / (f32) D_i5_801BBEF0[36]) * 360.0f) * sp24;
-        }
+        // LTODO: This is causing graphical errors when shooting these limbs, investigate.
+        //if (D_i5_801BBEF0[34] != 0) {
+        //    sp24 = (D_i5_801BBEF0[34] / 15.0f) * D_i5_801BBEF0[38];
+        //    rot->z += SIN_DEG((D_i5_801BBEF0[34] / (f32) D_i5_801BBEF0[36]) * 360.0f) * sp24;
+        //}
     }
     Matrix_Translate(gCalcMatrix, pos->x, pos->y, pos->z, MTXF_APPLY);
     Matrix_RotateZ(gCalcMatrix, rot->z * M_DTOR, MTXF_APPLY);
