@@ -184,6 +184,10 @@ void OnPlayerBrake(PlayerActionBrakeEvent* event) {
     }
 }
 
+void OnPlayerShootPost(PlayerActionPostShootEvent* event){
+    event->shot->timer *= CVarGetInteger("gLaserRangeMult", 100)/100.0f;
+}
+
 void PortEnhancements_Init() {
     PortEnhancements_Register();
 
@@ -195,6 +199,7 @@ void PortEnhancements_Init() {
     // Register Action listeners
     REGISTER_LISTENER(PlayerActionBoostEvent, OnPlayerBoost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerActionBrakeEvent, OnPlayerBrake, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PlayerActionPostShootEvent, OnPlayerShootPost, EVENT_PRIORITY_NORMAL);
 }
 
 void PortEnhancements_Register() {

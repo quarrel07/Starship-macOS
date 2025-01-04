@@ -3081,6 +3081,7 @@ void Player_SetupArwingShot(Player* player, PlayerShot* shot, f32 arg2, f32 arg3
             shot->timer = 30;
         }
     }
+
     shot->sourceId = player->num;
 }
 
@@ -3156,7 +3157,7 @@ void Player_TankCannon(Player* player) {
         }
     }
     if (!PlayerActionPreShootEvent_.event.cancelled){
-        CALL_EVENT(PlayerActionPostShootEvent, player, gLaserStrength[gPlayerNum]);
+        CALL_EVENT(PlayerActionPostShootEvent, player, &gPlayerShots[i]);
     }
 }
 
@@ -3205,7 +3206,7 @@ void Player_ArwingLaser(Player* player) {
             }
             break;
     }
-    CALL_EVENT(PlayerActionPostShootEvent, player, laser);
+    CALL_EVENT(PlayerActionPostShootEvent, player, &gPlayerShots[i]);
 }
 
 void Player_SmartBomb(Player* player) {

@@ -1247,7 +1247,7 @@ void Aquas_BlueMarineLaser(Player* player) {
         }
     }
     if (!PlayerActionPreShootEvent_.event.cancelled){
-        CALL_EVENT(PlayerActionPostShootEvent, player, gLaserStrength[gPlayerNum]);
+        CALL_EVENT(PlayerActionPostShootEvent, player, &gPlayerShots[i]);
     }
 }
 
