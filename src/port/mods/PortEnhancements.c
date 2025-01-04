@@ -53,6 +53,7 @@ void OnDisplayUpdatePost(IEvent* event) {
                 gDrawMode = DRAW_NONE;
                 gControllerLock = 3;
                 gBackToMap = true;
+                gPlayerGlareAlphas[0] = 0;
         }
     }
 
