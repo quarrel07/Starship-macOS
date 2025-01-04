@@ -5105,9 +5105,6 @@ void Player_ArwingBoost(Player* player) {
         sp28 = 1.5f;
         sp2C = 0.35f;
     }
-    if (CVarGetInteger("gInfiniteBoost", 0)) {
-        sp28 = 0.0f;
-    } 
     
     player->sfx.boost = 0;
 
@@ -5240,9 +5237,6 @@ void Player_ArwingBrake(Player* player) {
         sp30 = 1.5f;
         sp34 = 0.35f;
     }
-    if (CVarGetInteger("gInfiniteBoost", 0)) {
-        sp30 = 0.0f;
-    } 
 
     player->sfx.brake = false;
 
@@ -5856,7 +5850,7 @@ void Player_Update(Player* player) {
     s32 i;
     Vec3f sp58[30];
     s32 pad;
-
+    CALL_EVENT(PlayerPreUpdateEvent, player);
     if (gVersusMode) {
         gInputHold = &gControllerHold[player->num];
         gInputPress = &gControllerPress[player->num];
@@ -6184,6 +6178,7 @@ void Player_Update(Player* player) {
         Math_SmoothStepToF(&player->unk_194, player->unk_190, 0.5f, 0.5f, 0.0f);
         player->unk_190 = 0.0f;
     }
+    CALL_EVENT(PlayerPostUpdateEvent, player);
 }
 
 void Camera_UpdateArwingOnRails(Player* player) {
