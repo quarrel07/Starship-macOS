@@ -3155,8 +3155,7 @@ void Player_TankCannon(Player* player) {
                 break;
             }
         }
-    }
-    if (!PlayerActionPreShootEvent_.event.cancelled){
+
         CALL_EVENT(PlayerActionPostShootEvent, player, &gPlayerShots[i]);
     }
 }
@@ -3170,10 +3169,7 @@ void Player_ArwingLaser(Player* player) {
         laser = LASERS_SINGLE;
     }
 
-    CALL_EVENT(PlayerActionPreShootEvent, player, laser);
-    if (PlayerActionPreShootEvent_.event.cancelled){
-        return;
-    }
+    CALL_CANCELLABLE_RETURN_EVENT(PlayerActionPreShootEvent, player, laser);
 
     switch (laser) {
         case LASERS_SINGLE:
@@ -3213,11 +3209,7 @@ void Player_SmartBomb(Player* player) {
 
     if ((gBombCount[player->num] != 0) && (gBombButton[player->num] & gInputPress->button) &&
         (gPlayerShots[ARRAY_COUNT(gPlayerShots) - 1].obj.status == SHOT_FREE)) {
-        CALL_EVENT(PlayerActionPreBombEvent, player);
-        if (PlayerActionPreBombEvent_.event.cancelled)
-        {
-            return;
-        }
+        CALL_CANCELLABLE_RETURN_EVENT(PlayerActionPreBombEvent, player);
 
         if (gVersusMode) {
             gBombCount[player->num] = 0;

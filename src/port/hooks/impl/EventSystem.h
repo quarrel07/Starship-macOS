@@ -49,6 +49,16 @@ typedef struct {
     EventSystem_CallEvent(eventType##ID, &eventType##_); \
     if (!eventType##_.event.cancelled)
 
+#define CHECK_IF_NOT_CANCELLED(eventType) \
+    if (!eventType##_.event.cancelled)
+
+#define CALL_CANCELLABLE_RETURN_EVENT(eventType, ...) \
+    eventType eventType##_ = { {false}, __VA_ARGS__ }; \
+    EventSystem_CallEvent(eventType##ID, &eventType##_); \
+    if (eventType##_.event.cancelled) { \
+        return; \
+    }
+
 #define REGISTER_EVENT(eventType) \
     eventType##ID = EventSystem_RegisterEvent();
 

@@ -28,6 +28,7 @@
 #include "assets/ast_ve1_boss.h"
 #include "assets/ast_zoness.h"
 #include "port/interpolation/FrameInterpolation.h"
+#include "port/hooks/Events.h"
 
 Vec3f D_edisplay_801615D0;
 Vec3f sViewPos;
@@ -1044,6 +1045,7 @@ void ObjSpecial_SetMatrix(Object* obj, f32 xRot, f32 yRot, f32 zRot, s32 drawTyp
 }
 
 void Scenery_Draw(Scenery* this, s32 cullDirection) {
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_SCENERY, this);
     this->obj.pos.y += gCameraShakeY;
     Object_SetMatrix(&this->obj, this->info.drawType);
     this->obj.pos.y -= gCameraShakeY;
@@ -1058,7 +1060,10 @@ void Scenery_Draw(Scenery* this, s32 cullDirection) {
                 Object_ApplyWaterDistortion();
             }
 
-            gSPDisplayList(gMasterDisp++, this->info.dList);
+            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_SCENERY, this){
+                gSPDisplayList(gMasterDisp++, this->info.dList);
+            }
+
             RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
         } else {
             if (this->obj.id == OBJ_SCENERY_CO_HIGHWAY_3) {
@@ -1074,7 +1079,9 @@ void Scenery_Draw(Scenery* this, s32 cullDirection) {
                 Object_ApplyWaterDistortion();
             }
 
-            gSPDisplayList(gMasterDisp++, this->info.dList);
+            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_SCENERY, this){
+                gSPDisplayList(gMasterDisp++, this->info.dList);
+            }
 
             if (this->obj.id == OBJ_SCENERY_CO_HIGHWAY_3) {
                 RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
@@ -1082,26 +1089,33 @@ void Scenery_Draw(Scenery* this, s32 cullDirection) {
         }
     } else if (this->info.draw != NULL) {
         Object_SetCullDirection(cullDirection);
-        this->info.draw(&this->obj);
+        CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_SCENERY, this){
+            this->info.draw(&this->obj);
+        }
     }
 }
 
 void Sprite_Draw(Sprite* this, s32 arg1) {
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_SPRITE, this);
     if (arg1 >= 0) {
         this->obj.pos.y += gCameraShakeY;
         Object_SetMatrix(&this->obj, 0);
         this->obj.pos.y -= gCameraShakeY;
 
-        if (this->info.drawType == 0) {
-            gSPDisplayList(gMasterDisp++, this->info.dList);
-        } else if (this->info.draw != NULL) {
-            this->info.draw(&this->obj);
+        CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_SPRITE, this){
+            if (this->info.drawType == 0) {
+                gSPDisplayList(gMasterDisp++, this->info.dList);
+            } else if (this->info.draw != NULL) {
+                this->info.draw(&this->obj);
+            }
         }
     }
 }
 
 void Actor_DrawOnRails(Actor* this) {
     Vec3f sp34 = { 0.0f, 0.0f, 0.0f };
+
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_ACTOR, this);
 
     if (this->info.draw != NULL) {
         switch (this->obj.id) {
@@ -1128,10 +1142,14 @@ void Actor_DrawOnRails(Actor* this) {
             }
 
             if (this->info.drawType == 0) {
-                gSPDisplayList(gMasterDisp++, this->info.dList);
+                CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR, this){
+                    gSPDisplayList(gMasterDisp++, this->info.dList);
+                }
                 Object_UpdateSfxSource(this->sfxSource);
             } else {
-                this->info.draw(&this->obj);
+                CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR, this){
+                    this->info.draw(&this->obj);
+                }
                 Object_UpdateSfxSource(this->sfxSource);
                 if (((this->obj.id == OBJ_ACTOR_TEAM_BOSS) ||
                      ((this->obj.id == OBJ_ACTOR_SX_SLIPPY) && (this->animFrame > 0))) &&
@@ -1157,6 +1175,8 @@ void Actor_DrawAllRange(Actor* this) {
     f32 var_ft5;
     f32 var_fv0;
     f32 var_fv1;
+
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_ACTOR, this);
 
     sDrewActor = false;
 
@@ -1185,7 +1205,9 @@ void Actor_DrawAllRange(Actor* this) {
                     Matrix_RotateY(gCalcMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                     Matrix_RotateX(gCalcMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
                     Matrix_RotateZ(gCalcMatrix, this->obj.rot.z * M_DTOR, MTXF_APPLY);
-                    this->info.draw(&this->obj);
+                    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR, this){
+                        this->info.draw(&this->obj);
+                    }
                     sDrewActor = true;
                     if ((gPlayer[0].state == PLAYERSTATE_ACTIVE) && (this->obj.id == OBJ_ACTOR_ALLRANGE) &&
                         (this->aiType == AI360_MISSILE)) {
@@ -1223,7 +1245,9 @@ void Actor_DrawAllRange(Actor* this) {
                         Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
                         Matrix_RotateZ(gGfxMatrix, this->obj.rot.z * M_DTOR, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
-                        this->info.draw(&this->obj);
+                        CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR, this){
+                            this->info.draw(&this->obj);
+                        }
                         sDrewActor = true;
                         if ((gPlayer[0].state == PLAYERSTATE_ACTIVE) &&
                             (((this->obj.id == OBJ_ACTOR_ALLRANGE) &&
@@ -1266,6 +1290,8 @@ void Boss_Draw(Boss* this, s32 arg1) {
     f32 var_fv1;
     f32 sp3C;
     Vec3f origin = { 0.0f, 0.0f, 0.0f };
+
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_BOSS, this);
 
     if (this->info.unk_19 != 0) {
         this->obj.pos.y += this->yOffset + gCameraShakeY;
@@ -1318,7 +1344,9 @@ void Boss_Draw(Boss* this, s32 arg1) {
                     if (arg1 < 0) {
                         Object_ApplyWaterDistortion();
                     }
-                    this->info.draw(&this->obj);
+                    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_BOSS, this){
+                        this->info.draw(&this->obj);
+                    }
                 }
             }
         }
@@ -1329,11 +1357,15 @@ void Boss_Draw(Boss* this, s32 arg1) {
         this->vwork[30] = D_edisplay_801615D0;
         Display_SetSecondLight(&this->obj.pos);
         Matrix_SetGfxMtx(&gMasterDisp);
-        this->info.draw(&this->obj);
+        CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_BOSS, this){
+            this->info.draw(&this->obj);
+        }
     }
 }
 
 void Effect_DrawOnRails(Effect* this, s32 arg1) {
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_EFFECT, this);
+
     if ((arg1 < 0) && (this->obj.pos.y < 7.0f)) {
         return;
     }
@@ -1348,8 +1380,10 @@ void Effect_DrawOnRails(Effect* this, s32 arg1) {
         Object_SetMatrix(&this->obj, 0);
     }
 
-    if (this->info.draw != NULL) {
-        this->info.draw(&this->obj);
+    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_EFFECT, this){
+        if (this->info.draw != NULL) {
+            this->info.draw(&this->obj);
+        }
     }
 }
 
@@ -1358,6 +1392,7 @@ void Effect_DrawAllRange(Effect* this) {
     Vec3f dest;
     f32 minZ;
     u8 drawn = false;
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_EFFECT, this);
 
     if (this->info.unk_14 == -1) {
         Matrix_Translate(gGfxMatrix, this->obj.pos.x, this->obj.pos.y + gCameraShakeY, this->obj.pos.z + gPathProgress,
@@ -1383,7 +1418,9 @@ void Effect_DrawAllRange(Effect* this) {
                     Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
                     Matrix_RotateZ(gGfxMatrix, this->obj.rot.z * M_DTOR, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
-                    this->info.draw(&this->obj);
+                    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_EFFECT, this){
+                        this->info.draw(&this->obj);
+                    }
                 }
                 drawn = true;
             }
@@ -1402,6 +1439,8 @@ void Item_Draw(Item* this, s32 arg1) {
     Vec3f dest;
     u8 drawn;
 
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_ITEM, this);
+
     Matrix_Translate(gGfxMatrix, this->obj.pos.x, this->obj.pos.y, this->obj.pos.z + gPathProgress, MTXF_APPLY);
     Matrix_MultVec3f(gGfxMatrix, &src, &dest);
 
@@ -1416,10 +1455,12 @@ void Item_Draw(Item* this, s32 arg1) {
                     Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
                     Matrix_RotateZ(gGfxMatrix, this->obj.rot.z * M_DTOR, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
-                    if (this->info.drawType == 0) {
-                        gSPDisplayList(gMasterDisp++, this->info.dList);
-                    } else {
-                        this->info.draw(&this->obj);
+                    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ITEM, this){
+                        if (this->info.drawType == 0) {
+                            gSPDisplayList(gMasterDisp++, this->info.dList);
+                        } else {
+                            this->info.draw(&this->obj);
+                        }
                     }
                 }
                 drawn = true;
@@ -1584,6 +1625,8 @@ void Scenery360_Draw(Scenery360* this) {
     Vec3f src = { 0.0f, 0.0f, 0.0f };
     Vec3f dest;
 
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_SCENERY360, this);
+
     f32 behindZdist = 1000.0f;
     f32 frontZdist = -12000.0f;
     f32 xyOffsetBounds = 2000.0f + 1000.0f;
@@ -1636,11 +1679,15 @@ check:
                     Matrix_RotateY(gGfxMatrix, M_PI / 2, MTXF_APPLY);
                     Matrix_Translate(gGfxMatrix, -551.0f, 0.0f, 0.0f, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
-                    gSPDisplayList(gMasterDisp++, D_VE2_6007650);
+                    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_SCENERY360, this){
+                        gSPDisplayList(gMasterDisp++, D_VE2_6007650);
+                    }
                 } else {
                     Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
-                    gSPDisplayList(gMasterDisp++, this->info.dList);
+                    CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_SCENERY360, this){
+                        gSPDisplayList(gMasterDisp++, this->info.dList);
+                    }
                 }
 
             }

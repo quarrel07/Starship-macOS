@@ -20,6 +20,7 @@
 #include "assets/ast_solar.h"
 #include "assets/ast_ve1_boss.h"
 #include "assets/ast_zoness.h"
+#include "port/hooks/Events.h"
 
 s32 gTeamEventActorIndex[4] = { 0, 0, 0, 0 };
 s32 gCallVoiceParam = 0;
@@ -3880,6 +3881,8 @@ void ActorEvent_Draw(ActorEvent* this) {
     s16 savedState;
     s32 pad;
 
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectDrawPreSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this);
+
     if (this->timer_0C6 && (this->eventType != EVID_MA_RAILROAD_CART) && (this->eventType != EVID_SY_LASER_TURRET) &&
         (this->eventType != EVID_SY_SHIP_WINDOWS)) {
         if ((this->eventType != EVID_ME_METEOR_1) && (this->eventType != EVID_ME_METEOR_2) &&
@@ -3925,18 +3928,23 @@ void ActorEvent_Draw(ActorEvent* this) {
         case EVID_WZ_PILLAR_2:
         case EVID_WZ_METEOR_1:
         case EVID_WZ_METEOR_2:
-        case EVID_WZ_GATE:
+        case EVID_WZ_GATE: {
             RCP_SetupDL(&gMasterDisp, SETUPDL_34);
             gDPSetTextureFilter(gMasterDisp++, G_TF_POINT);
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, (s32) this->fwork[15], (s32) this->fwork[16],
                             (s32) this->fwork[17], 255);
-            gSPDisplayList(gMasterDisp++, sEventActorInfo[this->eventType].dList);
+            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this){
+                gSPDisplayList(gMasterDisp++, sEventActorInfo[this->eventType].dList);
+            }
             gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
             break;
+        }
 
-        default:
-            if ((this->eventType < EVID_200) && (sEventActorInfo[this->eventType].dList != NULL)) {
-                gSPDisplayList(gMasterDisp++, sEventActorInfo[this->eventType].dList);
+        default: {
+            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this){
+                if ((this->eventType < EVID_200) && (sEventActorInfo[this->eventType].dList != NULL)) {
+                    gSPDisplayList(gMasterDisp++, sEventActorInfo[this->eventType].dList);
+                }
             }
 
             switch (this->eventType) {
@@ -4215,6 +4223,7 @@ void ActorEvent_Draw(ActorEvent* this) {
                 }
             }
             break;
+        }
     }
 }
 
