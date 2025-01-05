@@ -296,7 +296,17 @@ void OnBombCounterDraw(IEvent* ev){
 }
 
 void OnLivesCounterDraw(IEvent* ev){
-    ev->cancelled = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+    bool restore = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+    if(!restore){
+        return;
+    }
+
+    if (gPlayState == PLAY_PAUSE || gCurrentLevel == LEVEL_TRAINING) {
+        return;
+    }
+
+    ev->cancelled = true;
+    HUD_LivesCount2_Draw(258.0f, SCREEN_HEIGHT - 20, gLifeCount[gPlayerNum]);
 }
 
 void PortEnhancements_Init() {
