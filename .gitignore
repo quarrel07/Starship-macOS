@@ -34,7 +34,7 @@ cmake-build-*/
 .vs
 build*
 logs/
-mods/
+/mods/
 starship.cfg.json
 default.sav
 imgui.ini
