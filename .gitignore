@@ -34,6 +34,7 @@ cmake-build-*/
 .vs
 build*
 logs/
+mods/
 starship.cfg.json
 default.sav
 imgui.ini
@@ -49,3 +50,4 @@ Starship.log
 *.pdb
 dumps/
 _packages/*
+*.DS_Store
