@@ -1769,9 +1769,10 @@ void PlayerShot_SearchLockOnTarget(PlayerShot* shot) {
             !(gControllerHold[shot->sourceId].button & A_BUTTON) || (shot->timer == 0)) {
             Object_Kill(&shot->obj, shot->sfxSource);
         }
-    } else {
+    } else {    
+        bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
         if ((shot->obj.pos.y < gGroundHeight) || PlayerShot_FindLockTarget(shot) ||
-            !(gControllerHold[gMainController].button & A_BUTTON) || (shot->timer == 0)) {
+            (!(gControllerHold[gMainController].button & A_BUTTON)^rapidFire) || (shot->timer == 0)) {
             Object_Kill(&shot->obj, shot->sfxSource);
         }
     }

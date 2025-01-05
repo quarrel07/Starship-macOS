@@ -3323,8 +3323,9 @@ bool Player_CanLockOn(s32 playerNum) {
 bool Player_UpdateLockOn(Player* player) {
     bool hasBombTarget;
     s32 i;
-
-    if (gInputHold->button & A_BUTTON) {
+    
+    bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
+    if (rapidFire ? !(gInputHold->button & A_BUTTON) : (gInputHold->button & A_BUTTON)) {
         gChargeTimers[player->num]++;
         if (gChargeTimers[player->num] > 21) {
             gChargeTimers[player->num] = 21;
@@ -3440,6 +3441,8 @@ bool Player_UpdateLockOn(Player* player) {
 }
 
 void Player_Shoot(Player* player) {
+    bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
+
     switch (player->form) {
         case FORM_ARWING:
             if ((player->arwing.rightWingState <= WINGSTATE_BROKEN) ||
@@ -3451,6 +3454,11 @@ void Player_Shoot(Player* player) {
                     Math_SmoothStepToF(&player->arwing.laserGunsYpos, -10.0f, 1.0f, 0.5f, 0.0f);
                 } else {
                     Math_SmoothStepToF(&player->arwing.laserGunsYpos, 0.0f, 1.0f, 0.5f, 0.0f);
+                }
+                if (rapidFire && (gShootButton[player->num] & gInputHold->button)){
+                    if (player->shotTimer <= 0){
+                        player->shotTimer = 3;
+                    }
                 }
                 if (gShootButton[player->num] & gInputPress->button) {
                     Player_ArwingLaser(player);

@@ -498,6 +498,9 @@ void DrawCheatsMenu() {
         UIWidgets::CVarCheckbox("Hyper Laser", "gHyperLaser");
         UIWidgets::CVarSliderInt("Laser Range Multiplier: %d%%", "gLaserRangeMult", 15, 800, 100,
             { .tooltip = "Changes how far your lasers fly." });
+        UIWidgets::CVarCheckbox("Rapid-fire mode", "gRapidFire", {
+                .tooltip = "Hold A to keep firing. Release A to start charging a shot."
+            });
         UIWidgets::CVarCheckbox("Self destruct button", "gHit64SelfDestruct", {
                 .tooltip = "Press Down on the D-PAD to instantly self destruct."
             });
