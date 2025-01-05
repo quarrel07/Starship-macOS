@@ -473,8 +473,8 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Restores the beta coin that got replaced with the gold ring"
             });
 
-            UIWidgets::CVarCheckbox("Beta: Restore old boost gauge", "gRestoreOldBoostGauge", {
-                .tooltip = "Restores the old boost gauge that was seen on some beta footage"
+            UIWidgets::CVarCheckbox("Beta: Restore old boost/brake gauge", "gRestoreOldBoostGauge", {
+                .tooltip = "Restores the old boost gauge that was seen in some beta footage"
             });
 
             ImGui::EndMenu();
