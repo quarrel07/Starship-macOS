@@ -501,6 +501,13 @@ void DrawCheatsMenu() {
         UIWidgets::CVarCheckbox("Rapid-fire mode", "gRapidFire", {
                 .tooltip = "Hold A to keep firing. Release A to start charging a shot."
             });
+            if (CVarGetInteger("gRapidFire", 0) == 1) {
+                ImGui::Dummy(ImVec2(22.0f, 0.0f));
+                ImGui::SameLine();
+                UIWidgets::CVarCheckbox("Hold L to Charge", "gLtoCharge", {
+                    .tooltip = "If you prefer to not have auto-charge."
+                });
+            }
         UIWidgets::CVarCheckbox("Self destruct button", "gHit64SelfDestruct", {
                 .tooltip = "Press Down on the D-PAD to instantly self destruct."
             });

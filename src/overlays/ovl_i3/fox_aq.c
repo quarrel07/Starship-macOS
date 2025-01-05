@@ -1331,12 +1331,12 @@ void Aquas_BlueMarineShoot(Player* player) {
     bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
 
     if (rapidFire){
-        if (gInputHold->button & A_BUTTON) 
+        if (gInputHold->button & A_BUTTON)
         {
             if (player-> shotTimer > 0) {
                 player->shotTimer--;
             }
-            if (player->shotTimer <= 0){
+            if (player->shotTimer <= 0) {
                 Aquas_BlueMarineLaser(player);
                 player->shotTimer = 3;
             }

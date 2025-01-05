@@ -3325,7 +3325,18 @@ bool Player_UpdateLockOn(Player* player) {
     s32 i;
 
     bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
-    if (rapidFire ? !(gInputHold->button & A_BUTTON) : (gInputHold->button & A_BUTTON)) {
+    bool charging;
+    if (rapidFire) {
+        if (CVarGetInteger("gLtoCharge", 0) == 1) {
+            charging = (gInputHold->button & L_TRIG) && !(gInputHold->button & A_BUTTON);
+        }
+        else {
+            charging = !(gInputHold->button & A_BUTTON);
+        }
+    } else {
+        charging = (gInputHold->button & A_BUTTON);
+    }
+    if (charging) {
         gChargeTimers[player->num]++;
         if (gChargeTimers[player->num] > 21) {
             gChargeTimers[player->num] = 21;
