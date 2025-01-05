@@ -238,7 +238,7 @@ void* AudioLoad_SyncLoadSeqFonts(s32 seqId, u32* outFontId) {
     s32 index = ((u16*) gSeqFontTable)[AudioLoad_GetLoadTableIndex(SEQUENCE_TABLE, seqId)];
     s32 fontId = 0xFF;
     s32 numFonts = gSeqFontTable[index++];
-    void* soundFontData;
+    void* soundFontData = NULL;
 
     for (numFonts; numFonts > 0; numFonts--) {
         fontId = gSeqFontTable[index++];
