@@ -3323,7 +3323,7 @@ bool Player_CanLockOn(s32 playerNum) {
 bool Player_UpdateLockOn(Player* player) {
     bool hasBombTarget;
     s32 i;
-    
+
     bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
     if (rapidFire ? !(gInputHold->button & A_BUTTON) : (gInputHold->button & A_BUTTON)) {
         gChargeTimers[player->num]++;
@@ -3476,8 +3476,21 @@ void Player_Shoot(Player* player) {
 
         case FORM_LANDMASTER:
             if (!Player_UpdateLockOn(player)) {
-                if (gShootButton[player->num] & gInputPress->button) {
-                    Player_TankCannon(player);
+                if (rapidFire) {
+                    if (gShootButton[player->num] & (gInputHold->button)) {
+                        if (player-> shotTimer > 0) {
+                            player->shotTimer--;
+                        }
+                        if (player->shotTimer <= 0){
+                            Player_TankCannon(player);
+                            player->shotTimer = 3;
+                        }
+                    }
+                }
+                else {
+                    if (gShootButton[player->num] & (gInputPress->button)) {
+                        Player_TankCannon(player);
+                    }
                 }
                 Player_SmartBomb(player);
             }

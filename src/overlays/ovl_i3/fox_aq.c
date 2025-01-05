@@ -1328,11 +1328,27 @@ void Aquas_BlueMarineShoot(Player* player) {
         Aquas_801A9DE4(player);
     }
 
-    if (gInputPress->button & A_BUTTON) {
-        Aquas_BlueMarineLaser(player);
+    bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
+
+    if (rapidFire){
+        if (gInputHold->button & A_BUTTON) 
+        {
+            if (player-> shotTimer > 0) {
+                player->shotTimer--;
+            }
+            if (player->shotTimer <= 0){
+                Aquas_BlueMarineLaser(player);
+                player->shotTimer = 3;
+            }
+        }
+    } 
+    else {
+        if (gInputPress->button & A_BUTTON) {
+            Aquas_BlueMarineLaser(player);
+        }
     }
 
-    if (gInputPress->button & B_BUTTON) {
+    if ((rapidFire ? gInputHold->button : gInputPress->button) & B_BUTTON) {
         Aquas_BlueMarineTorpedo(player);
         if (D_i3_801C4190[0] != 0) {
             D_i3_801C4190[3] = 1;
