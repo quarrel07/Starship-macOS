@@ -461,6 +461,10 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Fixes a camera bug found in the code of the game"
             });
 
+            UIWidgets::CVarCheckbox("Sector Z: Spawn all actors", "gSzActorFix", {
+                .tooltip = "Fixes a bug found in Sector Z, where only 10 of 12 available actors are spawned, this causes two 'Space Junk Boxes' to be missing from the level."
+            });
+
             ImGui::EndMenu();
         }
 

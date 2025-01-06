@@ -3492,12 +3492,14 @@ void Macbeth_MaRailwaySignal_Draw(MaRailwaySignal* this) {
     Vec3f frameTable[50];
 
     Matrix_Push(&gGfxMatrix);
+    // Lever
     Animation_GetFrameData(&D_MA_602F2E0, 0, frameTable);
     Animation_DrawSkeleton(1, D_MA_602F36C, frameTable, Macbeth_MaRailwaySignal_OverrideLimbDraw1, NULL, this,
                            &gIdentityMatrix);
     Matrix_Pop(&gGfxMatrix);
     Matrix_Push(&gGfxMatrix);
     Animation_GetFrameData(&D_MA_602F098, 0, frameTable);
+    // Base
     Animation_DrawSkeleton(1, D_MA_602F264, frameTable, Macbeth_MaRailwaySignal_OverrideLimbDraw2, NULL, this,
                            &gIdentityMatrix);
     Matrix_Pop(&gGfxMatrix);

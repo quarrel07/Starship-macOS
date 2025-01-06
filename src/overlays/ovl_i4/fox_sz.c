@@ -611,6 +611,11 @@ void SectorZ_UpdateEvents(ActorAllRange* this) {
             gActors[3].state = 2;
 
             for (i = 10; i < ARRAY_COUNT(gActors); i++) {
+#ifdef AVOID_UB
+                if (gActors[i].obj.status == OBJ_FREE) {
+                    continue;
+                }
+#endif
                 gActors[i].aiIndex = -1;
                 gActors[i].state = 3;
             }
@@ -1893,7 +1898,13 @@ void SectorZ_LoadLevelObjects(void) {
         }
     }
 
-    for (j = 50, actor = &gActors[j], i = 0; i < 1000; i++) {
+    if (CVarGetInteger("gSzActorFix", 0) == 1) {
+        j = 47;
+    } else {
+        j = 50;
+    }
+
+    for (actor = &gActors[j], i = 0; i < 1000; i++) {
         if (gLevelObjects[i].id <= OBJ_INVALID) {
             break;
         }
@@ -1911,7 +1922,7 @@ void SectorZ_LoadLevelObjects(void) {
             Object_SetInfo(&actor->info, actor->obj.id);
             actor->itemDrop = DROP_SILVER_RING;
 
-            if (j++ >= ARRAY_COUNT(gActors)) {
+            if (j++ >= 59) {
                 break;
             }
             actor++;
