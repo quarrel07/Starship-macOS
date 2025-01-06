@@ -35,7 +35,7 @@ typedef struct {
 #define DEFINE_EVENT(eventName, ...) \
     typedef struct { \
         IEvent event; \
-        __VA_ARGS__ \
+        __VA_ARGS__; \
     } eventName; \
     \
     DECLARE_EVENT(eventName)

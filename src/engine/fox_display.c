@@ -758,7 +758,9 @@ void Display_Arwing(Player* player, s32 reflectY) {
             }
             D_display_800CA22C = true;
             gReflectY = reflectY;
-            Display_ArwingWings(&player->arwing);
+            CALL_CANCELLABLE_EVENT(PlayerDrawArwing, &player) {
+                Display_ArwingWings(&player->arwing);
+            }
         }
     }
 }

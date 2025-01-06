@@ -309,6 +309,99 @@ void OnLivesCounterDraw(IEvent* ev){
     HUD_LivesCount2_Draw(258.0f, SCREEN_HEIGHT - 20, gLifeCount[gPlayerNum]);
 }
 
+void Display_ArwingWings_Katt(ArwingInfo* arwing) {
+    Vec3f frameTable[30];
+    s32 drawFace;
+    Matrix_Push(&gGfxMatrix);
+    arwing->laserGunsXpos = 0.0f;
+    if (arwing->laserGunsYpos < -7.0f) {
+        arwing->laserGunsXpos = (-arwing->laserGunsYpos - 7.0f) * 2.5f;
+    }
+    if (gGameState == GSTATE_PLAY) {
+        // Animation_DrawSkeleton(1, D_arwing_3016610, gPlayer[0].jointTable, Display_ArwingWingsOverrideLimbDraw, NULL,
+        //                        arwing, &gIdentityMatrix);
+        gSPDisplayList(gMasterDisp++, aKattShipDL);
+    } else {
+        if (gGameState == GSTATE_MENU) {
+            Animation_GetFrameData(&D_arwing_3015AF4, 0, frameTable);
+        } else {
+            Animation_GetFrameData(&D_arwing_3015C28, 0, frameTable);
+        }
+        //Animation_DrawSkeleton(1, D_arwing_3016610, frameTable, Display_ArwingWingsOverrideLimbDraw, NULL, arwing,
+        //                       &gIdentityMatrix);
+        gSPDisplayList(gMasterDisp++, aKattShipDL);
+    }
+    D_display_800CA22C = false;
+    drawFace = arwing->drawFace;
+    if (D_display_800CA220 != 0) {
+        drawFace = true;
+    }
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild(arwing, 0);
+    if (drawFace != 0) {
+        Matrix_Push(&gGfxMatrix);
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("ArwingCharFace", arwing->drawFace);
+        Matrix_Translate(gGfxMatrix, 0.0f, 6.4f, -16.5f, MTXF_APPLY);
+        Matrix_RotateY(gGfxMatrix, arwing->teamFaceYrot * M_DTOR, MTXF_APPLY);
+        Matrix_RotateX(gGfxMatrix, arwing->teamFaceXrot * M_DTOR, MTXF_APPLY);
+        Matrix_Scale(gGfxMatrix, 1.0f / 70.925f, 1.0f / 70.925f, 1.0f / 70.925f, MTXF_APPLY);
+        if (gGameState == GSTATE_ENDING) {
+            Matrix_Scale(gGfxMatrix, 0.95f, 0.95f, 0.95f, MTXF_APPLY);
+        }
+        Matrix_SetGfxMtx(&gMasterDisp);
+        if (gExpertMode) {
+            gSPDisplayList(gMasterDisp++, sExpertFaceDL[drawFace - 1]);
+        } else {
+            gSPDisplayList(gMasterDisp++, sFaceDL[drawFace - 1]);
+        }
+        Matrix_Pop(&gGfxMatrix);
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+    }
+    Matrix_Translate(gGfxMatrix, 0.0f, 17.2f, -25.8f, MTXF_APPLY);
+    Matrix_RotateX(gGfxMatrix, arwing->cockpitGlassXrot * M_DTOR, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    RCP_SetupDL_64_2();
+    if ((gGameState == GSTATE_PLAY) && (gPlayer[0].state == PLAYERSTATE_LEVEL_INTRO) &&
+        (gCurrentLevel == LEVEL_CORNERIA)) {
+        gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 120);
+        gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
+        gSPDisplayList(gMasterDisp++, D_arwing_30194E0);
+        RCP_SetupDL_46();
+        gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 100);
+        gSPDisplayList(gMasterDisp++, D_arwing_30183D0);
+    } else {
+        RCP_SetupDL_46();
+        gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 140);
+        gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
+        gSPDisplayList(gMasterDisp++, D_arwing_30194E0);
+    }
+    gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
+    Matrix_Pop(&gGfxMatrix);
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
+}
+
+void OnRenderArwing(PlayerDrawArwingEvent* event){
+    // 0 = Fox
+    int skin = CVarGetInteger("gPlayerSkin", 0);
+
+    if(skin == 0){
+        return;
+    }
+
+    event->event.cancelled = true;
+
+    switch (skin) {
+        case 1: // Katt
+            Display_ArwingWings_Katt(&event->player.arwing);
+            break;
+        case 2: // Bill 
+            break;
+    }
+}
+
 void PortEnhancements_Init() {
     PortEnhancements_Register();
 
@@ -319,6 +412,7 @@ void PortEnhancements_Init() {
     REGISTER_LISTENER(DrawBoostGaugeHUDEvent, OnBoostGaugeDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawLivesCounterHUDEvent, OnLivesCounterDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawBombCounterHUDEvent, OnBombCounterDraw, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PlayerDrawArwingEvent, OnRenderArwing, EVENT_PRIORITY_NORMAL);
 
     REGISTER_LISTENER(ObjectUpdateEvent, OnItemGoldRingUpdate, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(ObjectDrawPostSetupEvent, OnItemGoldRingDraw, EVENT_PRIORITY_NORMAL);
@@ -339,6 +433,7 @@ void PortEnhancements_Register() {
 
     REGISTER_EVENT(PlayerPreUpdateEvent);
     REGISTER_EVENT(PlayerPostUpdateEvent);
+    REGISTER_EVENT(PlayerDrawArwing);
 
     REGISTER_EVENT(DrawRadarHUDEvent);
     REGISTER_EVENT(DrawBoostGaugeHUDEvent);
