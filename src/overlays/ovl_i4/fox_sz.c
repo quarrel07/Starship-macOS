@@ -1922,7 +1922,11 @@ void SectorZ_LoadLevelObjects(void) {
             Object_SetInfo(&actor->info, actor->obj.id);
             actor->itemDrop = DROP_SILVER_RING;
 
-            if (j++ >= 59) {
+#ifdef AVOID_UB
+            if (j++ >= ARRAY_COUNT(gActors) - 1) {
+#else
+            if (j++ >= ARRAY_COUNT(gActors)) {
+#endif
                 break;
             }
             actor++;
