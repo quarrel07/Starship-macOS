@@ -75,6 +75,11 @@ GameEngine::GameEngine() {
                 if (StringHelper::IEquals(ext, ".otr") || StringHelper::IEquals(ext, ".o2r")) {
                     OTRFiles.push_back(p.path().generic_string());
                 }
+
+                if (StringHelper::IEquals(ext, ".zip")) {
+                    SPDLOG_WARN("Zip files should be only used for development purposes, not for distribution");
+                    OTRFiles.push_back(p.path().generic_string());
+                }
             }
         }
     }
@@ -92,7 +97,7 @@ GameEngine::GameEngine() {
 
     auto window = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
 
-    this->context->Init(OTRFiles, {}, 3, { 32000, 1024 , 2480  }, window, controlDeck);
+    this->context->Init(OTRFiles, {}, 3, { 32000, 1024, 1680 }, window, controlDeck);
 
     Ship::Context::GetInstance()->GetLogger()->set_level(
         (spdlog::level::level_enum) CVarGetInteger("gDeveloperTools.LogLevel", 1));
