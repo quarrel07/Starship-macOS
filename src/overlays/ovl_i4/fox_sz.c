@@ -1899,7 +1899,7 @@ void SectorZ_LoadLevelObjects(void) {
     }
 
     if (CVarGetInteger("gSzActorFix", 0) == 1) {
-        j = 47;
+        j = 48;
     } else {
         j = 50;
     }
@@ -1928,7 +1928,6 @@ void SectorZ_LoadLevelObjects(void) {
             actor++;
         }
     }
-
     Boss_Initialize(greatFox);
     greatFox->obj.status = OBJ_INIT;
 
