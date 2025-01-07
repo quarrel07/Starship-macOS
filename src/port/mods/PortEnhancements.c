@@ -302,10 +302,6 @@ void OnLivesCounterDraw(IEvent* ev){
     }
     ev->cancelled = true;
 
-    if (gPlayState == PLAY_PAUSE || gCurrentLevel == LEVEL_TRAINING) {
-        return;
-    }
-
     HUD_LivesCount2_Draw(258.0f, SCREEN_HEIGHT - 20, gLifeCount[gPlayerNum]);
 }
 
