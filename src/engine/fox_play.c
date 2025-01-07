@@ -27,6 +27,8 @@ extern float gCurrentScreenWidth;
 extern float gCurrentScreenHeight;
 extern Vtx D_SO_6001C50_copy[];
 extern Vtx D_SO_6004500_copy[];
+extern Vtx D_ZO_6009ED0_copy[];
+extern Vtx D_ZO_600C780_copy[];
 
 UNK_TYPE D_800D2F50 = 0; // unused
 s32 sOverheadCam = 0;
@@ -154,9 +156,7 @@ void Play_UpdateDynaFloor(void) {
 
         Matrix_MultVec3fNoTranslate(gCalcMatrix, &spC4, &spB8);
 
-        if (gCurrentLevel == LEVEL_SOLAR) {
-            spB4[*spB0].n.n[0] = spB8.x;
-        }
+        spB4[*spB0].n.n[0] = spB8.x;
         spB4[*spB0].n.n[1] = spB8.y;
         spB4[*spB0].n.n[2] = spB8.z;
     }
@@ -182,7 +182,7 @@ void Play_UpdateDynaFloor(void) {
                 // spB4_copy[*spB0].n.n[2] *= -1.0f;
             }
             break;
-            /*
+            
             case LEVEL_ZONESS:
                 if ((gGameFrameCount % 2) != 0) {
                     spB4 = SEGMENTED_TO_VIRTUAL(D_ZO_6009ED0);
@@ -193,7 +193,7 @@ void Play_UpdateDynaFloor(void) {
                 }
                 spB0 = SEGMENTED_TO_VIRTUAL(D_ZO_602AC50);
 
-                memcpy2(spB4_copy, spB4, 17 * 17 * sizeof(Vtx));
+                memcpy(spB4_copy, spB4, 17 * 17 * sizeof(Vtx));
 
                 for (i = 0; (i < 17 * 17); i++, spB0++) {
                     // spB4_copy[*spB0] = spB4[*spB0];
@@ -202,7 +202,6 @@ void Play_UpdateDynaFloor(void) {
                     // spB4_copy[*spB0].n.n[2] *= -1.0f;
                 }
                 break;
-                */
     }
 }
 

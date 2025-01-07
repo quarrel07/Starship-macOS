@@ -1828,6 +1828,7 @@ void Background_DrawGround(void) {
             Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -3000.0f, MTXF_APPLY); // Center Further
             Matrix_Scale(gGfxMatrix, 3.0f, 2.0f, 3.0f, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
+
             if ((gGameFrameCount % 2) != 0) {
                 gSPDisplayList(gMasterDisp++, D_ZO_6008830);
             } else {
@@ -1844,10 +1845,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1862,9 +1864,9 @@ void Background_DrawGround(void) {
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1891,9 +1893,9 @@ void Background_DrawGround(void) {
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1907,10 +1909,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1936,10 +1939,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1953,10 +1957,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1966,6 +1971,7 @@ void Background_DrawGround(void) {
             Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, 0.0f, MTXF_APPLY); // Center
             Matrix_Scale(gGfxMatrix, 3.0f, 2.0f, 3.0f, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
+
             if ((gGameFrameCount % 2) != 0) {
                 gSPDisplayList(gMasterDisp++, D_ZO_6008830);
             } else {
@@ -1982,10 +1988,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -1999,10 +2006,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -2028,10 +2036,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
@@ -2045,10 +2054,11 @@ void Background_DrawGround(void) {
             gSPTexture(gMasterDisp++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
             gDPSetTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_RENDERTILE, 0, G_TX_WRAP, 5, G_TX_NOLOD,
                        G_TX_WRAP, 5, G_TX_NOLOD);
+
             if ((gGameFrameCount % 2) != 0) {
-                gSPDisplayList(gMasterDisp++, D_ZO_6008830);
+                gSPDisplayList(gMasterDisp++, D_ZO_6008830_copy);
             } else {
-                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0);
+                gSPDisplayList(gMasterDisp++, D_ZO_600B0E0_copy);
             }
             gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK); // Re-enable backface culling
             Matrix_Pop(&gGfxMatrix);
