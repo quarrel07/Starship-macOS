@@ -1332,14 +1332,38 @@ void Background_DrawGround(void) {
                 gGroundSurface = SURFACE_GRASS;
                 gBgColor = 0x845; // 8, 8, 32
 
+                skipInterpolationGround = prevPlayerPath != gPlayer[gPlayerNum].xPath;
+                skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
+
+                if (skipInterpolationGround || skipInterpolationGround2) {
+                    // @port Skip interpolation
+                    FrameInterpolation_ShouldInterpolateFrame(false);
+                }
+
                 for (i = 0; i < ARRAY_COUNT(sGroundPositions360x); i++) {
+                    if (!skipInterpolationGround && !skipInterpolationGround2) {
+                        // @port: Tag the transform.
+                        FrameInterpolation_RecordOpenChild("360Ground", i);
+                    }
+
                     Matrix_Push(&gGfxMatrix);
                     Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i],
                                      MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
                     gSPDisplayList(gMasterDisp++, D_CO_601EAA0);
+
+                    if (!skipInterpolationGround && !skipInterpolationGround2) {
+                        // @port: Tag the transform.
+                        FrameInterpolation_RecordCloseChild();
+                    }
                     Matrix_Pop(&gGfxMatrix);
                 }
+                if (skipInterpolationGround || skipInterpolationGround2) {
+                    // @port renable interpolation
+                    FrameInterpolation_ShouldInterpolateFrame(true);
+                }
+                prevPlayerPath = gPlayer[gPlayerNum].xPath;
+                prevPlayerPath2 = sp1D4;
             }
             break;
 
@@ -1445,9 +1469,6 @@ void Background_DrawGround(void) {
                                 G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
             RCP_SetupDL_29(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
 
-            skipInterpolationGround = (fabsf(gPlayer[gPlayerNum].xPath - prevPlayerPath) > 12000.0f / 2.0f);
-            skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
-
             if (gLevelMode == LEVELMODE_ON_RAILS) {
                 // if (gPathTexScroll > (32.0f * 36.7f) / 2.0f) {
                 //     gPathTexScroll -= (32.0f * 36.7f) / 2.0f;
@@ -1510,19 +1531,32 @@ void Background_DrawGround(void) {
                 gSPDisplayList(gMasterDisp++, sp1C0);
                 Matrix_Pop(&gGfxMatrix);
             } else {
-                u32 skipInfo = skipInterpolationGround << 8 | skipInterpolationGround2 << 16;
+                skipInterpolationGround = prevPlayerPath != gPlayer[gPlayerNum].xPath;
+                skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
+
+                if (skipInterpolationGround || skipInterpolationGround2) {
+                    // @port Skip interpolation
+                    FrameInterpolation_ShouldInterpolateFrame(false);
+                }
 
                 for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
-                    FrameInterpolation_RecordOpenChild("Ground", i | skipInfo);
-                    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                    if (!skipInterpolationGround && !skipInterpolationGround2) {
+                        // @port: Tag the transform.
+                        FrameInterpolation_RecordOpenChild("360Ground", i);
+                    }
+
                     Matrix_Push(&gGfxMatrix);
                     Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i],
                                      MTXF_APPLY);
                     Matrix_Scale(gGfxMatrix, 1.5f, 1.0f, 1.0f, MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
                     gSPDisplayList(gMasterDisp++, D_TR_6005880);
+
+                    if (!skipInterpolationGround && !skipInterpolationGround2) {
+                        // @port: Tag the transform.
+                        FrameInterpolation_RecordCloseChild();
+                    }
                     Matrix_Pop(&gGfxMatrix);
-                    FrameInterpolation_RecordCloseChild();
                 }
             }
             prevPlayerPath = gPlayer[gPlayerNum].xPath;
@@ -1703,39 +1737,44 @@ void Background_DrawGround(void) {
                 RCP_SetupDL_20(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
             }
 
-            skipInterpolationGround = (fabsf(gPlayer[gPlayerNum].xPath - prevPlayerPath) > 12000.0f / 2.0f);
+            skipInterpolationGround = prevPlayerPath != gPlayer[gPlayerNum].xPath;
             skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
 
-            // if (skipInterpolationGround || skipInterpolationGround2) {
-            //     printf(" Ground interpolation Skipped! \n");
-            // }
+            if (skipInterpolationGround || skipInterpolationGround2) {
+                // @port Skip interpolation
+                FrameInterpolation_ShouldInterpolateFrame(false);
+            }
 
-            {
-                u32 skipInfo = skipInterpolationGround << 8 | skipInterpolationGround2 << 16;
+            for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
+                if (!skipInterpolationGround && !skipInterpolationGround2) {
+                    // @port: Tag the transform.
+                    FrameInterpolation_RecordOpenChild("360Ground", i);
+                }
 
-                // printf("skipInfo: %x \n", skipInfo);
+                Matrix_Push(&gGfxMatrix);
+                Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i],
+                                 MTXF_APPLY);
+                Matrix_SetGfxMtx(&gMasterDisp);
 
-                for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
-                    FrameInterpolation_RecordOpenChild("Ground", i | skipInfo);
-                    FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+                if (gCurrentLevel == LEVEL_FORTUNA) {
+                    gSPDisplayList(gMasterDisp++, D_FO_6001360);
+                } else if (gCurrentLevel == LEVEL_KATINA) {
+                    gSPDisplayList(gMasterDisp++, D_KA_6009250);
+                } else if (gCurrentLevel == LEVEL_BOLSE) {
+                    gSPDisplayList(gMasterDisp++, D_BO_600A810);
+                } else if (gCurrentLevel == LEVEL_VENOM_2) {
+                    gSPDisplayList(gMasterDisp++, D_VE2_6010700);
+                }
 
-                    Matrix_Push(&gGfxMatrix);
-                    Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i],
-                                     MTXF_APPLY);
-                    Matrix_SetGfxMtx(&gMasterDisp);
-                    if (gCurrentLevel == LEVEL_FORTUNA) {
-                        gSPDisplayList(gMasterDisp++, D_FO_6001360);
-                    } else if (gCurrentLevel == LEVEL_KATINA) {
-                        gSPDisplayList(gMasterDisp++, D_KA_6009250);
-                    } else if (gCurrentLevel == LEVEL_BOLSE) {
-                        gSPDisplayList(gMasterDisp++, D_BO_600A810);
-                    } else if (gCurrentLevel == LEVEL_VENOM_2) {
-                        gSPDisplayList(gMasterDisp++, D_VE2_6010700);
-                    }
-                    Matrix_Pop(&gGfxMatrix);
-
+                if (!skipInterpolationGround && !skipInterpolationGround2) {
+                    // @port: Tag the transform.
                     FrameInterpolation_RecordCloseChild();
                 }
+                Matrix_Pop(&gGfxMatrix);
+            }
+            if (skipInterpolationGround || skipInterpolationGround2) {
+                // @port renable interpolation
+                FrameInterpolation_ShouldInterpolateFrame(true);
             }
             prevPlayerPath = gPlayer[gPlayerNum].xPath;
             prevPlayerPath2 = sp1D4;
@@ -1748,7 +1787,20 @@ void Background_DrawGround(void) {
                 RCP_SetupDL_20(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
             }
 
+            skipInterpolationGround = prevPlayerPath != gPlayer[gPlayerNum].xPath;
+            skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
+
+            if (skipInterpolationGround || skipInterpolationGround2) {
+                // @port Skip interpolation
+                FrameInterpolation_ShouldInterpolateFrame(false);
+            }
+
             for (i = 0; i < ARRAY_COUNT(sGroundPositions360x); i++) {
+                if (!skipInterpolationGround && !skipInterpolationGround2) {
+                    // @port: Tag the transform.
+                    FrameInterpolation_RecordOpenChild("360Ground", i);
+                }
+
                 Matrix_Push(&gGfxMatrix);
                 Matrix_Translate(gGfxMatrix, sGroundPositions360x[i], 0.0f, sGroundPositions360z[i], MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
@@ -1757,8 +1809,18 @@ void Background_DrawGround(void) {
                 } else {
                     gSPDisplayList(gMasterDisp++, D_versus_30160A0);
                 }
+                if (!skipInterpolationGround && !skipInterpolationGround2) {
+                    // @port: Tag the transform.
+                    FrameInterpolation_RecordCloseChild();
+                }
                 Matrix_Pop(&gGfxMatrix);
             }
+            if (skipInterpolationGround || skipInterpolationGround2) {
+                // @port renable interpolation
+                FrameInterpolation_ShouldInterpolateFrame(true);
+            }
+            prevPlayerPath = gPlayer[gPlayerNum].xPath;
+            prevPlayerPath2 = sp1D4;
             break;
 
         case LEVEL_SOLAR: // WIP
