@@ -92,10 +92,10 @@ void Display_DrawHelpAlert(void) {
         switch (centered) {
             case false:
                 if (gTeamHelpActor->sfxSource[0] > 0.0f) {
-                    sp78 = 20.0f * OTRGetAspectRatio()-8;
+                    sp78 = 20.0f * OTRGetAspectRatio() - 8;
                     sp74 = M_PI / 2;
                 } else {
-                    sp78 = -20.0f * OTRGetAspectRatio()+8;
+                    sp78 = -20.0f * OTRGetAspectRatio() + 8;
                     sp74 = -M_PI / 2;
                 }
                 Matrix_Push(&gGfxMatrix);
@@ -141,7 +141,7 @@ void Display_DrawHelpAlert(void) {
                 FrameInterpolation_RecordCloseChild();
                 break;
         }
-        
+
         switch (centered) {
             case false:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
@@ -156,7 +156,7 @@ void Display_DrawHelpAlert(void) {
             case true:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
-                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdge(38.0f) , 106, 1.0f, 1.0f, "HELP!!");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdge(38.0f), 106, 1.0f, 1.0f, "HELP!!");
                 Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdge(248), 106, 1.0f, 1.0f, "HELP!!");
                 break;
         }
@@ -2014,6 +2014,17 @@ void Display_Update(void) {
     Display_DrawHelpAlert();
     sPlayersVisible[gPlayerNum] = false;
     Matrix_Pop(&gGfxMatrix);
+
+#if 0
+    RCP_SetupDL(&gMasterDisp, SETUPDL_83);
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
+    Graphics_DisplaySmallText(10, 210, 1.0f, 1.0f, "STICK_X:");
+    Graphics_DisplaySmallNumber(60, 210, (int) ABS(gInputPress->stick_x));
+    Graphics_DisplaySmallText(10, 220, 1.0f, 1.0f, "STICK_Y:");
+    Graphics_DisplaySmallNumber(60, 220, (int) ABS(gInputPress->stick_y));
+    if (gInputPress->stick_x < 0) Graphics_DisplaySmallText(110, 210, 1.0f, 1.0f, "NEG:");
+    if (gInputPress->stick_y < 0) Graphics_DisplaySmallText(110, 220, 1.0f, 1.0f, "NEG:");
+#endif
 
     // @port: @event: Call DisplayPostUpdateEvent
     CALL_EVENT(DisplayPostUpdateEvent);
