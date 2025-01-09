@@ -6722,6 +6722,9 @@ void Map_Idle_Update(void) {
     movingCamera = false;
 
     if (gControllerPress[gMainController].button & A_BUTTON) {
+        if (CVarGetInteger("gLevelSelector", 0) == 1) {
+            goto loadLevel;
+        }
         if ((gLastGameState == GSTATE_PLAY) && (sPrevMissionStatus != MISSION_COMPLETE) && !D_menu_801CEFD0) {
             Audio_PlayMapMenuSfx(1);
             D_menu_801CEFC4 = 1;
@@ -6730,6 +6733,7 @@ void Map_Idle_Update(void) {
             sMapState = MAP_PATH_CHANGE;
             D_menu_801CD94C = 0;
         } else {
+            loadLevel:
             for (i = 0; i < TEAM_ID_MAX; i++) {
                 D_ctx_80177C58[i] = gTeamShields[i];
             }
