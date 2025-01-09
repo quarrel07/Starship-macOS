@@ -25,16 +25,16 @@ Your ROM needs to be in .z64 format. If it's in .n64 format, use the following t
 
 ### 2. Download Starship from [Releases](https://github.com/HarbourMasters/Starship/releases)
 
-### 3. Generating the OTR from the ROM
+### 3. Generating the O2R from the ROM
 #### Windows
 * Extract every file from the zip into a folder of your choosing.
 * Copy your ROM to the root of the folder you extracted the zip to.
-* Run "generate_otr.bat"
+* Run "generate_o2r.bat"
 
 #### MacOS
 * Extract every file from the zip into a folder of your choosing.
 * Copy your ROM to the root of the folder you extracted the zip to.
-* Run "generate_otr.sh"
+* Run "generate_o2r.sh"
 
 ### 4. Play!
 * Launch `Starship.exe`

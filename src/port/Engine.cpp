@@ -58,14 +58,14 @@ GameEngine* GameEngine::Instance;
 static GamePool MemoryPool = { .chunk = 1024 * 512, .cursor = 0, .length = 0, .memory = nullptr };
 
 GameEngine::GameEngine() {
-    std::vector<std::string> OTRFiles;
-    if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.otr");
+    std::vector<std::string> archiveFiles;
+    if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
         std::filesystem::exists(cube_path)) {
-        OTRFiles.push_back(cube_path);
+        archiveFiles.push_back(cube_path);
     }
-    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.otr");
+    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
         std::filesystem::exists(sm64_otr_path)) {
-        OTRFiles.push_back(sm64_otr_path);
+        archiveFiles.push_back(sm64_otr_path);
     }
     if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods");
         !patches_path.empty() && std::filesystem::exists(patches_path)) {
@@ -73,12 +73,12 @@ GameEngine::GameEngine() {
             for (const auto& p : std::filesystem::recursive_directory_iterator(patches_path)) {
                 const auto ext = p.path().extension().string();
                 if (StringHelper::IEquals(ext, ".otr") || StringHelper::IEquals(ext, ".o2r")) {
-                    OTRFiles.push_back(p.path().generic_string());
+                    archiveFiles.push_back(p.path().generic_string());
                 }
 
                 if (StringHelper::IEquals(ext, ".zip")) {
                     SPDLOG_WARN("Zip files should be only used for development purposes, not for distribution");
-                    OTRFiles.push_back(p.path().generic_string());
+                    archiveFiles.push_back(p.path().generic_string());
                 }
             }
         }
@@ -92,12 +92,12 @@ GameEngine::GameEngine() {
 
     auto controlDeck = std::make_shared<LUS::ControlDeck>();
 
-    this->context->InitResourceManager(OTRFiles, {}, 3); // without this line InitWindow fails in Gui::Init()
+    this->context->InitResourceManager(archiveFiles, {}, 3); // without this line InitWindow fails in Gui::Init()
     this->context->InitConsole(); // without this line the GuiWindow constructor fails in ConsoleWindow::InitElement()
 
     auto window = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
 
-    this->context->Init(OTRFiles, {}, 3, { 32000, 1024, 1680 }, window, controlDeck);
+    this->context->Init(archiveFiles, {}, 3, { 32000, 1024, 1680 }, window, controlDeck);
 
     Ship::Context::GetInstance()->GetLogger()->set_level(
         (spdlog::level::level_enum) CVarGetInteger("gDeveloperTools.LogLevel", 1));

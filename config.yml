@@ -17,7 +17,7 @@ f7475fb11e7e6830f82883412638e8390791ab87:
     sort: OFFSET
     # logging: ERROR
     output:
-      binary: sf64.otr
+      binary: sf64.o2r
 #      code: src/assets
 #      headers: include/assets
 #      modding: src/assets
@@ -47,7 +47,7 @@ d8b1088520f7c5f81433292a9258c1184afa1457:
     sort: OFFSET
     # logging: ERROR
     output:
-      binary: sf64.otr
+      binary: sf64.o2r
 #      code: src/assets
 #      headers: include/assets
 #      modding: src/assets
@@ -77,7 +77,7 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
     sort: OFFSET
     logging: ERROR
     output:
-      binary: ./mods/sf64jp.otr
+      binary: ./mods/sf64jp.o2r
       code: src/assets
       headers: include/assets
       modding: src/assets
