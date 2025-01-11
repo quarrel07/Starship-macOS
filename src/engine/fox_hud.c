@@ -119,7 +119,7 @@ Gfx sRadioDamageDL[] = {
 };
 
 void HUD_MatrixTranslateCoordLeft(f32* transX, f32* transY) {
-    *transX = OTRGetRectDimensionFromLeftEdge(*transX) - (SCREEN_WIDTH / 2.0f);
+    *transX = OTRGetRectDimensionFromLeftEdgeCentered(*transX) - (SCREEN_WIDTH / 2.0f);
     *transY = (SCREEN_HEIGHT / 2.0f) - *transY;
 }
 
@@ -976,9 +976,9 @@ void HUD_LivesCount2_Draw(f32 x, f32 y, s32 number) {
     x2 += (2 - i) * 4;
 
     if (gShowLevelClearStatusScreen == 0) {
-        x0 = OTRGetDimensionFromRightEdge(x0);
-        x1 = OTRGetDimensionFromRightEdge(x1);
-        x2 = OTRGetDimensionFromRightEdge(x2);
+        x0 = OTRGetDimensionFromRightEdgeCentered(x0);
+        x1 = OTRGetDimensionFromRightEdgeCentered(x1);
+        x2 = OTRGetDimensionFromRightEdgeCentered(x2);
     }
 
     Lib_TextureRect_CI4(&gMasterDisp, sLivesCounterTexs[form], sLivesCounterTLUTs[form], 16, 16, x0, y0, 1.0f, 1.0f);
@@ -1236,7 +1236,7 @@ void HUD_LevelClearStatusScreen_Draw(void) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
 
         gDPSetPrimColor(gMasterDisp++, 0, 0, 90, 160, 200, 255);
-        HUD_Number_Draw(OTRGetDimensionFromLeftEdge(24.0f), 30.0f + 3.0f, D_801617C0[5], 1.0f, false, 999);
+        HUD_Number_Draw(OTRGetRectDimensionFromLeftEdgeCentered(24.0f), 30.0f + 3.0f, D_801617C0[5], 1.0f, false, 999);
 
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
         Lib_TextureRect_IA8(&gMasterDisp, aTextEnemiesDown, 64, 25, x0, y0 + 4.0f, 1.0f, 1.0f);
@@ -1498,8 +1498,8 @@ void HUD_PauseScreen_Update(void) {
                 sPauseScreenTimer[0] = 0;
 
             case 3:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
-                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdgeCentered(0), 0,
+                                       OTRGetDimensionFromRightEdgeCentered(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
 
                 gFillScreenAlphaTarget = 0;
 
@@ -1548,8 +1548,8 @@ void HUD_PauseScreen_Update(void) {
                 break;
 
             case 4:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
-                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdgeCentered(0), 0,
+                                       OTRGetDimensionFromRightEdgeCentered(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
                 if (sPauseScreenTimer[0] < 140) {
                     break;
                 }
@@ -1567,8 +1567,8 @@ void HUD_PauseScreen_Update(void) {
                 }
 
             case 5:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
-                                       OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdgeCentered(0), 0,
+                                       OTRGetDimensionFromRightEdgeCentered(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
 
                 for (i = 0; i < 6; i++) {
                     if (gPrevPlanetTeamShields[i] == -1) {
@@ -2033,22 +2033,22 @@ s32 HUD_RadarMarks_Update(void) {
 
     switch (gCurrentLevel) {
         case LEVEL_CORNERIA:
-            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetRect = OTRGetDimensionFromRightEdgeCentered(0.0f);
             gHudOffsetPers = gHudOffsetRect * 2.15f;
             break;
 
         case LEVEL_SECTOR_Z:
-            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetRect = OTRGetDimensionFromRightEdgeCentered(0.0f);
             gHudOffsetPers = gHudOffsetRect * 5.50f;
             break;
 
         case LEVEL_BOLSE:
-            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetRect = OTRGetDimensionFromRightEdgeCentered(0.0f);
             gHudOffsetPers = gHudOffsetRect * 2.70f;
             break;
 
         default:
-            gHudOffsetRect = OTRGetDimensionFromRightEdge(0.0f);
+            gHudOffsetRect = OTRGetDimensionFromRightEdgeCentered(0.0f);
             gHudOffsetPers = gHudOffsetRect * 3.35f;
             break;
     }
@@ -2250,7 +2250,7 @@ void HUD_RadioCharacterName_Draw(void) {
         RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 0, 255);
 
-        f32 xPos = OTRGetRectDimensionFromLeftEdge(73.0f);
+        f32 xPos = OTRGetRectDimensionFromLeftEdgeCentered(73.0f);
 
         switch ((s32) gRadioMsgRadioId) {
             case RCID_FOX:
@@ -2435,7 +2435,7 @@ void HUD_PlayerShieldGauge_Update(void) {
 }
 
 void HUD_PlayerShieldGauge_Draw(f32 x, f32 y) {
-    x = OTRGetDimensionFromLeftEdge(x);
+    x = OTRGetRectDimensionFromLeftEdgeCentered(x);
     RCP_SetupDL(&gMasterDisp, SETUPDL_75);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
     HUD_ShieldGaugeBars_Draw(x + 7.0f, y + 2.0f, D_801617A8, 1.0f, D_801617AC);
@@ -3011,16 +3011,16 @@ void HUD_BoostGauge_Draw(f32 xPos, f32 yPos) {
         sp68 = 24.0f;
         switch (gPlayerNum) {
             case 1:
-                xPos = OTRGetDimensionFromLeftEdge(xPos);
+                xPos = OTRGetRectDimensionFromLeftEdgeCentered(xPos);
                 break;
             case 2:
-                xPos = OTRGetDimensionFromLeftEdge(xPos);
+                xPos = OTRGetRectDimensionFromLeftEdgeCentered(xPos);
                 break;
             case 3:
-                xPos = OTRGetDimensionFromRightEdge(xPos);
+                xPos = OTRGetDimensionFromRightEdgeCentered(xPos);
                 break;
             case 4:
-                xPos = OTRGetDimensionFromRightEdge(xPos);
+                xPos = OTRGetDimensionFromRightEdgeCentered(xPos);
                 break;
         }
     } else {
@@ -3028,7 +3028,7 @@ void HUD_BoostGauge_Draw(f32 xPos, f32 yPos) {
         sp60 = 2.0f;
         sp68 = 40.0f;
         playerNum = 4; // index for Single Player
-        xPos = OTRGetDimensionFromRightEdge(xPos);
+        xPos = OTRGetDimensionFromRightEdgeCentered(xPos);
         boostGaugeXpos[playerNum] = xPos;
         boostGaugeYpos[playerNum] = yPos;
     }
@@ -3174,14 +3174,14 @@ void HUD_DrawBossHealth(void) {
         temp4 = sp3C + 6.0f;
         temp5 = temp1 + 10.0f;
 
-        temp2 = OTRGetDimensionFromLeftEdge(temp2);
-        temp4 = OTRGetDimensionFromLeftEdge(temp4);
+        temp2 = OTRGetRectDimensionFromLeftEdgeCentered(temp2);
+        temp4 = OTRGetRectDimensionFromLeftEdgeCentered(temp4);
 
         RCP_SetupDL(&gMasterDisp, SETUPDL_78_POINT);
         gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
         Lib_TextureRect_CI4(&gMasterDisp, D_1011A40, D_1011AB0, 32, 7, temp2, temp3, 1.0f, 1.0f);
         f32 border = sp3C;
-        border = OTRGetDimensionFromLeftEdge(border);
+        border = OTRGetRectDimensionFromLeftEdgeCentered(border);
         RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
         Lib_TextureRect_IA8(&gMasterDisp, D_1002040, 40, 12, border, temp1, 1.0f, 1.0f);
 
@@ -3214,7 +3214,7 @@ void HUD_DrawBossHealth(void) {
         if (D_801616C4 >= 0.88f) {
             temp6 = sp3C + 8.0f;
             temp7 = 101.0f - ((2200.0f / 69.0f) * D_801616C8) + temp1;
-            temp6 = OTRGetDimensionFromLeftEdge(temp6);
+            temp6 = OTRGetRectDimensionFromLeftEdgeCentered(temp6);
             if (D_801616C8 > 0.0f) {
                 // LTODO: FIX BOSS BAR
                 Lib_TextureRect_RGBA16(&gMasterDisp, D_Tex_800D99F8, 32, 32, temp6 + 0.5f, temp7, 0.2f, D_801616C8);
@@ -3408,7 +3408,7 @@ void HUD_BombCounter_Draw(f32 x, f32 y) {
     f32 temp_fv0;
     f32 temp;
 
-    x = OTRGetDimensionFromRightEdge(x);
+    x = OTRGetDimensionFromRightEdgeCentered(x);
 
     // Max bombs
     if (gBombCount[gPlayerNum] > 9) {
@@ -5521,7 +5521,7 @@ void HUD_Score_Draw(f32 x, f32 y) {
     f32 y1;
     f32 xScale;
 
-    x = OTRGetDimensionFromLeftEdge(x);
+    x = OTRGetRectDimensionFromLeftEdgeCentered(x);
 
     if (gHitCount > gDisplayedHitCount) {
         temp3 = gDisplayedHitCount + 1;

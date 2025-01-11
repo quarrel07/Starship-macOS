@@ -547,6 +547,14 @@ extern "C" float OTRGetDimensionFromRightEdge(float v) {
             (gfx_native_dimensions.width - v));
 }
 
+extern "C" float OTRGetDimensionFromLeftEdgeCentered(float v) {
+    return (gfx_native_dimensions.width / 2 - gfx_native_dimensions.height / 2 + (v));
+}
+
+extern "C" float OTRGetDimensionFromRightEdgeCentered(float v) {
+    return (gfx_native_dimensions.width / 2 + gfx_native_dimensions.height / 2 -
+            (gfx_native_dimensions.width - v));
+}
 // Gets the width of the current render target area
 extern "C" uint32_t OTRGetGameRenderWidth() {
     return gfx_current_dimensions.width;
@@ -563,6 +571,14 @@ extern "C" int16_t OTRGetRectDimensionFromLeftEdge(float v) {
 
 extern "C" int16_t OTRGetRectDimensionFromRightEdge(float v) {
     return ((int) ceilf(OTRGetDimensionFromRightEdge(v)));
+}
+
+extern "C" int16_t OTRGetRectDimensionFromLeftEdgeCentered(float v) {
+    return ((int) floorf(OTRGetDimensionFromLeftEdgeCentered(v)));
+}
+
+extern "C" int16_t OTRGetRectDimensionFromRightEdgeCentered(float v) {
+    return ((int) ceilf(OTRGetDimensionFromRightEdgeCentered(v)));
 }
 
 extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
