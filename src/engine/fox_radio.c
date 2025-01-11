@@ -126,11 +126,11 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
     switch (gGameState) {
         case GSTATE_TITLE:
             gRadioPrintPosY = 176;
-            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdgeCentered(85.0f);
-            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdgeCentered(80.0f);
+            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdgeForcedAspect(85.0f, 4.0f/3);
+            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdgeForcedAspect(80.0f, 4.0f/3);
             gRadioTextBoxPosY = 174.0f;
             gRadioTextBoxScaleX = 4.63f;
-            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdgeCentered(32.0f);
+            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdgeForcedAspect(32.0f, 4.0f/3);
             gRadioPortraitPosY = 174.0f;
             break;
 
@@ -146,11 +146,11 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
 
         case GSTATE_PLAY:
             gRadioPrintPosY = 180;
-            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdgeCentered(79.0f);
-            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdgeCentered(74.0f);
+            gRadioPrintPosX = OTRGetRectDimensionFromLeftEdgeForcedAspect(79.0f, 4.0f/3);
+            gRadioTextBoxPosX = OTRGetRectDimensionFromLeftEdgeForcedAspect(74.0f, 4.0f/3);
             gRadioTextBoxPosY = 178.0f;
             gRadioTextBoxScaleX = 4.53f;
-            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdgeCentered(26.0f);
+            gRadioPortraitPosX = OTRGetRectDimensionFromLeftEdgeForcedAspect(26.0f, 4.0f/3);
             gRadioPortraitPosY = 178.0f;
             break;
     }
@@ -712,12 +712,12 @@ void Radio_Draw(void) {
                 (gCurrentRadioPortrait != RCID_1000)) {
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
-                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdgeCentered(31.0f), 167, 1.0f, 1.0f, "DOWN");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdgeForcedAspect(31.0f, 4.0f/3), 167, 1.0f, 1.0f, "DOWN");
                 HUD_TeamDownWrench_Draw(1);
             }
             if (((gCurrentRadioPortrait != RCID_STATIC) && (gCurrentRadioPortrait != RCID_STATIC + 1)) &&
                 (gCurrentRadioPortrait != RCID_1000)) {
-                HUD_TeamShields_Draw(OTRGetRectDimensionFromLeftEdgeCentered(22.0f), 165.0f, gTeamShields[idx]);
+                HUD_TeamShields_Draw(OTRGetRectDimensionFromLeftEdgeForcedAspect(22.0f, 4.0f/3), 165.0f, gTeamShields[idx]);
             }
         }
 
@@ -761,11 +761,11 @@ void Radio_Draw(void) {
                 (gCurrentRadioPortrait != RCID_STATIC + 1) && (gCurrentRadioPortrait != RCID_1000)) {
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
-                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdgeCentered(31.0f), 167, 1.0f, 1.0f, "DOWN");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdgeForcedAspect(31.0f, 4.0f/3), 167, 1.0f, 1.0f, "DOWN");
             }
             if (((gCurrentRadioPortrait != RCID_STATIC) && (gCurrentRadioPortrait != RCID_STATIC + 1)) &&
                 (gCurrentRadioPortrait != RCID_1000)) {
-                HUD_TeamShields_Draw(OTRGetRectDimensionFromLeftEdgeCentered(22.0f), 165.0f, gActors[idx].health * 2.55f);
+                HUD_TeamShields_Draw(OTRGetRectDimensionFromLeftEdgeForcedAspect(22.0f, 4.0f/3), 165.0f, gActors[idx].health * 2.55f);
             }
         }
         if (((gCurrentRadioPortrait != RCID_STATIC) && (gCurrentRadioPortrait != RCID_STATIC + 1)) &&
