@@ -538,6 +538,14 @@ extern "C" float OTRGetAspectRatio() {
     return gfx_current_dimensions.aspect_ratio;
 }
 
+extern "C" float OTRGetHUDAspectRatio() {
+    if (CVarGetInteger("gHUDAspectRatio.Enabled", 0) == 0 || CVarGetInteger("gHUDAspectRatio.X", 0) == 0 || CVarGetInteger("gHUDAspectRatio.Y", 0) == 0)
+    {
+        return OTRGetAspectRatio();
+    }
+    return ((float)CVarGetInteger("gHUDAspectRatio.X", 1) / (float)CVarGetInteger("gHUDAspectRatio.Y", 1));
+}
+
 extern "C" float OTRGetDimensionFromLeftEdge(float v) {
     return (gfx_native_dimensions.width / 2 - gfx_native_dimensions.height / 2 * OTRGetAspectRatio() + (v));
 }
@@ -555,6 +563,15 @@ extern "C" float OTRGetDimensionFromRightEdgeForcedAspect(float v, float aspectR
     return (gfx_native_dimensions.width / 2 + gfx_native_dimensions.height / 2 * (aspectRatio > 0 ? aspectRatio : OTRGetAspectRatio()) -
             (gfx_native_dimensions.width - v));
 }
+
+extern "C" float OTRGetDimensionFromLeftEdgeOverride(float v) {
+    return OTRGetDimensionFromLeftEdgeForcedAspect(v, OTRGetHUDAspectRatio());
+}
+
+extern "C" float OTRGetDimensionFromRightEdgeOverride(float v) {
+    return OTRGetDimensionFromRightEdgeForcedAspect(v, OTRGetHUDAspectRatio());
+}
+
 // Gets the width of the current render target area
 extern "C" uint32_t OTRGetGameRenderWidth() {
     return gfx_current_dimensions.width;
@@ -579,6 +596,14 @@ extern "C" int16_t OTRGetRectDimensionFromLeftEdgeForcedAspect(float v, float as
 
 extern "C" int16_t OTRGetRectDimensionFromRightEdgeForcedAspect(float v, float aspectRatio) {
     return ((int) ceilf(OTRGetDimensionFromRightEdgeForcedAspect(v, aspectRatio)));
+}
+
+extern "C" int16_t OTRGetRectDimensionFromLeftEdgeOverride(float v) {
+    return OTRGetRectDimensionFromLeftEdgeForcedAspect(v, OTRGetHUDAspectRatio());
+}
+
+extern "C" int16_t OTRGetRectDimensionFromRightEdgeOverride(float v) {
+    return OTRGetRectDimensionFromRightEdgeForcedAspect(v, OTRGetHUDAspectRatio());
 }
 
 extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {

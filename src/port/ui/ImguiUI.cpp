@@ -440,6 +440,10 @@ void DrawGameMenu() {
     }
 }
 
+static const char* hudAspects[] = {
+    "Native", "Custom", "Original (4:3)", "Widescreen (16:9)", "Nintendo 3DS (5:3)", "16:10 (8:5)", "Ultrawide (21:9)"
+};
+
 void DrawEnhancementsMenu() {
     if (UIWidgets::BeginMenu("Enhancements")) {
 
@@ -480,6 +484,59 @@ void DrawEnhancementsMenu() {
             UIWidgets::CVarCheckbox("Beta: Restore old boost/brake gauge", "gRestoreOldBoostGauge", {
                 .tooltip = "Restores the old boost gauge that was seen in some beta footage"
             });
+
+            ImGui::EndMenu();
+        }
+
+        if (UIWidgets::BeginMenu("HUD")) {
+            if (UIWidgets::CVarCombobox("HUD Aspect Ratio", "gHUDAspectRatio.Selection", hudAspects, 
+            {
+                .tooltip = "Which Aspect Ratio to use when drawing the HUD (Radar, gauges and radio messages)",
+                .defaultIndex = 0,
+            })) {
+                CVarSetInteger("gHUDAspectRatio.Enabled", 1);
+                switch (CVarGetInteger("gHUDAspectRatio.Selection", 0)) {
+                    case 0:
+                        CVarSetInteger("gHUDAspectRatio.Enabled", 0);
+                        CVarSetInteger("gHUDAspectRatio.X", 0);
+                        CVarSetInteger("gHUDAspectRatio.Y", 0);
+                        break;
+                    case 1:
+                        if (CVarGetInteger("gHUDAspectRatio.X", 0) <= 0){
+                            CVarSetInteger("gHUDAspectRatio.X", 1);
+                        }
+                        if (CVarGetInteger("gHUDAspectRatio.Y", 0) <= 0){
+                            CVarSetInteger("gHUDAspectRatio.Y", 1);
+                        }
+                        break;
+                    case 2:
+                        CVarSetInteger("gHUDAspectRatio.X", 4);
+                        CVarSetInteger("gHUDAspectRatio.Y", 3);
+                        break;
+                    case 3:
+                        CVarSetInteger("gHUDAspectRatio.X", 16);
+                        CVarSetInteger("gHUDAspectRatio.Y", 9);
+                        break;
+                    case 4:
+                        CVarSetInteger("gHUDAspectRatio.X", 5);
+                        CVarSetInteger("gHUDAspectRatio.Y", 3);
+                        break;
+                    case 5:
+                        CVarSetInteger("gHUDAspectRatio.X", 8);
+                        CVarSetInteger("gHUDAspectRatio.Y", 5);
+                        break;
+                    case 6:
+                        CVarSetInteger("gHUDAspectRatio.X", 21);
+                        CVarSetInteger("gHUDAspectRatio.Y", 9);
+                        break;                    
+                }
+            }
+            
+            if (CVarGetInteger("gHUDAspectRatio.Selection", 0) == 1)
+            {
+                UIWidgets::CVarSliderInt("Horizontal: %d", "gHUDAspectRatio.X", 1, 100, 1);
+                UIWidgets::CVarSliderInt("Vertical: %d", "gHUDAspectRatio.Y", 1, 100, 1);
+            }
 
             ImGui::EndMenu();
         }
