@@ -178,9 +178,9 @@ void DrawSettingsMenu(){
                 .tooltip = "Allows controller navigation of the SOH menu bar (Settings, Enhancements,...)\nCAUTION: This will disable game inputs while the menubar is visible.\n\nD-pad to move between items, A to select, and X to grab focus on the menu bar"
             });
 #endif
-            UIWidgets::CVarCheckbox("Show Inputs", "gInputEnabled", {
-                .tooltip = "Shows currently pressed inputs on the bottom right of the screen"
-            });
+            // UIWidgets::CVarCheckbox("Show Inputs", "gInputEnabled", {
+            //     .tooltip = "Shows currently pressed inputs on the bottom right of the screen"
+            // });
             if (CVarGetInteger("gInputEnabled", 0)) {
                 UIWidgets::CVarSliderFloat("Input Scale", "gInputScale", 1.0f, 3.0f, 1.0f, {
                     .tooltip = "Sets the on screen size of the displayed inputs from the Show Inputs setting",
@@ -625,9 +625,9 @@ void DrawDebugMenu() {
             .tooltip = "Enables the Gfx Debugger window, allowing you to input commands, type help for some examples"
         });
 
-        UIWidgets::CVarCheckbox("Debug mode", "gEnableDebugMode", {
-            .tooltip = "TBD"
-        });
+        // UIWidgets::CVarCheckbox("Debug mode", "gEnableDebugMode", {
+        //     .tooltip = "TBD"
+        // });
 
         UIWidgets::CVarCheckbox("Level Selector", "gLevelSelector", {
             .tooltip = "Allows you to select any level from the main menu"
