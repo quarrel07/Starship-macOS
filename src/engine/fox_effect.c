@@ -3786,7 +3786,9 @@ void Effect_Effect395_Update(Effect395* this) {
                     D_ctx_801779A8[0] = 50.0f;
                     if (this->unk_46 == 10) {
                         gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 255;
-                        gFillScreenAlpha = gFillScreenAlphaTarget = 255;
+                        if (CVarGetInteger("gDisableGorgonFlash", 0) == 0){
+                            gFillScreenAlpha = gFillScreenAlphaTarget = 255;
+                        }
                         gFillScreenAlphaTarget = 0;
                         gFillScreenAlphaStep = 25;
                         gCameraShake = 50;

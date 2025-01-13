@@ -542,6 +542,14 @@ void DrawEnhancementsMenu() {
             ImGui::EndMenu();
         }
 
+        if (UIWidgets::BeginMenu("Accessibility")) { 
+            UIWidgets::CVarCheckbox("Disable Gorgon (Area 6 boss) screen flashes", "gDisableGorgonFlash", {
+                .tooltip = "Gorgon flashes the screen repeatedly when firing its beam or when teleporting, which causes eye pain for some players and may be harmful to those with photosensitivity.",
+                .defaultValue = false
+            });
+            ImGui::EndMenu();
+        }
+
         ImGui::EndMenu();
     }
 }
