@@ -441,7 +441,7 @@ void DrawGameMenu() {
 }
 
 static const char* hudAspects[] = {
-    "Native", "Custom", "Original (4:3)", "Widescreen (16:9)", "Nintendo 3DS (5:3)", "16:10 (8:5)", "Ultrawide (21:9)"
+    "Expand", "Custom", "Original (4:3)", "Widescreen (16:9)", "Nintendo 3DS (5:3)", "16:10 (8:5)", "Ultrawide (21:9)"
 };
 
 void DrawEnhancementsMenu() {
