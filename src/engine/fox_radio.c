@@ -123,7 +123,12 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
     gRadioMsg = msg;
     gRadioState = 100;
 
-    switch (gGameState) {
+    gRadioMsgId = Message_IdFromPtr(msg);
+    Audio_PlayVoice(gRadioMsgId);
+}
+
+void Radio_CalculatePositions(){
+        switch (gGameState) {
         case GSTATE_TITLE:
             gRadioPrintPosY = 176;
             gRadioPrintPosX = OTRGetRectDimensionFromLeftEdgeOverride(85.0f);
@@ -154,9 +159,6 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
             gRadioPortraitPosY = 178.0f;
             break;
     }
-
-    gRadioMsgId = Message_IdFromPtr(msg);
-    Audio_PlayVoice(gRadioMsgId);
 }
 
 s32 sRadioUseRedBox;
@@ -453,6 +455,8 @@ void func_radio_800BB388(void) {
     u8* texture;
     u16* palette;
     f32 sp30;
+    
+    Radio_CalculatePositions();
 
     if ((gGameState != GSTATE_MAP) && (gRadioTextBoxScaleY != 0.0f)) {
         temp_fa0 = (gRadioTextBoxScaleY / 0.26f) * 3.0f;
