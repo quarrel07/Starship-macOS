@@ -1663,7 +1663,7 @@ void Display_LockOnIndicator(void) {
                 Matrix_Scale(gGfxMatrix, var_fs0 * 1.5f, var_fs0 * 1.5f, 1.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, D_display_801615A8[i] * M_DTOR, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
-                RCP_SetupDL(&gMasterDisp, SETUPDL_67);
+                RCP_SetupDL(&gMasterDisp, SETUPDL_67_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 0, 0, 255);
                 gDPSetEnvColor(gMasterDisp++, 255, 0, 0, 255);
                 gSPDisplayList(gMasterDisp++, D_1024F60);
