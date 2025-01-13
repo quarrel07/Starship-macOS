@@ -538,6 +538,7 @@ void DrawEnhancementsMenu() {
                 UIWidgets::CVarSliderInt("Vertical: %d", "gHUDAspectRatio.Y", 1, 100, 1);
             }
 
+            ImGui::Dummy(ImVec2(ImGui::CalcTextSize("Nintendo 3DS (5:3)").x + 35, 0.0f));
             ImGui::EndMenu();
         }
 
