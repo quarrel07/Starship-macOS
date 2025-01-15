@@ -17,6 +17,7 @@ ctx.c.m2c
 *.bin
 *.otr
 *.o2r
+*.log
 *.eeprom
 assets/yaml/us/ast_test.yaml
 /audio_data
