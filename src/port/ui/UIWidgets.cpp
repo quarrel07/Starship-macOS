@@ -1,10 +1,3 @@
-//
-//  UIWidgets.cpp
-//  soh
-//
-//  Created by David Chavez on 25.08.22.
-//
-
 #include "UIWidgets.h"
 
 #include "libultraship/src/Context.h"

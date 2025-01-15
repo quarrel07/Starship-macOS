@@ -18,6 +18,8 @@ set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
 
 # Add a custom module path to locate additional CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+set(YAML_CPP_STATIC_DEFINE ON)
+add_compile_definitions(YAML_CPP_STATIC_DEFINE)
 
 if (WIN32)
 include(cmake/automate-vcpkg.cmake)
@@ -25,6 +27,11 @@ set(VCPKG_TRIPLET x64-windows-static)
 set(VCPKG_TARGET_TRIPLET x64-windows-static)
 vcpkg_bootstrap()
 vcpkg_install_packages(zlib bzip2 libzip libpng sdl2 glew glfw3 nlohmann-json tinyxml2 spdlog)
+endif()
+
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/config.yml)
+	execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/config.yml" "${CMAKE_BINARY_DIR}/config.yml")
+	execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/" "${CMAKE_BINARY_DIR}/assets/")
 endif()
 
 if (MSVC)
@@ -221,42 +228,23 @@ add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-		target_compile_definitions(${PROJECT_NAME} PRIVATE
-			"$<$<CONFIG:Debug>:"
-				"_DEBUG;"
-				"_CRT_SECURE_NO_WARNINGS;"
-				"ENABLE_DX11;"
-			">"
-			"$<$<CONFIG:Release>:"
-				"NDEBUG"
-			">"
-			"INCLUDE_GAME_PRINTF;"
-			"UNICODE;"
-			"_UNICODE"
-			STORMLIB_NO_AUTO_LINK
-			"_CRT_SECURE_NO_WARNINGS;"
-            "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS;"
-		)
-	elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-		target_compile_definitions(${PROJECT_NAME} PRIVATE
-			"$<$<CONFIG:Debug>:"
-				"NOINCLUDE_GAME_PRINTF;"
-				"_DEBUG;"
-				"_CRT_SECURE_NO_WARNINGS;"
-				"ENABLE_OPENGL"
-			">"
-			"$<$<CONFIG:Release>:"
-				"NDEBUG;"
-			">"
-			"INCLUDE_GAME_PRINTF;"
-			"WIN32;"
-			"UNICODE;"
-			"_UNICODE"
-			STORMLIB_NO_AUTO_LINK
-            "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS;"
-		)
-	endif()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        "$<$<CONFIG:Debug>:"
+            "_DEBUG;"
+            "_CRT_SECURE_NO_WARNINGS;"
+            "ENABLE_DX11;"
+        ">"
+        "$<$<CONFIG:Release>:"
+            "NDEBUG"
+        ">"
+        "INCLUDE_GAME_PRINTF;"
+        "UNICODE;"
+        "_UNICODE;"
+        "_CRT_SECURE_NO_WARNINGS;"
+        "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS;"
+    )
+    add_compile_definitions(STORMLIB_NO_AUTO_LINK)
+	set(STORMLIB_NO_AUTO_LINK ON)
 elseif (CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
 	target_compile_definitions(${PROJECT_NAME} PRIVATE
 		"$<$<CONFIG:Debug>:"
@@ -319,18 +307,24 @@ if(USE_NETWORKING)
     target_compile_definitions(${PROJECT_NAME} PRIVATE USE_NETWORKING)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+option(USE_STANDALONE "Build as a standalone executable" OFF)
+option(BUILD_STORMLIB "Build with StormLib support" OFF)
+
+option(BUILD_SM64 "Build with Super Mario 64 support" OFF)
+option(BUILD_MK64 "Build with Mario Kart 64 support" OFF)
+add_subdirectory(tools/Torch)
+target_link_libraries(${PROJECT_NAME} PRIVATE torch "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
 if(CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch")
 
-nx_generate_nacp(Lylat.nacp
+nx_generate_nacp(${PROJECT_NAME}.nacp
    NAME "${PROJECT_NAME}"
    AUTHOR "${PROJECT_TEAM}"
    VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
 )
 
 nx_create_nro(${PROJECT_NAME}
-    NACP Lylat.nacp
+    NACP ${PROJECT_NAME}.nacp
 )
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.nro DESTINATION . COMPONENT ${PROJECT_NAME})
@@ -530,20 +524,20 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
 endif()
 
 include(ExternalProject)
-ExternalProject_Add(torch
-	PREFIX torch
+ExternalProject_Add(TorchExternal
+	PREFIX TorchExternal
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/tools/Torch
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch
 )
-ExternalProject_Get_Property(torch install_dir)
+ExternalProject_Get_Property(TorchExternal install_dir)
 if (MSVC)
-  set(TORCH_EXECUTABLE ${install_dir}/src/torch-build/$<CONFIGURATION>/torch)
+  set(TORCH_EXECUTABLE ${install_dir}/src/TorchExternal-build/$<CONFIGURATION>/torch)
 else()
-  set(TORCH_EXECUTABLE ${install_dir}/src/torch-build/torch)
+  set(TORCH_EXECUTABLE ${install_dir}/src/TorchExternal-build/torch)
 endif()
 add_custom_target(
     ExtractAssets
-    DEPENDS torch
+    DEPENDS TorchExternal
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMAND ${TORCH_EXECUTABLE} o2r baserom.z64
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/sf64.o2r" "${CMAKE_BINARY_DIR}/sf64.o2r"
@@ -551,7 +545,7 @@ add_custom_target(
 
 add_custom_target(
     GeneratePortOTR
-    DEPENDS torch
+    DEPENDS TorchExternal
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMAND ${TORCH_EXECUTABLE} pack port starship.o2r o2r
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/starship.o2r" "${CMAKE_BINARY_DIR}/starship.o2r"

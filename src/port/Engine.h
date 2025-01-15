@@ -24,6 +24,7 @@ class GameEngine {
     std::shared_ptr<Ship::Context> context;
 
     GameEngine();
+    static void GenAssetFile();
     static void Create();
     void StartFrame() const;
     static void HandleAudioThread();
@@ -37,6 +38,7 @@ class GameEngine {
     static void Destroy();
     static void ProcessGfxCommands(Gfx* commands);
     static uint32_t GetInterpolationFPS();
+    static void ShowMessage(const char* title, const char* message);
 };
 
 extern "C" void* GameEngine_Malloc(size_t size);

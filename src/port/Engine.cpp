@@ -2,6 +2,7 @@
 #include "ui/ImguiUI.h"
 #include "StringHelper.h"
 
+#include "extractor/GameExtractor.h"
 #include "libultraship/src/Context.h"
 #include "resource/type/ResourceType.h"
 #include "resource/importers/AnimFactory.h"
@@ -47,7 +48,6 @@ namespace fs = std::filesystem;
 
 extern "C" {
 bool prevAltAssets = false;
-float gInterpolationStep = 0.0f;
 #include <sf64thread.h>
 #include <macros.h>
 #include "sf64audio_provisional.h"
@@ -59,14 +59,24 @@ static GamePool MemoryPool = { .chunk = 1024 * 512, .cursor = 0, .length = 0, .m
 
 GameEngine::GameEngine() {
     std::vector<std::string> archiveFiles;
-    if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
-        std::filesystem::exists(cube_path)) {
-        archiveFiles.push_back(cube_path);
+    const std::string main_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
+    const std::string assets_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
+
+#ifdef _WIN32
+    AllocConsole();
+#endif
+
+    if (std::filesystem::exists(main_path)) {
+        archiveFiles.push_back(main_path);
+    } else {
+        GenAssetFile();
+        archiveFiles.push_back(main_path);
     }
-    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
-        std::filesystem::exists(sm64_otr_path)) {
-        archiveFiles.push_back(sm64_otr_path);
+
+    if (std::filesystem::exists(assets_path)) {
+        archiveFiles.push_back(assets_path);
     }
+
     if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods");
         !patches_path.empty() && std::filesystem::exists(patches_path)) {
         if (std::filesystem::is_directory(patches_path)) {
@@ -185,6 +195,23 @@ GameEngine::GameEngine() {
 
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
+}
+
+void GameEngine::GenAssetFile() {
+    auto extractor = new GameExtractor();
+
+    if (!extractor->SelectGameFromUI()) {
+        ShowMessage("Extractor", "No game selected.");
+        return;
+    }
+    if (!extractor->ValidateChecksum()) {
+        ShowMessage("Extractor", "Invalid checksum.");
+        return;
+    }
+
+    if (!extractor->GenerateOTR()) {
+        ShowMessage("Extractor", "Failed to generate OTR.");
+    }
 }
 
 void GameEngine::Create() {
@@ -419,6 +446,15 @@ uint32_t GameEngine::GetInterpolationFPS() {
 
     return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
                               CVarGetInteger("gInterpolationFPS", 60));
+}
+
+void GameEngine::ShowMessage(const char* title, const char* message) {
+#if defined(__SWITCH__)
+    SPDLOG_ERROR(message);
+#else
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, nullptr);
+    SPDLOG_ERROR(message);
+#endif
 }
 
 extern "C" uint32_t GameEngine_GetSampleRate() {
