@@ -218,7 +218,6 @@ void GameEngine::StartFrame() const {
         default:
             break;
     }
-    this->context->GetWindow()->StartFrame();
 }
 
 #if 0
@@ -329,9 +328,17 @@ void GameEngine::AudioExit() {
 }
 
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
+    auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetInstance()->GetWindow());
+
+    if (wnd == nullptr) {
+        return;
+    }
+
+    // Process window events for resize, mouse, keyboard events
+    wnd->HandleEvents();
+
     for (const auto& m : mtx_replacements) {
-        gfx_run(Commands, m);
-        gfx_end_frame();
+        wnd->DrawAndRunGraphicsCommands(Commands, m);
     }
 
     bool curAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
