@@ -8,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  generate-port-otr:
+  generate-port-o2r:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
@@ -19,32 +19,32 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.13
       with:
-        key: ${{ runner.os }}-otr-ccache-${{ github.ref }}-${{ github.sha }}
+        key: ${{ runner.os }}-o2r-ccache-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-otr-ccache-${{ github.ref }}
-          ${{ runner.os }}-otr-ccache-
+          ${{ runner.os }}-o2r-ccache-${{ github.ref }}
+          ${{ runner.os }}-o2r-ccache-
     - name: Cache build folders
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-otr-build-${{ github.ref }}-${{ github.sha }}
+        key: ${{ runner.os }}-o2r-build-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-otr-build-${{ github.ref }}
-          ${{ runner.os }}-otr-build-
+          ${{ runner.os }}-o2r-build-${{ github.ref }}
+          ${{ runner.os }}-o2r-build-
         path: |
           tools/Torch/cmake-build-release
-    - name: Generate starship.otr
+    - name: Generate starship.o2r
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
         make -C tools/Torch type=release -j3
-        tools/Torch/cmake-build-release/torch pack port starship.otr
+        tools/Torch/cmake-build-release/torch pack port starship.o2r o2r
     - uses: actions/upload-artifact@v4
       with:
-        name: starship.otr
-        path: starship.otr
+        name: starship.o2r
+        path: starship.o2r
         retention-days: 1
 
   build-windows:
-    needs: generate-port-otr
+    needs: generate-port-o2r
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
@@ -54,11 +54,11 @@ jobs:
         run: |
           cmake -S . -B "build/x64" -G "Visual Studio 17 2022" -T v143 -A x64 -DCMAKE_BUILD_TYPE=Release
           cmake --build ./build/x64 --config Release --parallel 10
-      - name: Download starship.otr
+      - name: Download starship.o2r
         uses: actions/download-artifact@v4
         with:
-          name: starship.otr
-          path: ./build/x64/Release/starship.otr
+          name: starship.o2r
+          path: ./build/x64/Release/starship.o2r
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
@@ -66,7 +66,7 @@ jobs:
           path: ./build/x64/Release
 
   build-macos:
-    needs: generate-port-otr
+    needs: generate-port-o2r
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,16 +78,16 @@ jobs:
         run: |
           cmake -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE=Release
           cmake --build build-cmake --config Release -j3
-      - name: Download starship.otr
+      - name: Download starship.o2r
         uses: actions/download-artifact@v4
         with:
-          name: starship.otr
-          path: build-cmake/starship.otr
+          name: starship.o2r
+          path: build-cmake/starship.o2r
       - name: Create Package
         run: |
           mkdir starship-release
           mv build-cmake/Starship starship-release/
-          mv build-cmake/starship.otr starship-release/
+          mv build-cmake/starship.o2r starship-release/
       - name: Publish packaged artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -95,7 +95,7 @@ jobs:
             path: starship-release
 
   build-linux:
-    needs: generate-port-otr
+    needs: generate-port-o2r
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -123,11 +123,11 @@ jobs:
           cmake ..
           make
           sudo make install
-      - name: Download starship.otr
+      - name: Download starship.o2r
         uses: actions/download-artifact@v4
         with:
-          name: starship.otr
-          path: build-cmake/starship.otr
+          name: starship.o2r
+          path: build-cmake/starship.o2r
       - name: Build
         run: |
           cmake -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE=Release
