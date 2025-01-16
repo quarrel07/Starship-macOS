@@ -41,7 +41,6 @@
 #include "port/mods/PortEnhancements.h"
 
 #include <Fast3D/gfx_pc.h>
-#include <SDL2/SDL.h>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -219,7 +218,7 @@ bool GameEngine::GenAssetFile() {
         exit(1);
     }
 
-    ShowMessage(("Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.");
+    ShowMessage(("Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
 
     return extractor->GenerateOTR();
 }
@@ -458,11 +457,11 @@ uint32_t GameEngine::GetInterpolationFPS() {
                               CVarGetInteger("gInterpolationFPS", 60));
 }
 
-void GameEngine::ShowMessage(const char* title, const char* message) {
+void GameEngine::ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type) {
 #if defined(__SWITCH__)
     SPDLOG_ERROR(message);
 #else
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, nullptr);
+    SDL_ShowSimpleMessageBox(type, title, message, nullptr);
     SPDLOG_ERROR(message);
 #endif
 }

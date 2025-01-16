@@ -8,10 +8,10 @@
 #include <port/Engine.h>
 
 std::unordered_map<std::string, std::string> mGameList = {
-    { "d8b1088520f7c5f81433292a9258c1184afa1457", "Star Fox 64 (U) (V1.1)" },
+    { "d8b1088520f7c5f81433292a9258c1184afa1457", "Star Fox 64 (U) (V1.0)" },
     { "63b69f0ef36306257481afc250f9bc304c7162b2", "Star Fox 64 (U) (V1.0) (Uncompressed)" },
     { "09f0d105f476b00efa5303a3ebc42e60a7753b7a", "Star Fox 64 (U) (V1.1)" },
-    { "f7475fb11e7e6830f82883412638e8390791ab87", "Star Fox 64 (U) (V1.0) (Uncompressed)" },
+    { "f7475fb11e7e6830f82883412638e8390791ab87", "Star Fox 64 (U) (V1.1) (Uncompressed)" },
 };
 
 bool GameExtractor::SelectGameFromUI() {
