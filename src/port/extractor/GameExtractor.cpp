@@ -12,11 +12,13 @@ std::unordered_map<std::string, std::string> mGameList = {
     { "63b69f0ef36306257481afc250f9bc304c7162b2", "Star Fox 64 (U) (V1.0) (Uncompressed)" },
     { "09f0d105f476b00efa5303a3ebc42e60a7753b7a", "Star Fox 64 (U) (V1.1)" },
     { "f7475fb11e7e6830f82883412638e8390791ab87", "Star Fox 64 (U) (V1.1) (Uncompressed)" },
+    { "9bd71afbecf4d0a43146e4e7a893395e19bf3220", "Star Fox 64 (J) (V1.0)" },
+    { "d064229a32cc05ab85e2381ce07744eb3ffaf530", "Star Fox 64 (J) (V1.0) (Uncompressed)" },
 };
 
 bool GameExtractor::SelectGameFromUI() {
 #if !defined(__IOS__) || !defined(__ANDROID__) || !defined(__SWITCH__)
-    auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64 *.n64 *.v64" }).result();
+    auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64" }).result();
 
     if (selection.empty()) {
         return false;
