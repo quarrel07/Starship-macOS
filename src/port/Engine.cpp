@@ -69,8 +69,16 @@ GameEngine::GameEngine() {
     if (std::filesystem::exists(main_path)) {
         archiveFiles.push_back(main_path);
     } else {
-        GenAssetFile();
-        archiveFiles.push_back(main_path);
+        if (ShowYesNoBox("No O2R Files", "No O2R files found. Generate one now?") == IDYES) {
+            if(!GenAssetFile()){
+                ShowMessage("Error", "An error occured, no O2R file was generated.\n\nExiting...");
+                exit(1);
+            } else {
+                archiveFiles.push_back(main_path);
+            }
+        } else {
+            exit(1);
+        }
     }
 
     if (std::filesystem::exists(assets_path)) {
@@ -197,21 +205,23 @@ GameEngine::GameEngine() {
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 }
 
-void GameEngine::GenAssetFile() {
+bool GameEngine::GenAssetFile() {
     auto extractor = new GameExtractor();
 
     if (!extractor->SelectGameFromUI()) {
-        ShowMessage("Extractor", "No game selected.");
-        return;
-    }
-    if (!extractor->ValidateChecksum()) {
-        ShowMessage("Extractor", "Invalid checksum.");
-        return;
+        ShowMessage("Error", "No ROM selected.\n\nExiting...");
+        exit(1);
     }
 
-    if (!extractor->GenerateOTR()) {
-        ShowMessage("Extractor", "Failed to generate OTR.");
+    auto game = extractor->ValidateChecksum();
+    if (!game.has_value()) {
+        ShowMessage("Unsupported ROM", "The provided ROM is not supported.\n\nCheck the readme for a list of supported versions.");
+        exit(1);
     }
+
+    ShowMessage(("Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.");
+
+    return extractor->GenerateOTR();
 }
 
 void GameEngine::Create() {
@@ -455,6 +465,30 @@ void GameEngine::ShowMessage(const char* title, const char* message) {
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, nullptr);
     SPDLOG_ERROR(message);
 #endif
+}
+
+int GameEngine::ShowYesNoBox(const char* title, const char* box) {
+    int ret;
+#ifdef _WIN32
+    ret = MessageBoxA(nullptr, box, title, MB_YESNO | MB_ICONQUESTION);
+#else
+    SDL_MessageBoxData boxData = { 0 };
+    SDL_MessageBoxButtonData buttons[2] = { { 0 } };
+
+    buttons[0].buttonid = IDYES;
+    buttons[0].text = "Yes";
+    buttons[0].flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+    buttons[1].buttonid = IDNO;
+    buttons[1].text = "No";
+    buttons[1].flags = SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT;
+    boxData.numbuttons = 2;
+    boxData.flags = SDL_MESSAGEBOX_INFORMATION;
+    boxData.message = box;
+    boxData.title = title;
+    boxData.buttons = buttons;
+    SDL_ShowMessageBox(&boxData, &ret);
+#endif
+    return ret;
 }
 
 extern "C" uint32_t GameEngine_GetSampleRate() {

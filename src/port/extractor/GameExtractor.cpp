@@ -8,8 +8,10 @@
 #include <port/Engine.h>
 
 std::unordered_map<std::string, std::string> mGameList = {
-    { "f7475fb11e7e6830f82883412638e8390791ab87", "Star Fox 64 (U) (V1.1) (Uncompressed)" },
-    { "09f0d105f476b00efa5303a3ebc42e60a7753b7a", "Star Fox 64 (U) (V1.1)" }
+    { "d8b1088520f7c5f81433292a9258c1184afa1457", "Star Fox 64 (U) (V1.1)" },
+    { "63b69f0ef36306257481afc250f9bc304c7162b2", "Star Fox 64 (U) (V1.0) (Uncompressed)" },
+    { "09f0d105f476b00efa5303a3ebc42e60a7753b7a", "Star Fox 64 (U) (V1.1)" },
+    { "f7475fb11e7e6830f82883412638e8390791ab87", "Star Fox 64 (U) (V1.0) (Uncompressed)" },
 };
 
 bool GameExtractor::SelectGameFromUI() {
@@ -34,7 +36,13 @@ bool GameExtractor::SelectGameFromUI() {
 std::optional<std::string> GameExtractor::ValidateChecksum() const {
     const auto rom = new N64::Cartridge(this->mGameData);
     rom->Initialize();
-    return mGameList[rom->GetHash()];
+    auto hash = rom->GetHash();
+    
+    if (mGameList.find(hash) == mGameList.end()) {
+        return std::nullopt;
+    }
+
+    return mGameList[hash];
 }
 
 bool GameExtractor::GenerateOTR() const {
@@ -43,8 +51,7 @@ bool GameExtractor::GenerateOTR() const {
     try {
         Companion::Instance->Init(ExportType::Binary);
     } catch (const std::exception& e) {
-        GameEngine::ShowMessage("Failed to generate OTR", e.what());
-        exit(1);
+        return false;
     }
 
     return true;

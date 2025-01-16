@@ -15,7 +15,12 @@ struct GamePool {
 #include <Fast3D/gfx_pc.h>
 #include "libultraship/src/Context.h"
 
-
+#ifndef IDYES
+#define IDYES 6
+#endif
+#ifndef IDNO
+#define IDNO 7
+#endif
 
 class GameEngine {
   public:
@@ -24,7 +29,7 @@ class GameEngine {
     std::shared_ptr<Ship::Context> context;
 
     GameEngine();
-    static void GenAssetFile();
+    static bool GenAssetFile();
     static void Create();
     void StartFrame() const;
     static void HandleAudioThread();
@@ -38,6 +43,8 @@ class GameEngine {
     static void Destroy();
     static void ProcessGfxCommands(Gfx* commands);
     static uint32_t GetInterpolationFPS();
+
+    static int ShowYesNoBox(const char* title, const char* box);
     static void ShowMessage(const char* title, const char* message);
 };
 

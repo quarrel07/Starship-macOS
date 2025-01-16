@@ -7,7 +7,7 @@
 
 class GameExtractor {
 public:
-    static void GenAssetFile();
+    static bool GenAssetFile();
     std::optional<std::string> ValidateChecksum() const;
     bool SelectGameFromUI();
     bool GenerateOTR() const;
