@@ -95,7 +95,7 @@ jobs:
           mkdir starship-release
           mv build-cmake/Starship starship-release/
           mv build-cmake/starship.o2r starship-release/
-          mv config.json starship-release/
+          mv config.yml starship-release/
           mv assets starship-release/
       - name: Publish packaged artifacts
         uses: actions/upload-artifact@v4
@@ -151,5 +151,5 @@ jobs:
           name: Starship-linux
           path: |
             starship.appimage
-            config.json
+            config.yml
             assets
