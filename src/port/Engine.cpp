@@ -2,6 +2,7 @@
 #include "ui/ImguiUI.h"
 #include "StringHelper.h"
 
+#include "extractor/GameExtractor.h"
 #include "libultraship/src/Context.h"
 #include "resource/type/ResourceType.h"
 #include "resource/importers/AnimFactory.h"
@@ -40,14 +41,12 @@
 #include "port/mods/PortEnhancements.h"
 
 #include <Fast3D/gfx_pc.h>
-#include <SDL2/SDL.h>
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
 extern "C" {
 bool prevAltAssets = false;
-float gInterpolationStep = 0.0f;
 #include <sf64thread.h>
 #include <macros.h>
 #include "sf64audio_provisional.h"
@@ -59,14 +58,32 @@ static GamePool MemoryPool = { .chunk = 1024 * 512, .cursor = 0, .length = 0, .m
 
 GameEngine::GameEngine() {
     std::vector<std::string> archiveFiles;
-    if (const std::string cube_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
-        std::filesystem::exists(cube_path)) {
-        archiveFiles.push_back(cube_path);
+    const std::string main_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
+    const std::string assets_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
+
+#ifdef _WIN32
+    AllocConsole();
+#endif
+
+    if (std::filesystem::exists(main_path)) {
+        archiveFiles.push_back(main_path);
+    } else {
+        if (ShowYesNoBox("No O2R Files", "No O2R files found. Generate one now?") == IDYES) {
+            if(!GenAssetFile()){
+                ShowMessage("Error", "An error occured, no O2R file was generated.\n\nExiting...");
+                exit(1);
+            } else {
+                archiveFiles.push_back(main_path);
+            }
+        } else {
+            exit(1);
+        }
     }
-    if (const std::string sm64_otr_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
-        std::filesystem::exists(sm64_otr_path)) {
-        archiveFiles.push_back(sm64_otr_path);
+
+    if (std::filesystem::exists(assets_path)) {
+        archiveFiles.push_back(assets_path);
     }
+
     if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods");
         !patches_path.empty() && std::filesystem::exists(patches_path)) {
         if (std::filesystem::is_directory(patches_path)) {
@@ -185,6 +202,25 @@ GameEngine::GameEngine() {
 
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
+}
+
+bool GameEngine::GenAssetFile() {
+    auto extractor = new GameExtractor();
+
+    if (!extractor->SelectGameFromUI()) {
+        ShowMessage("Error", "No ROM selected.\n\nExiting...");
+        exit(1);
+    }
+
+    auto game = extractor->ValidateChecksum();
+    if (!game.has_value()) {
+        ShowMessage("Unsupported ROM", "The provided ROM is not supported.\n\nCheck the readme for a list of supported versions.");
+        exit(1);
+    }
+
+    ShowMessage(("Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
+
+    return extractor->GenerateOTR();
 }
 
 void GameEngine::Create() {
@@ -419,6 +455,39 @@ uint32_t GameEngine::GetInterpolationFPS() {
 
     return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
                               CVarGetInteger("gInterpolationFPS", 60));
+}
+
+void GameEngine::ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type) {
+#if defined(__SWITCH__)
+    SPDLOG_ERROR(message);
+#else
+    SDL_ShowSimpleMessageBox(type, title, message, nullptr);
+    SPDLOG_ERROR(message);
+#endif
+}
+
+int GameEngine::ShowYesNoBox(const char* title, const char* box) {
+    int ret;
+#ifdef _WIN32
+    ret = MessageBoxA(nullptr, box, title, MB_YESNO | MB_ICONQUESTION);
+#else
+    SDL_MessageBoxData boxData = { 0 };
+    SDL_MessageBoxButtonData buttons[2] = { { 0 } };
+
+    buttons[0].buttonid = IDYES;
+    buttons[0].text = "Yes";
+    buttons[0].flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+    buttons[1].buttonid = IDNO;
+    buttons[1].text = "No";
+    buttons[1].flags = SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT;
+    boxData.numbuttons = 2;
+    boxData.flags = SDL_MESSAGEBOX_INFORMATION;
+    boxData.message = box;
+    boxData.title = title;
+    boxData.buttons = buttons;
+    SDL_ShowMessageBox(&boxData, &ret);
+#endif
+    return ret;
 }
 
 extern "C" uint32_t GameEngine_GetSampleRate() {
