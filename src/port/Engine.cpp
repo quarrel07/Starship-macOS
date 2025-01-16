@@ -47,6 +47,7 @@ namespace fs = std::filesystem;
 
 extern "C" {
 bool prevAltAssets = false;
+bool gEnableGammaBoost = true;
 #include <sf64thread.h>
 #include <macros.h>
 #include "sf64audio_provisional.h"
@@ -214,6 +215,7 @@ GameEngine::GameEngine() {
                                     "SoundFont", static_cast<uint32_t>(SF64::ResourceType::SoundFont), 0);
 
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
+    gEnableGammaBoost = CVarGetInteger("gGraphics.GammaMode", 1) == 1;
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 }
 
@@ -405,7 +407,9 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
         return;
     }
 
-    wnd->EnableSRGBMode();
+    if(gEnableGammaBoost) {
+        wnd->EnableSRGBMode();
+    }
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
 
     std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;

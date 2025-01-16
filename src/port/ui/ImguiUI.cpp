@@ -376,10 +376,10 @@ void DrawSettingsMenu(){
         }
 
         UIWidgets::PaddedEnhancementCheckbox("Enable Alternative Assets", "gEnhancements.Mods.AlternateAssets");
+        UIWidgets::EnhancementCheckbox("Enable Gamma Boost (Needs reload)", "gGraphics.GammaMode", false, "Gamma Boost is disabled in the current build of the game", UIWidgets::CheckboxGraphics::Cross, true);
 
         // If more filters are added to LUS, make sure to add them to the filters list here
         ImGui::Text("Texture Filter (Needs reload)");
-
         UIWidgets::EnhancementCombobox("gTextureFilter", filters, 0);
 
         UIWidgets::Spacer(0);
