@@ -64,7 +64,7 @@ jobs:
           mkdir starship-release
           mv build/x64/Release/Starship.exe starship-release/
           mv build/x64/Release/starship.o2r starship-release/
-          mv config.json starship-release/
+          mv config.yml starship-release/
           mv assets starship-release/
       - name: Upload build
         uses: actions/upload-artifact@v4
