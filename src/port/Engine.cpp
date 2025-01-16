@@ -66,6 +66,10 @@ GameEngine::GameEngine() {
     AllocConsole();
 #endif
 
+    if (!fs::exists("mods")) {
+        fs::create_directories("mods");
+    }
+
     if (std::filesystem::exists(main_path)) {
         archiveFiles.push_back(main_path);
     } else {
@@ -78,9 +82,6 @@ GameEngine::GameEngine() {
             }
 
             if (ShowYesNoBox("Extraction Complete", "ROM Extracted. Extract another?") == IDYES) {
-                if (!fs::exists("mods")) {
-                    fs::create_directories("mods");
-                }
                 if(!GenAssetFile()){
                     ShowMessage("Error", "An error occured, no O2R file was generated.");
                 } else {
