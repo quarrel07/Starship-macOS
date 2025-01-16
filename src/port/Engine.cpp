@@ -78,6 +78,9 @@ GameEngine::GameEngine() {
             }
 
             if (ShowYesNoBox("Extraction Complete", "ROM Extracted. Extract another?") == IDYES) {
+                if (!fs::exists("mods")) {
+                    fs::create_directories("mods");
+                }
                 if(!GenAssetFile()){
                     ShowMessage("Error", "An error occured, no O2R file was generated.");
                 } else {
