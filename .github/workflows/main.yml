@@ -66,6 +66,7 @@ jobs:
           mv build/x64/Release/starship.o2r starship-release/
           mv config.yml starship-release/
           mv assets starship-release/
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt" -OutFile "starship-release/gamecontrollerdb.txt"
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
@@ -97,6 +98,7 @@ jobs:
           mv build-cmake/starship.o2r starship-release/
           mv config.yml starship-release/
           mv assets starship-release/
+          wget -O starship-release/gamecontrollerdb.txt https://github.com/mdqinc/SDL_GameControllerDB/blob/master/gamecontrollerdb.txt
       - name: Publish packaged artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -142,7 +144,7 @@ jobs:
           cmake -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE=Release
           cmake --build build-cmake --config Release -j3
           (cd build-cmake && cpack -G External)
-
+          wget -O gamecontrollerdb.txt https://github.com/mdqinc/SDL_GameControllerDB/blob/master/gamecontrollerdb.txt
           mv README.md readme.txt
           mv build-cmake/*.appimage starship.appimage
       - name: Upload build
@@ -153,3 +155,4 @@ jobs:
             starship.appimage
             config.yml
             assets
+            gamecontrollerdb.txt
