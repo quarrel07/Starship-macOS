@@ -58,12 +58,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: starship.o2r
-          path: ./build/x64/Release/starship.o2r
+          path: ./build/x64/Release
+      - name: Create Package
+        run: |
+          mkdir starship-release
+          mv build/x64/Release/Starship.exe starship-release/
+          mv build/x64/Release/starship.o2r starship-release/
+          mv config.json starship-release/
+          mv assets starship-release/
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
           name: starship-windows
-          path: ./build/x64/Release
+          path: starship-release
 
   build-macos:
     needs: generate-port-o2r
@@ -82,12 +89,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: starship.o2r
-          path: build-cmake/starship.o2r
+          path: ./build-cmake
       - name: Create Package
         run: |
           mkdir starship-release
           mv build-cmake/Starship starship-release/
           mv build-cmake/starship.o2r starship-release/
+          mv config.json starship-release/
+          mv assets starship-release/
       - name: Publish packaged artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -127,7 +136,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: starship.o2r
-          path: build-cmake/starship.o2r
+          path: ./build-cmake
       - name: Build
         run: |
           cmake -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE=Release
@@ -142,3 +151,5 @@ jobs:
           name: Starship-linux
           path: |
             starship.appimage
+            config.json
+            assets

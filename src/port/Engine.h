@@ -30,20 +30,18 @@ class GameEngine {
     std::shared_ptr<Ship::Context> context;
 
     GameEngine();
+    void StartFrame() const;
     static bool GenAssetFile();
     static void Create();
-    void StartFrame() const;
     static void HandleAudioThread();
-    static void ProcessAudioTask(s16* audio_buffer);
     static void StartAudioFrame();
     static void EndAudioFrame();
     static void AudioInit();
     static void AudioExit();
     static void RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements);
-    void ProcessFrame(void (*run_one_game_iter)()) const;
     static void Destroy();
-    static void ProcessGfxCommands(Gfx* commands);
     static uint32_t GetInterpolationFPS();
+    static void ProcessGfxCommands(Gfx* commands);
 
     static int ShowYesNoBox(const char* title, const char* box);
     static void ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type = SDL_MESSAGEBOX_ERROR);
