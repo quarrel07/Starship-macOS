@@ -657,6 +657,9 @@ s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, uintptr_t devAddr
                   OSMesgQueue* retQueue, s32 medium, const char* dmaType) {
     OSPiHandle* handle;
 
+    memcpy(ramAddr, devAddr, size);
+    return 0;
+
     // switch (medium) {
     //     case MEDIUM_CART:
     //         handle = osCartRomInit();
@@ -795,9 +798,9 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
 }
 
 void AudioLoad_ProcessLoads(s32 resetStatus) {
-    // AudioLoad_ProcessSlowLoads(resetStatus);
-    // AudioLoad_ProcessSamplePreloads(resetStatus);
-    // AudioLoad_ProcessAsyncLoads(resetStatus);
+    AudioLoad_ProcessSlowLoads(resetStatus);
+    AudioLoad_ProcessSamplePreloads(resetStatus);
+    AudioLoad_ProcessAsyncLoads(resetStatus);
 }
 
 static const char devstr27[] = "Clear Workarea %x -%x size %x \n";
@@ -907,6 +910,7 @@ s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
     Sample* sample;
     AudioSlowLoad* slowLoad;
 
+    *status = SLOW_LOAD_DONE;
     sample = AudioLoad_GetFontSample(fontId, instId);
     return 0;
 

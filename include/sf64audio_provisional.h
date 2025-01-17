@@ -517,20 +517,20 @@ typedef struct SequenceLayer {
 } SequenceLayer; // size = 0x80
 
 typedef struct UnkStruct_800097A8 {
-    /* 0x00 */ s16* unk_0;
-    /* 0x04 */ s32 unk_4;
-    /* 0x08 */ s32 unk_8;
-    /* 0x0C */ s16* unk_C;
+    /* 0x00 */ s16* inputBuffer;
+    /* 0x04 */ s32 remainingLength;
+    /* 0x08 */ s32 totalLength;
+    /* 0x0C */ s16* tempBuffer;
     /* 0x10 */ char pad10[4];
-    /* 0x14 */ struct SampleDma* unk_14;
-    /* 0x18 */ s16 unk18;
+    /* 0x14 */ struct SampleDma* dma;
+    /* 0x18 */ s16 accumulator;
     /* 0x1A */ char pad1A[6];
-} UnkStruct_800097A8; /* size = 0x20 */
+} DMADecompress; /* size = 0x20 */
 
 typedef struct {
     /* 0x000 */ s16 adpcmdecState[16];
     /* 0x020 */ s16 finalResampleState[16];
-    /* 0x040 */ UnkStruct_800097A8 unk_40;
+    /* 0x040 */ DMADecompress unk_40;
     /* 0x060 */ char pad[0x20];
     /* 0x080 */ s16 panSamplesBuffer[0x20];
     // /* 0x040 */ s16 mixEnvelopeState[32];

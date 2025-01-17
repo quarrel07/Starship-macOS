@@ -2,6 +2,7 @@
 #include "sf64audio_provisional.h"
 #include "audio/mixer.h"
 #include "endianness.h"
+#include "port/Engine.h"
 
 #define DMEM_WET_SCRATCH 0x470
 #define DMEM_COMPRESSED_ADPCM_DATA 0x990
@@ -390,7 +391,7 @@ void AudioSynth_HartleyTransform(f32* arg0, s32 arg1, f32* arg2) {
 
 // https://decomp.me/scratch/TZQNS
 #ifdef NON_MATCHING
-void func_80009124(s16** arg0) {
+void AudioSynth_DecodePCMChunk(s16** arg0) {
     s16* var_a1;
     s32 temp_a0;
     u8 temp_s0;
@@ -517,22 +518,22 @@ void func_80009124(s16** arg0) {
     *arg0 = var_a1;
 }
 #else
-void func_80009124(s16** arg0);
-#pragma GLOBAL_ASM("asm/us/rev1/nonmatchings/audio/audio_synthesis/func_80009124.s")
+void AudioSynth_DecodePCMChunk(s16** arg0);
+#pragma GLOBAL_ASM("asm/us/rev1/nonmatchings/audio/audio_synthesis/AudioSynth_DecodePCMChunk.s")
 #endif
 
-void func_80009504(s16* arg0, UnkStruct_800097A8* arg1) {
+void AudioSynth_DecodePCM(s16* arg0, DMADecompress* arg1) {
     s32 i;
 
-    if (arg1->unk_0 != NULL) {
-        arg1->unk_C = arg1->unk_0;
-        arg1->unk_0 = 0;
+    if (arg1->inputBuffer != NULL) {
+        arg1->tempBuffer = arg1->inputBuffer;
+        arg1->inputBuffer = 0;
     }
 
-    arg1->unk18 += D_8014C1B4;
-    while (arg1->unk18 > 0x1000) {
-        func_80009124(&arg1->unk_C);
-        arg1->unk18 -= 0x1000;
+    arg1->accumulator += D_8014C1B4;
+    while (arg1->accumulator > 0x1000) {
+        AudioSynth_DecodePCMChunk(&arg1->tempBuffer);
+        arg1->accumulator -= 0x1000;
     }
 
     AudioSynth_InverseDiscreteCosineTransform(D_80145D48, D_80146148, 8, D_80146548);
@@ -551,66 +552,63 @@ void func_80009504(s16* arg0, UnkStruct_800097A8* arg1) {
     }
 }
 
-s32 func_8000967C(s32 length, s16* ramAddr, UnkStruct_800097A8* arg2) {
+s32 AudioSynth_DecompressSample(s32 length, s16* ramAddr, DMADecompress* arg2) {
     s32 pad;
-    s32 temp_t0;
+    s32 chunkSize;
     s32 i;
-    s32 var_s1;
-    s16* temp_t7 = (s16*) arg2->unk_14->ramAddr;
+    s32 sampleIdx;
+    s16* buffer = (s16*) arg2->dma->ramAddr;
 
-    for (i = 0; i < arg2->unk_4; i++) {
-        ramAddr[i] = temp_t7[i];
+    for (i = 0; i < arg2->remainingLength; i++) {
+        ramAddr[i] = buffer[i];
     }
 
-    var_s1 = arg2->unk_4;
-    temp_t0 = (length - arg2->unk_4 + 0xFF) / 256;
-    arg2->unk_4 = (temp_t0 * 256) + arg2->unk_4 - length;
+    sampleIdx = arg2->remainingLength;
+    chunkSize = (length - arg2->remainingLength + 0xFF) / 256;
+    arg2->remainingLength = (chunkSize * 256) + arg2->remainingLength - length;
 
-    for (i = 0; i < temp_t0; i++) {
-        func_80009504(&ramAddr[var_s1], arg2);
-        var_s1 += 0x100;
+    for (i = 0; i < chunkSize; i++) {
+        AudioSynth_DecodePCM(&ramAddr[sampleIdx], arg2);
+        sampleIdx += 0x100;
     }
 
-    for (i = 0; i < arg2->unk_4; i++) {
-        temp_t7[i] = ramAddr[length + i];
+    for (i = 0; i < arg2->remainingLength; i++) {
+        buffer[i] = ramAddr[length + i];
     }
-    return temp_t0;
+    return chunkSize;
 }
 
-u8* func_800097A8(Sample* sample, s32 length, u32 flags, UnkStruct_800097A8* arg3) {
-    // @port: We don't need to do a dma call
-    return sample->sampleAddr;
+static SampleDma pad2 = {0};
+static SampleDma sp1C = {0};
+
+u8* AudioSynth_ProcessDecompression(Sample* sample, s32 length, u32 flags, DMADecompress* arg3) {
     s32 pad1;
-    SampleDma* pad2;
-    SampleDma* sp1C;
+
+    if(sp1C.ramAddr == NULL){
+        sp1C.ramAddr = GameEngine_Malloc(0x1000 * 2);
+    }
+
+    if(pad2.ramAddr == NULL){
+        pad2.ramAddr = GameEngine_Malloc(0x1000 * 2);
+    }
 
     if (flags == A_INIT) {
-        arg3->unk_0 = (s16*) sample->sampleAddr;
-        arg3->unk_4 = 0;
-        arg3->unk_8 = 0;
-        arg3->unk18 = 0;
-
-        if (gSampleDmaReuseQueue1RdPos != gSampleDmaReuseQueue1WrPos) {
-            arg3->unk_14 = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
-            arg3->unk_14->devAddr = -1;
-            arg3->unk_14->sizeUnused = 0;
-        }
+        arg3->inputBuffer = (s16*) sample->sampleAddr;
+        arg3->remainingLength = 0;
+        arg3->totalLength = 0;
+        arg3->accumulator = 0;
+        arg3->dma = &pad2;
+        arg3->dma->devAddr = -1;
+        arg3->dma->sizeUnused = 0;
     }
 
-    if (gSampleDmaReuseQueue1RdPos != gSampleDmaReuseQueue1WrPos) {
-        sp1C = &gSampleDmas[gSampleDmaReuseQueue1[gSampleDmaReuseQueue1RdPos++]];
-    }
-
-    if (1) {} //! FAKE
-
-    sp1C->ttl = 2;
+    sp1C.ttl = 2;
     // @port: (uintptr_t)
-    sp1C->devAddr = (uintptr_t) sample->sampleAddr;
-    sp1C->sizeUnused = length * 2;
-    pad2 = arg3->unk_14;
-    pad2->ttl = 2;
-    arg3->unk_8 += func_8000967C(length, (s16*) sp1C->ramAddr, arg3);
-    return sp1C->ramAddr;
+    sp1C.devAddr = (uintptr_t) sample->sampleAddr;
+    sp1C.sizeUnused = length * 2;
+    pad2.ttl = 2;
+    arg3->totalLength += AudioSynth_DecompressSample(length, (s16*) sp1C.ramAddr, arg3);
+    return sp1C.ramAddr;
 }
 
 Acmd* AudioSynth_LoadRingBufferPart(Acmd* aList, u16 dmem, u16 startPos, s32 size, s32 reverbIndex) {
@@ -888,6 +886,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
     s32 dmemUncompressedAddrOffset1;
     u32 sampleslenFixedPoint;
     u8* samplesToLoadAddr;
+    uintptr_t buffAddr;
     s32 gain;
     u32 nEntries;
     s32 aligned;
@@ -1009,7 +1008,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                     }
                 }
 
-                switch (bookSample->codec) {
+                switch ((uint8_t) bookSample->codec) {
                     case CODEC_ADPCM:
                         frameSize = 9;
                         skipInitialSamples = SAMPLES_PER_FRAME;
@@ -1022,11 +1021,18 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                         sampleDmaStart = 0;
                         break;
 
-                    case CODEC_S16_INMEMORY:
+                    case CODEC_S16_INMEMORY: {
+                        buffAddr = AudioSynth_ProcessDecompression(bookSample, numSamplesToLoadAdj, flags,
+                                                 &synthState->synthesisBuffers->unk_40);
+                        if (0) {}
+                        aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(buffAddr), DMEM_UNCOMPRESSED_NOTE,
+                                    (numSamplesToLoadAdj + SAMPLES_PER_FRAME) * 2);
+                        flags = A_CONTINUE;
                         skipBytes = 0;
                         numSamplesProcessed = numSamplesToLoadAdj;
                         dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
                         goto skip;
+                    }
 
                     case CODEC_S16:
                         skipBytes = 0;
