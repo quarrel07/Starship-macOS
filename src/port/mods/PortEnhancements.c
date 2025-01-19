@@ -305,6 +305,13 @@ void OnLivesCounterDraw(IEvent* ev){
     HUD_LivesCount2_Draw(258.0f, SCREEN_HEIGHT - 20, gLifeCount[gPlayerNum]);
 }
 
+void OnPlayerShootChargedPre(PlayerActionPreShootChargedEvent* ev){
+    if (CVarGetInteger("gRapidFire", 0) == 1) {
+        ev->player->shotTimer = 4;
+    }
+
+}
+
 void PortEnhancements_Init() {
     PortEnhancements_Register();
 
@@ -323,6 +330,7 @@ void PortEnhancements_Init() {
     REGISTER_LISTENER(PlayerActionBoostEvent, OnPlayerBoost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerActionBrakeEvent, OnPlayerBrake, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerActionPostShootEvent, OnPlayerShootPost, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PlayerActionPreShootChargedEvent, OnPlayerShootChargedPre, EVENT_PRIORITY_NORMAL);
 }
 
 void PortEnhancements_Register() {
