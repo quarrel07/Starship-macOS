@@ -3367,7 +3367,7 @@ bool Player_UpdateLockOn(Player* player) {
         }
     }
 
-    if (gInputPress->button & A_BUTTON) {
+    if (gInputPress->button & (CVarGetInteger("gLtoCharge", 0) == 1 ? L_TRIG : A_BUTTON)) {
         for (i = 0; i < ARRAY_COUNT(gActors); i++) {
             if ((gActors[i].obj.status == OBJ_ACTIVE) && (gActors[i].lockOnTimers[player->num] != 0)) {
                 if ((gPlayerShots[14 - player->num].obj.status == SHOT_FREE) ||
