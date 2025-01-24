@@ -28,7 +28,7 @@ jobs:
           wget https://github.com/leethomason/tinyxml2/archive/refs/tags/10.0.0.tar.gz
           tar -xzf 10.0.0.tar.gz
           cd tinyxml2-10.0.0
-          mkdir build
+          mkdir -p build
           cd build
           cmake ..
           make
