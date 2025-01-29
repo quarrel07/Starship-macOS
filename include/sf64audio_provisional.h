@@ -398,12 +398,12 @@ typedef struct {
 } AdsrState; // size = 0x24
 
 typedef struct {
-    /* 0x00 */ u8 stereoHeadsetEffects : 1;
-    /* 0x00 */ u8 usesHeadsetPanEffects : 1;
-    /* 0x00 */ u8 unused : 2;
-    /* 0x00 */ u8 bit2 : 2;
-    /* 0x00 */ u8 strongRight : 1;
     /* 0x00 */ u8 strongLeft : 1;
+    /* 0x00 */ u8 strongRight : 1;
+    /* 0x00 */ u8 bit2 : 2;
+    /* 0x00 */ u8 unused : 2;
+    /* 0x00 */ u8 usesHeadsetPanEffects : 1;
+    /* 0x00 */ u8 stereoHeadsetEffects : 1;
 } StereoData; // size = 0x1
 
 typedef union {
@@ -773,13 +773,22 @@ typedef struct {
         };
     };
     union {
-        void* data;
+        uintptr_t asPtr;
+        u32 data;
         f32 asFloat;
         s32 asInt;
-        uintptr_t asPtr;
-        u16 asUShort;
-        s8 asSbyte;
-        u8 asUbyte;
+        struct {
+            u8 pad2[2];
+            u16 asUShort;
+        };
+        struct {
+            u8 pad1[3];
+            s8 asSbyte;
+        };
+        struct {
+            u8 pad0[3];
+            u8 asUbyte;
+        };
         u32 asUInt;
     };
 } AudioCmd; // size = 0x8
