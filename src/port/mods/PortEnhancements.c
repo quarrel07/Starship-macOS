@@ -267,7 +267,7 @@ static const char* sBoostGaugeArrow[] = {
 };
 
 void OnBoostGaugeDraw(IEvent* event){
-    bool restore = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+    bool restore = CVarGetInteger("gRestoreBetaBoostGauge", 0) == 1;
 
     if(!restore){
         return;
@@ -286,7 +286,7 @@ void OnBoostGaugeDraw(IEvent* event){
 }
 
 void OnBombCounterDraw(IEvent* ev){
-    bool restore = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+    bool restore = CVarGetInteger("gRestoreBetaBoostGauge", 0) == 1;
     if(!restore){
         return;
     }
@@ -296,7 +296,7 @@ void OnBombCounterDraw(IEvent* ev){
 }
 
 void OnLivesCounterDraw(IEvent* ev){
-    bool restore = CVarGetInteger("gRestoreOldBoostGauge", 0) == 1;
+    bool restore = CVarGetInteger("gRestoreBetaBoostGauge", 0) == 1;
     if(!restore){
         return;
     }
