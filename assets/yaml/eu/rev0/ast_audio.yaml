@@ -27,5 +27,5 @@ audio_seq_table:
 audio_soundfont_table:
   { type: NAUDIO:V1:AUDIO_TABLE, format: SOUNDFONT, offset: 0xC51B0, symbol: gSoundFontTableInit }
 
-audio_seq_font_table: # count may be wrong
-  { type: ARRAY, count: 283, array_type: u8, offset: 0xC53E0, symbol: gSeqFontTableInit }
+audio_seq_font_table:
+  { type: ARRAY, count: 287, array_type: u8, offset: 0xC53E0, symbol: gSeqFontTableInit }

@@ -6,6 +6,8 @@
 #ifndef SF64_AUDIO_H
 #define SF64_AUDIO_H
 
+#define AUDIO_EU 0
+
 #include <libultra/types.h>
 #include "sf64audio_external.h"
 
@@ -1234,6 +1236,7 @@ extern s16 gD_800DD200[];
 extern f32 gHeadsetPanVolume[128];
 extern f32 gStereoPanVolume[128];
 extern f32 gDefaultPanVolume[128];
+extern u8 gVoiceLanguage;
 
 #ifdef __cplusplus
 }
