@@ -906,7 +906,8 @@ static const char devstr40[] = "===Block LPS end\n";
 s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
     Sample* sample;
     AudioSlowLoad* slowLoad;
-
+    
+    *status = SLOW_LOAD_DONE;
     sample = AudioLoad_GetFontSample(fontId, instId);
     return 0;
 
