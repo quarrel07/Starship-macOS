@@ -1105,6 +1105,10 @@ void Display_ArwingLaserCharge(Player* player) {
                 }
 
                 Matrix_Push(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("ArwingMuzzleFlash", 0);
+
                 Matrix_Translate(gGfxMatrix, sp94.x, sp94.y, sp94.z, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, gMuzzleFlashScale[player->num], gMuzzleFlashScale[player->num], 1.0f,
                              MTXF_APPLY);
@@ -1112,6 +1116,9 @@ void Display_ArwingLaserCharge(Player* player) {
                 gSPDisplayList(gMasterDisp++, aOrbDL);
 
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
                 break;
 
             case LASERS_TWIN:
@@ -1126,6 +1133,10 @@ void Display_ArwingLaserCharge(Player* player) {
                 Matrix_MultVec3f(gCalcMatrix, &spAC, &sp94);
                 Matrix_MultVec3f(gCalcMatrix, &spA0, &sp88);
                 Matrix_Push(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("ArwingMuzzleFlash", 0);
+                
                 Matrix_Translate(gGfxMatrix, sp94.x, sp94.y, sp94.z, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, gMuzzleFlashScale[player->num], gMuzzleFlashScale[player->num], 1.0f,
                              MTXF_APPLY);
@@ -1133,7 +1144,14 @@ void Display_ArwingLaserCharge(Player* player) {
                 gSPDisplayList(gMasterDisp++, aOrbDL);
                 Matrix_Pop(&gGfxMatrix);
 
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
+
                 Matrix_Push(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("ArwingMuzzleFlash", 1);
+
                 Matrix_Translate(gGfxMatrix, sp88.x, sp88.y, sp88.z, MTXF_NEW);
                 Matrix_Scale(gGfxMatrix, gMuzzleFlashScale[player->num], gMuzzleFlashScale[player->num], 1.0f,
                              MTXF_APPLY);
@@ -1141,6 +1159,9 @@ void Display_ArwingLaserCharge(Player* player) {
                 gSPDisplayList(gMasterDisp++, aOrbDL);
 
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
                 break;
         }
         Matrix_Pop(&gGfxMatrix);
