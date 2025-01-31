@@ -795,7 +795,7 @@ void* AudioLoad_AsyncLoadInner(s32 tableType, s32 id, s32 nChunks, s32 retData, 
 }
 
 void AudioLoad_ProcessLoads(s32 resetStatus) {
-    // AudioLoad_ProcessSlowLoads(resetStatus);
+    AudioLoad_ProcessSlowLoads(resetStatus);
     // AudioLoad_ProcessSamplePreloads(resetStatus);
     // AudioLoad_ProcessAsyncLoads(resetStatus);
 }
@@ -906,10 +906,8 @@ static const char devstr40[] = "===Block LPS end\n";
 s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
     Sample* sample;
     AudioSlowLoad* slowLoad;
-    
-    *status = SLOW_LOAD_DONE;
+
     sample = AudioLoad_GetFontSample(fontId, instId);
-    return 0;
 
     if (sample == NULL) {
         *status = SLOW_LOAD_STATUS_0;
@@ -928,8 +926,7 @@ s32 AudioLoad_SlowLoadSample(s32 fontId, u8 instId, s8* status) {
     slowLoad->sample = *sample;
     slowLoad->status = status;
 
-    slowLoad->curRamAddr =
-        AudioHeap_AllocTemporarySampleCache(sample->size, fontId, sample->sampleAddr, sample->medium);
+    slowLoad->curRamAddr = GameEngine_Malloc(sample->size);
 
     if (slowLoad->curRamAddr == NULL) {
         if ((sample->medium == MEDIUM_UNK) || (sample->codec == 2)) {

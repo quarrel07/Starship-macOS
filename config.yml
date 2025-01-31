@@ -76,9 +76,9 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
     logging: INFO
     output:
       binary: ./mods/sf64jp.o2r
-      code: src/assets
+      code: srcjp/assets
       headers: include/assets
-      modding: src/assets
+      modding: srcjp/assets
     # enums:
     #   - include/sf64object.h
     #   - include/sf64level.h
