@@ -1281,6 +1281,7 @@ void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
     }
 
     seqPlayer->tempoAcc = (seqPlayer->tempoAcc - gMaxTempo) & 0xFFFF; // fake?
+    
     bool euRunning = GameEngine_HasVersion(SF64_VER_EU);
 
     if (seqPlayer->delay > 1) {
@@ -1289,9 +1290,6 @@ void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
         temp_s0 = &seqPlayer->scriptState;
         seqPlayer->recalculateVolume = true;
         while (true) {
-            if(euRunning && temp_s0->pc == NULL){
-                break;
-            }
             temp_s2 = AudioSeq_ScriptReadU8(temp_s0);
             if (temp_s2 == 0xFF) {
                 if (temp_s0->depth == 0) {
