@@ -53,4 +53,6 @@ Starship.log
 dumps/
 _packages/*
 *.DS_Store
-srcjp/
+src/jp/
+src/eu/
+src/cn/

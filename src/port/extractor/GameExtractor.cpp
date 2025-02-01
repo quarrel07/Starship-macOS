@@ -14,6 +14,8 @@ std::unordered_map<std::string, std::string> mGameList = {
     { "f7475fb11e7e6830f82883412638e8390791ab87", "Star Fox 64 (U) (V1.1) (Uncompressed)" },
     { "9bd71afbecf4d0a43146e4e7a893395e19bf3220", "Star Fox 64 (J) (V1.0)" },
     { "d064229a32cc05ab85e2381ce07744eb3ffaf530", "Star Fox 64 (J) (V1.0) (Uncompressed)" },
+    { "05b307b8804f992af1a1e2fbafbd588501fdf799", "Star Fox 64 (E) (V1.0)" },
+    { "09f5d5c14219fc77a36c5a6ad5e63f7abd8b3385", "Star Fox 64 (E) (V1.0) (Uncompressed)" },
 };
 
 bool GameExtractor::SelectGameFromUI() {

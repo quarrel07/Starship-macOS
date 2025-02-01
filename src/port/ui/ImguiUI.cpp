@@ -107,6 +107,10 @@ static const char* filters[3] = {
         "Linear", "None"
 };
 
+static const char* voiceLangs[] = {
+    "Original", /*"Japanese",*/ "Lylat"
+};
+
 void DrawSettingsMenu(){
     if(UIWidgets::BeginMenu("Settings")){
         if (UIWidgets::BeginMenu("Audio")) {
@@ -164,6 +168,21 @@ void DrawSettingsMenu(){
             }
 
             ImGui::EndMenu();
+        }
+
+        if(GameEngine::HasVersion(SF64_VER_EU)){
+            UIWidgets::Spacer(0);
+            if (UIWidgets::BeginMenu("Language")) {
+                if (UIWidgets::CVarCombobox("Voices", "gVoiceLanguage", voiceLangs, 
+                {
+                    .tooltip = "Changes the language of the voice acting in the game",
+                    .defaultIndex = 0,
+                })) {
+                    Audio_SetVoiceLanguage(CVarGetInteger("gVoiceLanguage", 0));
+                };
+                ImGui::Dummy(ImVec2(ImGui::CalcTextSize(voiceLangs[0]).x + 55, 0.0f));
+                ImGui::EndMenu();
+            }
         }
 
         UIWidgets::Spacer(0);

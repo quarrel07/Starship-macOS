@@ -542,6 +542,15 @@ int GameEngine::ShowYesNoBox(const char* title, const char* box) {
     return ret;
 }
 
+bool GameEngine::HasVersion(SF64Version ver){
+    auto versions = Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->GetGameVersions();
+    return std::find(versions.begin(), versions.end(), ver) != versions.end();
+}
+
+extern "C" bool GameEngine_HasVersion(SF64Version ver) {
+    return GameEngine::HasVersion(ver);
+}
+
 extern "C" uint32_t GameEngine_GetSampleRate() {
     auto player = Ship::Context::GetInstance()->GetAudio()->GetAudioPlayer();
     if (player == nullptr) {

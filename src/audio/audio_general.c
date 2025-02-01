@@ -3,6 +3,7 @@
 #include "sf64context.h"
 #include "audiothread_cmd.h"
 #include "audioseq_cmd.h"
+#include "port/Engine.h"
 
 void Audio_SetModulationAndPlaySfx(f32* sfxSource, u32 sfxId, f32 freqMod);
 s32 Audio_GetCurrentVoice(void);
@@ -530,9 +531,9 @@ void Audio_SetSfxProperties(u8 bankId, u8 entryIndex, u8 channelId) {
             }
             break;
         case SFX_BANK_SYSTEM:
-            if (AUDIO_EU) {
+            if (GameEngine_HasVersion(SF64_VER_EU)) {
                 if (entry->state == 2) {
-                    AUDIOCMD_CHANNEL_SET_IO(SEQ_PLAYER_SFX, channelId, 1, gVoiceLanguage);
+                    AUDIOCMD_CHANNEL_SET_IO(SEQ_PLAYER_SFX, channelId, 1, CVarGetInteger("gVoiceLanguage", 0));
                 }
             }
             if (sSfxChannelLayout == SFXCHAN_3) {
@@ -2398,7 +2399,7 @@ void Audio_StopPlayerNoise(u8 playerId) {
             break;
         case FORM_LANDMASTER:
             sfxId = NA_SE_TANK_ENGIN;
-            if (AUDIO_EU) {
+            if (GameEngine_HasVersion(SF64_VER_EU)) {
                 Audio_KillSfxBySourceAndId(gPlayer[playerId].sfx.srcPos, NA_SE_TANK_GO_UP);
             }
             break;
@@ -2728,13 +2729,14 @@ void Audio_KillAllSfx(void) {
 }
 
 void Audio_SetVoiceLanguage(u8 language) {
-    gVoiceLanguage = language;
-
-    if (gVoiceLanguage == 0) {
-        Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO, -1, 1);
-    } else {
-        // 0x42 sets voice language to Lylat ?
-        Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO_LYLAT, -1, 1);
+    switch (language) {
+        case 0:
+        default:
+            Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO, -1, 1);
+            break;
+        case 1:
+            Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO_LYLAT, -1, 1);
+            break;
     }
 }
 
@@ -2755,7 +2757,7 @@ void Audio_InitSounds(void) {
     Audio_ResetSfxChannelState();
     Audio_ResetActiveSequencesAndVolume();
     Audio_ResetSfx();
-    if (AUDIO_EU) {
+    if (GameEngine_HasVersion(SF64_VER_EU)) {
         AUDIOCMD_GLOBAL_SYNC_LOAD_SEQ_PARTS(NA_BGM_VO_LYLAT, 0);
     }
     Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO, -1, 1);
@@ -2767,8 +2769,8 @@ void Audio_RestartSeqPlayers(void) {
     s32 pad2;
     u16 fadeIn = 1;
 
-    if (AUDIO_EU) {
-        if (gVoiceLanguage == 0) {
+    if (GameEngine_HasVersion(SF64_VER_EU)) {
+        if (CVarGetInteger("gVoiceLanguage", 0) == 0) {
             Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO, -1, 1);
         } else {
             Audio_StartSequence(SEQ_PLAYER_VOICE, NA_BGM_VO_LYLAT, -1, 1);

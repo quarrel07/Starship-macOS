@@ -65,7 +65,7 @@ d8b1088520f7c5f81433292a9258c1184afa1457:
   name: Star Fox 64 (JP) (V1.0) (Compressed)
   preprocess:
     decompress_mio0:
-      method: mioh0-comptool
+      method: mio0-comptool
       type: decompress
       target: d064229a32cc05ab85e2381ce07744eb3ffaf530
       restart: true
@@ -79,9 +79,9 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
     logging: INFO
     output:
       binary: ./mods/sf64jp.o2r
-      code: srcjp/assets
+      code: src/jp/assets
       headers: include/assets
-      modding: srcjp/assets
+      modding: src/jp/assets
     # enums:
     #   - include/sf64object.h
     #   - include/sf64level.h
@@ -95,7 +95,7 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
   name: Star Fox 64 (EU) (V1.0) (Compressed)
   preprocess:
     decompress_mio0:
-      method: mioh0-comptool
+      method: mio0-comptool
       type: decompress
       target: 09f5d5c14219fc77a36c5a6ad5e63f7abd8b3385
       restart: true
@@ -109,9 +109,9 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
     logging: INFO
     output:
       binary: ./mods/sf64eu.o2r
-      code: srceu/assets
+      code: src/eu/assets
       headers: include/assets
-      modding: srceu/assets
+      modding: src/eu/assets
     # enums:
     #   - include/sf64object.h
     #   - include/sf64level.h
