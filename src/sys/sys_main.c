@@ -234,12 +234,9 @@ void Graphics_ThreadUpdate() {
 
     gSysFrameCount++;
     Graphics_InitializeTask(gSysFrameCount);
-    osRecvMesg(&gControllerMesgQueue, NULL, OS_MESG_NOBLOCK);
-    osSendMesg(&gSerialThreadMesgQueue, OS_MESG_32(SI_RUMBLE), OS_MESG_PRI_NORMAL);
     Controller_UpdateInput();
     Controller_ReadData();
     Controller_Rumble();
-    osSendMesg(&gSerialThreadMesgQueue, OS_MESG_32(SI_READ_CONTROLLER), OS_MESG_PRI_NORMAL);
     Main_SetVIMode();
     {
         __gSPSegment(gUnkDisp1++, 0, 0);
@@ -254,7 +251,6 @@ void Graphics_ThreadUpdate() {
         gDPFullSync(gMasterDisp++);
         gSPEndDisplayList(gMasterDisp++);
     }
-    osRecvMesg(&gGfxTaskMesgQueue, NULL, OS_MESG_BLOCK);
     Graphics_SetTask();
 
     if (GfxDebuggerIsDebuggingRequested()) {
@@ -277,7 +273,6 @@ void Graphics_ThreadUpdate() {
     //     osRecvMesg(&gGfxVImsgQueue, NULL, OS_MESG_BLOCK);
     // }
 
-    osSendMesg(&gTaskMesgQueue, OS_MESG_PTR(NULL), OS_MESG_NOBLOCK);
     Audio_Update();
 }
 
