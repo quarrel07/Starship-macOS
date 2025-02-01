@@ -244,7 +244,7 @@ GameEngine::GameEngine() {
                                     "SoundFont", static_cast<uint32_t>(SF64::ResourceType::SoundFont), 0);
 
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
-    gEnableGammaBoost = CVarGetInteger("gGraphics.GammaMode", 1) == 1;
+    gEnableGammaBoost = CVarGetInteger("gGraphics.GammaMode", 0) == 0;
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 }
 
