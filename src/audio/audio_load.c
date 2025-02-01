@@ -816,21 +816,9 @@ void AudioLoad_Init(void) {
     s32 i;
     s32 j;
     s32 numFonts;
-    s32 dwordsLeft;
-    u64* clearContext;
     void* ramAddr;
 
     gAudioResetTimer = 0;
-
-    for (i = 0; i < gAudioHeapSize / 8; i++) {
-        *((u64*) gAudioHeap + i) = 0;
-    }
-
-    clearContext = gAudioContextStart;
-    dwordsLeft = ((uintptr_t) gAudioContextEnd - (uintptr_t) gAudioContextStart) / 8;
-    for (; dwordsLeft >= 0; dwordsLeft--) {
-        *clearContext++ = 0;
-    }
     // TODO: osTVType should be unnecessary
     gMaxTempoTvTypeFactors = 16.713f;
     gRefreshRate = 60;
@@ -874,11 +862,6 @@ void AudioLoad_Init(void) {
     gSampleBankTable = SEGMENTED_TO_VIRTUAL(gSampleBankTableInit);
     gSeqFontTable = SEGMENTED_TO_VIRTUAL(gSeqFontTableInit);
     gNumSequences = gSequenceTable->base.numEntries;
-
-    //    AudioLoad_InitTable(gSequenceTable, LOAD_ASSET(gAudioSeq), gSequenceMedium);
-    //    AudioLoad_InitTable(gSoundFontTable, LOAD_ASSET(gAudioBank), gSoundFontMedium);
-    //    AudioLoad_InitTable(gSampleBankTable, LOAD_ASSET(gAudioTable), gSampleBankMedium);
-
     numFonts = gSoundFontTable->base.numEntries;
 
     gSoundFontList = AudioHeap_Alloc(&gInitPool, numFonts * sizeof(SoundFont));

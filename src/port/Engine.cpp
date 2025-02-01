@@ -62,7 +62,6 @@ GameEngine::GameEngine() {
     std::vector<std::string> archiveFiles;
     const std::string main_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
     const std::string assets_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
-    const std::string mod_path = Ship::Context::GetPathRelativeToAppDirectory("mods/sf64jp.o2r");
 
 #ifdef _WIN32
     AllocConsole();
@@ -86,8 +85,6 @@ GameEngine::GameEngine() {
             if (ShowYesNoBox("Extraction Complete", "ROM Extracted. Extract another?") == IDYES) {
                 if(!GenAssetFile()){
                     ShowMessage("Error", "An error occured, no O2R file was generated.");
-                } else {
-                    archiveFiles.push_back(mod_path);
                 }
             }
         } else {
