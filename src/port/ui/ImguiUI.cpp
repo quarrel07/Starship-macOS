@@ -473,6 +473,8 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Character heads are displayed inside Arwings in all cutscenes",
                 .defaultValue = true
             });
+            UIWidgets::CVarSliderInt("Cockpit Glass Opacity: %d", "gCockpitOpacity", 0, 255, 120);
+            
 
             ImGui::EndMenu();
         }

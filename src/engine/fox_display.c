@@ -699,7 +699,8 @@ void Display_CockpitGlass(void) {
     Matrix_Scale(gGfxMatrix, D_display_800CA28C, D_display_800CA28C, D_display_800CA28C, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
     RCP_SetupDL_64_2();
-    gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 120);
+    u16 opacity = CVarGetInteger("gCockpitOpacity", 120);
+    gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, opacity);
     gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
     gSPDisplayList(gMasterDisp++, D_arwing_30194E0);
     gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
