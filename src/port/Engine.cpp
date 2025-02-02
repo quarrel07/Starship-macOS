@@ -584,6 +584,19 @@ extern "C" uint8_t GameEngine_OTRSigCheck(const char* data) {
     return strncmp(data, sOtrSignature, strlen(sOtrSignature)) == 0;
 }
 
+extern "C" void GameEngine_GetTextureInfo(const char* path, int32_t* width, int32_t* height, float* scale, bool* custom) {
+    if(GameEngine_OTRSigCheck(path) != 1){
+        *custom = false;
+        return;
+    }
+    std::shared_ptr<Fast::Texture> tex = std::static_pointer_cast<Fast::Texture>(
+        Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(path));
+    *width = tex->Width;
+    *height = tex->Height;
+    *scale = tex->VPixelScale;
+    *custom = tex->Flags & (1 << 0);
+}
+
 extern "C" float __cosf(float angle) throw() {
     return cosf(angle);
 }
