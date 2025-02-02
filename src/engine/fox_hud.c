@@ -2819,9 +2819,9 @@ void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
     f32 xPos = D_800D1EF8[idx];
 
     if (xPos < 0.0f) {
-        xPos = xPos * OTRGetAspectRatio() + 1;
+        xPos = xPos * OTRGetHUDAspectRatio() + 1;
     } else if (xPos > 0.0f) {
-        xPos = xPos * OTRGetAspectRatio() - 1;
+        xPos = xPos * OTRGetHUDAspectRatio() - 1;
     }
 
     if (arg1) {
