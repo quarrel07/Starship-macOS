@@ -280,9 +280,9 @@ void OnBoostGaugeDraw(IEvent* event){
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
-    Lib_TextureRect_CI8(&gMasterDisp, D_1012290, D_10126B0, 48, 22, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - x), y, 1.0f, 1.0f);
-    Lib_TextureRect_CI8(&gMasterDisp, D_10126F0, D_1012750, 24, 4, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - (x - 9)), y + 3, 1.0f, 1.0f);
-    Lib_TextureRect_RGBA16(&gMasterDisp, sBoostGaugeArrow[step], 32, 32, OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH - (x - 6)), y - 1, 0.9f, 0.9f);
+    Lib_TextureRect_CI8(&gMasterDisp, D_1012290, D_10126B0, 48, 22, OTRGetRectDimensionFromRightEdgeOverride(SCREEN_WIDTH - x), y, 1.0f, 1.0f);
+    Lib_TextureRect_CI8(&gMasterDisp, D_10126F0, D_1012750, 24, 4, OTRGetRectDimensionFromRightEdgeOverride(SCREEN_WIDTH - (x - 9)), y + 3, 1.0f, 1.0f);
+    Lib_TextureRect_RGBA16(&gMasterDisp, sBoostGaugeArrow[step], 32, 32, OTRGetRectDimensionFromRightEdgeOverride(SCREEN_WIDTH - (x - 6)), y - 1, 0.9f, 0.9f);
 }
 
 void OnBombCounterDraw(IEvent* ev){

@@ -1498,8 +1498,8 @@ void HUD_PauseScreen_Update(void) {
                 sPauseScreenTimer[0] = 0;
 
             case 3:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdgeOverride(0), 0,
-                                       OTRGetDimensionFromRightEdgeOverride(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
+                                       OTRGetDimensionFromRightEdge(SCREEN_WIDTH)+1, SCREEN_HEIGHT, 0, 0, 0, 255);
 
                 gFillScreenAlphaTarget = 0;
 
@@ -1548,8 +1548,8 @@ void HUD_PauseScreen_Update(void) {
                 break;
 
             case 4:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdgeOverride(0), 0,
-                                       OTRGetDimensionFromRightEdgeOverride(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
+                                       OTRGetDimensionFromRightEdge(SCREEN_WIDTH)+1, SCREEN_HEIGHT, 0, 0, 0, 255);
                 if (sPauseScreenTimer[0] < 140) {
                     break;
                 }
@@ -1567,8 +1567,8 @@ void HUD_PauseScreen_Update(void) {
                 }
 
             case 5:
-                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdgeOverride(0), 0,
-                                       OTRGetDimensionFromRightEdgeOverride(SCREEN_WIDTH), SCREEN_HEIGHT, 0, 0, 0, 255);
+                Graphics_FillRectangle(&gMasterDisp, OTRGetRectDimensionFromLeftEdge(0), 0,
+                                       OTRGetDimensionFromRightEdge(SCREEN_WIDTH)+1, SCREEN_HEIGHT, 0, 0, 0, 255);
 
                 for (i = 0; i < 6; i++) {
                     if (gPrevPlanetTeamShields[i] == -1) {
@@ -2819,9 +2819,9 @@ void HUD_EdgeArrows_Draw(s32 idx, bool arg1) {
     f32 xPos = D_800D1EF8[idx];
 
     if (xPos < 0.0f) {
-        xPos = xPos * OTRGetAspectRatio() + 1;
+        xPos = xPos * OTRGetHUDAspectRatio() + 1;
     } else if (xPos > 0.0f) {
-        xPos = xPos * OTRGetAspectRatio() - 1;
+        xPos = xPos * OTRGetHUDAspectRatio() - 1;
     }
 
     if (arg1) {

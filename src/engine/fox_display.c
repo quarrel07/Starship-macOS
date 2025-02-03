@@ -92,10 +92,10 @@ void Display_DrawHelpAlert(void) {
         switch (centered) {
             case false:
                 if (gTeamHelpActor->sfxSource[0] > 0.0f) {
-                    sp78 = 20.0f * OTRGetAspectRatio() - 8;
+                    sp78 = 20.0f * OTRGetHUDAspectRatio() - 8;
                     sp74 = M_PI / 2;
                 } else {
-                    sp78 = -20.0f * OTRGetAspectRatio() + 8;
+                    sp78 = -20.0f * OTRGetHUDAspectRatio() + 8;
                     sp74 = -M_PI / 2;
                 }
                 Matrix_Push(&gGfxMatrix);
@@ -120,7 +120,7 @@ void Display_DrawHelpAlert(void) {
 
                 // @port: Tag the transform.
                 FrameInterpolation_RecordOpenChild("Display_DrawHelpAlert", centered);
-                Matrix_Translate(gGfxMatrix, 20.0f * OTRGetAspectRatio() - 8, 0.0f, -50.0f, MTXF_APPLY);
+                Matrix_Translate(gGfxMatrix, 20.0f * OTRGetHUDAspectRatio() - 8, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, -M_PI / 2, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 0.03f, 0.03f, 0.03f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
@@ -130,7 +130,7 @@ void Display_DrawHelpAlert(void) {
 
                 // left arrow (both in simultaneous)
                 Matrix_Push(&gGfxMatrix);
-                Matrix_Translate(gGfxMatrix, -20.0f * OTRGetAspectRatio() + 8, 0.0f, -50.0f, MTXF_APPLY);
+                Matrix_Translate(gGfxMatrix, -20.0f * OTRGetHUDAspectRatio() + 8, 0.0f, -50.0f, MTXF_APPLY);
                 Matrix_RotateZ(gGfxMatrix, M_PI / 2, MTXF_APPLY);
                 Matrix_Scale(gGfxMatrix, 0.03f, 0.03f, 0.03f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
@@ -147,17 +147,17 @@ void Display_DrawHelpAlert(void) {
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
                 if (sp78 < 0.0f) {
-                    Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdge(38.0f), 106, 1.0f, 1.0f, "HELP!!");
+                    Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdgeOverride(38.0f), 106, 1.0f, 1.0f, "HELP!!");
                 } else {
-                    Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdge(248), 106, 1.0f, 1.0f, "HELP!!");
+                    Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdgeOverride(248), 106, 1.0f, 1.0f, "HELP!!");
                 }
                 break;
 
             case true:
                 RCP_SetupDL(&gMasterDisp, SETUPDL_76_POINT);
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 0, 255);
-                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdge(38.0f), 106, 1.0f, 1.0f, "HELP!!");
-                Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdge(248), 106, 1.0f, 1.0f, "HELP!!");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromLeftEdgeOverride(38.0f), 106, 1.0f, 1.0f, "HELP!!");
+                Graphics_DisplaySmallText(OTRGetRectDimensionFromRightEdgeOverride(248), 106, 1.0f, 1.0f, "HELP!!");
                 break;
         }
     }
@@ -699,7 +699,8 @@ void Display_CockpitGlass(void) {
     Matrix_Scale(gGfxMatrix, D_display_800CA28C, D_display_800CA28C, D_display_800CA28C, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
     RCP_SetupDL_64_2();
-    gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 120);
+    u16 opacity = CVarGetInteger("gCockpitOpacity", 120);
+    gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, opacity);
     gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
     gSPDisplayList(gMasterDisp++, D_arwing_30194E0);
     gSPSetGeometryMode(gMasterDisp++, G_CULL_BACK);
