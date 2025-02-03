@@ -229,6 +229,8 @@ std::shared_ptr<Ship::IResource> ResourceFactoryXMLSampleV0::ReadResource(std::s
         sample->mSample.sampleAddr[i] = (*sampleFile->Buffer)[i];
     }
 
+    sample->mSample.isRelocated = 1;
+
     return sample;
 }
 
