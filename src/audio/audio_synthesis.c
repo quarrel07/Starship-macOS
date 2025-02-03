@@ -1036,13 +1036,14 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                         goto skip;
 
                     case CODEC_S16:
+                        flags = A_CONTINUE;
                         skipBytes = 0;
                         size_t bytesToRead;
                         numSamplesProcessed += numSamplesToLoadAdj;
                         dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
 
                         if (((synthState->samplePosInt * 2) + (numSamplesToLoadAdj)*SAMPLE_SIZE) < bookSample->size) {
-                            bytesToRead = (numSamplesToLoadAdj)*SAMPLE_SIZE;
+                            bytesToRead = (numSamplesToLoadAdj) * SAMPLE_SIZE;
                         } else {
                             bytesToRead = bookSample->size - (synthState->samplePosInt * 2);
                         }
