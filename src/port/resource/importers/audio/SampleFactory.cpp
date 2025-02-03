@@ -101,12 +101,14 @@ static void Mp3DecoderWorker(std::shared_ptr<Sample> sample, std::shared_ptr<Shi
     drmp3 mp3;
     drwav_uint64 numFrames;
     drmp3_bool32 ret =
-        drmp3_init_memory(&mp3, sampleFile->Buffer.get()->data(), sampleFile->Buffer.get()->size(), nullptr);
+        drmp3_init_memory(&mp3, sampleFile->Buffer->data(), sampleFile->Buffer->size(), nullptr);
     numFrames = drmp3_get_pcm_frame_count(&mp3);
     drwav_uint64 channels = mp3.channels;
     drwav_uint64 sampleRate = mp3.sampleRate;
 
-    sample->mSample.sampleAddr = new uint8_t[numFrames * channels * 2];
+    sample->mSample.tuning = (float)(sampleRate * channels) / 32000.0f;
+    sample->mSample.size = numFrames * channels * 2;
+    sample->mSample.sampleAddr = new uint8_t[sample->mSample.size];
     drmp3_read_pcm_frames_s16(&mp3, numFrames, (int16_t*)sample->mSample.sampleAddr);
 }
 
@@ -131,6 +133,7 @@ static void OggDecoderWorker(std::shared_ptr<Sample> sample, std::shared_ptr<Shi
     int bitStream = 0;
     size_t toRead = numFrames * numChannels * 2;
     sample->mSample.sampleAddr = new uint8_t[toRead];
+    sample->mSample.tuning = (float)(sampleRate * numChannels) / 32000.0f;
     do {
         read = ov_read(&vf, dataBuff, 4096, 0, 2, 1, &bitStream);
         memcpy(sample->mSample.sampleAddr + pos, dataBuff, read);
@@ -199,12 +202,13 @@ std::shared_ptr<Ship::IResource> ResourceFactoryXMLSampleV0::ReadResource(std::s
             drwav_uint64 numFrames;
 
             drwav_bool32 ret =
-                drwav_init_memory(&wav, sampleFile->Buffer.get()->data(), sampleFile->Buffer.get()->size(), nullptr);
+                drwav_init_memory(&wav, sampleFile->Buffer->data(), sampleFile->Buffer->size(), nullptr);
 
             drwav_get_length_in_pcm_frames(&wav, &numFrames);
 
-            sample->mSample.tuning = (wav.sampleRate * wav.channels) / 32000.0f;
-            sample->mSample.sampleAddr = new uint8_t[numFrames * wav.channels * 2];
+            sample->mSample.tuning = (float)(wav.sampleRate * wav.channels) / 32000.0f;
+            sample->mSample.size = numFrames * wav.channels * 2;
+            sample->mSample.sampleAddr = new uint8_t[sample->mSample.size];
 
             drwav_read_pcm_frames_s16(&wav, numFrames, (int16_t*)sample->mSample.sampleAddr);
             return sample;
