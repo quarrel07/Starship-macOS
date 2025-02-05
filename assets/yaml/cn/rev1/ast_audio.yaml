@@ -9,8 +9,8 @@ audio_setup:
   type: NAUDIO:V1:AUDIO_SETUP
   driver: SF64
   audio_seq:
-    size: 0x3AFD0
-    offset: 0xE9950
+    size: 0x3AB10
+    offset: 0xDD890
   audio_bank:
     size: 0x1CB20
     offset: 0x1183A0
