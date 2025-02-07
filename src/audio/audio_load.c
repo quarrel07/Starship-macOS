@@ -402,6 +402,7 @@ void AudioLoad_SyncInitSeqPlayerInternal(s32 playerIdx, s32 seqId, s32 arg2) {
         AudioLoad_SyncLoadFont(fontId);
     }
 
+    printf("seqId: %d\n", seqId);
     seqData = AudioLoad_SyncLoadSeq(seqId);
 
     AudioSeq_ResetSequencePlayer(playerIdx);
@@ -416,8 +417,15 @@ void AudioLoad_SyncInitSeqPlayerInternal(s32 playerIdx, s32 seqId, s32 arg2) {
     gSeqPlayers[playerIdx].finished = false;
 }
 
+char* WriteDummySequence();
+
 void* AudioLoad_SyncLoadSeq(s32 seqId) {
+    // if(seqId == 9 || seqId == 21){
+    //     return WriteDummySequence();
+    // }
     AudioTable* table = AudioLoad_GetLoadTable(SEQUENCE_TABLE);
+    char* seqPath = ResourceGetNameByCrc((uint64_t) table->entries[seqId].romAddr);
+    printf("seqPath: %s\n", seqPath);
     return ResourceGetDataByCrc((uint64_t) table->entries[seqId].romAddr);
 }
 
