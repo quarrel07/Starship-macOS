@@ -473,6 +473,7 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Character heads are displayed inside Arwings in all cutscenes",
                 .defaultValue = true
             });
+            UIWidgets::CVarCheckbox("Use red radio backgrounds for enemies.", "gEnemyRedRadio");
             UIWidgets::CVarSliderInt("Cockpit Glass Opacity: %d", "gCockpitOpacity", 0, 255, 120);
             
 

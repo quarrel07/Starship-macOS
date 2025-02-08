@@ -174,7 +174,7 @@ void func_radio_800BAAE8(void) {
     sRadioUseRedBox = false;
 
     mirror = false;
-
+    bool enemyRedRadio = CVarGetInteger("gEnemyRedRadio", 0);
     switch (gCurrentRadioPortrait) {
         case RCID_FOX_RED:
             sRadioUseRedBox = true;
@@ -232,105 +232,139 @@ void func_radio_800BAAE8(void) {
             break;
         case RCID_WOLF:
             radioPortraitTex = D_STAR_WOLF_F00B580;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_WOLF + 1:
             radioPortraitTex = D_STAR_WOLF_F00C4A0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_PIGMA:
             radioPortraitTex = D_STAR_WOLF_F003C80;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_PIGMA + 1:
             radioPortraitTex = D_STAR_WOLF_F004BA0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_LEON:
             radioPortraitTex = D_STAR_WOLF_F007900;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_LEON + 1:
             radioPortraitTex = D_STAR_WOLF_F008820;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_ANDREW:
             radioPortraitTex = D_STAR_WOLF_F000000;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_ANDREW + 1:
             radioPortraitTex = D_STAR_WOLF_F000F20;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_WOLF_2:
             radioPortraitTex = D_STAR_WOLF_F00D3C0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_WOLF_2 + 1:
             radioPortraitTex = D_STAR_WOLF_F00E2E0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_PIGMA_2:
             radioPortraitTex = D_STAR_WOLF_F005AC0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_PIGMA_2 + 1:
             radioPortraitTex = D_STAR_WOLF_F0069E0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_LEON_2:
             radioPortraitTex = D_STAR_WOLF_F009740;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_LEON_2 + 1:
             radioPortraitTex = D_STAR_WOLF_F00A660;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_ANDREW_2:
             radioPortraitTex = D_STAR_WOLF_F001E40;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_ANDREW_2 + 1:
             radioPortraitTex = D_STAR_WOLF_F002D60;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_CORNERIA:
             radioPortraitTex = D_CO_6026420;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_CORNERIA + 1:
             radioPortraitTex = D_CO_6027340;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_CORNERIA2:
             radioPortraitTex = D_CO_60245E0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_CORNERIA2 + 1:
             radioPortraitTex = D_CO_6025500;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_METEO:
             radioPortraitTex = D_ME_601C8E0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_METEO + 1:
             radioPortraitTex = D_ME_601D800;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_AREA6:
             radioPortraitTex = D_A6_60047E0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_AREA6 + 1:
             radioPortraitTex = D_A6_6005700;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_CAIMAN_AREA6:
             radioPortraitTex = D_A6_60029A0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_CAIMAN_AREA6 + 1:
             radioPortraitTex = D_A6_60038C0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_ZONESS:
             radioPortraitTex = D_ZO_6014510;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_ZONESS + 1:
             radioPortraitTex = D_ZO_6015430;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_SECTORX:
             radioPortraitTex = D_SX_6020FB0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_SECTORX + 1:
             radioPortraitTex = D_SX_6021ED0;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_SECTORY:
             radioPortraitTex = D_SY_6018F30;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_SECTORY + 1:
             radioPortraitTex = D_SY_6019E50;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_MACBETH:
             radioPortraitTex = D_MA_6010C20;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_BOSS_MACBETH + 1:
             radioPortraitTex = D_MA_6011B40;
+            sRadioUseRedBox = enemyRedRadio;
             break;
         case RCID_ROB64_RED:
             sRadioUseRedBox = true;
@@ -422,6 +456,20 @@ void func_radio_800BAAE8(void) {
             }
             if (((s32) gRadioMsgRadioId == RCID_ANDROSS) || ((s32) gRadioMsgRadioId == RCID_ANDROSS_RED)) {
                 sRadioUseRedBox = true;
+            }
+            if (enemyRedRadio)
+            {   //This ensures the box stays red when the message is closing and already showing static in the portrait.
+                if (gRadioMsgRadioId == RCID_BOSS_CORNERIA || gRadioMsgRadioId == RCID_BOSS_CORNERIA2 || 
+                    gRadioMsgRadioId == RCID_BOSS_METEO || gRadioMsgRadioId == RCID_BOSS_SECTORX ||
+                    gRadioMsgRadioId == RCID_BOSS_SECTORY ||  gRadioMsgRadioId == RCID_BOSS_MACBETH ||
+                    gRadioMsgRadioId == RCID_BOSS_ZONESS || gRadioMsgRadioId == RCID_BOSS_AREA6 ||
+                    gRadioMsgRadioId == RCID_CAIMAN_AREA6 || gRadioMsgRadioId == RCID_WOLF ||
+                    gRadioMsgRadioId == RCID_PIGMA || gRadioMsgRadioId == RCID_LEON ||
+                    gRadioMsgRadioId == RCID_ANDREW || gRadioMsgRadioId == RCID_WOLF_2 || 
+                    gRadioMsgRadioId == RCID_PIGMA_2 || gRadioMsgRadioId == RCID_LEON_2 ||
+                    gRadioMsgRadioId == RCID_ANDREW_2) {
+                        sRadioUseRedBox = true;
+                    }
             }
             break;
     }
