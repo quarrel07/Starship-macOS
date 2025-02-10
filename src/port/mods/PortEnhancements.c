@@ -163,6 +163,10 @@ void OnGameUpdatePost(IEvent* event) {
     }
 }
 
+void OnPlayUpdateEvent(IEvent* event){
+    event->cancelled = CVarGetInteger("gDebugPause", 0);
+}
+
 void RefillBoostMeter(Player* player) {
     if (player->boostMeter > 1.0f) {
         player->boostMeter = 1.0f;
@@ -318,6 +322,7 @@ void PortEnhancements_Init() {
     // Register event listeners
     REGISTER_LISTENER(DisplayPostUpdateEvent, OnDisplayUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PlayUpdateEvent, OnPlayUpdateEvent, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerPostUpdateEvent, OnPlayerUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawBoostGaugeHUDEvent, OnBoostGaugeDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawLivesCounterHUDEvent, OnLivesCounterDraw, EVENT_PRIORITY_NORMAL);
@@ -343,6 +348,8 @@ void PortEnhancements_Register() {
 
     REGISTER_EVENT(GamePreUpdateEvent);
     REGISTER_EVENT(GamePostUpdateEvent);
+
+    REGISTER_EVENT(PlayUpdateEvent);
 
     REGISTER_EVENT(PlayerPreUpdateEvent);
     REGISTER_EVENT(PlayerPostUpdateEvent);

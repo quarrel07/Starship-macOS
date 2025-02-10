@@ -9,6 +9,8 @@ DEFINE_EVENT(DisplayPostUpdateEvent);
 DEFINE_EVENT(GamePreUpdateEvent);
 DEFINE_EVENT(GamePostUpdateEvent);
 
+DEFINE_EVENT(PlayUpdateEvent);
+
 DEFINE_EVENT(PlayerPreUpdateEvent, Player* player;);
 DEFINE_EVENT(PlayerPostUpdateEvent, Player* player;);
 

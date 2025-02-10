@@ -7167,7 +7167,7 @@ void Play_Main(void) {
             }
 
             gDrawMode = DRAW_PLAY;
-            if (CVarGetInteger("gDebugPause", 0) == 0){
+            CALL_CANCELLABLE_EVENT(PlayUpdateEvent){
                 Play_Update();
             }
 
