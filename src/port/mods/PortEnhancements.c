@@ -299,6 +299,25 @@ void OnBombCounterDraw(IEvent* ev){
     HUD_BombCounter_Draw(253.0f, 18.0f);
 }
 
+void OnPreSetupRadioMsgEvent(PreSetupRadioMsgEvent* ev){
+    bool enemyRedRadio = CVarGetInteger("gEnemyRedRadio", 0);
+    if (!enemyRedRadio)
+    {
+        return;
+    }
+    if (gRadioMsgRadioId == RCID_BOSS_CORNERIA || gRadioMsgRadioId == RCID_BOSS_CORNERIA2 || 
+        gRadioMsgRadioId == RCID_BOSS_METEO || gRadioMsgRadioId == RCID_BOSS_SECTORX ||
+        gRadioMsgRadioId == RCID_BOSS_SECTORY ||  gRadioMsgRadioId == RCID_BOSS_MACBETH ||
+        gRadioMsgRadioId == RCID_BOSS_ZONESS || gRadioMsgRadioId == RCID_BOSS_AREA6 ||
+        gRadioMsgRadioId == RCID_CAIMAN_AREA6 || gRadioMsgRadioId == RCID_WOLF ||
+        gRadioMsgRadioId == RCID_PIGMA || gRadioMsgRadioId == RCID_LEON ||
+        gRadioMsgRadioId == RCID_ANDREW || gRadioMsgRadioId == RCID_WOLF_2 || 
+        gRadioMsgRadioId == RCID_PIGMA_2 || gRadioMsgRadioId == RCID_LEON_2 ||
+        gRadioMsgRadioId == RCID_ANDREW_2) {
+            *ev->radioRedBox = true;
+        }
+}
+
 void OnLivesCounterDraw(IEvent* ev){
     bool restore = CVarGetInteger("gRestoreBetaBoostGauge", 0) == 1;
     if(!restore){
@@ -327,6 +346,7 @@ void PortEnhancements_Init() {
     REGISTER_LISTENER(DrawBoostGaugeHUDEvent, OnBoostGaugeDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawLivesCounterHUDEvent, OnLivesCounterDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawBombCounterHUDEvent, OnBombCounterDraw, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PreSetupRadioMsgEvent, OnPreSetupRadioMsgEvent, EVENT_PRIORITY_NORMAL);
 
     REGISTER_LISTENER(ObjectUpdateEvent, OnItemGoldRingUpdate, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(ObjectDrawPostSetupEvent, OnItemGoldRingDraw, EVENT_PRIORITY_NORMAL);
@@ -358,6 +378,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(DrawBoostGaugeHUDEvent);
     REGISTER_EVENT(DrawBombCounterHUDEvent);
     REGISTER_EVENT(DrawIncomingMsgHUDEvent);
+    REGISTER_EVENT(PreSetupRadioMsgEvent);
     REGISTER_EVENT(DrawGoldRingsHUDEvent);
     REGISTER_EVENT(DrawLivesCounterHUDEvent);
     REGISTER_EVENT(DrawTrainingRingPassCountHUDEvent);

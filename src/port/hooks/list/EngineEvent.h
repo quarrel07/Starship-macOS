@@ -18,6 +18,7 @@ DEFINE_EVENT(DrawRadarHUDEvent);
 DEFINE_EVENT(DrawBoostGaugeHUDEvent);
 DEFINE_EVENT(DrawBombCounterHUDEvent);
 DEFINE_EVENT(DrawIncomingMsgHUDEvent);
+DEFINE_EVENT(PreSetupRadioMsgEvent, s32* radioRedBox);
 DEFINE_EVENT(DrawGoldRingsHUDEvent);
 DEFINE_EVENT(DrawLivesCounterHUDEvent);
 DEFINE_EVENT(DrawTrainingRingPassCountHUDEvent);
