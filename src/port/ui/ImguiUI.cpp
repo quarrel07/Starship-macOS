@@ -567,6 +567,10 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Gorgon flashes the screen repeatedly when firing its beam or when teleporting, which causes eye pain for some players and may be harmful to those with photosensitivity.",
                 .defaultValue = false
             });
+            UIWidgets::CVarCheckbox("Add outline to Arwing and Wolfen in radar", "gFighterOutlines", {
+                .tooltip = "Increases visibility of ships in the radar.",
+                .defaultValue = false
+            });
             ImGui::EndMenu();
         }
 

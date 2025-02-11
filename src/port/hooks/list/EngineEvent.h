@@ -15,6 +15,8 @@ DEFINE_EVENT(PlayerPreUpdateEvent, Player* player;);
 DEFINE_EVENT(PlayerPostUpdateEvent, Player* player;);
 
 DEFINE_EVENT(DrawRadarHUDEvent);
+DEFINE_EVENT(DrawRadarMarkArwingEvent, s32 colorIdx;);
+DEFINE_EVENT(DrawRadarMarkWolfenEvent);
 DEFINE_EVENT(DrawBoostGaugeHUDEvent);
 DEFINE_EVENT(DrawBombCounterHUDEvent);
 DEFINE_EVENT(DrawIncomingMsgHUDEvent);
