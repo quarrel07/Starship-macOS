@@ -6447,6 +6447,7 @@ void Map_PathLine_Draw(PathType pathType) {
     s32 r;
     s32 g;
     s32 b;
+    static f32 prevPosX = 0.0f;
 
     if (pathType == PL_WARP_YLW) {
         r = 240;
@@ -6465,8 +6466,13 @@ void Map_PathLine_Draw(PathType pathType) {
 
     Matrix_Push(&gGfxMatrix);
 
-    // @port: Tag the transform.
-    FrameInterpolation_RecordOpenChild("Map_PathLine_Draw", 0);
+    if (ABS(D_menu_801CEEB0.x) - ABS(prevPosX) > 30) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(false);
+    } else {
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Map_PathLine_Draw", 0);
+    }
 
     Matrix_Translate(gGfxMatrix, D_menu_801CEEB0.x, D_menu_801CEEB0.y, D_menu_801CEEB0.z, MTXF_APPLY);
 
@@ -6481,8 +6487,15 @@ void Map_PathLine_Draw(PathType pathType) {
 
     Matrix_Pop(&gGfxMatrix);
 
-    // @port Pop the transform id.
-    FrameInterpolation_RecordCloseChild();
+    if (ABS(prevPosX) - ABS(D_menu_801CEEB0.x) > 30) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(true);
+    } else {
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+    }
+
+    prevPosX = D_menu_801CEEB0.x;
 
     D_menu_801B6B30 -= 45.0f;
 }
@@ -6733,7 +6746,7 @@ void Map_Idle_Update(void) {
             sMapState = MAP_PATH_CHANGE;
             D_menu_801CD94C = 0;
         } else {
-            loadLevel:
+        loadLevel:
             for (i = 0; i < TEAM_ID_MAX; i++) {
                 D_ctx_80177C58[i] = gTeamShields[i];
             }
