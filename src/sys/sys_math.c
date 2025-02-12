@@ -19,9 +19,6 @@ void Rand_Init(void) {
 }
 
 f32 Rand_ZeroOne(void) {
-    if (sRandSeed1 == sRandSeed2 == sRandSeed3 == 0){
-        Rand_Init();
-    }
     sRandSeed1 = (sRandSeed1 * 171) % 30269;
     sRandSeed2 = (sRandSeed2 * 172) % 30307;
     sRandSeed3 = (sRandSeed3 * 170) % 30323;
