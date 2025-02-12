@@ -6447,7 +6447,6 @@ void Map_PathLine_Draw(PathType pathType) {
     s32 r;
     s32 g;
     s32 b;
-    static f32 prevPosX = 0.0f;
 
     if (pathType == PL_WARP_YLW) {
         r = 240;
@@ -6466,7 +6465,10 @@ void Map_PathLine_Draw(PathType pathType) {
 
     Matrix_Push(&gGfxMatrix);
 
-    if (ABS(D_menu_801CEEB0.x) - ABS(prevPosX) > 30) {
+    static f32 prevPosX = 0.0f;
+    bool shouldSkipInterpolation = ABS(D_menu_801CEEB0.x) - ABS(prevPosX) > 30;
+
+    if (shouldSkipInterpolation) {
         // @port Skip interpolation
         FrameInterpolation_ShouldInterpolateFrame(false);
     } else {
@@ -6487,7 +6489,7 @@ void Map_PathLine_Draw(PathType pathType) {
 
     Matrix_Pop(&gGfxMatrix);
 
-    if (ABS(prevPosX) - ABS(D_menu_801CEEB0.x) > 30) {
+    if (shouldSkipInterpolation) {
         // @port Skip interpolation
         FrameInterpolation_ShouldInterpolateFrame(true);
     } else {
