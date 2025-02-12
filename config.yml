@@ -118,4 +118,33 @@ d064229a32cc05ab85e2381ce07744eb3ffaf530:
     #   - include/sf64mesg.h
     #   - include/sf64audio_external.h
     #   - include/sf64event.h
-    #   - include/sf64player.
+    #   - include/sf64player.h
+
+c8a10699dea52f4bb2e2311935c1376dfb352e7a:
+  name: Star Fox 64 (CN) (V1.1) (Compressed)
+  preprocess:
+    decompress_mio0:
+      method: mio0-comptool
+      type: decompress
+      target: 3a05aba5549fa71e8b16a0c6e2c8481b070818a9
+      restart: true
+
+3a05aba5549fa71e8b16a0c6e2c8481b070818a9:
+  name: Star Fox 64 (CN) (V1.1)
+  path: assets/yaml/cn/rev1
+  config:
+    gbi: F3DEX
+    sort: OFFSET
+    logging: INFO
+    output:
+      binary: ./mods/sf64cn.o2r
+      code: src/cn/assets
+      headers: include/assets
+      modding: src/cn/assets
+    # enums:
+    #   - include/sf64object.h
+    #   - include/sf64level.h
+    #   - include/sf64mesg.h
+    #   - include/sf64audio_external.h
+    #   - include/sf64event.h
+    #   - include/sf64player.h

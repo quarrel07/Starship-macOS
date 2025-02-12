@@ -18,6 +18,7 @@
 #include "assets/ast_area_6.h"
 #include "assets/ast_title.h"
 #include "assets/ast_zoness.h"
+#include "port/hooks/Events.h"
 
 u16** gRadioMsgList;
 s32 gRadioMsgListIndex;
@@ -174,7 +175,7 @@ void func_radio_800BAAE8(void) {
     sRadioUseRedBox = false;
 
     mirror = false;
-
+    CALL_EVENT(PreSetupRadioMsgEvent, &sRadioUseRedBox);
     switch (gCurrentRadioPortrait) {
         case RCID_FOX_RED:
             sRadioUseRedBox = true;

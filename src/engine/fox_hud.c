@@ -1790,7 +1790,7 @@ void HUD_RadarMark_Arwing_Draw(s32 colorIdx) {
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_62);
     gDPSetPrimColor(gMasterDisp++, 0, 0, arwingMarkColor[colorIdx][0], arwingMarkColor[colorIdx][1],
-                    arwingMarkColor[colorIdx][2], arwingMarkColor[colorIdx][3]);
+        arwingMarkColor[colorIdx][2], arwingMarkColor[colorIdx][3]);
     Matrix_Scale(gGfxMatrix, var_fv1, var_fv2, 1.0f, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
     gSPDisplayList(gMasterDisp++, aRadarMarkArwingDL);
@@ -1801,7 +1801,7 @@ void HUD_RadarMark_StarWolf_Draw(void) {
     gDPSetPrimColor(gMasterDisp++, 0, 0, 0, 0, 0, 255);
     Matrix_Scale(gGfxMatrix, 54.0f, 54.0f, 1.0f, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
-    gSPDisplayList(gMasterDisp++, aStarWolfRadarMarkDL);
+    gSPDisplayList(gMasterDisp++, aStarWolfRadarMarkDL);    
 }
 
 void HUD_RadarMark_Katt_Draw(void) {
@@ -1885,17 +1885,21 @@ void HUD_RadarMark_Draw(s32 type) {
             } else {
                 arwingMarkColor = arwingMarkColor * 2;
             }
-
-            HUD_RadarMark_Arwing_Draw(arwingMarkColor);
+            CALL_CANCELLABLE_EVENT(DrawRadarMarkArwingEvent, arwingMarkColor) {
+                HUD_RadarMark_Arwing_Draw(arwingMarkColor);
+            }
             break;
 
         case RADARMARK_WOLF:
         case RADARMARK_LEON:
         case RADARMARK_PIGMA:
         case RADARMARK_ANDREW:
-            HUD_RadarMark_StarWolf_Draw();
-            break;
-
+            {   //This won't compile without braces, for some reason.
+                CALL_CANCELLABLE_EVENT(DrawRadarMarkWolfenEvent) {
+                    HUD_RadarMark_StarWolf_Draw();
+                }
+                break;
+            }
         case RADARMARK_KATT:
             HUD_RadarMark_Katt_Draw();
             break;

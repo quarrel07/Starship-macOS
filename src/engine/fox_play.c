@@ -974,6 +974,10 @@ void Player_ApplyDamage(Player* player, s32 direction, s32 damage) {
     Vec3f sp38;
     f32 sp34 = 20.0f;
 
+    if (CVarGetInteger("gInvincible", 0)) {
+        damage = 0;
+    }
+
     player->dmgType = damage;
     player->hitDirection = direction;
 
@@ -6945,7 +6949,9 @@ void Play_UpdateLevel(void) {
             }
 
             if ((gPlayer[0].state == PLAYERSTATE_ACTIVE) && ((gGameFrameCount & cycleMask) == 0)) {
-                gPlayer[0].shields--;
+                if (!CVarGetInteger("gInvincible", 0)) {
+                    gPlayer[0].shields--;
+                }
                 if (gPlayer[0].shields <= 0) {
                     gPlayer[0].shields = 0;
                 }
@@ -7161,8 +7167,9 @@ void Play_Main(void) {
             }
 
             gDrawMode = DRAW_PLAY;
-
-            Play_Update();
+            CALL_CANCELLABLE_EVENT(PlayUpdateEvent){
+                Play_Update();
+            }
 
             if ((gControllerPress[gMainController].button & START_BUTTON) &&
                 (gPlayer[0].state == PLAYERSTATE_LEVEL_INTRO) &&

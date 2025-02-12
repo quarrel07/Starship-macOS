@@ -3,6 +3,7 @@
 #include "hit64.h"
 #include "mods.h"
 #include "hud.h"
+#include "assets/ast_star_wolf.h"
 
 #define INIT_EVENT_IDS
 #include "port/hooks/Events.h"
@@ -163,6 +164,10 @@ void OnGameUpdatePost(IEvent* event) {
     }
 }
 
+void OnPlayUpdateEvent(IEvent* event){
+    event->cancelled = CVarGetInteger("gDebugPause", 0);
+}
+
 void RefillBoostMeter(Player* player) {
     if (player->boostMeter > 1.0f) {
         player->boostMeter = 1.0f;
@@ -295,6 +300,83 @@ void OnBombCounterDraw(IEvent* ev){
     HUD_BombCounter_Draw(253.0f, 18.0f);
 }
 
+void OnPreSetupRadioMsgEvent(PreSetupRadioMsgEvent* ev){
+    bool enemyRedRadio = CVarGetInteger("gEnemyRedRadio", 0);
+    if (!enemyRedRadio)
+    {
+        return;
+    }
+    if (gRadioMsgRadioId == RCID_BOSS_CORNERIA || gRadioMsgRadioId == RCID_BOSS_CORNERIA2 || 
+        gRadioMsgRadioId == RCID_BOSS_METEO || gRadioMsgRadioId == RCID_BOSS_SECTORX ||
+        gRadioMsgRadioId == RCID_BOSS_SECTORY ||  gRadioMsgRadioId == RCID_BOSS_MACBETH ||
+        gRadioMsgRadioId == RCID_BOSS_ZONESS || gRadioMsgRadioId == RCID_BOSS_AREA6 ||
+        gRadioMsgRadioId == RCID_CAIMAN_AREA6 || gRadioMsgRadioId == RCID_WOLF ||
+        gRadioMsgRadioId == RCID_PIGMA || gRadioMsgRadioId == RCID_LEON ||
+        gRadioMsgRadioId == RCID_ANDREW || gRadioMsgRadioId == RCID_WOLF_2 || 
+        gRadioMsgRadioId == RCID_PIGMA_2 || gRadioMsgRadioId == RCID_LEON_2 ||
+        gRadioMsgRadioId == RCID_ANDREW_2) {
+            *ev->radioRedBox = true;
+        }
+}
+
+void OnRadarMarkArwingDraw(DrawRadarMarkArwingEvent* ev){
+    bool outlines = CVarGetInteger("gFighterOutlines", 0);
+    if (!outlines){
+        return;
+    }
+
+    ev->event.cancelled = true;
+
+    s32 arwingMarkColor[][4] = {
+        { 177, 242, 12, 255 }, { 89, 121, 6, 128 }, { 90, 90, 255, 255 }, { 45, 45, 128, 128 },
+        { 0, 179, 67, 255 },   { 0, 90, 34, 128 },  { 255, 30, 0, 255 },  { 128, 15, 0, 128 },
+    };
+    f32 var_fv1;
+    f32 var_fv2;
+
+    if (gCamCount != 1) {
+        var_fv1 = 38.0f;
+        var_fv2 = 38.0f;
+    } else {
+        var_fv1 = 54.0f;
+        var_fv2 = 54.0f;
+    }
+
+    RCP_SetupDL(&gMasterDisp, SETUPDL_62);
+    gDPSetPrimColor(gMasterDisp++, 0, 0,0,0,0,255);
+    Matrix_Scale(gGfxMatrix, var_fv1, var_fv2, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aRadarMarkArwingDL);
+
+    gDPSetPrimColor(gMasterDisp++, 0, 0, arwingMarkColor[ev->colorIdx][0], arwingMarkColor[ev->colorIdx][1],
+                    arwingMarkColor[ev->colorIdx][2], arwingMarkColor[ev->colorIdx][3]);
+    Matrix_Translate(gGfxMatrix, 0.0f, 1.0f, 0.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 0.8f, 0.7f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aRadarMarkArwingDL);
+    
+
+}
+
+void OnRadarMarkWolfenDraw(IEvent* ev) {
+    bool outlines = CVarGetInteger("gFighterOutlines", 0);
+    if (!outlines){
+        return;
+    }
+    ev->cancelled = true;
+
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
+    Matrix_Scale(gGfxMatrix, 54.0f, 54.0f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aStarWolfRadarMarkDL);
+
+    gDPSetPrimColor(gMasterDisp++, 0, 0, 0, 0, 0, 255);
+    Matrix_Translate(gGfxMatrix, 0.0f, -1.2f, 0.0f, MTXF_APPLY);
+    Matrix_Scale(gGfxMatrix, 0.9f, 0.8f, 1.0f, MTXF_APPLY);
+    Matrix_SetGfxMtx(&gMasterDisp);
+    gSPDisplayList(gMasterDisp++, aStarWolfRadarMarkDL);
+}
+
 void OnLivesCounterDraw(IEvent* ev){
     bool restore = CVarGetInteger("gRestoreBetaBoostGauge", 0) == 1;
     if(!restore){
@@ -318,10 +400,14 @@ void PortEnhancements_Init() {
     // Register event listeners
     REGISTER_LISTENER(DisplayPostUpdateEvent, OnDisplayUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(GamePostUpdateEvent, OnGameUpdatePost, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PlayUpdateEvent, OnPlayUpdateEvent, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerPostUpdateEvent, OnPlayerUpdatePost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawBoostGaugeHUDEvent, OnBoostGaugeDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawLivesCounterHUDEvent, OnLivesCounterDraw, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(DrawBombCounterHUDEvent, OnBombCounterDraw, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(PreSetupRadioMsgEvent, OnPreSetupRadioMsgEvent, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(DrawRadarMarkArwingEvent, OnRadarMarkArwingDraw, EVENT_PRIORITY_NORMAL);
+    REGISTER_LISTENER(DrawRadarMarkWolfenEvent, OnRadarMarkWolfenDraw, EVENT_PRIORITY_NORMAL);
 
     REGISTER_LISTENER(ObjectUpdateEvent, OnItemGoldRingUpdate, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(ObjectDrawPostSetupEvent, OnItemGoldRingDraw, EVENT_PRIORITY_NORMAL);
@@ -331,6 +417,9 @@ void PortEnhancements_Init() {
     REGISTER_LISTENER(PlayerActionBrakeEvent, OnPlayerBrake, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerActionPostShootEvent, OnPlayerShootPost, EVENT_PRIORITY_NORMAL);
     REGISTER_LISTENER(PlayerActionPreShootChargedEvent, OnPlayerShootChargedPre, EVENT_PRIORITY_NORMAL);
+
+    //If we close the game while debug pause is active, we want it to be deactivated when we run again.
+    CVarSetInteger("gDebugPause", 0);
 }
 
 void PortEnhancements_Register() {
@@ -341,13 +430,18 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(GamePreUpdateEvent);
     REGISTER_EVENT(GamePostUpdateEvent);
 
+    REGISTER_EVENT(PlayUpdateEvent);
+
     REGISTER_EVENT(PlayerPreUpdateEvent);
     REGISTER_EVENT(PlayerPostUpdateEvent);
 
     REGISTER_EVENT(DrawRadarHUDEvent);
+    REGISTER_EVENT(DrawRadarMarkArwingEvent);
+    REGISTER_EVENT(DrawRadarMarkWolfenEvent);
     REGISTER_EVENT(DrawBoostGaugeHUDEvent);
     REGISTER_EVENT(DrawBombCounterHUDEvent);
     REGISTER_EVENT(DrawIncomingMsgHUDEvent);
+    REGISTER_EVENT(PreSetupRadioMsgEvent);
     REGISTER_EVENT(DrawGoldRingsHUDEvent);
     REGISTER_EVENT(DrawLivesCounterHUDEvent);
     REGISTER_EVENT(DrawTrainingRingPassCountHUDEvent);
