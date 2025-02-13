@@ -165,6 +165,14 @@ void OnGameUpdatePost(IEvent* event) {
 }
 
 void OnPlayUpdateEvent(IEvent* event){
+    bool debugPaused = CVarGetInteger("gDebugPause", 0);
+    if (CVarGetInteger("gLToDebugPause", 0)){
+        if (gControllerPress[0].button & L_TRIG) {
+            CVarSetInteger("gDebugPause", !debugPaused);
+        } 
+    } else {
+        CVarSetInteger("gDebugPause", 0); //Unpause if we disable the shortcut
+    }
     event->cancelled = CVarGetInteger("gDebugPause", 0);
 }
 

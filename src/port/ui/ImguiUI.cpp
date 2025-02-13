@@ -718,9 +718,8 @@ void DrawDebugMenu() {
             .tooltip = "Jump to credits at the main menu"
         });
 
-        if (gGameState == GSTATE_PLAY){
-            UIWidgets::CVarCheckbox("Debug Pause", "gDebugPause");
-        }
+        UIWidgets::CVarCheckbox("Press L to Debug Pause", "gLToDebugPause");
+        
 
         if (CVarGetInteger(StringHelper::Sprintf("gCheckpoint.%d.Set", gCurrentLevel).c_str(), 0)) {
             if (UIWidgets::Button("Clear Checkpoint")) {
