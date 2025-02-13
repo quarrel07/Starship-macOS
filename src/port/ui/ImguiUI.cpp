@@ -718,8 +718,12 @@ void DrawDebugMenu() {
             .tooltip = "Jump to credits at the main menu"
         });
 
-        UIWidgets::CVarCheckbox("Press L to Debug Pause", "gLToDebugPause");
-        
+        UIWidgets::CVarCheckbox("Press L to toggle Debug Pause", "gLToDebugPause");
+        if (CVarGetInteger("gLToDebugPause", 0)){
+            ImGui::Dummy(ImVec2(22.0f, 0.0f));
+            ImGui::SameLine();
+            UIWidgets::CVarCheckbox("Pressing L again advances one frame instead", "gLToFrameAdvance");
+        }
 
         if (CVarGetInteger(StringHelper::Sprintf("gCheckpoint.%d.Set", gCurrentLevel).c_str(), 0)) {
             if (UIWidgets::Button("Clear Checkpoint")) {
