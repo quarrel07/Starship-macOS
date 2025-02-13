@@ -44,10 +44,26 @@ f32 gAndrossUnkAlpha = 0.0f;
 u16 gBolseDynamicGround = true;
 s32 D_bg_800C9C38 = 0; // unused?
 static f32 sGroundPositions360x_FIX[] = {
-    5999.0f, -5999.0f, 5999.0f, -5999.0f, /* 5999.0f * 2.0f, 5999.0f * 2.0f, -5999.0f * 2.0f, -5999.0f * 2.0f,*/
+    5999.0f, -5999.0f, 5999.0f, -5999.0f, // Center pieces X : 0 - 3
+    5999.0f * 3.0f, // lower right corner piece : 4
+    5999.0f * 1.0f, -5999.0f * 1.0f, // Lower middle pieces : 5 - 6
+    -5999.0f * 3.0f,  // lower left corner piece : 7
+    -5999.0f * 3.0f, // upper left corner piece : 8
+     -5999.0f * 1.0f, +5999.0f * 1.0f, // Upper middle pieces X : 9 - 10
+     +5999.0f * 3.0f,  // upper right corner piece : 11
+    -5999.0f * 3.0f, -5999.0f * 3.0f, // Side left pieces : 12 - 13
+    +5999.0f * 3.0f, +5999.0f * 3.0f, // Side Right pieces : 14 - 15
 };
 static f32 sGroundPositions360z_FIX[] = {
-    5999.0f, 5999.0f, -5999.0f, -5999.0f, /* 5999.0f * 2.0f, 5999.0f * 2.0f, -5999.0f * 2.0f, -5999.0f * 2.0f,*/
+    5999.0f, 5999.0f, -5999.0f, -5999.0f, // Center pieces Z
+    5999.0f * 3.0f,  // lower right corner piece : 4
+    5999.0f * 3.0f,  +5999.0f * 3.0f, // Lower pieces Z : 5 - 6
+    5999.0f * 3.0f,   // lower left corner piece : 7
+    -5999.0f * 3.0f, -5999.0f * 3.0f, // Upper pieces X : 9 - 11
+    -5999.0f * 3.0f,  // upper right corner piece : 12
+    -5999.0f * 3.0f,  // upper left corner piece : 8
+    -5999.0f * 1.0f, 5999.0f * 1.0f, // Side left pieces
+    -5999.0f * 1.0f, 5999.0f * 1.0f, // Side Right pieces
 };
 u16 gStarColors[16] = {
     0x108B, 0x108B, 0x1087, 0x1089, 0x39FF, 0x190D, 0x108B, 0x1089,
@@ -1177,6 +1193,16 @@ void Background_DrawGround(void) {
     u32 temp_s0;
     u16* sp1C4;
     Gfx* sp1C0;
+    f32 temp_fv1;
+    f32 temp_fa0;
+    bool sQuadrantX1 = false;
+    bool sQuadrantZ1 = false;
+    bool sQuadrantX2 = false;
+    bool sQuadrantZ2 = false;
+    bool sQuadrantX3 = false;
+    bool sQuadrantZ3 = false;
+    bool sQuadrantX4 = false;
+    bool sQuadrantZ4 = false;
 
     if ((gCurrentLevel != LEVEL_VENOM_2) && ((gPlayer[0].cam.eye.y > 4000.0f) || !gDrawGround)) {
         return;
@@ -1198,8 +1224,6 @@ void Background_DrawGround(void) {
     if (gLevelMode == LEVELMODE_ALL_RANGE) {
         Vec3f sp1B4;
         Vec3f sp1A8;
-        f32 temp_fv1;
-        f32 temp_fa0;
 
         sp1D4 = 0.0f;
         gPlayer[gPlayerNum].xPath = 0.0f;
@@ -1214,31 +1238,50 @@ void Background_DrawGround(void) {
         temp_fv1 = gPlayer[gPlayerNum].cam.eye.x + sp1A8.x;
         temp_fa0 = gPlayer[gPlayerNum].cam.eye.z + sp1A8.z;
 
+        // printf("X: %f\n Z: %f\n\n", temp_fv1, temp_fa0);
+
         if (temp_fv1 > 6000.0f) {
-            gPlayer[gPlayerNum].xPath = 12000.0f;
+            // gPlayer[gPlayerNum].xPath = 12000.0f;
+            //printf("X QUADRANT 1    ");
+            sQuadrantX1 = true;
         }
         if (temp_fv1 > 18000.0f) {
-            gPlayer[gPlayerNum].xPath = 24000.0f;
+            // gPlayer[gPlayerNum].xPath = 24000.0f;
+            //printf("X QUADRANT 2    ");
+            sQuadrantX2 = true;
         }
         if (temp_fv1 < -6000.0f) {
-            gPlayer[gPlayerNum].xPath = -12000.0f;
+            // gPlayer[gPlayerNum].xPath = -12000.0f;
+            //printf("X QUADRANT 3    ");
+            sQuadrantX3 = true;
         }
         if (temp_fv1 < -18000.0f) {
-            gPlayer[gPlayerNum].xPath = -24000.0f;
+            // gPlayer[gPlayerNum].xPath = -24000.0f;
+            //printf("X QUADRANT 4    ");
+            sQuadrantX4 = true;
         }
 
         if (temp_fa0 > 6000.0f) {
-            sp1D4 = 12000.0f;
+            //  sp1D4 = 12000.0f;
+            //printf("Z QUADRANT 1    ");
+            sQuadrantZ1 = true;
         }
         if (temp_fa0 > 18000.0f) {
-            sp1D4 = 24000.0f;
+            // sp1D4 = 24000.0f;
+           // printf("Z QUADRANT 2    ");
+            sQuadrantZ2 = true;
         }
         if (temp_fa0 < -6000.0f) {
-            sp1D4 = -12000.0f;
+            // sp1D4 = -12000.0f;
+            //printf("Z QUADRANT 3    ");
+            sQuadrantZ3 = true;
         }
         if (temp_fa0 < -18000.0f) {
-            sp1D4 = -24000.0f;
+            // sp1D4 = -24000.0f;
+           // printf("Z QUADRANT 4    ");
+            sQuadrantZ4 = true;
         }
+       // printf("\n");
     }
 
     Matrix_Push(&gGfxMatrix);
@@ -1737,21 +1780,75 @@ void Background_DrawGround(void) {
                 RCP_SetupDL_20(gFogRed, gFogGreen, gFogBlue, gFogAlpha, gFogNear, gFogFar);
             }
 
-            skipInterpolationGround = prevPlayerPath != gPlayer[gPlayerNum].xPath;
-            skipInterpolationGround2 = prevPlayerPath2 != sp1D4;
-
-            if (skipInterpolationGround || skipInterpolationGround2) {
-                // @port Skip interpolation
-                FrameInterpolation_ShouldInterpolateFrame(false);
-            }
+            printf("Player X: %f     ", gPlayer[0].pos.x);
+            printf("Player Z: %f     ", gPlayer[0].pos.z);
+            printf("\n");
 
             for (i = 0; i < ARRAY_COUNT(sGroundPositions360x_FIX); i++) {
-                if (!skipInterpolationGround && !skipInterpolationGround2) {
-                    // @port: Tag the transform.
-                    FrameInterpolation_RecordOpenChild("360Ground", i);
+                const f32 dist = 4000.0f;
+
+                #if 1
+                // lower right corner piece Z + X +
+                if ((i == 4) && gPlayer[0].pos.z < -dist && gPlayer[0].pos.x < -dist) {
+                    continue;
+                }
+                // lower left corner piece Z + X -
+                if ((i == 7) && gPlayer[0].pos.z < -dist && gPlayer[0].pos.x > dist) {
+                    continue;
                 }
 
+                // upper left corner piece Z - X -
+                if ((i == 8) && gPlayer[0].pos.z > dist && gPlayer[0].pos.x > dist) {
+                   continue;
+                }
+
+                // upper right corner piece Z - X + 
+                if ((i == 11) && gPlayer[0].pos.z > dist && gPlayer[0].pos.x < -dist) {
+                    continue;
+                }
+
+                // Lower middle pieces
+                if ((i >= 5 && i <= 6) && gPlayer[0].pos.z < -dist) {
+                    continue;
+                }
+
+                // Upper middle pieces
+                if ((i >= 9 && i <= 11) && gPlayer[0].pos.z > dist) {
+                    continue;
+                }
+
+                // Side Left pieces
+                if ((i >= 12 && i <= 13) && gPlayer[0].pos.x > dist) {
+                    continue;
+                }
+
+                // Side Right pieces
+                if ((i >= 14 && i <= 15) && gPlayer[0].pos.x < -dist) {
+                    continue;
+                }
+                #else
+                f32 xDist = sGroundPositions360x_FIX[i] + gPlayer[0].pos.x;
+                f32 zDist = sGroundPositions360z_FIX[i] + gPlayer[0].pos.z;
+                f32 xPDist = gPlayer[0].pos.x;
+                f32 zPDist = gPlayer[0].pos.z;
+
+                if (xDist > xPDist || zDist > zPDist) {
+                    continue;
+                }
+                #endif          
+
+                // if ((i == 4 || i == 5) && !sQuadrantX1 && !sQuadrantZ1) {
+                //     continue;
+                // }
+
+                //if (i == 5 && !sQuadrantX3 && !sQuadrantZ1) {
+                //    continue;
+                //}
+
                 Matrix_Push(&gGfxMatrix);
+
+                FrameInterpolation_RecordOpenChild("360Ground", i);
+
                 Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i],
                                  MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
@@ -1766,10 +1863,9 @@ void Background_DrawGround(void) {
                     gSPDisplayList(gMasterDisp++, D_VE2_6010700);
                 }
 
-                if (!skipInterpolationGround && !skipInterpolationGround2) {
+               
                     // @port: Tag the transform.
                     FrameInterpolation_RecordCloseChild();
-                }
                 Matrix_Pop(&gGfxMatrix);
             }
             if (skipInterpolationGround || skipInterpolationGround2) {
