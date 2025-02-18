@@ -1249,6 +1249,7 @@ void AllRangeGround_Draw(void) {
 
         Matrix_Push(&gGfxMatrix);
 
+        // @port: Tag the transform.
         FrameInterpolation_RecordOpenChild("360Ground", i);
 
         Matrix_Translate(gGfxMatrix, sGroundPositions360x_FIX[i], 0.0f, sGroundPositions360z_FIX[i], MTXF_APPLY);
@@ -1287,7 +1288,7 @@ void AllRangeGround_Draw(void) {
         }
         Matrix_Pop(&gGfxMatrix);
 
-        // @port: Tag the transform.
+        // @port: Pop the transform.
         FrameInterpolation_RecordCloseChild();
     }
 }
