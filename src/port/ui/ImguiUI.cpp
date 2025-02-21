@@ -673,7 +673,7 @@ void DrawDebugMenu() {
             .tooltip = "Disable starfield interpolation to increase performance on slower CPUs"
         });
         UIWidgets::CVarCheckbox("Disable Gamma Boost (Needs reload)", "gGraphics.GammaMode", {
-            .tooltip = "Gamma Boost is disabled in the current build of the game",
+            .tooltip = "Disables the game's Built-in Gamma Boost. Useful for modders",
             .defaultValue = false
         });
 
@@ -711,18 +711,22 @@ void DrawDebugMenu() {
         });
         
         UIWidgets::CVarCheckbox("Speed Control", "gDebugSpeedControl", {
-            .tooltip = "Control the Arwing speed"
+            .tooltip = "Arwing speed control. Use D-PAD Left and Right to Increase/Decrease the Arwing Speed, D-PAD Down to stop movement."
         });
 
         UIWidgets::CVarCheckbox("Debug Ending", "gDebugEnding", {
             .tooltip = "Jump to credits at the main menu"
         });
 
-        UIWidgets::CVarCheckbox("Press L to toggle Debug Pause", "gLToDebugPause");
-        if (CVarGetInteger("gLToDebugPause", 0)){
+        UIWidgets::CVarCheckbox("Debug Pause", "gLToDebugPause", {
+            .tooltip = "Press L to toggle Debug Pause"
+        });
+        if (CVarGetInteger("gLToDebugPause", 0)) {
             ImGui::Dummy(ImVec2(22.0f, 0.0f));
             ImGui::SameLine();
-            UIWidgets::CVarCheckbox("Pressing L again advances one frame instead", "gLToFrameAdvance");
+            UIWidgets::CVarCheckbox("Frame Advance", "gLToFrameAdvance", {
+            .tooltip = "Pressing L again advances one frame instead"
+        });
         }
 
         if (CVarGetInteger(StringHelper::Sprintf("gCheckpoint.%d.Set", gCurrentLevel).c_str(), 0)) {
