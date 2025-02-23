@@ -565,14 +565,14 @@ void Background_DrawBackdrop(void) {
 
                 case LEVEL_CORNERIA:
                 case LEVEL_VENOM_1: {
+                    Matrix_Push(&gGfxMatrix);
                     // Calculate vertical and horizontal offsets
                     f32 bgYpos = (gPlayer[gPlayerNum].camPitch * -6000.0f) - (gPlayer[gPlayerNum].cam.eye.y * 0.6f);
-                    f32 sp13C =
-                        Math_ModF(Math_RadToDeg(gPlayer[gPlayerNum].camYaw) * (-7280.0f / 360.0f) * 5.0f, 7280.0f);
-                    f32 corneriaCamYawDeg = Math_RadToDeg(gPlayer[0].camYaw);
+                    f32 playerCamYawDeg = Math_RadToDeg(gPlayer[gPlayerNum].camYaw);
+                    f32 sp13C = Math_ModF(playerCamYawDeg * (-7280.0f / 360.0f) * 5.0f, 7280.0f);
 
                     if (gLevelMode == LEVELMODE_ON_RAILS) {
-                        if (corneriaCamYawDeg < 180.0f) {
+                        if (playerCamYawDeg < 180.0f) {
                             sp13C = -(7280.0f - sp13C);
                         }
                     }
@@ -588,12 +588,12 @@ void Background_DrawBackdrop(void) {
 
                     // Apply camera roll and translate matrix to the starting position (far left)
                     Matrix_RotateZ(gGfxMatrix, gPlayer[gPlayerNum].camRoll * M_DTOR, MTXF_APPLY);
-                    Matrix_Translate(gGfxMatrix, sp13C - 14560.0f, -2000.0f + bgYpos + bgCutsceneFix, -6000.0f,
+                    Matrix_Translate(gGfxMatrix, sp13C - (7280.0f * 2.0f), -2000.0f + bgYpos + bgCutsceneFix, -6000.0f,
                                      MTXF_APPLY);
                     Matrix_SetGfxMtx(&gMasterDisp);
 
                     // Render the textures across a wider range to cover the screen
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 0; i < 6; i++) {
                         if (skipInterpolation) {
                             // @port Skip interpolation
                             FrameInterpolation_ShouldInterpolateFrame(false);
@@ -625,8 +625,8 @@ void Background_DrawBackdrop(void) {
                         }
                     }
                     bgPrevPosX = sp13C;
-                    break;
-                }
+                    Matrix_Pop(&gGfxMatrix);
+                } break;
 
                 case LEVEL_VENOM_ANDROSS: // WIP
                     if (gDrawBackdrop != 6) {
