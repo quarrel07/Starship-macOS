@@ -181,7 +181,10 @@ void Corneria_CoGranga_HandleDamage(CoGranga* this) {
                 }
 
                 this->state = GRANGA_EXPLODE;
-                this->timer_050 = 100;
+
+                // @port: Adjust timing to compensate the lack of lag.
+                // this->timer_050 = 100;
+                this->timer_050 = 138;
 
                 SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM, 80);
                 SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_FANFARE, 80);
