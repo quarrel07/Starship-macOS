@@ -379,6 +379,7 @@ void OnRadarMarkWolfenDraw(IEvent* ev) {
     }
     ev->cancelled = true;
 
+    RCP_SetupDL(&gMasterDisp, SETUPDL_62);
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, 255);
     Matrix_Scale(gGfxMatrix, 54.0f, 54.0f, 1.0f, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
