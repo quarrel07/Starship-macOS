@@ -19,7 +19,7 @@ void Rand_Init(void) {
 }
 
 f32 Rand_ZeroOne(void) {
-#ifdef __SWITCH__ // Readded to prevent 0 seed
+#if defined(__SWITCH__) || defined(__linux__)
     if (sRandSeed1 == sRandSeed2 == sRandSeed3 == 0){
         Rand_Init();
     }
