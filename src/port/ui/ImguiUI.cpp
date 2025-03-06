@@ -14,6 +14,11 @@
 #include "port/notification/notification.h"
 #include "utils/StringHelper.h"
 
+#ifdef __SWITCH__
+#include <port/switch/SwitchImpl.h>
+#include <port/switch/SwitchPerformanceProfiles.h>
+#endif
+
 extern "C" {
 #include "sys.h"
 #include <sf64audio_provisional.h>
@@ -192,20 +197,10 @@ void DrawSettingsMenu(){
 
             UIWidgets::Spacer(0);
 
-#ifndef __SWITCH__
             UIWidgets::CVarCheckbox("Menubar Controller Navigation", "gControlNav", {
                 .tooltip = "Allows controller navigation of the SOH menu bar (Settings, Enhancements,...)\nCAUTION: This will disable game inputs while the menubar is visible.\n\nD-pad to move between items, A to select, and X to grab focus on the menu bar"
             });
-#endif
-            // UIWidgets::CVarCheckbox("Show Inputs", "gInputEnabled", {
-            //     .tooltip = "Shows currently pressed inputs on the bottom right of the screen"
-            // });
-            if (CVarGetInteger("gInputEnabled", 0)) {
-                UIWidgets::CVarSliderFloat("Input Scale", "gInputScale", 1.0f, 3.0f, 1.0f, {
-                    .tooltip = "Sets the on screen size of the displayed inputs from the Show Inputs setting",
-                    .format = "%.1fx",
-                });
-            }
+
             UIWidgets::CVarCheckbox("Invert Y Axis", "gInvertYAxis",{
                 .tooltip = "Inverts the Y axis for controlling vehicles"
             });
@@ -647,6 +642,16 @@ void DrawDebugMenu() {
         })) {
             Ship::Context::GetInstance()->GetLogger()->set_level((spdlog::level::level_enum)CVarGetInteger("gDeveloperTools.LogLevel", 1));
         }
+
+#ifdef __SWITCH__
+        if (UIWidgets::CVarCombobox("Switch CPU Profile", "gSwitchPerfMode", SWITCH_CPU_PROFILES, {
+            .tooltip = "Switches the CPU profile to a different one",
+            .defaultIndex = (int)Ship::SwitchProfiles::STOCK
+        })) {
+            SPDLOG_INFO("Profile:: %s", SWITCH_CPU_PROFILES[CVarGetInteger("gSwitchPerfMode", (int)Ship::SwitchProfiles::STOCK)]);
+            Ship::Switch::ApplyOverclock();
+        }
+#endif
 
         UIWidgets::WindowButton("Gfx Debugger", "gGfxDebuggerEnabled", GameUI::mGfxDebuggerWindow, {
             .tooltip = "Enables the Gfx Debugger window, allowing you to input commands, type help for some examples"

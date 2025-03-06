@@ -14,6 +14,10 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment ve
 # Set the C++ standard and enable the MSVC parallel build option
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
 set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
+set(PROJECT_TEAM "Lywx & YoshiCrystal")
+set(PROJECT_VERSION_MAJOR 2)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
 #add_compile_options(-fsanitize=address)
 #add_link_options(-fsanitize=address)
 
@@ -67,6 +71,20 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         OR "${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32"))
         message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
     endif()
+endif()
+
+################################################################################
+# Global configuration types
+################################################################################
+if (CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
+set(CMAKE_C_FLAGS_DEBUG "-g -ffast-math -DDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ffast-math -DDEBUG")
+set(CMAKE_C_FLAGS_RELEASE "-O3 -ffast-math -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffast-math -DNDEBUG")
+else()
+set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+set(CMAKE_OBJCXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 endif()
 
 # Set game compilation version
@@ -309,8 +327,16 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         "Vorbis::vorbisfile"
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
+    find_package(SDL2)
+	find_package(Vorbis REQUIRED)
+	link_libraries(Vorbis::vorbisfile)
+	find_package(Ogg REQUIRED)
+	link_libraries(Ogg::ogg)
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
         -lglad
+        SDL2::SDL2
+        "Ogg::ogg"
+        "Vorbis::vorbisfile"
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
@@ -360,6 +386,7 @@ nx_generate_nacp(${PROJECT_NAME}.nacp
 
 nx_create_nro(${PROJECT_NAME}
     NACP ${PROJECT_NAME}.nacp
+    ICON ${CMAKE_CURRENT_SOURCE_DIR}/nx-logo.jpg
 )
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.nro DESTINATION . COMPONENT ${PROJECT_NAME})

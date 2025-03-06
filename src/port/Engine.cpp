@@ -44,6 +44,10 @@
 #include <Fast3D/gfx_pc.h>
 #include <filesystem>
 
+#ifdef __SWITCH__
+#include <port/switch/SwitchImpl.h>
+#endif
+
 namespace fs = std::filesystem;
 
 extern "C" {
@@ -59,6 +63,11 @@ std::vector<uint8_t*> MemoryPool;
 GameEngine* GameEngine::Instance;
 
 GameEngine::GameEngine() {
+#ifdef __SWITCH__
+    Ship::Switch::Init(Ship::PreInitPhase);
+    Ship::Switch::Init(Ship::PostInitPhase);
+#endif
+
     std::vector<std::string> archiveFiles;
     const std::string main_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
     const std::string assets_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
@@ -159,9 +168,11 @@ GameEngine::GameEngine() {
 
     this->context->Init(archiveFiles, {}, 3, { 32000, 1024, 1680 }, window, controlDeck);
 
+#ifndef __SWITCH__
     Ship::Context::GetInstance()->GetLogger()->set_level(
         (spdlog::level::level_enum) CVarGetInteger("gDeveloperTools.LogLevel", 1));
     Ship::Context::GetInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
+#endif
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
@@ -289,6 +300,9 @@ void GameEngine::Destroy() {
         free(ptr);
     }
     MemoryPool.clear();
+#ifdef __SWITCH__
+    Ship::Switch::Exit();
+#endif
 }
 
 void GameEngine::StartFrame() const {
