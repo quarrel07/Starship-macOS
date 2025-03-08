@@ -80,6 +80,8 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
                     }
                     break;
             }
+
+            gSPInvalidateTexCache(gMasterDisp++, pixel);
         }
     } else {
         u16* pixel = SEGMENTED_TO_VIRTUAL(texture);
