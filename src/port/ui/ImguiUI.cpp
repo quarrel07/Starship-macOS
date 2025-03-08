@@ -446,11 +446,11 @@ void DrawGameMenu() {
         if (UIWidgets::MenuItem("Toggle Fullscreen", "F11")) {
             Ship::Context::GetInstance()->GetWindow()->ToggleFullscreen();
         }
+#endif
 
         if (UIWidgets::MenuItem("Quit")) {
             Ship::Context::GetInstance()->GetWindow()->Close();
         }
-#endif
         ImGui::EndMenu();
     }
 }
