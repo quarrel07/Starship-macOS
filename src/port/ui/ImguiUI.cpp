@@ -175,9 +175,12 @@ void DrawSettingsMenu(){
             ImGui::EndMenu();
         }
 
-        if(GameEngine::HasVersion(SF64_VER_EU)){
-            UIWidgets::Spacer(0);
-            if (UIWidgets::BeginMenu("Language")) {
+        UIWidgets::Spacer(0);
+
+        if (UIWidgets::BeginMenu("Language")) {
+            ImGui::Dummy(ImVec2(150, 0.0f));
+            if(GameEngine::HasVersion(SF64_VER_EU)){
+                UIWidgets::Spacer(0);
                 if (UIWidgets::CVarCombobox("Voices", "gVoiceLanguage", voiceLangs, 
                 {
                     .tooltip = "Changes the language of the voice acting in the game",
@@ -185,9 +188,20 @@ void DrawSettingsMenu(){
                 })) {
                     Audio_SetVoiceLanguage(CVarGetInteger("gVoiceLanguage", 0));
                 };
-                ImGui::Dummy(ImVec2(ImGui::CalcTextSize(voiceLangs[0]).x + 55, 0.0f));
-                ImGui::EndMenu();
+            } else {
+                if(UIWidgets::Button("Install EU Audio")){
+                    if(!GameEngine::GenAssetFile()){
+                        GameEngine::ShowMessage("Success", "EU Audio Installed, restart the game to apply changes.");
+                    }
+                }
             }
+
+            if(!GameEngine::HasVersion(SF64_VER_JP) && UIWidgets::Button("Install JP Audio")) {
+                if(GameEngine::GenAssetFile()){
+                    GameEngine::ShowMessage("Success", "EU Audio Installed, restart the game to apply changes.");
+                }
+            }
+            ImGui::EndMenu();
         }
 
         UIWidgets::Spacer(0);

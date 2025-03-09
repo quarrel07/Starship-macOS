@@ -263,18 +263,26 @@ GameEngine::GameEngine() {
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 }
 
-bool GameEngine::GenAssetFile() {
+bool GameEngine::GenAssetFile(bool exitOnFail) {
     auto extractor = new GameExtractor();
 
     if (!extractor->SelectGameFromUI()) {
         ShowMessage("Error", "No ROM selected.\n\nExiting...");
-        exit(1);
+        if (exitOnFail) {
+            exit(1);
+        } else {
+            return false;
+        }
     }
 
     auto game = extractor->ValidateChecksum();
     if (!game.has_value()) {
         ShowMessage("Unsupported ROM", "The provided ROM is not supported.\n\nCheck the readme for a list of supported versions.");
-        exit(1);
+        if (exitOnFail) {
+            exit(1);
+        } else {
+            return false;
+        }
     }
 
     ShowMessage(("Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
