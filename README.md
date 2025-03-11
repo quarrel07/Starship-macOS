@@ -76,6 +76,7 @@ If you want to playtest a continuous integration build, you can find them at the
 * [Windows](https://nightly.link/HarbourMasters/Starship/workflows/main/main/starship-windows.zip)
 * [macOS](https://nightly.link/HarbourMasters/Starship/workflows/main/main/starship-mac-x64.zip)
 * [Linux](https://nightly.link/HarbourMasters/Starship/workflows/main/main/Starship-linux.zip)
+* [Switch](https://nightly.link/HarbourMasters/Starship/workflows/main/main/Starship-switch.zip)
 
 <a href="https://github.com/Kenix3/libultraship/">
   <picture>
