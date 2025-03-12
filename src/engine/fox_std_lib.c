@@ -192,7 +192,7 @@ void Lib_Texture_Mottle(u16* dst, u16* src, u8 mode) {
             break;
     }
 
-    gSPInvalidateTexCache(gMasterDisp++, dst8);
+    gSPInvalidateTexCache(gMasterDisp++, dst);
 }
 
 s32 Animation_GetLimbIndex(Limb* limb, Limb** skeleton) {
