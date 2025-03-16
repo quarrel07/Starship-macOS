@@ -147,11 +147,15 @@ float random(float3 value) {
     return fract(sin(random) * 143758.5453);
 }
 
-float4 fromLinear(float4 linearRGB){
-    bool3 cutoff = linearRGB.xyz < float3(0.0031308, 0.0031308, 0.0031308);
-    float3 higher = 1.055 * pow(linearRGB.xyz, float3(1.0 / 2.4, 1.0 / 2.4, 1.0 / 2.4)) - float3(0.055, 0.055, 0.055);
-    float3 lower = linearRGB.xyz * float3(12.92, 12.92, 12.92);
-    return float4(lerp(higher, lower, cutoff), linearRGB.w);
+float4 fromLinear(float4 linearRGB) {
+    float3 threshold = float3(0.0031308);
+    float3 gamma = float3(1.0 / 2.4);
+    float3 scale = float3(12.92);
+    float3 offset = float3(1.055);
+    float3 subtract = float3(0.055);
+    float3 higher = offset * fast::pow(linearRGB.xyz, gamma) - subtract;
+    float3 lower = linearRGB.xyz * scale;
+    return float4(select(higher, lower, linearRGB.xyz < threshold), linearRGB.w);
 }
 
 fragment float4 fragmentShader(ProjectedVertex in [[stage_in]], constant FrameUniforms &frameUniforms [[buffer(0)]]
