@@ -147,6 +147,13 @@ float random(float3 value) {
     return fract(sin(random) * 143758.5453);
 }
 
+float4 fromLinear(float4 linearRGB){
+    bool3 cutoff = linearRGB.xyz < float3(0.0031308, 0.0031308, 0.0031308);
+    float3 higher = 1.055 * pow(linearRGB.xyz, float3(1.0 / 2.4, 1.0 / 2.4, 1.0 / 2.4)) - float3(0.055, 0.055, 0.055);
+    float3 lower = linearRGB.xyz * float3(12.92, 12.92, 12.92);
+    return float4(lerp(higher, lower, cutoff), linearRGB.w);
+}
+
 fragment float4 fragmentShader(ProjectedVertex in [[stage_in]], constant FrameUniforms &frameUniforms [[buffer(0)]]
 @if(o_textures[0])
     , texture2d<float> uTex0 [[texture(0)]], sampler uTex0Smplr [[sampler(0)]]
@@ -277,8 +284,8 @@ fragment float4 fragmentShader(ProjectedVertex in [[stage_in]], constant FrameUn
         @if(o_invisible)
             texel.w = 0.0;
         @end
-        return texel;
+        return fromLinear(texel);
     @else
-        return float4(texel, 1.0);
+        return fromLinear(float4(texel, 1.0));
     @end
 }
