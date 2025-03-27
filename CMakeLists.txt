@@ -614,6 +614,10 @@ add_custom_target(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/starship.o2r" "${CMAKE_BINARY_DIR}/starship.o2r"
 )
 
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+  install(FILES "${CMAKE_BINARY_DIR}/starship.o2r" DESTINATION . COMPONENT ${PROJECT_NAME})
+endif()
+
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 add_custom_target(CreateOSXIcons
     COMMAND mkdir -p ${CMAKE_BINARY_DIR}/macosx/starship.iconset
