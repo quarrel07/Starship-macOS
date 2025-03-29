@@ -207,7 +207,7 @@ void Background_DrawStarfield(void) {
     float starfieldHeight;
     float vx;
     float vy;
-    const float STAR_MARGIN = 10.0f; // Margin to hide seam stars
+    const float STAR_MARGIN = 40.0f; // Margin to hide seam stars
 
     // Set projection to orthographic before drawing stars
     Lib_InitOrtho(&gMasterDisp);
@@ -295,8 +295,8 @@ void Background_DrawStarfield(void) {
             if (vx >= (marginX - STAR_MARGIN) && vx <= (marginX + renderMaskWidth + STAR_MARGIN) &&
                 vy >= (renderMaskHeight - STAR_MARGIN) && vy <= ((renderMaskHeight * 2) + STAR_MARGIN)) {
 
-                bool skipInterpolation = (fabsf(vx - gStarPrevX[i]) > starfieldWidth / 2.0f) ||
-                                         (fabsf(vy - gStarPrevY[i]) > starfieldHeight / 2.0f);
+                bool skipInterpolation = (fabsf(vx - gStarPrevX[i]) > (marginX + renderMaskWidth + STAR_MARGIN) / 2.0f) ||
+                                         (fabsf(vy - gStarPrevY[i]) > (marginX + renderMaskWidth + STAR_MARGIN) / 2.0f);
 
                 if (skipInterpolation) {
                     // @port Skip interpolation
@@ -328,7 +328,7 @@ void Background_DrawStarfield(void) {
                 Matrix_Pop(&gGfxMatrix);
 
                 if (skipInterpolation) {
-                    // @port Skip interpolation
+                    // @port Re-enable Interpolation if it was skipped
                     FrameInterpolation_ShouldInterpolateFrame(true);
                 } else {
                     FrameInterpolation_RecordCloseChild();
