@@ -480,7 +480,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
 
     std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
-    int target_fps = GameEngine::Instance->GetInterpolationFPS();
+    int target_fps = CVarGetInteger("gInterpolationFPS", 60);
     static int last_fps;
     static int last_update_rate;
     static int time;
@@ -509,8 +509,11 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
 
     time -= fps;
 
+    int threshold = CVarGetInteger("gExtraLatencyThreshold", 80);
+
     if (wnd != nullptr) {
         wnd->SetTargetFps(fps);
+        wnd->SetMaximumFrameLatency(threshold > 0 && target_fps >= threshold ? 2 : 1);
     }
 
     // When the gfx debugger is active, only run with the final mtx
@@ -526,16 +529,16 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
 }
 
 uint32_t GameEngine::GetInterpolationFPS() {
-    if (CVarGetInteger("gMatchRefreshRate", 0)) {
-        return Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate();
-
-    } else if (CVarGetInteger("gVsyncEnabled", 1) ||
-               !Ship::Context::GetInstance()->GetWindow()->CanDisableVerticalSync()) {
-        return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
-                                  CVarGetInteger("gInterpolationFPS", 60));
+    if (Ship::Context::GetInstance()->GetWindow()->GetWindowBackend() == Ship::WindowBackend::FAST3D_DXGI_DX11) {
+        return CVarGetInteger("gInterpolationFPS", 60);
     }
 
-    return CVarGetInteger("gInterpolationFPS", 60);
+    if (CVarGetInteger("gMatchRefreshRate", 0)) {
+        return Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate();
+    }
+
+    return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
+                              CVarGetInteger("gInterpolationFPS", 60));
 }
 
 uint32_t GameEngine::GetInterpolationFrameCount()
