@@ -295,8 +295,8 @@ void Background_DrawStarfield(void) {
             if (vx >= (marginX - STAR_MARGIN) && vx <= (marginX + renderMaskWidth + STAR_MARGIN) &&
                 vy >= (renderMaskHeight - STAR_MARGIN) && vy <= ((renderMaskHeight * 2) + STAR_MARGIN)) {
 
-                bool skipInterpolation = (fabsf(vx - gStarPrevX[i]) > (marginX + renderMaskWidth + STAR_MARGIN) / 2.0f) ||
-                                         (fabsf(vy - gStarPrevY[i]) > (marginX + renderMaskWidth + STAR_MARGIN) / 2.0f);
+                bool skipInterpolation = (fabsf(vx - gStarPrevX[i]) > (marginX + renderMaskWidth) / 2.0f) ||
+                                         (fabsf(vy - gStarPrevY[i]) > ((renderMaskHeight * 2)) / 2.0f);
 
                 if (skipInterpolation) {
                     // @port Skip interpolation
