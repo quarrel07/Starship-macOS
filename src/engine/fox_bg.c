@@ -1705,6 +1705,7 @@ void Background_DrawGround(void) {
             sp1C0 = D_AQ_600AB10;
             gSPFogPosition(gMasterDisp++, gFogNear, gFogFar);
 
+            // Top water surface:
             if ((D_bg_8015F964 == 0) && ((gAqDrawMode == 0) || (gAqDrawMode == 2))) {
 
                 gDPLoadTileTexture(gMasterDisp++, SEGMENTED_TO_VIRTUAL(D_AQ_600AB68), G_IM_FMT_RGBA, G_IM_SIZ_16b, 32,
@@ -1781,6 +1782,7 @@ void Background_DrawGround(void) {
                 Matrix_Pop(&gGfxMatrix);
             }
 
+            // Bottom Water floor
             if ((D_bg_8015F964 != 0) || (gAqDrawMode == 0)) {
                 gDPLoadTileTexture(gMasterDisp++, SEGMENTED_TO_VIRTUAL(D_AQ_602ACC0), G_IM_FMT_RGBA, G_IM_SIZ_16b, 32,
                                    32);
