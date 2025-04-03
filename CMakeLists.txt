@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
 # Set the project version and language
 project(Starship VERSION 0.1.0 LANGUAGES C CXX ASM)
