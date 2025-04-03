@@ -73,7 +73,7 @@ GameEngine::GameEngine() {
     const std::string assets_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
 
 #ifdef _WIN32
-    AllocConsole();
+    // AllocConsole();
 #endif
 
     if (!fs::exists("mods")) {
