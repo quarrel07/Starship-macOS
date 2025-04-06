@@ -172,40 +172,36 @@ void DrawSettingsMenu(){
                 UIWidgets::ReEnableComponent("");
             }
             
-            UIWidgets::PaddedEnhancementCheckbox("Surround 5.1 (needs reload)", "gAudioChannelsSetting", 1, 0);
+            UIWidgets::PaddedEnhancementCheckbox("Surround 5.1 (Needs reload)", "gAudioChannelsSetting", 1, 0);
 
             ImGui::EndMenu();
         }
-
-        UIWidgets::Spacer(0);
-
-        if (UIWidgets::BeginMenu("Language")) {
-            ImGui::Dummy(ImVec2(150, 0.0f));
-            if(GameEngine::HasVersion(SF64_VER_EU)){
-                UIWidgets::Spacer(0);
-                if (UIWidgets::CVarCombobox("Voices", "gVoiceLanguage", voiceLangs, 
-                {
-                    .tooltip = "Changes the language of the voice acting in the game",
-                    .defaultIndex = 0,
-                })) {
-                    Audio_SetVoiceLanguage(CVarGetInteger("gVoiceLanguage", 0));
-                };
-            } else {
-                if(UIWidgets::Button("Install EU Audio")){
-                    if(!GameEngine::GenAssetFile()){
-                        GameEngine::ShowMessage("Success", "EU Audio Installed, restart the game to apply changes.");
+        
+        if (!GameEngine::HasVersion(SF64_VER_JP) || GameEngine::HasVersion(SF64_VER_EU)) {
+            UIWidgets::Spacer(0);
+            if (UIWidgets::BeginMenu("Language")) {
+                ImGui::Dummy(ImVec2(150, 0.0f));
+                if (!GameEngine::HasVersion(SF64_VER_JP) && GameEngine::HasVersion(SF64_VER_EU)){
+                    //UIWidgets::Spacer(0);
+                    if (UIWidgets::CVarCombobox("Voices", "gVoiceLanguage", voiceLangs, 
+                    {
+                        .tooltip = "Changes the language of the voice acting in the game",
+                        .defaultIndex = 0,
+                    })) {
+                        Audio_SetVoiceLanguage(CVarGetInteger("gVoiceLanguage", 0));
+                    };
+                } else {
+                    if (UIWidgets::Button("Install JP/EU Audio")) {
+                        if (GameEngine::GenAssetFile()){
+                            GameEngine::ShowMessage("Success", "Audio assets Installed, restart the game to apply changes.", SDL_MESSAGEBOX_INFORMATION);
+                            Ship::Context::GetInstance()->GetWindow()->Close();
+                        }
                     }
                 }
+                ImGui::EndMenu();
             }
-
-            if(!GameEngine::HasVersion(SF64_VER_JP) && UIWidgets::Button("Install JP Audio")) {
-                if(GameEngine::GenAssetFile()){
-                    GameEngine::ShowMessage("Success", "EU Audio Installed, restart the game to apply changes.");
-                }
-            }
-            ImGui::EndMenu();
         }
-
+        
         UIWidgets::Spacer(0);
 
         if (UIWidgets::BeginMenu("Controller")) {
