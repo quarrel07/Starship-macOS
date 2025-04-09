@@ -453,11 +453,16 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
         return;
     }
 
+    auto interpreter = wnd->GetInterpreterWeak().lock().get();
+
     // Process window events for resize, mouse, keyboard events
     wnd->HandleEvents();
 
+    interpreter->mInterpolationIndex = 0;
+
     for (const auto& m : mtx_replacements) {
         wnd->DrawAndRunGraphicsCommands(Commands, m);
+        interpreter->mInterpolationIndex++;
     }
 
     bool curAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
