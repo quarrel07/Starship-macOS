@@ -419,8 +419,8 @@ void AudioLoad_SyncInitSeqPlayerInternal(s32 playerIdx, s32 seqId, s32 arg2) {
 void* AudioLoad_SyncLoadSeq(s32 seqId) {
     AudioTable* table = AudioLoad_GetLoadTable(SEQUENCE_TABLE);
     char* seqPath = ResourceGetNameByCrc((uint64_t) table->entries[seqId].romAddr);
-    printf("seqId: %d\n", seqId);
-    printf("seqPath: %s\n", seqPath);
+    // printf("seqId: %d\n", seqId);
+    // printf("seqPath: %s\n", seqPath);
 
     return ResourceGetDataByCrc((uint64_t) table->entries[seqId].romAddr);
 }
