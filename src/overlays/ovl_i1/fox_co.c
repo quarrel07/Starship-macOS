@@ -9,6 +9,7 @@
 #include "assets/ast_corneria.h"
 #include "fox_co.h"
 #include "port/hooks/Events.h"
+#include "fox_record.h"
 
 // Carrier destroy cutscene timings recorded from a real N64
 u8 gCarrierCutsceneRecord[200] = {
