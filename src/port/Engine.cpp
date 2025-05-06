@@ -70,7 +70,7 @@ GameEngine::GameEngine() {
 
     std::vector<std::string> archiveFiles;
     const std::string main_path = Ship::Context::GetPathRelativeToAppDirectory("sf64.o2r");
-    const std::string assets_path = Ship::Context::GetPathRelativeToAppDirectory("starship.o2r");
+    const std::string assets_path = Ship::Context::GetPathRelativeToAppBundle("starship.o2r");
 
 #ifdef _WIN32
     AllocConsole();
