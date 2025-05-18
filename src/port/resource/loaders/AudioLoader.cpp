@@ -11,7 +11,7 @@
 extern "C" SoundFont* Audio_LoadFont(AudioTableEntry entry, uint32_t fontId) {
     auto crc = (uint64_t) gSoundFontTable->entries[fontId].romAddr;
     auto path = ResourceGetNameByCrc(crc);
-    printf("Font: %s\n", path);
+    // printf("Font: %s\n", path);
   
     return (SoundFont*) ResourceGetDataByCrc(crc);
 }
