@@ -218,6 +218,9 @@ void Effect_Effect372_Draw(Effect372* this) {
 }
 
 void Effect_Effect382_Draw(Effect382* this) {
+    // @port Skip interpolation
+    FrameInterpolation_ShouldInterpolateFrame(false);
+
     RCP_SetupDL_49();
     gDPSetPrimColor(gMasterDisp++, 0, 0, 255, 255, 255, this->unk_44);
     gDPSetEnvColor(gMasterDisp++, 255, 255, 255, this->unk_44);
@@ -225,6 +228,10 @@ void Effect_Effect382_Draw(Effect382* this) {
     Matrix_Translate(gGfxMatrix, 0.0f, 20.0f, 0.0f, MTXF_APPLY);
     Matrix_SetGfxMtx(&gMasterDisp);
     gSPDisplayList(gMasterDisp++, D_ZO_6024220);
+
+    // @port renable interpolation
+    FrameInterpolation_ShouldInterpolateFrame(true);
+
     RCP_SetupDL(&gMasterDisp, SETUPDL_64);
 }
 
@@ -2276,11 +2283,18 @@ void Effect_Effect374_Draw(Effect374* this) {
             break;
 
         case 1:
+            // @port Skip interpolation
+            FrameInterpolation_ShouldInterpolateFrame(false);
+
             Matrix_Scale(gGfxMatrix, this->scale1, this->scale2, 2.5f, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             RCP_SetupDL_40();
             gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
             gSPDisplayList(gMasterDisp++, D_ENMY_PLANET_4008F70);
+
+            // @port renable interpolation
+            FrameInterpolation_ShouldInterpolateFrame(true);
+            
             RCP_SetupDL(&gMasterDisp, SETUPDL_64);
             break;
     }
