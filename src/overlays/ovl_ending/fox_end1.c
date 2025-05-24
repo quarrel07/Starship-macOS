@@ -1027,9 +1027,8 @@ void Ending_8018A8FC(void) {
 void Ending_Main(void) {
     gCsFrameCount++;
     gGameFrameCount++;
-
     switch (D_ending_80196D00) {
-        case 0:
+        case 0: // Ending Init
             gRadioState = 0;
             gGameFrameCount = 0;
             gSceneSetup = 0;
@@ -1037,6 +1036,12 @@ void Ending_Main(void) {
             gCsCamAtX = gCsCamAtY = 0.0f;
             gCsCamAtZ = -100.0f;
             D_ending_80196D00 = 1;
+
+            // @port Bugfix:
+            // In the original game, this variable is set zero when the overlay is reloaded.
+            // Since we don't use overlays, the absence of this counter reset causes the ending not to play
+            // after a the first playthrough.
+            D_ending_80192E70 = 0;
             break;
 
         case 1:
