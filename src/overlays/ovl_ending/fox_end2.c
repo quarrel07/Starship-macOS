@@ -820,6 +820,10 @@ void Ending_80191234(u32 arg0, AssetInfo* asset) {
     gBgColor = 0;
     gStarCount = 0;
     gControllerLock = 10;
+
+    // @port: Ending seen at least once.
+    gSaveFile.save.data.padEE[0] = 1;
+    Save_Write();
 }
 
 void Ending_80191294(u32 arg0, AssetInfo* asset) {
@@ -1083,7 +1087,11 @@ void Ending_801924EC(u32 arg0) {
 }
 
 void Ending_801926D4(void) {
-    gControllerLock = 10000;
+    if (gSaveFile.save.data.padEE[0] == 1) {
+        gControllerLock = 0;
+    } else {
+        gControllerLock = 10000;
+    }
 
     Matrix_Push(&gGfxMatrix);
 

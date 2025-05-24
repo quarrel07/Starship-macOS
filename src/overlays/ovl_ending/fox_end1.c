@@ -1046,6 +1046,18 @@ void Ending_8018A8FC(void) {
 void Ending_Main(void) {
     gCsFrameCount++;
     gGameFrameCount++;
+
+    if (gSaveFile.save.data.padEE[0] == 1) {
+        gControllerLock = 0;
+        if (gControllerPress[0].button & START_BUTTON) {
+            D_ending_80196D00 = 7;
+            D_ending_80196D04 = 7200;
+            D_ending_80192E70 = 7200;
+        }
+    } else {
+        gControllerLock = 10000;
+    }
+
     switch (D_ending_80196D00) {
         case 0: // Ending Init
             gRadioState = 0;
