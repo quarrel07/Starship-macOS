@@ -88,7 +88,7 @@ GameEngine::GameEngine() {
     if (std::filesystem::exists(main_path)) {
         archiveFiles.push_back(main_path);
     } else {
-        if (ShowYesNoBox("No O2R Files", "No O2R files found. Generate one now?") == IDYES) {
+        if (ShowYesNoBox("Starship - Asset Extraction", "Please provide a Starfox 64 ROM.\n\nSupported Versions:\nUS 1.0\nUS 1.1\n\nAssets will be extracted into an O2R file.") == IDYES) {
             if(!GenAssetFile()){
                 ShowMessage("Error", "An error occured, no O2R file was generated.\n\nExiting...");
                 exit(1);
@@ -96,7 +96,7 @@ GameEngine::GameEngine() {
                 archiveFiles.push_back(main_path);
             }
 
-            if (ShowYesNoBox("Extraction Complete", "ROM Extracted. Extract another?") == IDYES) {
+            if (ShowYesNoBox("Extraction Complete", "ROM Extracted. Extract another?\n\n Starship supports JP and EU ROMs for voice replacement.\n Voice replacement ROM assets can also be installed in:\n Settings->Language->Install JP/EU Audio") == IDYES) {
                 if(!GenAssetFile()){
                     ShowMessage("Error", "An error occured, no O2R file was generated.");
                 }
@@ -291,7 +291,7 @@ bool GameEngine::GenAssetFile(bool exitOnFail) {
         }
     }
 
-    ShowMessage(("Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
+    ShowMessage(("Starship - Extraction - Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
 
     return extractor->GenerateOTR();
 }
