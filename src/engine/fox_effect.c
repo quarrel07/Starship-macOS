@@ -753,6 +753,9 @@ void Effect_Effect357_Draw(Effect357* this) {
         gSPFogPosition(gMasterDisp++, gFogNear, 1005);
     }
 
+    // @port: Tag the transform.
+    FrameInterpolation_RecordOpenChild("Effect357", this->unk_4C | (this->index << 16) & 0x00FF);
+
     Graphics_SetScaleMtx(this->scale2);
 
     switch (gCurrentLevel) {
@@ -894,6 +897,8 @@ void Effect_Effect357_Draw(Effect357* this) {
             }
             break;
     }
+    // @port Pop the transform id.
+    FrameInterpolation_RecordCloseChild();
 
     RCP_SetupDL(&gMasterDisp, SETUPDL_64);
 
@@ -2294,7 +2299,7 @@ void Effect_Effect374_Draw(Effect374* this) {
 
             // @port renable interpolation
             FrameInterpolation_ShouldInterpolateFrame(true);
-            
+
             RCP_SetupDL(&gMasterDisp, SETUPDL_64);
             break;
     }
@@ -3809,7 +3814,7 @@ void Effect_Effect395_Update(Effect395* this) {
                     D_ctx_801779A8[0] = 50.0f;
                     if (this->unk_46 == 10) {
                         gFillScreenRed = gFillScreenGreen = gFillScreenBlue = 255;
-                        if (CVarGetInteger("gDisableGorgonFlash", 0) == 0){
+                        if (CVarGetInteger("gDisableGorgonFlash", 0) == 0) {
                             gFillScreenAlpha = gFillScreenAlphaTarget = 255;
                         }
                         gFillScreenAlphaTarget = 0;
