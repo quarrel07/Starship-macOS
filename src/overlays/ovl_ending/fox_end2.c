@@ -458,8 +458,24 @@ void Ending_8018EDB8(u32 arg0, AssetInfo* asset) {
 
     gDPLoadTextureBlock(gMasterDisp++, D_END_700EA38, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, G_TX_WRAP | G_TX_NOMIRROR,
                         G_TX_WRAP | G_TX_NOMIRROR, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
-    gDPSetupTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, arg0 * 14, 0, G_TX_NOMIRROR | G_TX_WRAP,
-                 G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+    int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
+
+    float scrollArg = arg0 * 14;
+    float inc = 14 / (float) interpolatedFrames;
+
+    for (int i = 0; i < interpolatedFrames; i++) {
+        gDPSetInterpolation(gMasterDisp++, i);
+
+        gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, scrollArg, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                      G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+
+        gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, scrollArg, 0, 32 << 2, 0);
+
+        gMasterDisp += 3;
+
+        scrollArg += inc;
+    }
+
     gSPDisplayList(gMasterDisp++, D_END_700E9E0);
 }
 
@@ -820,6 +836,10 @@ void Ending_80191234(u32 arg0, AssetInfo* asset) {
     gBgColor = 0;
     gStarCount = 0;
     gControllerLock = 10;
+
+    // @port: Ending seen at least once.
+    gSaveFile.save.data.padEE[0] = 1;
+    Save_Write();
 }
 
 void Ending_80191294(u32 arg0, AssetInfo* asset) {
@@ -1083,7 +1103,11 @@ void Ending_801924EC(u32 arg0) {
 }
 
 void Ending_801926D4(void) {
-    gControllerLock = 10000;
+    if (gSaveFile.save.data.padEE[0] == 1) {
+        gControllerLock = 0;
+    } else {
+        gControllerLock = 10000;
+    }
 
     Matrix_Push(&gGfxMatrix);
 

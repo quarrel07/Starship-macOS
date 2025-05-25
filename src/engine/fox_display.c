@@ -432,6 +432,10 @@ void Display_LandmasterThrusters(Player* player) {
         }
 
         Matrix_Push(&gGfxMatrix);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Display_LandmasterThrusters_1", player->num);
+
         Matrix_Translate(gGfxMatrix, 20.0f, 30.0f, -10.0f, MTXF_APPLY);
 
         if (!gVersusMode) {
@@ -447,6 +451,10 @@ void Display_LandmasterThrusters(Player* player) {
         } else {
             gSPDisplayList(gMasterDisp++, D_versus_301B6E0);
         }
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+
         Matrix_Pop(&gGfxMatrix);
     }
 
@@ -461,6 +469,10 @@ void Display_LandmasterThrusters(Player* player) {
         }
 
         Matrix_Push(&gGfxMatrix);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild("Display_LandmasterThrusters_2", player->num);
+
         Matrix_Translate(gGfxMatrix, -20.0f, 30.0f, -10.0f, MTXF_APPLY);
 
         if (!gVersusMode) {
@@ -476,8 +488,13 @@ void Display_LandmasterThrusters(Player* player) {
         } else {
             gSPDisplayList(gMasterDisp++, D_versus_301B6E0);
         }
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+
         Matrix_Pop(&gGfxMatrix);
     }
+
     Matrix_Pop(&gGfxMatrix);
 }
 

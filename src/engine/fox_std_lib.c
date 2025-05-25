@@ -42,6 +42,8 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
         width = newWidth;
         height = newHeight;
 
+        scale = 1; // TODO: a higher scale causes performance issues for large textures ?
+
         for(s32 i = 0; i < (s32) scale; i++){
             switch (mode) {
                 case 0:
