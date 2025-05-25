@@ -513,9 +513,7 @@ void DrawSettingsMenu(){
         ImGui::Text("Texture Filter (Needs reload)");
         UIWidgets::EnhancementCombobox("gTextureFilter", filters, 0);
 
-        if (Ship::Context::GetInstance()->GetConfig()->GetString("Window.Backend.Name") != windowBackendNames[Ship::WindowBackend::FAST3D_SDL_OPENGL]) {
-            UIWidgets::PaddedEnhancementCheckbox("Apply Point Filtering to UI Elements", "gHUDPointFiltering", true, false, false, "", UIWidgets::CheckboxGraphics::Cross, true);
-        }
+        UIWidgets::PaddedEnhancementCheckbox("Apply Point Filtering to UI Elements", "gHUDPointFiltering", true, false, false, "", UIWidgets::CheckboxGraphics::Cross, true);
         UIWidgets::Spacer(0);
 
         Ship::Context::GetInstance()->GetWindow()->GetGui()->GetGameOverlay()->DrawSettings();
