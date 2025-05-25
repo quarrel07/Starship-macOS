@@ -40,6 +40,7 @@ Your ROM needs to be in .z64 format. If it's in .n64 format, use the following t
 #### Linux
 * Extract every file from the zip into a folder of your choosing.
 * Execute starship.appimage. You may have to chmod +x the appimage via terminal.
+* Select your US 1.0 or US 1.1 ROM.
 
 #### MacOS
 * Extract every file from the zip into a folder of your choosing.
