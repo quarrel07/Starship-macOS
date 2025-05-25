@@ -18,27 +18,31 @@ If you're having any trouble after reading through this `README`, feel free ask 
 Starship does not include any copyrighted assets.  You are required to provide a supported copy of the game.
 
 ### 1. Verify your ROM dump
-The supported ROM is the USA 1.1 Rev A version. You can verify you have dumped a supported copy of the game by using the SHA-1 File Checksum Online at https://www.romhacking.net/hash/. The hash for a US 1.1 ROM is SHA-1: 09F0D105F476B00EFA5303A3EBC42E60A7753B7A.
+The supported ROMs are US 1.0 and US 1.1 Rev A versions. You can verify you have dumped a supported copy of the game by using the SHA-1 File Checksum Online at https://www.romhacking.net/hash/. 
+
+The SHA-1 hash for a US 1.0 ROM is D8B1088520F7C5F81433292A9258C1184AFA1457.
+The SHA-1 hash for a US 1.1 ROM is 09F0D105F476B00EFA5303A3EBC42E60A7753B7A.
+
+Starship also supports voice language replacement use from both EU (Lylat) and JP (Japanese) when used in conjunction with an US ROM.
+Note: JP and EU versions of the game are not supported for the base asset O2R creation, a US ROM must be used for it.
 
 ### 2. Verify your ROM is in .z64 format
 Your ROM needs to be in .z64 format. If it's in .n64 format, use the following to convert it to a .z64: https://hack64.net/tools/swapper.php
 
 ### 2. Download Starship from [Releases](https://github.com/HarbourMasters/Starship/releases)
 
-### 3. Generating the O2R from the ROM
+### 3. Generating the OTR from the ROM and Play!
 #### Windows
 * Extract every file from the zip into a folder of your choosing.
-* Copy your ROM to the root of the folder you extracted the zip to.
-* Run "generate_o2r.bat"
+* Run starship.exe and select your US 1.0 or US 1.1 ROM.
+
+#### Linux
+* Extract every file from the zip into a folder of your choosing.
+* Execute starship.appimage. You may have to chmod +x the appimage via terminal.
 
 #### MacOS
 * Extract every file from the zip into a folder of your choosing.
-* Copy your ROM to the root of the folder you extracted the zip to.
-* Run "generate_o2r.sh"
-
-### 4. Play!
-* Launch `Starship.exe`
-Congratulations, you are now sailing with Starship! Have fun!
+* Run starship and select your US 1.0 or US 1.1 ROM.
 
 # Configuration
 
