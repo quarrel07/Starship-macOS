@@ -24,6 +24,7 @@ The supported ROMs are US 1.0 and US 1.1 Rev A versions. You can verify you have
 * The SHA-1 hash for a US 1.1 ROM is 09F0D105F476B00EFA5303A3EBC42E60A7753B7A.
 
 Starship also supports voice language replacement use from both EU (Lylat) and JP (Japanese) when used in conjunction with an US ROM.
+
 Note: JP and EU versions of the game are not supported for the base asset O2R creation, a US ROM must be used for it.
 
 ### 2. Verify your ROM is in .z64 format
