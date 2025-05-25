@@ -320,10 +320,10 @@ void DrawSettingsMenu(){
                     };
                 } else {
                     if (UIWidgets::Button("Install JP/EU Audio")) {
-                        if (GameEngine::GenAssetFile()){
+                        if (GameEngine::GenAssetFile(false)){
                             GameEngine::ShowMessage("Success", "Audio assets installed. Changes will be applied on the next startup.", SDL_MESSAGEBOX_INFORMATION);
-                            Ship::Context::GetInstance()->GetWindow()->Close();
                         }
+                        Ship::Context::GetInstance()->GetWindow()->Close();
                     }
                 }
                 ImGui::EndMenu();
