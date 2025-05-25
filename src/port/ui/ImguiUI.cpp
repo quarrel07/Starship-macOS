@@ -449,7 +449,7 @@ void DrawSettingsMenu(){
         UIWidgets::Tooltip("Matches interpolation value to the refresh rate of your display.");
 
         if (Ship::Context::GetInstance()->GetWindow()->GetWindowBackend() == Ship::WindowBackend::FAST3D_DXGI_DX11) {
-            UIWidgets::PaddedEnhancementCheckbox("Render parallelization","gRenderParallelization", true, false);
+            UIWidgets::PaddedEnhancementCheckbox("Render parallelization","gRenderParallelization", true, false, {}, {}, {}, true);
             UIWidgets::Tooltip(
                 "This setting allows the CPU to work on one frame while GPU works on the previous frame.\n"
                 "Recommended if you can't reach the FPS you set, despite it being set below your refresh rate "

@@ -522,7 +522,7 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
 
     if (wnd != nullptr) {
         wnd->SetTargetFps(fps);
-        wnd->SetMaximumFrameLatency(CVarGetInteger("gRenderParallelization", 0) ? 2 : 1);
+        wnd->SetMaximumFrameLatency(CVarGetInteger("gRenderParallelization", 1) ? 2 : 1);
     }
 
     // When the gfx debugger is active, only run with the final mtx
