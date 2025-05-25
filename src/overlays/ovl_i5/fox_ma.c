@@ -5925,11 +5925,17 @@ void Macbeth_MaBombDrop_Draw(MaBombDrop* this) {
             break;
 
         case 1:
+            // @port Skip interpolation
+            FrameInterpolation_ShouldInterpolateFrame(false);
+
             Matrix_Scale(gGfxMatrix, this->fwork[0], this->scale, 2.5f, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             RCP_SetupDL_40();
             gSPClearGeometryMode(gMasterDisp++, G_CULL_BACK);
             gSPDisplayList(gMasterDisp++, D_ENMY_PLANET_4008F70);
+
+            // @port renable interpolation
+            FrameInterpolation_ShouldInterpolateFrame(true);
             RCP_SetupDL(&gMasterDisp, SETUPDL_64);
             break;
     }
@@ -6495,12 +6501,6 @@ void Macbeth_Effect357_Spawn2(f32 xPos, f32 yPos, f32 zPos, f32 arg3) {
 f32 D_i5_801BA854[8] = { 1.5f, -1.0f, 0.7f, 0.0f, 0.9f, 0.7f, -1.0f, 1.5f };
 f32 D_i5_801BA874[8] = { 200.0f, 300.0f, 400.0f, 0.0f, 500.0f, 100.0f, 120.0f, 100.0f };
 f32 D_i5_801BA894[8] = { 200.0f, 250.0f, 220.0f, 0.0f, 200.0f, 230.0f, 220.0f, 350.0f };
-
-
-
-
-
-
 
 void Macbeth_LevelComplete2(Player* player) {
     s32 i;
