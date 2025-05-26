@@ -129,8 +129,8 @@ void Radio_PlayMessage(u16* msg, RadioCharacterId character) {
     Audio_PlayVoice(gRadioMsgId);
 }
 
-void Radio_CalculatePositions(){
-        switch (gGameState) {
+void Radio_CalculatePositions() {
+    switch (gGameState) {
         case GSTATE_TITLE:
             gRadioPrintPosY = 176;
             gRadioPrintPosX = OTRGetRectDimensionFromLeftEdgeOverride(85.0f);
@@ -457,7 +457,7 @@ void func_radio_800BB388(void) {
     u8* texture;
     u16* palette;
     f32 sp30;
-    
+
     Radio_CalculatePositions();
 
     if ((gGameState != GSTATE_MAP) && (gRadioTextBoxScaleY != 0.0f)) {
@@ -771,7 +771,8 @@ void Radio_Draw(void) {
             }
             if (((gCurrentRadioPortrait != RCID_STATIC) && (gCurrentRadioPortrait != RCID_STATIC + 1)) &&
                 (gCurrentRadioPortrait != RCID_1000)) {
-                HUD_TeamShields_Draw(OTRGetRectDimensionFromLeftEdgeOverride(22.0f), 165.0f, gActors[idx].health * 2.55f);
+                HUD_TeamShields_Draw(OTRGetRectDimensionFromLeftEdgeOverride(22.0f), 165.0f,
+                                     gActors[idx].health * 2.55f);
             }
         }
         if (((gCurrentRadioPortrait != RCID_STATIC) && (gCurrentRadioPortrait != RCID_STATIC + 1)) &&

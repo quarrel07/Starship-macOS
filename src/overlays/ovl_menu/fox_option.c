@@ -3492,7 +3492,7 @@ void Option_DrawMenuCard(OptionCardFrame arg0) {
     Matrix_Push(&gGfxMatrix);
 
     // @port: Tag the transform.
-    FrameInterpolation_RecordOpenChild("MenuCard", (u32) & arg0);
+    FrameInterpolation_RecordOpenChild("MenuCard", (u32) &arg0);
 
     Matrix_Translate(gGfxMatrix, arg0.x, arg0.y, arg0.z, MTXF_APPLY);
     Matrix_Scale(gGfxMatrix, arg0.xScale, arg0.yScale, 1.0f, MTXF_APPLY);

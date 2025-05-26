@@ -34,7 +34,7 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
     bool custom;
     GameEngine_GetTextureInfo(texture, &newWidth, &newHeight, &scale, &custom);
 
-    if(custom) {
+    if (custom) {
         u32* pixel = SEGMENTED_TO_VIRTUAL(texture);
         u32 tempPxl;
         s32 u;
@@ -44,7 +44,7 @@ void Lib_Texture_Scroll(u16* texture, s32 width, s32 height, u8 mode) {
 
         scale = 1; // TODO: a higher scale causes performance issues for large textures ?
 
-        for(s32 i = 0; i < (s32) scale; i++){
+        for (s32 i = 0; i < (s32) scale; i++) {
             switch (mode) {
                 case 0:
                     for (u = 0; u < width; u++) {

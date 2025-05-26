@@ -489,7 +489,7 @@ void SectorY_80198F5C(SyShogun* this) {
         this->vel.y = 0.0f;
         this->vel.x = 0.0f;
 
-         // first and second robot explode
+        // first and second robot explode
         if ((gPlayer[0].state == PLAYERSTATE_ACTIVE) || (gPlayer[0].state == PLAYERSTATE_U_TURN)) {
             this->timer_058 = 100;
             gPlayer[0].state = PLAYERSTATE_STANDBY;
