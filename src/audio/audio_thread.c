@@ -186,7 +186,7 @@ SPTask* AudioThread_CreateTask() {
 
     task->output_buff = NULL;
     task->output_buff_size = NULL;
-    
+
     task->data_ptr = (u64*) gAbiCmdBuffs[aiBuffIndex];
     task->data_size = abiCmdCount * sizeof(Acmd);
 

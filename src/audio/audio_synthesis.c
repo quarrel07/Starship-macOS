@@ -702,8 +702,7 @@ Acmd* AudioSynth_Update(Acmd* aList, s32* cmdCount, s16* aiBufStart, s32 aiBufLe
             }
         }
 
-        aCmdPtr =
-            AudioSynth_DoOneAudioUpdate(aiBufPtr, chunkLen, aCmdPtr, gAudioBufferParams.ticksPerUpdate - i);
+        aCmdPtr = AudioSynth_DoOneAudioUpdate(aiBufPtr, chunkLen, aCmdPtr, gAudioBufferParams.ticksPerUpdate - i);
         aiBufLen -= chunkLen;
 
         int num_audio_channels = GetNumAudioChannels();
@@ -855,7 +854,8 @@ Acmd* AudioSynth_DoOneAudioUpdate(s16* aiBuf, s32 aiBufLen, Acmd* aList, s32 upd
     j = aiBufLen * num_audio_channels * sizeof(s16);
     // Set rsp output buffer to DMEM_TEMP with size j
     aSetBuffer(aList++, 0, 0, DMEM_TEMP, j);
-    aInterleave(aList++, DMEM_LEFT_CH, DMEM_RIGHT_CH, DMEM_CENTER_CH, DMEM_SUBWOOFER_CH, DMEM_REAR_LEFT_CH, DMEM_REAR_RIGHT_CH, num_audio_channels);
+    aInterleave(aList++, DMEM_LEFT_CH, DMEM_RIGHT_CH, DMEM_CENTER_CH, DMEM_SUBWOOFER_CH, DMEM_REAR_LEFT_CH,
+                DMEM_REAR_RIGHT_CH, num_audio_channels);
     // Copy j bytes from DMEM_TEMP to aiBuf
     aSaveBuffer(aList++, DMEM_TEMP, OS_K0_TO_PHYSICAL(aiBuf), j);
 
@@ -1048,7 +1048,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                         sampleDmaStart = 0;
                         break;
 
-                   case CODEC_S16_INMEMORY:
+                    case CODEC_S16_INMEMORY:
                         buffAddr = func_800097A8(bookSample, numSamplesToLoadAdj, flags,
                                                  &synthState->synthesisBuffers->unk_40);
                         aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(buffAddr), DMEM_UNCOMPRESSED_NOTE,
@@ -1061,22 +1061,22 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
 
                     case CODEC_S16:
                         aClearBuffer(aList++, DMEM_UNCOMPRESSED_NOTE,
-                                               (numSamplesToLoadAdj + SAMPLES_PER_FRAME) * SAMPLE_SIZE);
-                                               
+                                     (numSamplesToLoadAdj + SAMPLES_PER_FRAME) * SAMPLE_SIZE);
+
                         flags = A_CONTINUE;
                         skipBytes = 0;
                         size_t bytesToRead;
                         numSamplesProcessed += numSamplesToLoadAdj;
                         dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
 
-                        if (((synthState->samplePosInt * 2) + (numSamplesToLoadAdj)*SAMPLE_SIZE) < bookSample->size) {
-                            bytesToRead = (numSamplesToLoadAdj + 16)*SAMPLE_SIZE;
+                        if (((synthState->samplePosInt * 2) + (numSamplesToLoadAdj) *SAMPLE_SIZE) < bookSample->size) {
+                            bytesToRead = (numSamplesToLoadAdj + 16) * SAMPLE_SIZE;
                         } else {
                             bytesToRead = bookSample->size - (synthState->samplePosInt * 2);
                         }
                         // 2S2H [Port] [Custom audio] Handle decoding OPUS data
                         aLoadBuffer(cmd++, sampleAddr + (synthState->samplePosInt * 2), DMEM_UNCOMPRESSED_NOTE,
-                                        bytesToRead);
+                                    bytesToRead);
 
                         goto skip;
                 }
@@ -1086,7 +1086,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
 
 #if __SANITIZE_ADDRESS__
                 uintptr_t actualAddrLoaded = samplesToLoadAddr - sampleDataChunkAlignPad;
-                uintptr_t offset = actualAddrLoaded - (uintptr_t)sampleAddr;
+                uintptr_t offset = actualAddrLoaded - (uintptr_t) sampleAddr;
                 if (offset + aligned > bookSample->size) {
                     aligned -= (offset + aligned - bookSample->size);
                 }
@@ -1202,7 +1202,8 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                 case 2:
                     switch (curPart) {
                         case 0:
-                            aInterl(aList++, skipBytes + DMEM_UNCOMPRESSED_NOTE, DMEM_WET_SCRATCH, ALIGN8(numSamplesToLoadAdj / 2));
+                            aInterl(aList++, skipBytes + DMEM_UNCOMPRESSED_NOTE, DMEM_WET_SCRATCH,
+                                    ALIGN8(numSamplesToLoadAdj / 2));
                             resampledTempLen = numSamplesToLoadAdj;
                             noteSamplesDmemAddrBeforeResampling = DMEM_WET_SCRATCH;
                             if (noteSub->bitField0.finished) {
@@ -1373,30 +1374,37 @@ Acmd* AudioSynth_ProcessEnvelope(Acmd* aList, NoteSubEu* noteSub, NoteSynthesisS
     if (noteSub->bitField0.usesHeadsetPanEffects) {
         int32_t num_audio_channels = 2;
         aClearBuffer(aList++, DMEM_HAAS_TEMP, DMEM_1CH_SIZE);
-        aEnvSetup1(aList++, (sourceReverbVol & 0x7F), rampReverb, rampLeft, rampRight, rampCenter, rampLfe, rampRLeft, rampRRight);
+        aEnvSetup1(aList++, (sourceReverbVol & 0x7F), rampReverb, rampLeft, rampRight, rampCenter, rampLfe, rampRLeft,
+                   rampRRight);
         aEnvSetup2(aList++, curVolLeft, curVolRight, curVolCenter, curVolLfe, curVolRLeft, curVolRRight);
 
         switch (delaySide) {
             case HAAS_EFFECT_DELAY_LEFT:
                 aEnvMixer(aList++, dmemSrc, aiBufLen, ((sourceReverbVol & 0x80) >> 7),
-                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, DMEM_HAAS_TEMP << 16, num_audio_channels, cutoffFreqLfe);
+                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft,
+                          (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, DMEM_HAAS_TEMP << 16, num_audio_channels,
+                          cutoffFreqLfe);
                 break;
 
             case HAAS_EFFECT_DELAY_RIGHT:
                 aEnvMixer(aList++, dmemSrc, aiBufLen, ((sourceReverbVol & 0x80) >> 7),
-                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, DMEM_HAAS_TEMP, num_audio_channels, cutoffFreqLfe);
+                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft,
+                          (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, DMEM_HAAS_TEMP, num_audio_channels, cutoffFreqLfe);
                 break;
 
             default: // HAAS_EFFECT_DELAY_NONE
                 aEnvMixer(aList++, dmemSrc, aiBufLen, ((sourceReverbVol & 0x80) >> 7),
-                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, 0, num_audio_channels, cutoffFreqLfe);
+                          noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft,
+                          (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, 0, num_audio_channels, cutoffFreqLfe);
                 break;
         }
     } else {
-        aEnvSetup1(aList++, (sourceReverbVol & 0x7F), rampReverb, rampLeft, rampRight, rampCenter, rampLfe, rampRLeft, rampRRight);
+        aEnvSetup1(aList++, (sourceReverbVol & 0x7F), rampReverb, rampLeft, rampRight, rampCenter, rampLfe, rampRLeft,
+                   rampRRight);
         aEnvSetup2(aList++, curVolLeft, curVolRight, curVolCenter, curVolLfe, curVolRLeft, curVolRRight);
-        aEnvMixer(aList++, dmemSrc, aiBufLen, ((sourceReverbVol & 0x80) >> 7),
-                  noteSub->bitField0.stereoStrongRight, noteSub->bitField0.stereoStrongLeft, (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, 0, GetNumAudioChannels(), cutoffFreqLfe);
+        aEnvMixer(aList++, dmemSrc, aiBufLen, ((sourceReverbVol & 0x80) >> 7), noteSub->bitField0.stereoStrongRight,
+                  noteSub->bitField0.stereoStrongLeft, (DMEM_WET_LEFT_CH << 16) | DMEM_LEFT_CH, 0,
+                  GetNumAudioChannels(), cutoffFreqLfe);
     }
 
     return aList;

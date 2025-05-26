@@ -149,7 +149,7 @@ void AudioSeq_SeqLayerDisable(SequenceLayer* layer) {
 void AudioSeq_SeqLayerFree(SequenceChannel* channel, s32 layerIndex) {
     if (layerIndex < 4) {
         SequenceLayer* layer = channel->layers[layerIndex];
-        
+
         if (layer != NULL) {
             AudioSeq_AudioListPushBack(&gLayerFreeList, &layer->listItem);
             AudioSeq_SeqLayerDisable(layer);
@@ -785,7 +785,7 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
     s8 sp4B;
     u8* seqData;
     s32 pad;
-    
+
     if (!channel->enabled) {
         return;
     }
@@ -912,10 +912,8 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
                         sp52 = ((u16*) gSeqFontTable)[seqPlayer->seqId];
                         loBits = gSeqFontTable[sp52];
                         cmd = gSeqFontTable[sp52 + loBits - cmd];
-                        //if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) 
-						{
-                            channel->fontId = cmd;
-                        }
+                        // if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL)
+                        { channel->fontId = cmd; }
                         /* fallthrough */
                     case 0xC1:
                         cmd = AudioSeq_ScriptReadU8(state);
@@ -1020,10 +1018,8 @@ void AudioSeq_SequenceChannelProcessScript(SequenceChannel* channel) {
                         loBits = gSeqFontTable[sp52];
                         cmd = gSeqFontTable[sp52 + loBits - cmd];
 
-                        //if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL) 
-						{
-                            channel->fontId = cmd;
-                        }
+                        // if (AudioHeap_SearchCaches(FONT_TABLE, CACHE_EITHER, cmd) != NULL)
+                        { channel->fontId = cmd; }
                         break;
 
                     case 0xC7:

@@ -142,10 +142,9 @@ void Audio_InitNoteSub(Note* note, NoteAttributes* noteAttr) {
         // Surround 5.1
         if (stereo.s.is_voice) { // VOICE
             panVolumeCenter = 1.0f;
-        }
-        else if (stereo.s.is_sfx) { // SFX
+        } else if (stereo.s.is_sfx) { // SFX
             float pan_angle = ((float) pan) / 128 * 2 * M_PI;
-            
+
             // Speaker angles in radians
             const float front_left = (CVarGetInteger("gPositionFrontLeft", 240) - 90) * (M_PI / 180.0f);
             const float front_right = (CVarGetInteger("gPositionFrontRight", 300) - 90) * (M_PI / 180.0f);
@@ -153,11 +152,11 @@ void Audio_InitNoteSub(Note* note, NoteAttributes* noteAttr) {
             const float rear_right = (CVarGetInteger("gPositionRearRight", 20) - 90) * (M_PI / 180.0f);
 
             // Calculate volumes using cosine panning law
-            panVolumeLeft = fmaxf(0, cosf(pan_angle - front_left));  // Front Left
-            panVolumeRight = fmaxf(0, cosf(pan_angle - front_right)); // Front Right
+            panVolumeLeft = fmaxf(0, cosf(pan_angle - front_left));      // Front Left
+            panVolumeRight = fmaxf(0, cosf(pan_angle - front_right));    // Front Right
             panVolumeRearLeft = fmaxf(0, cosf(pan_angle - rear_left));   // Rear Left
-            panVolumeRearRight = fmaxf(0, cosf(pan_angle - rear_right));  // Rear Right
-        } else { // MUSIC
+            panVolumeRearRight = fmaxf(0, cosf(pan_angle - rear_right)); // Rear Right
+        } else {                                                         // MUSIC
             panVolumeLeft = gStereoPanVolume[pan];
             panVolumeRight = gStereoPanVolume[ARRAY_COUNT(gStereoPanVolume) - 1 - pan];
 
