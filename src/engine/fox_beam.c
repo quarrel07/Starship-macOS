@@ -654,9 +654,9 @@ bool PlayerShot_CheckPolyCollision(PlayerShot* shot, ObjectId objId, Object* obj
         }
         return false;
     }
-    #ifdef AVOID_UB
-        return false;
-    #endif
+#ifdef AVOID_UB
+    return false;
+#endif
 }
 
 void PlayerShot_ApplyDamageToActor(PlayerShot* shot, Actor* actor, s32 hitIndex) {
@@ -1769,10 +1769,10 @@ void PlayerShot_SearchLockOnTarget(PlayerShot* shot) {
             !(gControllerHold[shot->sourceId].button & A_BUTTON) || (shot->timer == 0)) {
             Object_Kill(&shot->obj, shot->sfxSource);
         }
-    } else {    
+    } else {
         bool rapidFire = CVarGetInteger("gRapidFire", 0) == 1;
         if ((shot->obj.pos.y < gGroundHeight) || PlayerShot_FindLockTarget(shot) ||
-            (!(gControllerHold[gMainController].button & A_BUTTON)^rapidFire) || (shot->timer == 0)) {
+            (!(gControllerHold[gMainController].button & A_BUTTON) ^ rapidFire) || (shot->timer == 0)) {
             Object_Kill(&shot->obj, shot->sfxSource);
         }
     }

@@ -3933,7 +3933,7 @@ void ActorEvent_Draw(ActorEvent* this) {
             gDPSetTextureFilter(gMasterDisp++, G_TF_POINT);
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, (s32) this->fwork[15], (s32) this->fwork[16],
                             (s32) this->fwork[17], 255);
-            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this){
+            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this) {
                 gSPDisplayList(gMasterDisp++, sEventActorInfo[this->eventType].dList);
             }
             gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
@@ -3941,7 +3941,7 @@ void ActorEvent_Draw(ActorEvent* this) {
         }
 
         default: {
-            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this){
+            CALL_CANCELLABLE_EVENT(ObjectDrawPostSetupEvent, OBJECT_TYPE_ACTOR_EVENT, this) {
                 if ((this->eventType < EVID_200) && (sEventActorInfo[this->eventType].dList != NULL)) {
                     gSPDisplayList(gMasterDisp++, sEventActorInfo[this->eventType].dList);
                 }
