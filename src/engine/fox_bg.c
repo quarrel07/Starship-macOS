@@ -294,10 +294,15 @@ void Background_DrawStarfield(void) {
             // Check if the star is within the visible screen area with margin
             if (vx >= (marginX - STAR_MARGIN) && vx <= (marginX + renderMaskWidth + STAR_MARGIN) &&
                 vy >= (renderMaskHeight - STAR_MARGIN) && vy <= ((renderMaskHeight * 2) + STAR_MARGIN)) {
+                bool skipInterpolation;
 
-                bool skipInterpolation = (fabsf(vx - gStarPrevX[i]) > (marginX + renderMaskWidth) / 2.0f) ||
-                                         (fabsf(vy - gStarPrevY[i]) > ((renderMaskHeight * 2)) / 2.0f);
-
+                skipInterpolation = (fabsf(vx - gStarPrevX[i]) > (marginX + renderMaskWidth) / 2.0f) ||
+                                    (fabsf(vy - gStarPrevY[i]) > ((renderMaskHeight * 2)) / 2.0f);
+#ifdef __SWITCH__
+                if (gGameState == GSTATE_MAP) {
+                    skipInterpolation = true;
+                }
+#endif
                 if (skipInterpolation) {
                     // @port Skip interpolation
                     FrameInterpolation_ShouldInterpolateFrame(false);
@@ -1388,31 +1393,30 @@ void Background_DrawGround(void) {
 
             if (gLevelMode == LEVELMODE_ON_RAILS) {
                 gDPSetTextureImage(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, SEGMENTED_TO_VIRTUAL(D_CO_601B6C0));
-                
-				int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-				temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f)); // 0.64f / 3.0f
-				temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
+                int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-				float xScroll = temp_fv0;
-				float yScroll = temp_s0;
+                temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f)); // 0.64f / 3.0f
+                temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
 
-				float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float)interpolatedFrames;
+                float xScroll = temp_fv0;
+                float yScroll = temp_s0;
 
-				for (int i = 0; i < interpolatedFrames; i++)
-				{
-					gDPSetInterpolation(gMasterDisp++, i);
+                float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float) interpolatedFrames;
 
-					gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-						G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+                for (int i = 0; i < interpolatedFrames; i++) {
+                    gDPSetInterpolation(gMasterDisp++, i);
 
-					gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
+                    gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
+                                  G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-					gMasterDisp += 3;
+                    gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
 
-					yScroll += inc >= 0 ? inc : -inc;
-					yScroll = fabs(Math_ModF(yScroll, 128.0f));
-				}
+                    gMasterDisp += 3;
+
+                    yScroll += inc >= 0 ? inc : -inc;
+                    yScroll = fabs(Math_ModF(yScroll, 128.0f));
+                }
 
                 switch (gGroundSurface) {
                     case SURFACE_GRASS:
@@ -1506,34 +1510,33 @@ void Background_DrawGround(void) {
                     break;
             }
             gDPSetTextureImage(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, sp1C4);
-            
-            //gDPSetupTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-                         //G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-			int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
+            // gDPSetupTile(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
+            // G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-			temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f));
-			temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
+            int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-			float xScroll = temp_fv0;
-			float yScroll = temp_s0;
+            temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f));
+            temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
 
-			float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float)interpolatedFrames;
+            float xScroll = temp_fv0;
+            float yScroll = temp_s0;
 
-			for (int i = 0; i < interpolatedFrames; i++)
-			{
-				gDPSetInterpolation(gMasterDisp++, i);
+            float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float) interpolatedFrames;
 
-				gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-					G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+            for (int i = 0; i < interpolatedFrames; i++) {
+                gDPSetInterpolation(gMasterDisp++, i);
 
-				gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
+                gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
+                              G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-				gMasterDisp += 3;
+                gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
 
-				yScroll += inc >= 0 ? inc : -inc;
-				yScroll = fabs(Math_ModF(yScroll, 128.0f));
-			}
+                gMasterDisp += 3;
+
+                yScroll += inc >= 0 ? inc : -inc;
+                yScroll = fabs(Math_ModF(yScroll, 128.0f));
+            }
 
             // CENTER FAR
             Matrix_Push(&gGfxMatrix);
@@ -1617,31 +1620,30 @@ void Background_DrawGround(void) {
                 //     gPathTexScroll -= (32.0f * 36.7f) / 2.0f;
                 // }
                 gDPSetTextureImage(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, sp1C4);
-                
-				int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-				temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f)); // 0.64f / 3.0f
-				temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
+                int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-				float xScroll = temp_fv0;
-				float yScroll = temp_s0;
+                temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f)); // 0.64f / 3.0f
+                temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
 
-				float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float)interpolatedFrames;
+                float xScroll = temp_fv0;
+                float yScroll = temp_s0;
 
-				for (int i = 0; i < interpolatedFrames; i++)
-				{
-					gDPSetInterpolation(gMasterDisp++, i);
+                float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float) interpolatedFrames;
 
-					gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-						G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+                for (int i = 0; i < interpolatedFrames; i++) {
+                    gDPSetInterpolation(gMasterDisp++, i);
 
-					gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
+                    gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
+                                  G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-					gMasterDisp += 3;
+                    gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
 
-					yScroll += inc >= 0 ? inc : -inc;
-					yScroll = fabs(Math_ModF(yScroll, 128.0f));
-				}
+                    gMasterDisp += 3;
+
+                    yScroll += inc >= 0 ? inc : -inc;
+                    yScroll = fabs(Math_ModF(yScroll, 128.0f));
+                }
 
                 // Original Display (Center)
                 Matrix_Push(&gGfxMatrix);
@@ -1712,31 +1714,30 @@ void Background_DrawGround(void) {
                                    32);
                 gDPSetTextureImage(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, SEGMENTED_TO_VIRTUAL(D_AQ_600AB68));
 
-				int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
+                int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-				temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f));
-				temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
+                temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f));
+                temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
 
-				float xScroll = temp_fv0;
-				float yScroll = temp_s0;
+                float xScroll = temp_fv0;
+                float yScroll = temp_s0;
 
-				float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float)interpolatedFrames;
+                float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float) interpolatedFrames;
 
-				for (int i = 0; i < interpolatedFrames; i++)
-				{
-					gDPSetInterpolation(gMasterDisp++, i);
+                for (int i = 0; i < interpolatedFrames; i++) {
+                    gDPSetInterpolation(gMasterDisp++, i);
 
-					gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-						G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+                    gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
+                                  G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-					gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
+                    gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
 
-					gMasterDisp += 3;
+                    gMasterDisp += 3;
 
-					yScroll += inc >= 0 ? inc : -inc;
-					yScroll = fabs(Math_ModF(yScroll, 128.0f));
-				}
-			
+                    yScroll += inc >= 0 ? inc : -inc;
+                    yScroll = fabs(Math_ModF(yScroll, 128.0f));
+                }
+
                 // CENTER FAR
                 Matrix_Push(&gGfxMatrix);
                 Matrix_Translate(gGfxMatrix, 0.0f, 0.0f, -3000.0f, MTXF_APPLY);
@@ -1788,30 +1789,29 @@ void Background_DrawGround(void) {
                                    32);
                 gDPSetTextureImage(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, SEGMENTED_TO_VIRTUAL(D_AQ_602ACC0));
 
-				int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
+                int interpolatedFrames = GameEngine_GetInterpolationFrameCount();
 
-				temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f));
-				temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
+                temp_s0 = fabsf(Math_ModF(2.0f * (gPathTexScroll * 0.2133333f), 128.0f));
+                temp_fv0 = Math_ModF((10000.0f - gPlayer[gPlayerNum].xPath) * 0.32f, 128.0f);
 
-				float xScroll = temp_fv0;
-				float yScroll = temp_s0;
+                float xScroll = temp_fv0;
+                float yScroll = temp_s0;
 
-				float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float)interpolatedFrames;
+                float inc = (2.0f * (gPathTexScroll - gLastPathTexScroll) * 0.2133333f) / (float) interpolatedFrames;
 
-				for (int i = 0; i < interpolatedFrames; i++)
-				{
-					gDPSetInterpolation(gMasterDisp++, i);
+                for (int i = 0; i < interpolatedFrames; i++) {
+                    gDPSetInterpolation(gMasterDisp++, i);
 
-					gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
-						G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+                    gDPSetupTile2(gMasterDisp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, temp_fv0, temp_s0,
+                                  G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-					gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
+                    gDPSetTileSizeInterp(gMasterDisp, G_TX_RENDERTILE, xScroll, yScroll, 32 << 2, 32 << 2);
 
-					gMasterDisp += 3;
+                    gMasterDisp += 3;
 
-					yScroll += inc >= 0 ? inc : -inc;
-					yScroll = fabs(Math_ModF(yScroll, 128.0f));
-				}
+                    yScroll += inc >= 0 ? inc : -inc;
+                    yScroll = fabs(Math_ModF(yScroll, 128.0f));
+                }
 
                 if (gAqDrawMode != 0) {
                     RCP_SetupDL(&gMasterDisp, SETUPDL_47);
