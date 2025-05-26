@@ -40,11 +40,14 @@ Your ROM needs to be in .z64 format. If it's in .n64 format, use the following t
 #### Linux
 * Extract every file from the zip into a folder of your choosing.
 * Execute starship.appimage. You may have to chmod +x the appimage via terminal.
-* Select your US 1.0 or US 1.1 ROM.
 
 #### MacOS
 * Extract every file from the zip into a folder of your choosing.
 * Run starship and select your US 1.0 or US 1.1 ROM.
+
+#### Nintendo Switch
+* Run one of the PC releases to generate an `sf64.o2r` file. After launching the game on PC, you will be able to find these files in the same directory as `starship.exe` or `starship.appimage`.
+* Copy the files to your sd card
 
 # Configuration
 
