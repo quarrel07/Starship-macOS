@@ -3,7 +3,7 @@
 
 # Starship
 
-Developed by: 
+Lead Developers: 
 * [SonicDcer](https://www.github.com/sonicdcer)
 * [Lywx](https://www.github.com/kiritodv)
 
