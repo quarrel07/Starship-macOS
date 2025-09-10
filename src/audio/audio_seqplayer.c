@@ -184,7 +184,7 @@ void AudioSeq_SequencePlayerSetupChannels(SequencePlayer* seqPlayer, u16 channel
     SequenceChannel* channel;
     s32 i;
 
-    for (i = 0; i < SEQ_NUM_CHANNELS; i++) {
+    for (i = 0; i < ARRAY_COUNT(seqPlayer->channels); i++) {
         if (channelBits & 1) {
             channel = seqPlayer->channels[i];
             if ((IS_SEQUENCE_CHANNEL_VALID(channel) == 1) && (seqPlayer == channel->seqPlayer)) {
@@ -211,7 +211,7 @@ void AudioSeq_SequencePlayerSetupChannels(SequencePlayer* seqPlayer, u16 channel
 void AudioSeq_SequencePlayerDisableChannels(SequencePlayer* seqPlayer, u16 channelBitsUnused) {
     s32 i;
 
-    for (i = 0; i < SEQ_NUM_CHANNELS; i++) {
+    for (i = 0; i < ARRAY_COUNT(seqPlayer->channels); i++) {
         if (channelBitsUnused & 1) {
             SequenceChannel* channel = seqPlayer->channels[i];
 
@@ -1517,7 +1517,7 @@ void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
         }
     }
 
-    for (i = 0; i < SEQ_NUM_CHANNELS; i++) {
+    for (i = 0; i < ARRAY_COUNT(seqPlayer->channels); i++) {
         if (IS_SEQUENCE_CHANNEL_VALID(seqPlayer->channels[i]) == 1) {
             AudioSeq_SequenceChannelProcessScript(seqPlayer->channels[i]);
         }
