@@ -1310,7 +1310,14 @@ void PlayerShot_DrawShot(PlayerShot* shot) {
                     Matrix_SetGfxMtx(&gMasterDisp);
                     gSPDisplayList(gMasterDisp++, aOrbDL);
                 } else {
-                    Matrix_Scale(gGfxMatrix, shot->scale, shot->scale, shot->scale, MTXF_APPLY);
+
+                    if (CVarGetInteger("gRestoreBetaBombExplosion", 0) != 1) {
+                        Matrix_Scale(gGfxMatrix, shot->scale, shot->scale, shot->scale, MTXF_APPLY);
+                    } else {
+                        Matrix_Scale(gGfxMatrix, shot->scale / 1.5f, shot->scale / 1.5f, shot->scale / 1.5f,
+                                     MTXF_APPLY);
+                    }
+
                     Matrix_SetGfxMtx(&gMasterDisp);
                     if (gVersusMode) {
                         RCP_SetupDL_49();
@@ -1333,7 +1340,12 @@ void PlayerShot_DrawShot(PlayerShot* shot) {
                         RCP_SetupDL_64_2();
                         gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, shot->unk_58);
                     }
-                    gSPDisplayList(gMasterDisp++, D_1031EC0);
+
+                    if (CVarGetInteger("gRestoreBetaBombExplosion", 0) != 1) {
+                        gSPDisplayList(gMasterDisp++, D_1031EC0);
+                    } else {
+                        gSPDisplayList(gMasterDisp++, D_102FF90);
+                    }
                 }
                 break;
             case PLAYERSHOT_TANK:

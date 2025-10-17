@@ -606,6 +606,10 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Restores the missile cutscene bug present in JP 1.0"
             });
 
+            UIWidgets::CVarCheckbox("Beta: Restore beta bomb explosion", "gRestoreBetaBombExplosion", {
+                .tooltip = "Restores the beta bomb explosion found inside the game"
+            });
+
             UIWidgets::CVarCheckbox("Beta: Restore beta coin", "gRestoreBetaCoin", {
                 .tooltip = "Restores the beta coin that got replaced with the gold ring"
             });
