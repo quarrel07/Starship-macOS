@@ -1814,11 +1814,11 @@ void Display_Update(void) {
     // @port: Display player's face at all times.
     gPlayer[0].arwing.drawFace = true;
 
-    // @port remove 511 hit count cap, hated by generations
-#if 0
-    // 511 hit count cap
-    if (gHitCount > 511) {
-        gHitCount = 511;
+    // @port: set hit count cap to 999 to restore US/JP 1.0 behaviour
+#if 1
+    // 999 hit count cap (511 in 1.1 US)
+    if (gHitCount > 999) {
+        gHitCount = 999;
     }
 #endif
 
