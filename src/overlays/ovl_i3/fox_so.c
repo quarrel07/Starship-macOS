@@ -1071,6 +1071,9 @@ void Solar_LevelStart(Player* player) {
             player->camRoll = 0.0f;
             player->baseSpeed = 0.0f;
 
+            // @port: get the player off the screen
+            player->pos.z = 10000.0f;
+
             gFillScreenAlpha = 255;
             gFillScreenAlphaTarget = 0;
             Solar_801A0DF8(-750.0f, -2600.0f, 300.0f, 2, 1.0f);
