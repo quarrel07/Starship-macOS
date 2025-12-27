@@ -22,6 +22,13 @@
 #include "fox_co.h"
 #include "fox_record.h"
 
+int gWarpzoneCsFrameCount = 0;
+
+Record gWarpzoneCsRecord[] = {
+    { 2, 1 },  { 3, 3 },  { 4, 4 },   { 3, 8 },   { 2, 9 },   { 3, 52 },  { 2, 54 },  { 3, 69 },  { 2, 70 },  { 3, 75 },
+    { 2, 76 }, { 3, 79 }, { 2, 117 }, { 3, 118 }, { 2, 120 }, { 3, 145 }, { 2, 215 }, { 3, 216 }, { 2, 230 },
+};
+
 void UpdateVisPerFrameFromRecording(Record* record, s32 maxFrames) {
     int i;
 
@@ -31,6 +38,20 @@ void UpdateVisPerFrameFromRecording(Record* record, s32 maxFrames) {
 
     for (i = 0; i < maxFrames; i++) {
         if (gCsFrameCount == record[i].frame) {
+            gVIsPerFrame = record[i].vis;
+        }
+    }
+}
+
+void UpdateVisPerFrameFromRecording_Warpzone(Record* record, s32 maxFrames) {
+    int i;
+
+    if (gWarpzoneCsFrameCount > record[maxFrames - 1].frame) {
+        return;
+    }
+
+    for (i = 0; i < maxFrames; i++) {
+        if (gWarpzoneCsFrameCount == record[i].frame) {
             gVIsPerFrame = record[i].vis;
         }
     }
@@ -413,6 +434,9 @@ void Cutscene_EnterWarpZone(Player* player) {
     s32 var_v0;
     s32 pad[4];
 
+    gWarpzoneCsFrameCount++;
+    UpdateVisPerFrameFromRecording_Warpzone(gWarpzoneCsRecord, ARRAY_COUNT(gWarpzoneCsRecord));
+
     player->pos.x += player->vel.x;
     player->flags_228 = 0;
     player->alternateView = false;
@@ -440,6 +464,9 @@ void Cutscene_EnterWarpZone(Player* player) {
 
     switch (player->csState) {
         case 0:
+            // @port: Initialize warpzone frame counter for recording.
+            gWarpzoneCsFrameCount = 0;
+
             player->somersault = false;
             gStarWarpDistortion = 100.0f;
             player->csState = 1;
