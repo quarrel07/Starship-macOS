@@ -360,8 +360,8 @@ void Background_DrawStarfield(void) {
 void Background_DrawPartialStarfield(s32 yMin, s32 yMax) { // Stars that are in the Epilogue
     f32 by;
     f32 bx;
-    s16 vy;
-    s16 vx;
+    f32 vy;
+    f32 vx;
     s32 i;
     s32 var_s2;
     f32 cos;
