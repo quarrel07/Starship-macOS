@@ -57,6 +57,20 @@ void UpdateVisPerFrameFromRecording_Warpzone(Record* record, s32 maxFrames) {
     }
 }
 
+void UpdateVisPerFrameFromRecording_Ending(Record* record, s32 maxFrames) {
+    int i;
+
+    if (gGameFrameCount > record[maxFrames - 1].frame) {
+        return;
+    }
+
+    for (i = 0; i < maxFrames; i++) {
+        if (gGameFrameCount == record[i].frame) {
+            gVIsPerFrame = record[i].vis;
+        }
+    }
+}
+
 void func_demo_80048AC0(TeamId teamId) {
     s32 teamShield;
 
