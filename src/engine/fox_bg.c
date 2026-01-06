@@ -576,7 +576,7 @@ void Background_DrawBackdrop(void) {
                         }
 
                         // Translate to the next position (move right by 7280.0f each time)
-                        Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
+                        Matrix_Translate(gGfxMatrix, 7279.0f, 0.0f, 0.0f, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
 
                         if (skipInterpolation) {
@@ -640,7 +640,7 @@ void Background_DrawBackdrop(void) {
                         }
 
                         // Translate to the next position (move right by 7280.0f each time)
-                        Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
+                        Matrix_Translate(gGfxMatrix, 7279.0f, 0.0f, 0.0f, MTXF_APPLY);
                         Matrix_SetGfxMtx(&gMasterDisp);
 
                         if (skipInterpolation) {
@@ -779,7 +779,7 @@ void Background_DrawBackdrop(void) {
                             }
 
                             // Translate to the next position (move right by 7280.0f each time)
-                            Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
+                            Matrix_Translate(gGfxMatrix, 7279.0f, 0.0f, 0.0f, MTXF_APPLY);
                             Matrix_SetGfxMtx(&gMasterDisp);
 
                             FrameInterpolation_RecordCloseChild();
@@ -853,7 +853,7 @@ void Background_DrawBackdrop(void) {
                         }
 
                         // Move the matrix to the right by 7280.0f each time to draw the next texture
-                        Matrix_Translate(gGfxMatrix, 7280.0f, 0.0f, 0.0f, MTXF_APPLY);
+                        Matrix_Translate(gGfxMatrix, 7279.0f, 0.0f, 0.0f, MTXF_APPLY);
 
                         Matrix_SetGfxMtx(&gMasterDisp);
 
