@@ -2422,7 +2422,7 @@ void ActorCutscene_Update(ActorCutscene* this) {
                     break;
 
                 case LEVEL_FORTUNA:
-                    if (this->animFrame == 11) {
+                    if (this->animFrame == ACTOR_CS_FO_EXPLOSION) {
                         switch (this->state) {
                             case 0:
                                 if (gCsFrameCount == 100) {
@@ -2430,6 +2430,8 @@ void ActorCutscene_Update(ActorCutscene* this) {
                                     this->timer_0BC = 50;
                                     this->iwork[0] = 255;
                                     AUDIO_PLAY_SFX(NA_SE_EN_BOSS_EXPLOSION, this->sfxSource, 0);
+                                    // @port: Add rumble to this explosion
+                                    gControllerRumbleTimers[0] = 4;
                                 }
                                 break;
 
