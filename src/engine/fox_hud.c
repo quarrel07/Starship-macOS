@@ -2718,6 +2718,7 @@ void HUD_Texture_Scroll(u8* texturePtr, s32 xPos, s32 yPos, u8 type) {
         default:
             break;
     }
+    gSPInvalidateTexCache(gMasterDisp++, texture);
 }
 
 void HUD_Texture_Wave(u16* srcTexture, u16* dstTexture) {
