@@ -1,5 +1,6 @@
 #include "global.h"
 #include "mods/hit64.c"
+#include "camera_interp_skip.c"
 #include "assets/ast_arwing.h"
 #include "assets/ast_allies.h"
 #include "assets/ast_landmaster.h"
@@ -1877,6 +1878,31 @@ void Display_Update(void) {
         gPlayCamAt.y = camPlayer->cam.at.y;
         gPlayCamAt.z = camPlayer->cam.at.z;
     }
+
+    static PlayState prevPlayState = 0;
+    static int camSkipTimes = 0;
+
+    bool bigJump = !should_interpolate_perspective(&gPlayCamEye, &gPlayCamAt);
+
+    // @port: Force interpolation camera skip if we're transitioning to or from a pause state.
+    if (((prevPlayState == PLAY_PAUSE) && (gPlayState == PLAY_UPDATE)) ||
+        ((prevPlayState == PLAY_UPDATE) && (gPlayState == PLAY_PAUSE))) {
+        bigJump = true;
+    }
+
+    if (bigJump) {
+        // @port Skip interpolation
+        FrameInterpolation_ShouldInterpolateFrame(false);
+        printf("CAMERA 1 SKIPED: %d\n", camSkipTimes++);
+        gCamera1Skipped = true;
+    } else {
+        FrameInterpolation_RecordOpenChild("GamePlayCam", 0);
+        FrameInterpolation_RecordMarker(__FILE__, __LINE__);
+        gCamera1Skipped = false;
+    }
+
+    prevPlayState = gPlayState;
+
     camPlayer->camYaw = -Math_Atan2F(gPlayCamEye.x - gPlayCamAt.x, gPlayCamEye.z - gPlayCamAt.z);
     camPlayer->camPitch = -Math_Atan2F(gPlayCamEye.y - gPlayCamAt.y,
                                        sqrtf(SQ(gPlayCamEye.z - gPlayCamAt.z) + SQ(gPlayCamEye.x - gPlayCamAt.x)));
@@ -2051,6 +2077,14 @@ void Display_Update(void) {
         HUD_Draw();
         HUD_EdgeArrows_Update();
     }
+
+    if (bigJump) {
+        // @port Re-enable Interpolation if it was skipped
+        FrameInterpolation_ShouldInterpolateFrame(true);
+    } else {
+        FrameInterpolation_RecordCloseChild();
+    }
+
     Matrix_Pop(&gGfxMatrix);
     Display_DrawHelpAlert();
     sPlayersVisible[gPlayerNum] = false;
