@@ -1,6 +1,3 @@
-#ifndef CAMERA_INTERP_SKIP_C
-#define CAMERA_INTERP_SKIP_C
-
 #include "global.h"
 
 #define SQXYZ(vec) ((vec.x) * (vec.x) + (vec.y) * (vec.y) + (vec.z) * (vec.z))
@@ -109,5 +106,3 @@ bool should_interpolate_perspective(Vec3f* eye, Vec3f* at) {
 
     return true;
 }
-
-#endif
