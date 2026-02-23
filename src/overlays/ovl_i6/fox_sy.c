@@ -1932,11 +1932,18 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
             gDPSetEnvColor(gMasterDisp++, 255, 48, 0, 255);
             Matrix_Pop(&gGfxMatrix);
+
+            // @port: Tag the transform.
+            FrameInterpolation_RecordOpenChild("SyShogun_EngineGlow", 0);
+
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, this->fwork[1], this->fwork[2], this->fwork[3], MTXF_APPLY);
             Matrix_Scale(gGfxMatrix, sp9C, sp9C, sp9C, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             gSPDisplayList(gMasterDisp++, aOrbDL);
+
+            // @port Pop the transform id.
+            FrameInterpolation_RecordCloseChild();
         }
 
         if (this->fwork[34] != 0.0f) {
@@ -1944,6 +1951,10 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
             gDPSetEnvColor(gMasterDisp++, 32, 255, 32, 255);
             Matrix_Pop(&gGfxMatrix);
+
+            // @port: Tag the transform.
+            FrameInterpolation_RecordOpenChild("SyShogun_EngineGlow", 1);
+
             Matrix_Push(&gGfxMatrix);
             Matrix_Translate(gGfxMatrix, this->fwork[31], this->fwork[32], this->fwork[33], MTXF_APPLY);
             Matrix_Scale(gGfxMatrix, this->fwork[34], this->fwork[34], this->fwork[34], MTXF_APPLY);
@@ -1959,6 +1970,9 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
             Matrix_RotateX(gGfxMatrix, -sp88, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             gSPDisplayList(gMasterDisp++, aOrbDL);
+
+            // @port Pop the transform id.
+            FrameInterpolation_RecordCloseChild();
         }
 
         if (this->index == 0) {
@@ -1967,7 +1981,12 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
                 gDPSetEnvColor(gMasterDisp++, 32, 255, 32, 255);
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("SyShogun_EngineGlow", 2);
+
                 Matrix_Push(&gGfxMatrix);
+
                 Matrix_Translate(gGfxMatrix, this->fwork[35], this->fwork[36], this->fwork[37], MTXF_APPLY);
                 Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                 Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
@@ -1975,6 +1994,9 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
                 Matrix_Scale(gGfxMatrix, this->fwork[41] * 2.0f, this->fwork[41], this->fwork[41] * 2.0f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, aOrbDL);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
             }
 
             if (this->fwork[42] != 0.0f) {
@@ -1982,7 +2004,12 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
                 gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 255, 255, 255, 255);
                 gDPSetEnvColor(gMasterDisp++, 32, 255, 32, 255);
                 Matrix_Pop(&gGfxMatrix);
+
+                // @port: Tag the transform.
+                FrameInterpolation_RecordOpenChild("SyShogun_EngineGlow", 3);
+
                 Matrix_Push(&gGfxMatrix);
+
                 Matrix_Translate(gGfxMatrix, this->fwork[38], this->fwork[39], this->fwork[40], MTXF_APPLY);
                 Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                 Matrix_RotateX(gGfxMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
@@ -1990,6 +2017,9 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
                 Matrix_Scale(gGfxMatrix, this->fwork[42] * 2.0f, this->fwork[42], this->fwork[42] * 2.0f, MTXF_APPLY);
                 Matrix_SetGfxMtx(&gMasterDisp);
                 gSPDisplayList(gMasterDisp++, aOrbDL);
+
+                // @port Pop the transform id.
+                FrameInterpolation_RecordCloseChild();
             }
         }
 
@@ -1998,12 +2028,20 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
             gDPSetPrimColor(gMasterDisp++, 0x00, 0x00, 0, 0, 0, 255);
             gDPSetEnvColor(gMasterDisp++, 0, 0, 0, 0);
             Matrix_Pop(&gGfxMatrix);
+
+            // @port: Tag the transform.
+            FrameInterpolation_RecordOpenChild("SyShogun_EngineGlow", 4);
+
             Matrix_Push(&gGfxMatrix);
+
             Matrix_Translate(gGfxMatrix, this->obj.pos.x, 157.0f, this->obj.pos.z, MTXF_APPLY);
             Matrix_RotateX(gGfxMatrix, M_PI / 2, MTXF_APPLY);
             Matrix_Scale(gGfxMatrix, this->fwork[43], this->fwork[43], this->fwork[43], MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             gSPDisplayList(gMasterDisp++, aOrbDL);
+
+            // @port Pop the transform id.
+            FrameInterpolation_RecordCloseChild();
         }
 
         if (this->fwork[46] != 0.0f) {
@@ -2013,6 +2051,10 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
             gDPSetEnvColor(gMasterDisp++, 0, 0, 0, 0);
             Matrix_Pop(&gGfxMatrix);
             Matrix_Push(&gGfxMatrix);
+
+            // @port: Tag the transform.
+            FrameInterpolation_RecordOpenChild("SyShogun_EngineGlow", 5);
+
             Matrix_Translate(gGfxMatrix, this->obj.pos.x + 10.0f, this->obj.pos.y + 70.0f, this->obj.pos.z + 60.0f,
                              MTXF_APPLY);
             Matrix_Scale(gGfxMatrix, 0.4f, 0.2f, 0.2f, MTXF_APPLY);
@@ -2021,6 +2063,9 @@ void SectorY_SyShogun_Draw(SyShogun* this) {
             Matrix_Translate(gGfxMatrix, -46.0f, 0, 0, MTXF_APPLY);
             Matrix_SetGfxMtx(&gMasterDisp);
             gSPDisplayList(gMasterDisp++, aOrbDL);
+
+            // @port Pop the transform id.
+            FrameInterpolation_RecordCloseChild();
         }
     }
 }
