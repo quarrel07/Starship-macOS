@@ -2197,6 +2197,10 @@ s32 HUD_RadarMarks_Update(void) {
         }
 
         Matrix_Push(&gGfxMatrix);
+
+        // @port: Tag the transform.
+        FrameInterpolation_RecordOpenChild(&gRadarMarks[i], i);
+
         Matrix_Translate(gGfxMatrix, gRadarMarks[i].pos.x * 0.008f, -gRadarMarks[i].pos.z * 0.008f, 0.0f, MTXF_APPLY);
 
         if (gRadarMarks[i].type == 103) {
@@ -2208,6 +2212,10 @@ s32 HUD_RadarMarks_Update(void) {
         Matrix_SetGfxMtx(&gMasterDisp);
 
         HUD_RadarMark_Draw(gRadarMarks[i].type);
+
+        // @port Pop the transform id.
+        FrameInterpolation_RecordCloseChild();
+
         Matrix_Pop(&gGfxMatrix);
 
         gRadarMarks[i].enabled = false;
