@@ -109,7 +109,8 @@ u8 Load_SceneSetup(u8 sceneId, u8 sceneSetup) {
         case SCENE_TITLE:
             changeScene = Load_SceneFiles(&sOvlmenu_Title[sceneSetup]);
             if (changeScene == true) {
-                AUDIO_SET_SPEC(SFXCHAN_0, AUDIOSPEC_22);
+               // Causes audio hang for a few seconds when going from the menu to the title
+               // AUDIO_SET_SPEC(SFXCHAN_0, AUDIOSPEC_22);
             }
             break;
         case SCENE_MENU:
