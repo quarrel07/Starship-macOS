@@ -1196,12 +1196,12 @@ void Actor_DrawAllRange(Actor* this) {
         }
 
         // @port draw no matter what
-        goto render;
+        // goto render;
 
         if ((var_fv0 > sViewPos.z) && (sViewPos.z > var_fv1)) {
-            if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * 0.5f) + 500.0f)) {
+            if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * 0.5f) + 500.0f) * 2.6f) {
                 if (fabsf(sViewPos.y) < (fabsf(sViewPos.z * 0.5f) + 500.0f)) {
-                render:
+                    // render:
                     Matrix_RotateY(gCalcMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);
                     Matrix_RotateX(gCalcMatrix, this->obj.rot.x * M_DTOR, MTXF_APPLY);
                     Matrix_RotateZ(gCalcMatrix, this->obj.rot.z * M_DTOR, MTXF_APPLY);
@@ -1234,10 +1234,10 @@ void Actor_DrawAllRange(Actor* this) {
         }
 
         // @port draw no matter what
-        goto render2;
+        // goto render2;
 
         if ((var_fv0 > sViewPos.z) && (sViewPos.z > var_fv1)) {
-            if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * var_fa1) + var_ft5)) {
+            if (fabsf(sViewPos.x) < (fabsf(sViewPos.z * var_fa1) + var_ft5) * 2.6f) {
                 if (fabsf(sViewPos.y) < (fabsf(sViewPos.z * var_fa1) + var_ft5)) {
                 render2:
                     if (this->info.draw != NULL) {
@@ -1325,15 +1325,15 @@ void Boss_Draw(Boss* this, s32 arg1) {
     sp3C = -1.0f;
 
     // @port draw no matter what
-    if ((gCurrentLevel != LEVEL_KATINA) &&
-        (gCurrentLevel != LEVEL_SECTOR_Y)) { // Excepting Katina because of KaSaucerer's bug
-        goto render;
-    }
+    // if ((gCurrentLevel != LEVEL_KATINA) &&
+    //     (gCurrentLevel != LEVEL_SECTOR_Y)) { // Excepting Katina because of KaSaucerer's bug
+    //     goto render;
+    // }
 
     if ((D_edisplay_801615D0.z < var_fv0) && (var_fv1 < D_edisplay_801615D0.z)) {
-        if (fabsf(D_edisplay_801615D0.x) < (fabsf(D_edisplay_801615D0.z * var_ft5) + var_fa1)) {
+        if (fabsf(D_edisplay_801615D0.x) < (fabsf(D_edisplay_801615D0.z * var_ft5) + var_fa1) * 1.77f) {
             if (fabsf(D_edisplay_801615D0.y) < (fabsf(D_edisplay_801615D0.z * var_ft5) + var_fa1)) {
-            render:
+                // render:
                 sp3C = 1.0f;
                 if (this->obj.id != OBJ_BOSS_BO_BASE) {
                     if (this->obj.id != OBJ_BOSS_KA_SAUCERER) {
@@ -1655,23 +1655,24 @@ void Scenery360_Draw(Scenery360* this) {
 
     Matrix_MultVec3f(gGfxMatrix, &src, &dest);
 
+#ifndef __SWITCH__
     if (gCurrentLevel == LEVEL_SECTOR_Z) {
         behindZdist = 6000.0f;
         frontZdist = -20000.0f * 2;
-        xyOffsetBounds = 6000.0f * 2;
-        xyObjDistBoundMod = 0.9f;
-        goto check;
+        // xyOffsetBounds = 6000.0f * 2;
+        // xyObjDistBoundMod = 0.9f;
     }
+#endif
 
-    if ((gCurrentLevel != LEVEL_SECTOR_Y) && (gCurrentLevel != LEVEL_VENOM_ANDROSS)) {
-        goto render;
-    }
+    // if ((gCurrentLevel != LEVEL_SECTOR_Y) && (gCurrentLevel != LEVEL_VENOM_ANDROSS)) {
+    //     goto render;
+    // }
 
-check:
+    // check:
     if ((dest.z < behindZdist) && (frontZdist < dest.z)) {
         if (fabsf(dest.y) < (fabsf(dest.z * xyObjDistBoundMod) + xyOffsetBounds)) {
-            if (fabsf(dest.x) < (fabsf(dest.z * xyObjDistBoundMod) + xyOffsetBounds)) {
-            render:
+            if (fabsf(dest.x) < (fabsf(dest.z * xyObjDistBoundMod) + xyOffsetBounds) * 2.6f) {
+                // render:
                 Display_SetSecondLight(&this->obj.pos);
                 if (this->obj.id == OBJ_SCENERY_AND_PASSAGE) {
                     Matrix_RotateY(gGfxMatrix, this->obj.rot.y * M_DTOR, MTXF_APPLY);

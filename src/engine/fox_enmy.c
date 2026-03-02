@@ -111,7 +111,8 @@ bool func_enmy_80060FE4(Vec3f* arg0, f32 arg1) {
 
     Matrix_MultVec3fNoTranslate(gCalcMatrix, &src, &dest);
 
-    if ((dest.z < 1000.0f) && (arg1 < dest.z) && (fabsf(dest.x) < (fabsf(dest.z * 0.5f) + 2000.0f))) {
+    // @port: Extend draw distance up to 32/9
+    if ((dest.z < 1000.0f) && (arg1 < dest.z) && (fabsf(dest.x) < (fabsf(dest.z * /* 0.5f */ 1.5f) + 2000.0f))) {
         return true;
     }
     return false;
