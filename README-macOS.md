@@ -47,7 +47,7 @@ also works when launched from a terminal.)
 Like upstream, **no build here contains game assets** — you supply your own ROM at run time.
 
 - **Prebuilt binary:** download `Starship-v2.0.0-macOS-arm64.zip` from the
-  [Releases page](https://github.com/quarrel07/Starship/releases), unzip, and move `Starship.app` to
+  [Releases page](https://github.com/quarrel07/Starship-macOS/releases), unzip, and move `Starship.app` to
   your Applications folder. Apple Silicon only. The build is ad-hoc signed, so the first time you open
   it, right-click the app → **Open** to get past Gatekeeper. On first launch it asks for your Star
   Fox 64 ROM and extracts the assets into `~/Library/Application Support/com.starship`.
@@ -60,7 +60,7 @@ Prerequisites (Homebrew): `cmake ninja sdl2 libpng glew libzip nlohmann-json tin
 vorbis-tools`, plus the Xcode command-line tools. Then:
 
 ```bash
-git clone --recurse-submodules https://github.com/quarrel07/Starship.git
+git clone --recurse-submodules https://github.com/quarrel07/Starship-macOS.git
 cd Starship
 cmake -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE=Release
 cmake --build build-cmake            # -> build-cmake/Starship.app
