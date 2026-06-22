@@ -63,8 +63,9 @@ Like upstream, **no build here contains game assets** — you supply your own RO
   ahead of upstream's own prebuilt binaries.
 
 ## Building from source
-Prerequisites (Homebrew): `cmake ninja sdl2 libpng glew libzip nlohmann-json tinyxml2 spdlog
-vorbis-tools`, plus the Xcode command-line tools. Then:
+Prerequisites (Homebrew): `cmake ninja sdl2 sdl3 libpng glew libzip nlohmann-json tinyxml2 spdlog
+vorbis-tools`, plus the Xcode command-line tools. (`sdl3` is needed because modern Homebrew's `sdl2`
+is **sdl2-compat**, a shim that loads SDL3 at runtime; SDL3 is also bundled into the `.app`.) Then:
 
 ```bash
 git clone --recurse-submodules https://github.com/quarrel07/Starship-macOS.git
