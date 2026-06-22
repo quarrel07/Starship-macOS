@@ -29,14 +29,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # ---------------------------------------------------------------------------
-# App icon: Starship.icns (matches CFBundleIconFile). Prefer the macOS-shaped
-# icon at cmake/macos/appicon.png (rounded squircle with padding); fall back to
-# the project logo if it is absent.
+# App icon: Starship.icns generated from logo.png (matches CFBundleIconFile).
+# macOS rounds the square automatically, so it reads as a native icon.
 # ---------------------------------------------------------------------------
-set(ICON_SRC ${CMAKE_SOURCE_DIR}/cmake/macos/appicon.png)
-if (NOT EXISTS ${ICON_SRC})
-    set(ICON_SRC ${CMAKE_SOURCE_DIR}/logo.png)
-endif()
+set(ICON_SRC ${CMAKE_SOURCE_DIR}/logo.png)
 set(ICONSET_DIR ${CMAKE_BINARY_DIR}/macosx/Starship.iconset)
 set(ICNS_FILE ${CMAKE_BINARY_DIR}/macosx/Starship.icns)
 add_custom_command(
