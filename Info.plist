@@ -33,10 +33,12 @@
     <string>public.app-category.games</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.15</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
     <key>LSEnvironment</key>
     <dict>
         <key>SHIP_HOME</key>
-        <string>~/Library/Application Support/com.Starship.Starship</string>
+        <string>~/Library/Application Support/com.starship</string>
     </dict>
     <key>LSArchitecturePriority</key>
     <array>
