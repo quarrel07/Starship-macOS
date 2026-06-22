@@ -32,7 +32,7 @@ bundle is fully self-contained and ready to move to `/Applications`:
   definitions used by the first-run ROM extractor, and the controller DB);
 - all Homebrew dylibs relinked into `Contents/Frameworks` (`@executable_path/../Frameworks/`), so it
   runs on Macs without Homebrew installed;
-- an app icon generated from the project logo, and an ad-hoc code signature.
+- a macOS-shaped app icon (rounded squircle with proper padding), and an ad-hoc code signature.
 
 `starship.o2r` (the packed port assets) is generated as a build dependency, so a plain build yields a
 complete app — no separate manual packaging step.

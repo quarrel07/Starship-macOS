@@ -29,26 +29,32 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # ---------------------------------------------------------------------------
-# App icon: Starship.icns generated from logo.png (matches CFBundleIconFile)
+# App icon: Starship.icns (matches CFBundleIconFile). Prefer the macOS-shaped
+# icon at cmake/macos/appicon.png (rounded squircle with padding); fall back to
+# the project logo if it is absent.
 # ---------------------------------------------------------------------------
+set(ICON_SRC ${CMAKE_SOURCE_DIR}/cmake/macos/appicon.png)
+if (NOT EXISTS ${ICON_SRC})
+    set(ICON_SRC ${CMAKE_SOURCE_DIR}/logo.png)
+endif()
 set(ICONSET_DIR ${CMAKE_BINARY_DIR}/macosx/Starship.iconset)
 set(ICNS_FILE ${CMAKE_BINARY_DIR}/macosx/Starship.icns)
 add_custom_command(
     OUTPUT ${ICNS_FILE}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONSET_DIR}
-    COMMAND sips -z 16 16     ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_16x16.png
-    COMMAND sips -z 32 32     ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_16x16@2x.png
-    COMMAND sips -z 32 32     ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_32x32.png
-    COMMAND sips -z 64 64     ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_32x32@2x.png
-    COMMAND sips -z 128 128   ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_128x128.png
-    COMMAND sips -z 256 256   ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_128x128@2x.png
-    COMMAND sips -z 256 256   ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_256x256.png
-    COMMAND sips -z 512 512   ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_256x256@2x.png
-    COMMAND sips -z 512 512   ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_512x512.png
-    COMMAND sips -z 1024 1024 ${CMAKE_SOURCE_DIR}/logo.png --out ${ICONSET_DIR}/icon_512x512@2x.png
+    COMMAND sips -z 16 16     ${ICON_SRC} --out ${ICONSET_DIR}/icon_16x16.png
+    COMMAND sips -z 32 32     ${ICON_SRC} --out ${ICONSET_DIR}/icon_16x16@2x.png
+    COMMAND sips -z 32 32     ${ICON_SRC} --out ${ICONSET_DIR}/icon_32x32.png
+    COMMAND sips -z 64 64     ${ICON_SRC} --out ${ICONSET_DIR}/icon_32x32@2x.png
+    COMMAND sips -z 128 128   ${ICON_SRC} --out ${ICONSET_DIR}/icon_128x128.png
+    COMMAND sips -z 256 256   ${ICON_SRC} --out ${ICONSET_DIR}/icon_128x128@2x.png
+    COMMAND sips -z 256 256   ${ICON_SRC} --out ${ICONSET_DIR}/icon_256x256.png
+    COMMAND sips -z 512 512   ${ICON_SRC} --out ${ICONSET_DIR}/icon_256x256@2x.png
+    COMMAND sips -z 512 512   ${ICON_SRC} --out ${ICONSET_DIR}/icon_512x512.png
+    COMMAND sips -z 1024 1024 ${ICON_SRC} --out ${ICONSET_DIR}/icon_512x512@2x.png
     COMMAND iconutil -c icns -o ${ICNS_FILE} ${ICONSET_DIR}
-    DEPENDS ${CMAKE_SOURCE_DIR}/logo.png
-    COMMENT "Generating Starship.icns from logo.png"
+    DEPENDS ${ICON_SRC}
+    COMMENT "Generating Starship.icns from ${ICON_SRC}"
     VERBATIM
 )
 add_custom_target(StarshipIcon DEPENDS ${ICNS_FILE})
