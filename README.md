@@ -1,4 +1,8 @@
 <!-- ===== macOS build fork banner (this fork only) ===== -->
+<p align="center">
+  <img src="docs/preview/app-icon.png" width="140" alt="Starship.app icon on macOS">
+</p>
+
 > ## 🍎 macOS build
 > This is a macOS-focused fork of Starship that makes the project **build and run cleanly on modern
 > macOS** (Apple clang 21) and packages it as a proper, self-contained **`Starship.app`** with its

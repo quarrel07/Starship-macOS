@@ -1,5 +1,11 @@
 # Starship — macOS build
 
+<p align="center">
+  <img src="docs/preview/app-icon.png" width="160" alt="Starship.app icon on macOS">
+  <br>
+  <sub><b>Starship.app</b> on macOS</sub>
+</p>
+
 A macOS-focused fork of [Starship](https://github.com/HarbourMasters/Starship) (the Star Fox 64
 port built on [libultraship](https://github.com/Kenix3/libultraship)) that makes the project **build
 and run cleanly on modern macOS** and packages it as a proper, self-contained **`Starship.app`**. All
@@ -32,7 +38,8 @@ bundle is fully self-contained and ready to move to `/Applications`:
   definitions used by the first-run ROM extractor, and the controller DB);
 - all Homebrew dylibs relinked into `Contents/Frameworks` (`@executable_path/../Frameworks/`), so it
   runs on Macs without Homebrew installed;
-- a macOS-shaped app icon (rounded squircle with proper padding), and an ad-hoc code signature.
+- an app icon generated from the project logo (macOS rounds it to a native squircle), and an ad-hoc
+  code signature.
 
 `starship.o2r` (the packed port assets) is generated as a build dependency, so a plain build yields a
 complete app — no separate manual packaging step.
