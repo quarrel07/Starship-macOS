@@ -170,16 +170,16 @@ Requires Xcode (or xcode-tools) && `sdl2, libpng, glew, ninja, cmake, nlohmann-j
 
 **Important: For maximum performance make sure you have ninja build tools installed!**
 
-> **Note (this fork):** This fork repoints the `tools/Torch` submodule to
-> [quarrel07/Torch](https://github.com/quarrel07/Torch) (branch `macos-clang-fmt-fix`),
-> which fixes a `consteval` build failure in spdlog's bundled fmt under newer
-> Clang (incl. Apple clang 21). No manual patching is required.
->
-> If CMake configuration fails with
-> `File or directory /Library/Headers referenced by variable SDL2_INCLUDE_DIR does not exist`,
-> a stale/broken `/Library/Frameworks/SDL2.framework` is shadowing Homebrew's SDL2.
-> Point CMake at the Homebrew copy by adding the following to the `cmake` configure command:
-> `-DSDL2_DIR="$(brew --prefix sdl2)/lib/cmake/SDL2" -DCMAKE_PREFIX_PATH="$(brew --prefix)"`.
+> **Note (this fork):** This fork bakes in two fixes for building on modern macOS
+> (incl. Apple clang 21), so the standard steps below work with no manual patching
+> or extra CMake flags:
+> - `tools/Torch` is repointed to [quarrel07/Torch](https://github.com/quarrel07/Torch)
+>   (branch `macos-clang-fmt-fix`), fixing a `consteval` build failure in spdlog's
+>   bundled fmt under newer Clang.
+> - `libultraship` is repointed to [quarrel07/libultraship](https://github.com/quarrel07/libultraship)
+>   (branch `macos-sdl2-framework-fix`), which prefers the Homebrew/MacPorts SDL2
+>   over a stale `/Library/Frameworks/SDL2.framework` that would otherwise break
+>   `find_package(SDL2)`.
 
 _Note: If you're using Visual Studio Code, the [cpack plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) makes it very easy to just press run and debug._
 
