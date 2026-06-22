@@ -1,3 +1,16 @@
+<!-- ===== macOS build fork banner (this fork only) ===== -->
+> ## 🍎 macOS build
+> This is a macOS-focused fork of Starship that makes the project **build and run cleanly on modern
+> macOS** (Apple clang 21) and packages it as a proper, self-contained **`Starship.app`** with its
+> data folder at `~/Library/Application Support/com.starship`.
+> **→ [Download the prebuilt macOS app](https://github.com/quarrel07/Starship/releases/latest)** (Apple Silicon), or see
+> **[README-macOS.md](README-macOS.md)** for what's different and how to build it.
+> Releases track upstream's version (`vX.Y.Z-macos` = the macOS build of upstream `vX.Y.Z`).
+> Everything below is from the upstream project. As with upstream, **no game assets are included** —
+> you supply your own ROM.
+
+---
+
 [comment]: <> (Todo: Make Light Mode Image)
 [comment]: <> (Todo: Make Dark Mode Image)
  
