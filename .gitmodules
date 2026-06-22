@@ -3,7 +3,8 @@
 	url = https://github.com/simonlindholm/asm-differ
 [submodule "tools/Torch"]
 	path = tools/Torch
-	url = https://github.com/HarbourMasters/Torch
+	url = https://github.com/quarrel07/Torch.git
+	branch = macos-clang-fmt-fix
 [submodule "libultraship"]
 	path = libultraship
 	url = https://github.com/Kenix3/libultraship.git
