@@ -37,6 +37,12 @@ extern "C"
 #endif
 int main(int argc, char *argv[]) {
 #endif
+#if defined(__APPLE__)
+    // Default the writable data/"library" folder to ~/Library/Application Support/com.starship.
+    // This mirrors the SHIP_HOME value in the .app's Info.plist (LSEnvironment); overwrite=0
+    // means a value provided by the bundle or the user's environment still takes precedence.
+    setenv("SHIP_HOME", "~/Library/Application Support/com.starship", 0);
+#endif
     GameEngine::Create();
     Main_SetVIMode();
     Lib_FillScreen(1);
