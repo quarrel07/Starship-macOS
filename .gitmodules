@@ -7,4 +7,5 @@
 	branch = macos-clang-fmt-fix
 [submodule "libultraship"]
 	path = libultraship
-	url = https://github.com/Kenix3/libultraship.git
+	url = https://github.com/quarrel07/libultraship.git
+	branch = macos-sdl2-framework-fix
