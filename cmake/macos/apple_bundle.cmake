@@ -89,7 +89,13 @@ if (STARSHIP_BUNDLE_DEPS)
             -DEXECUTABLE_NAME=${PROJECT_NAME}
             -P ${MACOS_DIR}/fixup_bundle.cmake
         COMMAND bash -c "install_name_tool -add_rpath '@executable_path/../Frameworks/' '$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/MacOS/${PROJECT_NAME}' 2>/dev/null || true"
-        COMMENT "Relinking dylibs into the .app bundle"
+        # Modern Homebrew's "sdl2" is sdl2-compat, a shim that dlopen()s libSDL3.dylib from
+        # @loader_path at runtime. fixup_bundle can't follow a dlopen, so copy SDL3 in next to
+        # the bundled libSDL2 (= @loader_path) by hand or the app aborts with "Failed loading
+        # SDL3 library." (No-op on machines that still have real SDL2: there is no sdl3 keg, so
+        # the copy is simply skipped.) SDL3 itself only links system frameworks.
+        COMMAND bash -c "SDL3_LIB=$(brew --prefix sdl3 2>/dev/null)/lib/libSDL3.0.dylib; if [ -f \"$SDL3_LIB\" ]; then cp \"$SDL3_LIB\" '$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Frameworks/libSDL3.dylib' && chmod u+w '$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Frameworks/libSDL3.dylib'; fi"
+        COMMENT "Relinking dylibs into the .app bundle (incl. SDL3 if sdl2-compat is in use)"
         VERBATIM
     )
 endif()
