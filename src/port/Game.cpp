@@ -29,6 +29,10 @@ void push_frame() {
     GameEngine::EndAudioFrame();
 }
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 #ifdef _WIN32
 int SDL_main(int argc, char **argv) {
 #else
@@ -38,6 +42,12 @@ extern "C"
 int main(int argc, char *argv[]) {
 #endif
 #if defined(__APPLE__)
+    // Disable the macOS "press and hold" accent/diacritic popup for this app. SDL keeps a Cocoa text
+    // input context active, so holding a movement key is interpreted as holding a letter key in a text
+    // field, and macOS shows the accent picker instead of repeating it. Per-app equivalent of
+    // `defaults write -app <App> ApplePressAndHoldEnabled -bool false`; key repeat still works.
+    CFPreferencesSetAppValue(CFSTR("ApplePressAndHoldEnabled"), kCFBooleanFalse, kCFPreferencesCurrentApplication);
+    CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
     // Default the writable data/"library" folder to ~/Library/Application Support/com.starship.
     // This mirrors the SHIP_HOME value in the .app's Info.plist (LSEnvironment); overwrite=0
     // means a value provided by the bundle or the user's environment still takes precedence.
