@@ -29,31 +29,74 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # ---------------------------------------------------------------------------
-# App icon: Starship.icns generated from logo.png (matches CFBundleIconFile).
-# macOS rounds the square automatically, so it reads as a native icon.
+# App icon.
+# Preferred: compile the Icon Composer package (cmake/macos/StarshipIcon.icon) with
+# actool. This emits Assets.car — the Liquid Glass icon used on macOS 26 (Tahoe)
+# and later, looked up via CFBundleIconName — plus StarshipIcon.icns, a flat
+# fallback for older macOS, looked up via CFBundleIconFile. The --app-icon value,
+# the .icon basename, and CFBundleIconName in Info.plist must all match
+# ("StarshipIcon") or actool silently emits no catalog / the system falls back to
+# the flat icns.
+# Fallback (no full Xcode, so no actool): render StarshipIcon.icns from logo.png.
 # ---------------------------------------------------------------------------
-set(ICON_SRC ${CMAKE_SOURCE_DIR}/logo.png)
-set(ICONSET_DIR ${CMAKE_BINARY_DIR}/macosx/Starship.iconset)
-set(ICNS_FILE ${CMAKE_BINARY_DIR}/macosx/Starship.icns)
-add_custom_command(
-    OUTPUT ${ICNS_FILE}
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONSET_DIR}
-    COMMAND sips -z 16 16     ${ICON_SRC} --out ${ICONSET_DIR}/icon_16x16.png
-    COMMAND sips -z 32 32     ${ICON_SRC} --out ${ICONSET_DIR}/icon_16x16@2x.png
-    COMMAND sips -z 32 32     ${ICON_SRC} --out ${ICONSET_DIR}/icon_32x32.png
-    COMMAND sips -z 64 64     ${ICON_SRC} --out ${ICONSET_DIR}/icon_32x32@2x.png
-    COMMAND sips -z 128 128   ${ICON_SRC} --out ${ICONSET_DIR}/icon_128x128.png
-    COMMAND sips -z 256 256   ${ICON_SRC} --out ${ICONSET_DIR}/icon_128x128@2x.png
-    COMMAND sips -z 256 256   ${ICON_SRC} --out ${ICONSET_DIR}/icon_256x256.png
-    COMMAND sips -z 512 512   ${ICON_SRC} --out ${ICONSET_DIR}/icon_256x256@2x.png
-    COMMAND sips -z 512 512   ${ICON_SRC} --out ${ICONSET_DIR}/icon_512x512.png
-    COMMAND sips -z 1024 1024 ${ICON_SRC} --out ${ICONSET_DIR}/icon_512x512@2x.png
-    COMMAND iconutil -c icns -o ${ICNS_FILE} ${ICONSET_DIR}
-    DEPENDS ${ICON_SRC}
-    COMMENT "Generating Starship.icns from ${ICON_SRC}"
-    VERBATIM
-)
-add_custom_target(StarshipIcon DEPENDS ${ICNS_FILE})
+set(ICON_OUT_DIR ${CMAKE_BINARY_DIR}/macosx)
+set(ICNS_FILE ${ICON_OUT_DIR}/StarshipIcon.icns)
+
+execute_process(COMMAND xcrun --find actool
+    RESULT_VARIABLE ACTOOL_NOT_FOUND OUTPUT_QUIET ERROR_QUIET)
+
+if (NOT ACTOOL_NOT_FOUND)
+    set(ICON_COMPOSER_SRC ${MACOS_DIR}/StarshipIcon.icon)
+    set(ASSETS_CAR ${ICON_OUT_DIR}/Assets.car)
+    # CMAKE_OSX_DEPLOYMENT_TARGET is an EMPTY cache entry here: project() creates it
+    # before the top-level CMakeLists' set(... CACHE ...) runs, so that set is a no-op.
+    # An empty value would make actool swallow the next flag as its argument.
+    set(ICON_DEPLOYMENT_TARGET "${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    if (NOT ICON_DEPLOYMENT_TARGET)
+        set(ICON_DEPLOYMENT_TARGET "10.15")
+    endif()
+    add_custom_command(
+        OUTPUT ${ASSETS_CAR} ${ICNS_FILE}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${ICON_OUT_DIR}
+        COMMAND xcrun actool ${ICON_COMPOSER_SRC}
+                --compile ${ICON_OUT_DIR}
+                --app-icon StarshipIcon
+                --output-partial-info-plist ${ICON_OUT_DIR}/icon-partial-info.plist
+                --platform macosx
+                --target-device mac
+                --minimum-deployment-target ${ICON_DEPLOYMENT_TARGET}
+                --errors --warnings
+        DEPENDS ${ICON_COMPOSER_SRC}/icon.json
+        COMMENT "Compiling Liquid Glass app icon (actool)"
+        VERBATIM
+    )
+    set(ICON_OUTPUTS ${ASSETS_CAR} ${ICNS_FILE})
+else()
+    message(STATUS "actool not found (full Xcode required) - using flat logo.png icon")
+    set(ICON_SRC ${CMAKE_SOURCE_DIR}/logo.png)
+    set(ICONSET_DIR ${ICON_OUT_DIR}/StarshipIcon.iconset)
+    add_custom_command(
+        OUTPUT ${ICNS_FILE}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONSET_DIR}
+        COMMAND sips -z 16 16     ${ICON_SRC} --out ${ICONSET_DIR}/icon_16x16.png
+        COMMAND sips -z 32 32     ${ICON_SRC} --out ${ICONSET_DIR}/icon_16x16@2x.png
+        COMMAND sips -z 32 32     ${ICON_SRC} --out ${ICONSET_DIR}/icon_32x32.png
+        COMMAND sips -z 64 64     ${ICON_SRC} --out ${ICONSET_DIR}/icon_32x32@2x.png
+        COMMAND sips -z 128 128   ${ICON_SRC} --out ${ICONSET_DIR}/icon_128x128.png
+        COMMAND sips -z 256 256   ${ICON_SRC} --out ${ICONSET_DIR}/icon_128x128@2x.png
+        COMMAND sips -z 256 256   ${ICON_SRC} --out ${ICONSET_DIR}/icon_256x256.png
+        COMMAND sips -z 512 512   ${ICON_SRC} --out ${ICONSET_DIR}/icon_256x256@2x.png
+        COMMAND sips -z 512 512   ${ICON_SRC} --out ${ICONSET_DIR}/icon_512x512.png
+        COMMAND sips -z 1024 1024 ${ICON_SRC} --out ${ICONSET_DIR}/icon_512x512@2x.png
+        COMMAND iconutil -c icns -o ${ICNS_FILE} ${ICONSET_DIR}
+        DEPENDS ${ICON_SRC}
+        COMMENT "Generating StarshipIcon.icns from ${ICON_SRC}"
+        VERBATIM
+    )
+    set(ICON_OUTPUTS ${ICNS_FILE})
+endif()
+
+add_custom_target(StarshipIcon DEPENDS ${ICON_OUTPUTS})
 add_dependencies(${PROJECT_NAME} StarshipIcon)
 
 # Ensure the packed port assets (starship.o2r) are generated before the app links,
@@ -61,8 +104,8 @@ add_dependencies(${PROJECT_NAME} StarshipIcon)
 # created at runtime from the user's ROM into SHIP_HOME, so it is intentionally not
 # a build dependency.)
 add_dependencies(${PROJECT_NAME} GeneratePortO2R)
-set_source_files_properties(${ICNS_FILE} PROPERTIES GENERATED TRUE MACOSX_PACKAGE_LOCATION "Resources")
-target_sources(${PROJECT_NAME} PRIVATE ${ICNS_FILE})
+set_source_files_properties(${ICON_OUTPUTS} PROPERTIES GENERATED TRUE MACOSX_PACKAGE_LOCATION "Resources")
+target_sources(${PROJECT_NAME} PRIVATE ${ICON_OUTPUTS})
 
 # ---------------------------------------------------------------------------
 # Copy runtime resources into Contents/Resources after the app links

@@ -11,7 +11,9 @@
     <key>CFBundleGetInfoString</key>
     <string>2.0.0 Barnard Alfa</string>
     <key>CFBundleIconFile</key>
-    <string>Starship.icns</string>
+    <string>StarshipIcon</string>
+    <key>CFBundleIconName</key>
+    <string>StarshipIcon</string>
     <key>CFBundleIdentifier</key>
     <string>com.Starship.Starship</string>
     <key>CFBundleDocumentTypes</key>

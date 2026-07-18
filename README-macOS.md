@@ -38,8 +38,9 @@ bundle is fully self-contained and ready to move to `/Applications`:
   definitions used by the first-run ROM extractor, and the controller DB);
 - all Homebrew dylibs relinked into `Contents/Frameworks` (`@executable_path/../Frameworks/`), so it
   runs on Macs without Homebrew installed;
-- an app icon generated from the project logo (macOS rounds it to a native squircle), and an ad-hoc
-  code signature.
+- a native Liquid Glass app icon (Icon Composer package compiled with `actool` into `Assets.car`
+  for macOS 26+, with a flat `.icns` fallback for older systems and for builds without full Xcode),
+  and an ad-hoc code signature.
 
 `starship.o2r` (the packed port assets) is generated as a build dependency, so a plain build yields a
 complete app — no separate manual packaging step.
